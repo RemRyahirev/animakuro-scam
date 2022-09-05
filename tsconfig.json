@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "commonjs",
+        "lib": ["dom", "esnext.asynciterable"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
+        "strict": false,
+
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "pretty": true,
+        "baseUrl": ".",
+        "rootDir": "src",
+        "outDir": "dist",
+        "allowJs": true
+    },
+    "exclude": ["node_modules"],
+    "include": ["./src/**/*.ts"]
+}
