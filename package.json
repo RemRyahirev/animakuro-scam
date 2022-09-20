@@ -4,7 +4,10 @@
   "description": "Animakuro backend project.",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev ./src/index.ts"
+    "start": "node ./dist/index.js",
+    "dev": "ts-node-dev ./src/index.ts",
+    "build": "tsc",
+    "generate": "npx prisma generate"
   },
   "repository": {
     "type": "git",

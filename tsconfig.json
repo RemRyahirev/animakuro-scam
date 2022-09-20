@@ -11,10 +11,14 @@
         "esModuleInterop": true,
         "sourceMap": true,
         "pretty": true,
-        "baseUrl": ".",
-        "rootDir": "src",
-        "outDir": "dist",
-        "allowJs": true
+        "baseUrl": "./src",
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "allowJs": true,
+
+        "paths": {
+            "@utils/*": ["utils/*"]
+        }
     },
     "exclude": ["node_modules"],
     "include": ["./src/**/*.ts"]

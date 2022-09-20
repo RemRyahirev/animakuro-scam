@@ -1,18 +1,19 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 // import { nanoid } from 'nanoid/async'
 import { prisma, redis } from '../../index'
-import { signAuthToken, verifyAuthToken } from '../../utils/jwt.util'
-import { verifyCode } from '../../utils/2fa.util'
-import { previewUrl, sendEmailConfirmationMail } from '../../utils/mail.util'
-import { CustomContext } from '../../types/custom-context'
+import { signAuthToken, verifyAuthToken } from '@utils/jwt.util'
+import { verifyCode } from '@utils/2fa.util'
+import { previewUrl, sendEmailConfirmationMail } from '@utils/mail.util'
+import { ICustomContext } from '../../types/custom-context.interface'
 import { ConfirmInput, LoginInput, LoginReturnType, LoginType, RegisterInput, TwoFAInput } from './auth.schema'
-import { compare, hash } from '../../utils/password.util'
+import { compare, hash } from '@utils/password.util'
 import { randomUUID } from 'crypto'
 
 @Resolver()
 export class AuthResolver {
     @Query(() => [String])
-    async recipe(@Arg("email") email: string) {
+    async recipe(@Arg("email") email: string, @Ctx() ctx: ICustomContext) {
+        console.log(ctx.request["ip"])
         const users = await prisma.user.findMany({
             where: {
                 email: email
@@ -67,7 +68,7 @@ export class AuthResolver {
             return false
         }
 
-        const pw= await hash(password)
+        const pw = await hash(password)
         await prisma.user.create({
             data: {
                 email,
@@ -80,7 +81,7 @@ export class AuthResolver {
     }
 
     @Mutation(() => LoginReturnType)
-    async login(@Arg('data') data: LoginInput, @Ctx() ctx: CustomContext): Promise<LoginReturnType> {
+    async login(@Arg('data') data: LoginInput, @Ctx() ctx: ICustomContext): Promise<LoginReturnType> {
 
         const user = await prisma.user.findFirst({
             where: { username: data.username }
@@ -103,7 +104,7 @@ export class AuthResolver {
         const session = await prisma.siteAuthSession.create({
             data: {
                 agent: ctx.request.headers['user-agent'],
-                ip: (ctx.request.headers['x-forwarded-for'] || "") as string, // TODO: recheck
+                ip: (ctx.request.headers['x-forwarded-for'] || ctx.request.ip) as string, // TODO: recheck
                 active: true,
                 userId: user.id
             }
@@ -116,8 +117,10 @@ export class AuthResolver {
     }
 
     @Mutation(() => LoginReturnType)
-    async confirm2fa(@Arg('data') data: TwoFAInput, @Ctx() ctx: CustomContext) {
+    async confirm2fa(@Arg('data') data: TwoFAInput, @Ctx() ctx: ICustomContext) {
         const userId = await redis.get(`confirmation:2fa-auth:${data.token}`)
+        if (!userId)
+            throw new Error("Invalid token")
 
         // TODO: get user from DB and check his 2FA code (if 2fa still linked)!!!
         const user = await prisma.user.findUnique({
@@ -135,7 +138,7 @@ export class AuthResolver {
         const session = await prisma.siteAuthSession.create({
             data: {
                 agent: ctx.request.headers['user-agent'],
-                ip: ctx.request.headers['x-forwarded-for'] as string, // TODO: recheck
+                ip: (ctx.request.headers['x-forwarded-for'] || ctx.request.socket.remoteAddress) as string, // TODO: recheck
                 active: true,
                 userId: user.id
             }
@@ -150,9 +153,12 @@ export class AuthResolver {
     @Mutation(() => Boolean)
     async logout(@Arg('token', () => String) token: string) {
         const decoded = await verifyAuthToken(token)
-        const session = await prisma.siteAuthSession.delete({
+        const session = await prisma.siteAuthSession.update({
             where: {
                 id: decoded.sub,
+            },
+            data: {
+                active: false
             }
         })
 
