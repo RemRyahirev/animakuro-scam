@@ -1,6 +1,5 @@
 FROM node:16-alpine AS builder
-WORKDIR /usr/app
-#COPY package*.json ./
+WORKDIR /build
 COPY . ./
 RUN npm install -g pnpm@7.11.0 && \
     pnpm install && \
@@ -8,13 +7,10 @@ RUN npm install -g pnpm@7.11.0 && \
     pnpm build
 
 FROM node:16-alpine
-WORKDIR /usr/app
+WORKDIR /app
 COPY package*.json ./
-RUN npm install -g pnpm@7.11.0 &&  \
-    pnpm install && \
-    npx prisma generate
-
-COPY --from=builder /usr/app/dist ./dist
-
+RUN npm i -g pnpm@7.11.0
+COPY --from=builder /build/node_modules node_modules/
+COPY --from=builder /build/dist dist/
 EXPOSE 8080
-CMD [ "pnpm", "start" ]
+CMD ["pnpm", "start"]

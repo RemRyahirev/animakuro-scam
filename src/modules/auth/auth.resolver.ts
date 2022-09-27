@@ -11,16 +11,9 @@ import { randomUUID } from 'crypto'
 
 @Resolver()
 export class AuthResolver {
-    @Query(() => [String])
-    async recipe(@Arg("email") email: string, @Ctx() ctx: ICustomContext) {
-        console.log(ctx.request["ip"])
-        const users = await prisma.user.findMany({
-            where: {
-                email: email
-            }
-        })
-
-        return users.map((val) => val.username);
+    @Query(() => Boolean)
+    async auth() {
+        return true
     }
 
     @Mutation(() => Boolean)

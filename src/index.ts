@@ -57,7 +57,10 @@ const cache = {}
 async function createServer() {
     const app = express()
     const schema = await buildSchema({
-        resolvers: [__dirname + '/**/*.resolver.ts']
+        resolvers: [
+            __dirname + '/**/*.resolver.ts',
+            __dirname + '/**/*.resolver.js'
+        ]
     })
 
     app.use(cors())
