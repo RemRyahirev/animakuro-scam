@@ -11,6 +11,8 @@ import { PrismaClient } from '@prisma/client'
 import { Server } from 'http'
 
 import * as dotenv from 'dotenv'
+import { ApiError, errors } from './errors/errors'
+
 dotenv.config()
 
 const PORT = +process.env.PORT || 8080
@@ -24,7 +26,7 @@ export const prisma = new PrismaClient()
 async function main() {
 
     await redis.connect()
-    console.log("Redis connected")
+    console.log('Redis connected')
 
     const app = await createServer()
     const server = await new Promise<Server>(resolve => {
@@ -70,7 +72,21 @@ async function createServer() {
             return {
                 schema,
                 context: { request, response },
-                graphiql: false
+                graphiql: false,
+                customFormatErrorFn(error) {
+                    if (error.originalError instanceof ApiError) return {
+                        path: error.path,
+                        message: error.originalError.identifier,
+                        extensions: error.originalError.export()
+                    }
+                    const internal = errors.INTERNAL()
+                    console.error(error.path, error.originalError)
+                    return {
+                        path: error.path,
+                        message: internal.identifier,
+                        extensions: internal.export()
+                    }
+                }
             }
         })
         // (_, __, {query}) => {

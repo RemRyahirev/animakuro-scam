@@ -8,6 +8,7 @@ import { ICustomContext } from '../../types/custom-context.interface'
 import { ConfirmInput, LoginInput, LoginReturnType, LoginType, RegisterInput, TwoFAInput } from './auth.schema'
 import { compare, hash } from '@utils/password.util'
 import { randomUUID } from 'crypto'
+import { errors } from '../../errors/errors'
 
 @Resolver()
 export class AuthResolver {
@@ -18,12 +19,14 @@ export class AuthResolver {
 
     @Mutation(() => Boolean)
     async register(@Arg('data') data: RegisterInput) {
-        const user = await prisma.user.findFirst({where: {
-            username: data.username
-        }})
+        const user = await prisma.user.findFirst({
+            where: {
+                username: data.username
+            }
+        })
 
         if (user)
-            throw new Error('Username already in use')
+            throw errors.AUTH_ERROR('USERNAME_TAKEN')
 
         // const code = await nanoid(30)
         const code = randomUUID()
@@ -41,22 +44,24 @@ export class AuthResolver {
     async confirmRegistration(@Arg('data') data: ConfirmInput) {
         const info = await redis.get(`confirmation:register:${data.token}`)
         if (!info)
-            throw new Error('Invalid token')
+            throw errors.AUTH_ERROR('CONFIRMATION_TOKEN_INVALID')
 
         await redis.del(`confirmation:register:${data.token}`)
-        const {email, password, username}: RegisterInput = JSON.parse(info)
+        const { email, password, username }: RegisterInput = JSON.parse(info)
 
-        const user = await prisma.user.findFirst({where: {
-            OR: [ {email}, {username} ]
-        }})
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [{ email }, { username }]
+            }
+        })
 
         if (user) {
             if (user.username === username)
-                throw new Error('Username already in use')
+                throw errors.AUTH_ERROR('USERNAME_TAKEN')
 
             // TODO: Temporary, remove in next version
             if (user.email === email)
-                throw new Error('Email already in use')
+                throw errors.AUTH_ERROR('EMAIL_TAKEN')
 
             return false
         }
@@ -81,7 +86,7 @@ export class AuthResolver {
         })
 
         if (!user || !await compare(data.password, user.password))
-            throw new Error("Invalid credentials")
+            throw errors.AUTH_ERROR('CREDENTIALS_INVALID')
 
         if (user.secret2fa) {
             // const token = await nanoid(30)
@@ -97,7 +102,7 @@ export class AuthResolver {
         const session = await prisma.siteAuthSession.create({
             data: {
                 agent: ctx.request.headers['user-agent'],
-                ip: (ctx.request.headers['x-forwarded-for'] || ctx.request.ip) as string, // TODO: recheck
+                ip: ctx.request.ip as string, // TODO: recheck
                 active: true,
                 userId: user.id
             }
@@ -113,7 +118,7 @@ export class AuthResolver {
     async confirm2fa(@Arg('data') data: TwoFAInput, @Ctx() ctx: ICustomContext) {
         const userId = await redis.get(`confirmation:2fa-auth:${data.token}`)
         if (!userId)
-            throw new Error("Invalid token")
+            throw errors.AUTH_ERROR('TFA_TOKEN_INVALID')
 
         // TODO: get user from DB and check his 2FA code (if 2fa still linked)!!!
         const user = await prisma.user.findUnique({
@@ -123,15 +128,15 @@ export class AuthResolver {
         })
 
         if (!user)
-            throw new Error("Internal")
+            throw errors.INTERNAL()
 
         if (user.secret2fa && !verifyCode(user.secret2fa, data.code))
-                throw new Error("Invalid 2fa code")
+            throw errors.AUTH_ERROR('TFA_TOKEN_INVALID')
 
         const session = await prisma.siteAuthSession.create({
             data: {
                 agent: ctx.request.headers['user-agent'],
-                ip: (ctx.request.headers['x-forwarded-for'] || ctx.request.socket.remoteAddress) as string, // TODO: recheck
+                ip: ctx.request.ip as string, // TODO: recheck
                 active: true,
                 userId: user.id
             }
@@ -156,7 +161,7 @@ export class AuthResolver {
         })
 
         if (!session)
-            throw new Error("Invalid session")
+            throw errors.AUTH_ERROR('SESSION_INVALID')
 
         return true
     }
