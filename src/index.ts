@@ -12,6 +12,7 @@ import { Server } from 'http'
 
 import * as dotenv from 'dotenv'
 import { ApiError, errors } from './errors/errors'
+import { ValidationError } from 'class-validator'
 
 dotenv.config()
 
@@ -78,6 +79,19 @@ async function createServer() {
                         path: error.path,
                         message: error.originalError.identifier,
                         extensions: error.originalError.export()
+                    }
+                    if (error.originalError["validationErrors"]) {
+                        const errorList = error.originalError["validationErrors"]
+                        // noinspection TypeScriptValidateJSTypes
+                        const validation = errors.VALIDATION(errorList.filter(it => it instanceof ValidationError).map(it => ({
+                            property: it.property as string,
+                            reasons: Object.values(it.constraints) as string[]
+                        })))
+                        return {
+                            path: error.path,
+                            message: validation.identifier,
+                            extensions: validation.export()
+                        }
                     }
                     const internal = errors.INTERNAL()
                     console.error(error.path, error.originalError)

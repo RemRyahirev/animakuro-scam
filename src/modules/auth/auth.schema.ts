@@ -48,7 +48,7 @@ export class TwoFAInput {
 
 @ObjectType()
 export class LoginReturnType {
-    @Field(type => LoginType)
+    @Field(() => LoginType)
     type: LoginType
 
     @Field()
