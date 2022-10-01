@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  username     String   @unique @db.VarChar(64)
-  email        String   @db.VarChar(320)
-  password     String?  @db.VarChar(60)
-  secret2fa    String?  @db.VarChar(20)
-  avatar       String?  @db.Text
-  banner       String?  @db.Text
-  birthday     Int?
-  gender       Gender   @default(UNSPECIFIED)
-  customGender String?  @db.VarChar(64)
-  createdAt    DateTime @default(now())
-  deleted      Boolean  @default(false)
+  id           String    @id @default(uuid())
+  username     String    @unique @db.VarChar(64)
+  email        String    @db.VarChar(320)
+  password     String?   @db.VarChar(60)
+  secret2fa    String?   @db.VarChar(20)
+  avatar       String?   @db.Text
+  banner       String?   @db.Text
+  birthday     DateTime? @db.Date
+  gender       Gender    @default(UNSPECIFIED)
+  customGender String?   @db.VarChar(64)
+  createdAt    DateTime  @default(now())
+  deleted      Boolean   @default(false)
 
   siteAuthSessions SiteAuthSession[]
 }

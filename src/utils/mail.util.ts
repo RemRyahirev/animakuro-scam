@@ -16,10 +16,16 @@ const mailer = nodemailer.createTransport({
     }
 });
 
-export const sendEmailConfirmationMail = (receiverEmail: string, link: string) => mailer.sendMail({
+export const sendEmailRegistrationConfirmationMail = (receiverEmail: string, link: string) => mailer.sendMail({
     to: receiverEmail, // list of receivers
     subject: "Email confirmation ✔", // Subject line
     html: `<b>Test Confirmation Mail</b><br><a href=${link}>Tap here</a>`, // html body
+})
+
+export const sendEmailChangeConfirmationMail = (receiverEmail: string, link: string, newEmail: string) => mailer.sendMail({
+    to: receiverEmail, // list of receivers
+    subject: "Change Email confirmation ✔", // Subject line
+    html: `<b>Hey, if you want to change your email to ${newEmail}</b><br><a href=${link}>Tap here</a>`, // html body
 })
 
 export const previewUrl = (info: SentMessageInfo) => nodemailer.getTestMessageUrl(info)

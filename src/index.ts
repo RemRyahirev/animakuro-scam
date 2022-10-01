@@ -80,7 +80,8 @@ async function createServer() {
                         message: error.originalError.identifier,
                         extensions: error.originalError.export()
                     }
-                    if (error.originalError["validationErrors"]) {
+
+                    if (error.originalError && error.originalError["validationErrors"]) {
                         const errorList = error.originalError["validationErrors"]
                         // noinspection TypeScriptValidateJSTypes
                         const validation = errors.VALIDATION(errorList.filter(it => it instanceof ValidationError).map(it => ({

@@ -1,4 +1,4 @@
-import { _errorRegistry } from './rgistry'
+import { _errorRegistry } from './registry'
 
 export class ApiError extends Error {
     readonly identifier: string

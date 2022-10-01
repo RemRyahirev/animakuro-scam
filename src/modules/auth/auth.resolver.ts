@@ -1,9 +1,8 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
-// import { nanoid } from 'nanoid/async'
+import { Arg, Ctx, Mutation, Resolver } from 'type-graphql'
 import { prisma, redis } from '../../index'
 import { signAuthToken, verifyAuthToken } from '@utils/jwt.util'
 import { verifyCode } from '@utils/2fa.util'
-import { previewUrl, sendEmailConfirmationMail } from '@utils/mail.util'
+import { previewUrl, sendEmailRegistrationConfirmationMail } from '@utils/mail.util'
 import { ICustomContext } from '../../types/custom-context.interface'
 import { ConfirmInput, LoginInput, LoginReturnType, LoginType, RegisterInput, TwoFAInput } from './auth.schema'
 import { compare, hash } from '@utils/password.util'
@@ -12,11 +11,6 @@ import { errors } from '../../errors/errors'
 
 @Resolver()
 export class AuthResolver {
-    @Query(() => Boolean)
-    async auth() {
-        return true
-    }
-
     @Mutation(() => Boolean)
     async register(@Arg('data') data: RegisterInput) {
         const user = await prisma.user.findFirst({
@@ -35,7 +29,7 @@ export class AuthResolver {
         }).catch(console.error)
 
         // Sending email
-        const info = await sendEmailConfirmationMail(data.email, `https://animakuro.domain/confirm/${code}`)
+        const info = await sendEmailRegistrationConfirmationMail(data.email, `https://animakuro.domain/confirm/${code}`)
         console.log(previewUrl(info))
         return true
     }
