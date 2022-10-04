@@ -1,0 +1,49 @@
+trigger:
+- prod
+ 
+resources:
+- repo: self
+ 
+variables:
+  tag: 'latest'
+ 
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: buildAndPush
+        repository: 'backend'
+        buildContext: '.'
+        containerRegistry: 'docker'
+        dockerfile: 'Dockerfile'
+        tags: |
+          $(tag)
+
+- stage: Deploy
+  jobs:
+    - deployment: Deploy
+      displayName: Deploy
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: 'development'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: SSH@0
+              inputs:
+                sshEndpoint: 'development'
+                runOptions: 'inline'
+                inline: |
+                  cd ~/infra/animakuro
+                  docker-compose pull backend 2>&1
+                  docker-compose up -d backend 2>&1
+                readyTimeout: '20000'
