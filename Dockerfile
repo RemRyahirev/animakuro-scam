@@ -7,7 +7,7 @@ RUN pnpm fetch
 COPY . ./
 RUN patch prisma/schema.prisma < prisma/docker.patch
 RUN pnpm i --offline --frozen-lockfile
-RUN pnpm build
+RUN pnpm generate && pnpm build
 
 FROM node:16-alpine
 WORKDIR /app
