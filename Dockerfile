@@ -4,7 +4,7 @@ COPY . ./
 RUN apk add --no-cache patch
 RUN patch prisma/schema.prisma < prisma/docker.patch
 RUN corepack enable pnpm && \
-    pnpm install && \
+    pnpm install --shamefully-hoist=true && \
     pnpm build
 
 FROM node:16-alpine
