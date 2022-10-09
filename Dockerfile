@@ -1,11 +1,12 @@
 FROM node:16-alpine AS builder
 WORKDIR /build
-COPY . ./
+RUN corepack enable pnpm
 RUN apk add --no-cache patch
+COPY pnpm-lock.yaml ./
+RUN pnpm fetch --prod
+COPY . ./
 RUN patch prisma/schema.prisma < prisma/docker.patch
-RUN corepack enable pnpm && \
-    pnpm install --shamefully-hoist=true && \
-    pnpm build
+RUN pnpm i --offline --frozen-lockfile --prod && pnpm build
 
 FROM node:16-alpine
 WORKDIR /app
