@@ -1,0 +1,53 @@
+{
+  "name": "@animakuro/backend",
+  "version": "0.0.1",
+  "description": "Animakuro backend project.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "dev": "ts-node-dev -r tsconfig-paths/register ./src/index.ts",
+    "build": "tsc && tsc-alias",
+    "generate": "npx prisma generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://animakuro-backend@dev.azure.com/animakuro-backend/animakuro-backend/_git/backend"
+  },
+  "keywords": [
+    "graphql",
+    "api"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.3.1",
+    "bcrypt": "^5.0.1",
+    "class-validator": "^0.13.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.3.0",
+    "graphql-jit": "^0.7.4",
+    "graphql-upload": "^11.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "nanoid": "^4.0.0",
+    "nodemailer": "^6.7.8",
+    "redis": "^4.3.0",
+    "reflect-metadata": "^0.1.13",
+    "speakeasy": "^2.0.0",
+    "type-graphql": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/node": "^18.7.14",
+    "@types/nodemailer": "^6.4.5",
+    "@types/speakeasy": "^2.0.7",
+    "prisma": "^4.3.1",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.7.0",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.2"
+  }
+}
