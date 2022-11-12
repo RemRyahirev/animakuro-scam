@@ -1,39 +1,40 @@
-import "reflect-metadata";
-import express from "express";
-import cors from "cors";
-import { buildSchema } from "type-graphql";
-import { graphqlUploadExpress } from "graphql-upload";
-import { graphqlHTTP } from "express-graphql";
-import { parse } from "graphql";
-import { compileQuery } from "graphql-jit";
-import { createClient } from "redis";
-import { PrismaClient } from "@prisma/client";
-import { Server } from "http";
+import 'reflect-metadata'
+import express from 'express'
+import cors from 'cors'
+import { buildSchema } from 'type-graphql'
+import { graphqlUploadExpress } from 'graphql-upload'
+import { graphqlHTTP } from 'express-graphql'
+import { parse } from 'graphql'
+import { compileQuery } from 'graphql-jit'
+import { createClient } from 'redis'
+import { PrismaClient } from '@prisma/client'
+import { Server } from 'http'
 
-import * as dotenv from "dotenv";
-import { ApiError, errors } from "./errors/errors";
-import { ValidationError } from "class-validator";
+import * as dotenv from 'dotenv'
+import { ApiError, errors } from './errors/errors'
+import { ValidationError } from 'class-validator'
 
-dotenv.config();
+dotenv.config()
 
-const PORT = +process.env.PORT || 8080;
+const PORT = +process.env.PORT || 8080
 
 export const redis = createClient({
     url: process.env.REDIS_URL,
-});
+})
 
-export const prisma = new PrismaClient();
+export const prisma = new PrismaClient()
 
 async function main() {
-    await redis.connect();
-    console.log("Redis connected");
 
-    const app = await createServer();
-    const server = await new Promise<Server>((resolve) => {
-        const server = app.listen(PORT, () => resolve(server));
-    });
+    await redis.connect()
+    console.log('Redis connected')
 
-    console.log(`🚀 1Server started at port ${PORT}`);
+    const app = await createServer()
+    const server = await new Promise<Server>(resolve => {
+        const server = app.listen(PORT, () => resolve(server))
+    })
+
+    console.log(`🚀 Server started at port ${PORT}`)
 
     // process.on('SIGTERM', shutDown);
     // process.on('SIGINT', shutDown);
@@ -52,22 +53,21 @@ async function main() {
     // }
 }
 
-main().catch(console.error);
+main().catch(console.error)
 
-const cache = {};
+const cache = {}
 
 async function createServer() {
-    const app = express();
+    const app = express()
     const schema = await buildSchema({
         resolvers: [
-            __dirname + "/**/*.resolver.ts",
-            __dirname + "/**/*.resolver.js",
-        ],
-    });
+            __dirname + '/**/*.resolver.ts',
+            __dirname + '/**/*.resolver.js'
+        ]
+    })
 
-    app.use(cors());
-    app.post(
-        "/graphql",
+    app.use(cors())
+    app.post('/graphql',
         graphqlUploadExpress(),
         graphqlHTTP((request, response) => {
             return {
@@ -75,45 +75,34 @@ async function createServer() {
                 context: { request, response },
                 graphiql: false,
                 customFormatErrorFn(error) {
-                    if (error.originalError instanceof ApiError)
-                        return {
-                            path: error.path,
-                            message: error.originalError.identifier,
-                            extensions: error.originalError.export(),
-                        };
+                    if (error.originalError instanceof ApiError) return {
+                        path: error.path,
+                        message: error.originalError.identifier,
+                        extensions: error.originalError.export()
+                    }
 
-                    if (
-                        error.originalError &&
-                        error.originalError["validationErrors"]
-                    ) {
-                        const errorList =
-                            error.originalError["validationErrors"];
+                    if (error.originalError && error.originalError["validationErrors"]) {
+                        const errorList = error.originalError["validationErrors"]
                         // noinspection TypeScriptValidateJSTypes
-                        const validation = errors.VALIDATION(
-                            errorList
-                                .filter((it) => it instanceof ValidationError)
-                                .map((it) => ({
-                                    property: it.property as string,
-                                    reasons: Object.values(
-                                        it.constraints
-                                    ) as string[],
-                                }))
-                        );
+                        const validation = errors.VALIDATION(errorList.filter(it => it instanceof ValidationError).map(it => ({
+                            property: it.property as string,
+                            reasons: Object.values(it.constraints) as string[]
+                        })))
                         return {
                             path: error.path,
                             message: validation.identifier,
-                            extensions: validation.export(),
-                        };
+                            extensions: validation.export()
+                        }
                     }
-                    const internal = errors.INTERNAL();
-                    console.error(error.path, error.originalError);
+                    const internal = errors.INTERNAL()
+                    console.error(error.path, error.originalError)
                     return {
                         path: error.path,
                         message: internal.identifier,
-                        extensions: internal.export(),
-                    };
-                },
-            };
+                        extensions: internal.export()
+                    }
+                }
+            }
         })
         // (_, __, {query}) => {
         //     if (!(query in cache)) {
@@ -129,9 +118,9 @@ async function createServer() {
         //             cache[query].query(rootValue, contextValue, variableValues),
         //     }
         // }
-    );
+    )
 
-    return app;
+    return app
 }
 
 // async function createServer() {
