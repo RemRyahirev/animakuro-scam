@@ -1,11 +1,11 @@
 trigger:
-- prod
+- dev-testing
  
 resources:
 - repo: self
  
 variables:
-  tag: 'latest'
+  tag: 'testing'
  
 stages:
 - stage: Build
