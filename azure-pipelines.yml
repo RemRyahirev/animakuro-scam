@@ -44,6 +44,6 @@ stages:
                 runOptions: 'inline'
                 inline: |
                   cd ~/infra/animakuro
-                  docker-compose pull backend 2>&1
-                  docker-compose up -d backend 2>&1
+                  docker-compose pull backend-dev 2>&1
+                  docker-compose up -d backend-dev 2>&1
                 readyTimeout: '20000'
