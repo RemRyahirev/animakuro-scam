@@ -2,12 +2,13 @@
     "compilerOptions": {
         "target": "ESNext",
         "module": "commonjs",
-        "lib": ["dom", "esnext.asynciterable"],
+        "lib": [
+            "dom",
+            "esnext.asynciterable"
+        ],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-
-        "strict": false,
-
+        "strict": true,
         "esModuleInterop": true,
         "sourceMap": true,
         "pretty": true,
@@ -15,11 +16,21 @@
         "rootDir": "./src",
         "outDir": "./dist",
         "allowJs": true,
-
         "paths": {
-            "@utils/*": ["utils/*"]
+            "@utils/*": [
+                "utils/*"
+            ]
         }
     },
-    "exclude": ["node_modules"],
-    "include": ["./src/**/*.ts"]
+    "references": [
+        {
+            "path": "../utils"
+        }
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "./src/**/*.ts"
+    ]
 }

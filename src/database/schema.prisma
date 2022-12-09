@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String          @id @default(uuid())
+  username          String          @unique @db.VarChar(64)
+  email             String?         @db.VarChar(320)
+  password          String?         @db.VarChar(60)
+  secret2fa         String?         @db.VarChar(20)
+  avatar            String?         @db.Text
+  banner            String?         @db.Text
+  birthday          DateTime?       @db.Date
+  gender            Gender          @default(UNSPECIFIED)
+  customGender      String?         @db.VarChar(64)
+  createdAt         DateTime        @default(now())
+  deleted           Boolean         @default(false)
+  thirdPartyAuth    ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
+  thirdPartyAuthId  String?
+
+  siteAuthSessions SiteAuthSession[]
+}
+
+model SiteAuthSession {
+  id     String  @id @default(uuid())
+  agent  String  @db.Text
+  ip     String  @db.VarChar(64)
+  userId String
+  user   User    @relation(fields: [userId], references: [id])
+  active Boolean @default(true)
+}
+
+enum ThirdPartyType {
+  DISCORD
+  GOOGLE
+  APPLE
+  FACEBOOK
+}
+
+model ThirdPartyAuth {
+  createdAt     DateTime            @default(now())
+  deleted       Boolean             @default(false)
+
+  id            String              @id @default(uuid())
+  uid           String              @db.VarChar(64)
+  email         String?             @db.VarChar(320)
+  firstName     String?             @db.VarChar(64)
+  lastName      String?             @db.VarChar(64)
+  avatar        String?             @db.Text
+  type          ThirdPartyType
+
+  user          User[]
+  // @@unique([serviceName, serviceId])
+}
+
+
+
+enum Gender {
+  UNSPECIFIED
+  MALE
+  FEMALE
+  CUSTOM
+}
+
+model Studio {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  deleted         Boolean  @default(false)
+  name            String   @db.VarChar(64)
+  rating          Float    @db.DoublePrecision()
+    
+  thumbnail       String   @db.Text
+  series          Series[]
+}
+
+model Series {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now())
+  deleted         Boolean  @default(false)
+  name            String   @db.VarChar(64)
+  studio          Studio?  @relation(fields: [studioId], references: [id])
+  studioId        String?
+}
