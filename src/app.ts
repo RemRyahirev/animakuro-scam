@@ -9,9 +9,8 @@ async function main() {
     const app = await createServer();
     const server = await new Promise<Server>((resolve) => {
         const server = app.listen(PORT, () => resolve(server));
+        console.log(`🚀 Server started at port ${PORT}`);
     });
-
-    console.log(`🚀 Server started at port ${PORT}`);
 }
 
 main().catch(console.error);

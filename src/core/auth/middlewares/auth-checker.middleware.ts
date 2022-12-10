@@ -1,8 +1,5 @@
 import { ResolverData } from 'type-graphql';
-
-import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
 import { GqlHttpException, HttpStatus } from 'common/errors/errors';
-import { redis } from 'server';
 import { ICustomContext } from 'common/types/custom-context.interface';
 import JwtTokenService from '../services/jwt-token.service';
 import { UserService } from 'core/user/services/user.service';
