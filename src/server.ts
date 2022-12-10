@@ -9,6 +9,9 @@ export const prisma = database;
 export const redis = loaders.redis;
 
 export async function createServer() {
+    await redis.connect();
+    console.log('Redis connected');
+
     const app = express();
     app.use(cors());
     app.use(cookieParser());
