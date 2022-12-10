@@ -3,6 +3,14 @@ import { createClient } from 'redis';
 
 dotenv.config();
 
-export default createClient({
-    url: process.env.REDIS_URL,
-});
+export default () => {
+    const redis = createClient({
+        url: process.env.REDIS_URL,
+    });
+    const connect = () =>
+        redis
+            .connect()
+            .then(() => console.log('Redis connected'))
+            .catch(console.log);
+    return { connect, redis };
+};
