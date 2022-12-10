@@ -1,0 +1,94 @@
+--- schema.prisma	2022-12-10 16:14:37.804457648 +0300
++++ schema.prisma	2022-12-10 16:38:08.415408481 +0300
+@@ -3,21 +3,21 @@
+ }
+ 
+ datasource db {
+-  provider = "postgresql"
++  provider = "mongodb"
+   url      = env("DATABASE_URL")
+ }
+ 
+ model User {
+-  id                String          @id @default(uuid())
+-  username          String          @unique @db.VarChar(64)
+-  email             String?         @db.VarChar(320)
+-  password          String?         @db.VarChar(60)
+-  secret2fa         String?         @db.VarChar(20)
+-  avatar            String?         @db.Text
+-  banner            String?         @db.Text
++  id                String          @id @default(auto()) @map("_id") @db.ObjectId
++  username          String          @unique 
++  email             String?         
++  password          String?         
++  secret2fa         String?         
++  avatar            String?         
++  banner            String?         
+   birthday          DateTime?       @db.Date
+   gender            Gender          @default(UNSPECIFIED)
+-  customGender      String?         @db.VarChar(64)
++  customGender      String?         
+   createdAt         DateTime        @default(now())
+   deleted           Boolean         @default(false)
+   thirdPartyAuth    ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
+@@ -27,9 +27,9 @@
+ }
+ 
+ model SiteAuthSession {
+-  id     String  @id @default(uuid())
+-  agent  String  @db.Text
+-  ip     String  @db.VarChar(64)
++  id     String  @id @default(auto()) @map("_id") @db.ObjectId
++  agent  String  
++  ip     String  
+   userId String
+   user   User    @relation(fields: [userId], references: [id])
+   active Boolean @default(true)
+@@ -46,12 +46,12 @@
+   createdAt     DateTime            @default(now())
+   deleted       Boolean             @default(false)
+ 
+-  id            String              @id @default(uuid())
+-  uid           String              @db.VarChar(64)
+-  email         String?             @db.VarChar(320)
+-  firstName     String?             @db.VarChar(64)
+-  lastName      String?             @db.VarChar(64)
+-  avatar        String?             @db.Text
++  id            String              @id @default(auto()) @map("_id") @db.ObjectId
++  uid           String              
++  email         String?             
++  firstName     String?             
++  lastName      String?             
++  avatar        String?             
+   type          ThirdPartyType
+ 
+   user          User[]
+@@ -68,21 +68,21 @@
+ }
+ 
+ model Studio {
+-  id              String   @id @default(uuid())
++  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+   createdAt       DateTime @default(now())
+   deleted         Boolean  @default(false)
+-  name            String   @db.VarChar(64)
+-  rating          Float    @db.DoublePrecision()
++  name            String   
++  rating          Float    
+     
+-  thumbnail       String   @db.Text
++  thumbnail       String   
+   series          Series[]
+ }
+ 
+ model Series {
+-  id              String   @id @default(uuid())
++  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+   createdAt       DateTime @default(now())
+   deleted         Boolean  @default(false)
+-  name            String   @db.VarChar(64)
++  name            String   
+   studio          Studio?  @relation(fields: [studioId], references: [id])
+   studioId        String?
+ }
+\ No newline at end of file
