@@ -1,13 +1,5 @@
 import { Checker } from '../checker';
-import { compare, hash } from '../../../../common/utils/password.util';
-import { PasswordInputInterface } from '../../types/password-input.interface';
 import { ErrorObjectInterface } from '../../types/error-object.interface';
-import Database from '../../../../database';
-import Redis from '../../../../loaders/redis';
-import { randomUUID } from 'crypto';
-import { Mailer } from '../../../../common/utils/mailer';
-import { EmailInputInterface } from '../../types/email-input.interface';
-import { User } from '../../schemas/user.schema';
 
 export class ValidateBirthday extends Checker<Date, Date, Date> {
     private _currentValue: Date;
