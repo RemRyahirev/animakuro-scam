@@ -4,7 +4,7 @@
     "description": "Animakuro backend project.",
     "main": "index.js",
     "scripts": {
-        "start": "node ./dist/index.js",
+        "start": "node ./dist/app.js",
         "dev": "ts-node-dev -r tsconfig-paths/register --exit-child ./src/app.ts",
         "build": "tsc && tsc-alias",
         "generate": "npx prisma generate",
