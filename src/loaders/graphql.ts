@@ -3,7 +3,6 @@ import { graphqlHTTP } from 'express-graphql';
 import { GraphQLError } from 'graphql';
 import exceptionsHandler from '../common/errors/exception-handler';
 import { ExtendedGraphQLError } from '../common/errors/types';
-import path from 'path';
 import { AuthCheckerMiddleware } from '../core/auth/middlewares/auth-checker.middleware';
 
 export default async () => {

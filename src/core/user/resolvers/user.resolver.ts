@@ -1,23 +1,24 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { prisma, redis } from 'server';
-import {
-    previewUrl,
-    sendEmailChangeConfirmationMail,
-} from 'common/utils/mail.util';
 import { compare, hash } from 'common/utils/password.util';
 import { randomUUID } from 'crypto';
 
 import { ValidateSchemas } from 'common/decorators/validation';
-import { ICustomContext } from 'common/types/custom-context.interface';
+import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { User } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
 import { UpdateUserInput } from '../inputs/update-user.schema';
 import { GqlHttpException, HttpStatus } from '../../../common/errors/errors';
 import { Gender } from '../enums/gender.enum';
 import { CreateUserInput } from '../inputs/create-user.schema';
+import Database from '../../../database';
+import Redis from '../../../loaders/redis';
+import { Mailer } from '../../../common/utils/mailer';
 
 @Resolver(() => User)
 export class UserResolver {
+    private readonly prisma = Database.getInstance().logic;
+    private readonly redis = Redis.getInstance().logic;
+    private mailer = new Mailer();
     userService: UserService;
 
     constructor() {
@@ -26,12 +27,12 @@ export class UserResolver {
 
     @Query(() => [User])
     users(@Arg('email') email: string) {
-        return prisma.user.findMany({ where: { email } });
+        return this.prisma.user.findMany({ where: { email } });
     }
 
     @Query(() => User, { nullable: true })
     user(@Arg('id') id: string) {
-        return prisma.user.findUnique({ where: { id } });
+        return this.prisma.user.findUnique({ where: { id } });
     }
 
     @ValidateSchemas()
@@ -40,7 +41,7 @@ export class UserResolver {
         @Arg('id') id: string,
         @Arg('data') data: UpdateUserInput,
     ) {
-        const user = await prisma.user.findUnique({ where: { id } });
+        const user = await this.prisma.user.findUnique({ where: { id } });
         if (!user)
             throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
 
@@ -93,7 +94,7 @@ export class UserResolver {
                 });
 
             if (
-                await prisma.user.findFirst({
+                await this.prisma.user.findFirst({
                     where: { username: data.username },
                 })
             )
@@ -115,14 +116,18 @@ export class UserResolver {
                 });
 
             // TODO: Temporary, remove in next version
-            if (await prisma.user.findFirst({ where: { email: data.email } }))
+            if (
+                await this.prisma.user.findFirst({
+                    where: { email: data.email },
+                })
+            )
                 return validationErrors.push({
                     property: 'email',
                     reasons: ['Email already used'],
                 });
 
             const code = randomUUID();
-            await redis.set(
+            await this.redis.set(
                 `confirmation:change-email:${code}`,
                 JSON.stringify({ id: user.id, email: data.email }),
                 {
@@ -135,12 +140,12 @@ export class UserResolver {
                     reasons: ['Email is not exists'],
                 });
 
-            const info = await sendEmailChangeConfirmationMail(
-                user.email,
-                `https://animakuro.domain/change-email/${code}`,
-                data.email,
-            );
-            console.log(previewUrl(info)); // TODO: REMOVE!
+            const info = await this.mailer.changeConfirmationMail({
+                receiverEmail: user.email,
+                code,
+                newEmail: data.email,
+            });
+            console.log(this.mailer.previewUrl(info)); // TODO: REMOVE!
         };
 
         const checkAndSetBirthday = () => {
@@ -196,7 +201,7 @@ export class UserResolver {
                 'validationErrors',
             );
 
-        return await prisma.user.update({
+        return await this.prisma.user.update({
             where: { id: user.id },
             data: { ...user },
         });

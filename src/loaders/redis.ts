@@ -1,16 +1,29 @@
-import * as dotenv from 'dotenv';
-import { createClient } from 'redis';
+import { createClient, RedisClientType } from 'redis';
+import Config from '../common/config/config';
 
-dotenv.config();
+export default class Redis {
+    private config = Config.getInstance().logic;
+    private readonly _logic: RedisClientType;
+    private static instance: Redis;
 
-export default () => {
-    const redis = createClient({
-        url: process.env.REDIS_URL,
-    });
-    const connect = () =>
-        redis
+    private constructor() {
+        this._logic = createClient({
+            url: this.config.redisUrl,
+        });
+        this._logic
             .connect()
             .then(() => console.log('Redis connected'))
             .catch(console.log);
-    return { connect, redis };
-};
+    }
+
+    public static getInstance(): Redis {
+        if (!Redis.instance) {
+            Redis.instance = new Redis();
+        }
+        return Redis.instance;
+    }
+
+    get logic(): RedisClientType {
+        return this._logic;
+    }
+}

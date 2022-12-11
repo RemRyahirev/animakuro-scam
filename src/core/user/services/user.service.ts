@@ -1,16 +1,17 @@
-import { prisma } from 'server';
-
 import { ThirdPartyAuthType } from '../enums/user-third-party-type.enum';
 import { User } from '../schemas/user.schema';
 import { CreateUserInput } from '../inputs/create-user.schema';
 import { ThirdPartyAuthInput } from '../../auth/inputs/third-party.schema';
+import Database from '../../../database';
 
 export class UserService {
+    private readonly prisma = Database.getInstance().logic;
+
     async createUserWithThirdParty(
         userUsername: string,
         thirdPartyInput: ThirdPartyAuthInput,
     ) {
-        return await prisma.user.create({
+        return await this.prisma.user.create({
             data: {
                 username: userUsername,
                 thirdPartyAuth: {
@@ -25,7 +26,7 @@ export class UserService {
     }
 
     async findUserByThirdpartyAuth(uid: string, type: ThirdPartyAuthType) {
-        return await prisma.user.findFirst({
+        return await this.prisma.user.findFirst({
             where: {
                 thirdPartyAuth: {
                     uid,
@@ -40,7 +41,7 @@ export class UserService {
     }
 
     async findUserByEmail(email: string) {
-        return await prisma.user.findFirst({
+        return await this.prisma.user.findFirst({
             where: {
                 email,
             },
@@ -48,7 +49,7 @@ export class UserService {
     }
 
     async findUserById(id: string) {
-        return await prisma.user.findUnique({
+        return await this.prisma.user.findUnique({
             where: {
                 id,
             },
@@ -56,7 +57,7 @@ export class UserService {
     }
 
     async findUserSession(sessionId: string, uid: string) {
-        return await prisma.siteAuthSession.findFirst({
+        return await this.prisma.siteAuthSession.findFirst({
             where: {
                 id: sessionId,
                 userId: uid,
@@ -68,7 +69,7 @@ export class UserService {
         email: string,
         username: string | undefined,
     ) {
-        return await prisma.user.findFirst({
+        return await this.prisma.user.findFirst({
             where: {
                 OR: [{ email }, { username }],
             },
@@ -76,7 +77,7 @@ export class UserService {
     }
 
     async findUserByUsername(username: string) {
-        return await prisma.user.findFirst({
+        return await this.prisma.user.findFirst({
             where: {
                 username,
             },
@@ -84,7 +85,7 @@ export class UserService {
     }
 
     async getUserEmailCount(email: string) {
-        return await prisma.user.count({
+        return await this.prisma.user.count({
             where: {
                 email,
             },
@@ -93,7 +94,7 @@ export class UserService {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async createUser({ ...data }: CreateUserInput & { username: string }) {
-        return await prisma.user.create({
+        return await this.prisma.user.create({
             data,
         });
     }

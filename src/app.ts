@@ -1,11 +1,10 @@
 import { Server } from 'http';
-import * as dotenv from 'dotenv';
 import { createServer } from './server';
-
-dotenv.config();
-const PORT = process.env.PORT ? +process.env.PORT : 8080;
+import Config from './common/config/config';
 
 async function main() {
+    const config = Config.getInstance().logic;
+    const PORT = config.get('PORT', 8080);
     const app = await createServer();
     const server = await new Promise<Server>((resolve) => {
         const server = app.listen(PORT, () => resolve(server));

@@ -1,6 +1,6 @@
 import { decode, JwtPayload, sign, verify } from 'jsonwebtoken';
+import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { ThirdPartyAuthType } from '../../user/enums/user-third-party-type.enum';
-import { ICustomContext } from '../../../common/types/custom-context.interface';
 
 // type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
@@ -42,9 +42,7 @@ export default class JwtTokenService {
     }
 
     static setCookieAccessToken(ctx: ICustomContext, accessToken: string) {
-        const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC
-            ? +process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC
-            : 3600;
+        const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC;
         ctx.response.cookie(
             JwtTokenService.ACCESS_TOKEN_COOKIE_NAME,
             accessToken,
@@ -52,7 +50,7 @@ export default class JwtTokenService {
                 httpOnly: true,
                 sameSite: 'lax',
                 secure: false,
-                maxAge: 1000 * expiresIn,
+                maxAge: 1000 * (expiresIn ? +expiresIn : 3600),
             },
         );
     }
@@ -64,7 +62,7 @@ export default class JwtTokenService {
     static makeAccessToken(payload: JwtInputPayload) {
         const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC;
 
-        return sign(payload, process.env.JWT_SECRET || 'animecuro', {
+        return sign(payload, process.env.JWT_SECRET || 'animekuro', {
             expiresIn,
             audience: 'content',
             issuer: 'auth',

@@ -1,5 +1,5 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { ICustomContext } from 'common/types/custom-context.interface';
+import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { ThirdPartyRedirectUrlReturnType } from '../schemas/auth.schema';
 import { compare, hash } from 'common/utils/password.util';
 import { randomUUID } from 'crypto';
@@ -13,6 +13,7 @@ import { UserService } from 'core/user/services/user.service';
 import { ValidateSchemas } from 'common/decorators/validation';
 import { RegisterInput } from '../inputs/register.schema';
 import { LoginInput } from '../inputs/login.schema';
+import { Mailer } from '../../../common/utils/mailer';
 
 // type ThirdPartyAuthKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
@@ -25,6 +26,7 @@ export class AuthResolver {
     private userService: UserService;
     private jwtTokenService: JwtTokenService;
     private authService: AuthService;
+    private mailer = new Mailer();
 
     constructor() {
         this.facebookStrategy = new FacebookStrategy();
@@ -224,10 +226,11 @@ export class AuthResolver {
         await this.authService.setRegisterConfirmation('test', data);
 
         // Sending email
-        // const info = await sendEmailRegistrationConfirmationMail(data.email, `https://animakuro.domain/confirm/${code}`)
-
-        // console.log(previewUrl(info))
-
+        const info = this.mailer.sendConfirmationMail({
+            receiverEmail: data.email,
+            code,
+        });
+        console.log(this.mailer.previewUrl(info));
         return true;
     }
 
@@ -294,7 +297,7 @@ export class AuthResolver {
 
         const session = await this.authService.createSiteAuthSession({
             agent: ctx.request.headers['user-agent'] || '',
-            ip: ctx.request.socket.remoteAddress as string, // TODO: recheck
+            ip: ctx.request.socket.remoteAddress || '', // TODO: recheck
             active: true,
             userId: user.id,
         });

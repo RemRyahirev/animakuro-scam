@@ -21,12 +21,12 @@ const containsFieldsWithSameUidAsRequestor = (
 };
 
 const containsAllowedScopes = (
-    requestorScopes: string[],
+    requesterScopes: string[],
     allowedScopes: string[],
 ): boolean => {
     const allowedScopeSet = new Set(allowedScopes);
 
-    return requestorScopes.some((scope) => allowedScopeSet.has(scope));
+    return requesterScopes.some((scope) => allowedScopeSet.has(scope));
 };
 
 /**

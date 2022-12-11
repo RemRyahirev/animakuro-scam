@@ -1,4 +1,4 @@
 import doGraphql from './graphql';
-import doRedis from './redis';
+import Redis from './redis';
 
-export default { doGraphql, doRedis };
+export default { doGraphql, Redis };

@@ -34,7 +34,7 @@ function formatClassValidatorErrors(
  * @param validateSchemas classes with class-validator decorators
  * if there is no classes, decorator will validate all object arguments
  */
-export const ValidateSchemas = (validateSchemas: Function[] = []) => {
+export const ValidateSchemas = (validateSchemas = []) => {
     return (target: any, key: string, descriptor: PropertyDescriptor) => {
         const originalMethod = descriptor.value;
 
