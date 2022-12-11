@@ -7,12 +7,13 @@ import { ICustomContext } from 'common/types/interfaces/custom-context.interface
 import { User } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
 import { UpdateUserInput } from '../inputs/update-user.schema';
-import { GqlHttpException, HttpStatus } from '../../../common/errors/errors';
+import { GqlHttpException } from '../../../common/errors/errors';
 import { Gender } from '../enums/gender.enum';
 import { CreateUserInput } from '../inputs/create-user.schema';
 import Database from '../../../database';
 import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';
+import { HttpStatus } from '../../../common/types/enums/http-status.enum';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -51,13 +52,8 @@ export class UserResolver {
             if (!data.password) return;
 
             // TODO: write logic when password is unsetted
-            if (!user.password)
-                throw new GqlHttpException(
-                    'Password is not setted',
-                    HttpStatus.BAD_REQUEST,
-                );
-
             const errorsList: string[] = [];
+            if (!user.password) errorsList.push('Password was not set');
 
             if (!data.newPassword)
                 errorsList.push(
@@ -69,7 +65,7 @@ export class UserResolver {
                     "Fields 'password' and 'newPassword' must differ",
                 );
 
-            if (!(await compare(data.password, user.password)))
+            if (!(await compare(data.password, user.password || '')))
                 errorsList.push('Password does not match saved');
 
             if (errorsList.length == 0 && data.newPassword) {

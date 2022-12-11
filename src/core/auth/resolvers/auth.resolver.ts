@@ -3,7 +3,7 @@ import { ICustomContext } from 'common/types/interfaces/custom-context.interface
 import { ThirdPartyRedirectUrlReturnType } from '../schemas/auth.schema';
 import { compare, hash } from 'common/utils/password.util';
 import { randomUUID } from 'crypto';
-import { HttpStatus, GqlHttpException } from 'common/errors/errors';
+import { GqlHttpException } from 'common/errors/errors';
 import JwtTokenService from '../services/jwt-token.service';
 import { FacebookStrategy } from '../strategies/facebook.strategy';
 import { AuthService } from '../services/auth.service';
@@ -14,6 +14,7 @@ import { ValidateSchemas } from 'common/decorators/validation';
 import { RegisterInput } from '../inputs/register.schema';
 import { LoginInput } from '../inputs/login.schema';
 import { Mailer } from '../../../common/utils/mailer';
+import { HttpStatus } from '../../../common/types/enums/http-status.enum';
 
 // type ThirdPartyAuthKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
 // type EmailAuthKey = `email-auth:${string}`

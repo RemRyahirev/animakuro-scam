@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { GqlHttpException, HttpStatus } from 'common/errors/errors';
+import { GqlHttpException } from 'common/errors/errors';
+import { HttpStatus } from '../../../common/types/enums/http-status.enum';
 
 export const METADATA_KEY = 'allow-change-by';
 

@@ -2,8 +2,9 @@ import 'reflect-metadata';
 import { AxiosError } from 'axios';
 import type { ServerResponse } from 'http';
 
-import { GqlHttpException, HttpStatus } from './errors';
+import { GqlHttpException } from './errors';
 import type { ExtendedGraphQLError } from './types';
+import { HttpStatus } from '../types/enums/http-status.enum';
 
 const handleExceptions = (error: ExtendedGraphQLError) => {
     if (error.originalError instanceof GqlHttpException) {

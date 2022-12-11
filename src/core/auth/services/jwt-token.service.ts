@@ -1,20 +1,12 @@
 import { decode, JwtPayload, sign, verify } from 'jsonwebtoken';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { ThirdPartyAuthType } from '../../user/enums/user-third-party-type.enum';
+import { JwtInputPayload } from '../types/jwt-input-payload.interface';
 
 // type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
 
 // type RedisTokenKeys =  ThirdPartyAuthRedisKey | EmailAuthKey
-
-export interface JwtInputPayload {
-    uid: string;
-    sessionId: string;
-    thirdPartyAuth?: {
-        uid: string;
-        type: ThirdPartyAuthType;
-    };
-}
 
 export default class JwtTokenService {
     // static getThirdPartyAuthRedisKey(type: ThirdPartyAuthType, uid: string) {

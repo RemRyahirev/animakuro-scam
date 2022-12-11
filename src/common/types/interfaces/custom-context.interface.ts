@@ -1,5 +1,5 @@
-import { JwtInputPayload } from 'core/auth/services/jwt-token.service';
 import { Request, Response } from 'express';
+import { JwtInputPayload } from '../../../core/auth/types/jwt-input-payload.interface';
 
 export interface ICustomContext {
     request: Request;
