@@ -1,11 +1,9 @@
 FROM node:16-alpine AS builder
 WORKDIR /build
 RUN corepack enable pnpm
-RUN apk add --no-cache patch
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
-RUN patch src/database/schema.prisma < src/database/mongo.patch
 RUN pnpm i --offline --frozen-lockfile
 RUN pnpm generate && pnpm build
 
