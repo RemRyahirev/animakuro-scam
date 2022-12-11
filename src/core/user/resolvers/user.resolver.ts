@@ -19,7 +19,7 @@ import { HttpStatus } from '../../../common/types/enums/http-status.enum';
 export class UserResolver {
     private readonly prisma = Database.getInstance().logic;
     private readonly redis = Redis.getInstance().logic;
-    private mailer = new Mailer();
+    private readonly mailer = new Mailer();
     userService: UserService;
 
     constructor() {
@@ -141,7 +141,6 @@ export class UserResolver {
                 code,
                 newEmail: data.email,
             });
-            console.log(this.mailer.previewUrl(info)); // TODO: REMOVE!
         };
 
         const checkAndSetBirthday = () => {

@@ -5,14 +5,18 @@ import { ErrorObjectInterface } from '../../types/error-object.interface';
 
 export class ValidatePassword extends Checker<
     string | undefined,
-    PasswordInputInterface
+    PasswordInputInterface,
+    string | undefined
 > {
+    private _currentValue: string | undefined;
+
     constructor(
         inputValue: PasswordInputInterface,
         sourceValue: string | undefined,
         errorsList: Array<ErrorObjectInterface>,
     ) {
         super(inputValue, sourceValue, errorsList);
+        this._currentValue = sourceValue;
     }
 
     get value(): string | undefined {
