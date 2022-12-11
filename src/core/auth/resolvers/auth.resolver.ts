@@ -226,7 +226,7 @@ export class AuthResolver {
         await this.authService.setRegisterConfirmation('test', data);
 
         // Sending email
-        const info = this.mailer.sendConfirmationMail({
+        const info = await this.mailer.sendConfirmationMail({
             receiverEmail: data.email,
             code,
         });

@@ -38,11 +38,8 @@ export class ConfigParent {
     ): number | string {
         const element = process.env[propertyPath];
         if (!element) return defaultValue;
-        try {
-            return Number(element);
-        } catch (e) {
-            return element;
-        }
+        const currElement = Number(element);
+        return isNaN(currElement) ? element : currElement;
     }
 }
 

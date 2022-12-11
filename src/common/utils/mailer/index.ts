@@ -33,7 +33,7 @@ export class Mailer {
         return `${this.domain}/confirm/${code}`;
     }
 
-    public sendConfirmationMail({
+    public async sendConfirmationMail({
         receiverEmail,
         code,
     }: {
@@ -43,14 +43,14 @@ export class Mailer {
         const link = this.getConfirmLink(code);
         const html = `<b>Test Confirmation Mail</b><br><a href=${link}>Tap here</a>`;
         const subject = 'Email confirmation ✔';
-        return this.sendToMail({
+        return await this.sendToMail({
             to: receiverEmail,
             subject,
             html,
         });
     }
 
-    public changeConfirmationMail({
+    public async changeConfirmationMail({
         receiverEmail,
         code,
         newEmail,
@@ -62,7 +62,7 @@ export class Mailer {
         const link = this.getChangeEmailLink(code);
         const html = `<b>Hey, if you want to change your email to ${newEmail}</b><br><a href=${link}>Tap here</a>`;
         const subject = 'Change Email confirmation ✔';
-        return this.sendToMail({
+        return await this.sendToMail({
             to: receiverEmail,
             subject,
             html,
