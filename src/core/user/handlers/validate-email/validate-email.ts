@@ -1,5 +1,4 @@
 import { Checker } from '../checker';
-import { ErrorObjectInterface } from '../../types/error-object.interface';
 import Database from '../../../../database';
 import Redis from '../../../../loaders/redis';
 import { randomUUID } from 'crypto';
@@ -21,10 +20,9 @@ export class ValidateEmail extends Checker<
     constructor(
         inputValue: string | undefined,
         sourceValue: User,
-        errorsList: Array<ErrorObjectInterface>,
         _isProduction = false,
     ) {
-        super(inputValue, sourceValue, errorsList);
+        super(inputValue, sourceValue);
         this._currentValue = this._sourceValue.email;
         this._isProduction = _isProduction;
     }

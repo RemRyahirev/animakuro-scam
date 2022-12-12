@@ -1,5 +1,4 @@
 import { Checker } from '../checker';
-import { ErrorObjectInterface } from '../../types/error-object.interface';
 import Database from '../../../../database';
 
 export class ValidateUsername extends Checker<
@@ -13,9 +12,8 @@ export class ValidateUsername extends Checker<
     constructor(
         inputValue: string | undefined,
         sourceValue: string | undefined,
-        errorsList: Array<ErrorObjectInterface>,
     ) {
-        super(inputValue, sourceValue, errorsList);
+        super(inputValue, sourceValue);
         this._currentValue = sourceValue;
     }
 

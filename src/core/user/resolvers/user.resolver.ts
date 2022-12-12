@@ -1,6 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
-import { compare, hash } from 'common/utils/password.util';
-import { randomUUID } from 'crypto';
+import { hash } from 'common/utils/password.util';
 
 import { ValidateSchemas } from 'common/decorators/validation';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
@@ -8,12 +7,12 @@ import { User } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
 import { UpdateUserInput } from '../inputs/update-user.schema';
 import { GqlHttpException } from '../../../common/errors/errors';
-import { Gender } from '../enums/gender.enum';
 import { CreateUserInput } from '../inputs/create-user.schema';
 import Database from '../../../database';
 import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';
 import { HttpStatus } from '../../../common/types/enums/http-status.enum';
+import { ValidateAll } from '../handlers/validate-all/validate-all';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -45,156 +44,10 @@ export class UserResolver {
         const user = await this.prisma.user.findUnique({ where: { id } });
         if (!user)
             throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
-
-        const validationErrors: { property: string; reasons: string[] }[] = [];
-
-        const checkAndSetNewPassword = async () => {
-            if (!data.password) return;
-
-            // TODO: write logic when password is unsetted
-            const errorsList: string[] = [];
-            if (!user.password) errorsList.push('Password was not set');
-
-            if (!data.newPassword)
-                errorsList.push(
-                    "Field must be specified in pair with 'newPassword'",
-                );
-
-            if (data.password === data.newPassword)
-                errorsList.push(
-                    "Fields 'password' and 'newPassword' must differ",
-                );
-
-            if (!(await compare(data.password, user.password || '')))
-                errorsList.push('Password does not match saved');
-
-            if (errorsList.length == 0 && data.newPassword) {
-                user.password = await hash(data.newPassword);
-            }
-
-            if (errorsList.length > 0) {
-                validationErrors.push({
-                    property: 'password',
-                    reasons: errorsList,
-                });
-            }
-        };
-
-        const checkAndSetUsername = async () => {
-            if (!data.username) return;
-
-            if (data.username == user.username)
-                return validationErrors.push({
-                    property: 'username',
-                    reasons: ['Username must differ from current'],
-                });
-
-            if (
-                await this.prisma.user.findFirst({
-                    where: { username: data.username },
-                })
-            )
-                return validationErrors.push({
-                    property: 'username',
-                    reasons: ['Username already used'],
-                });
-
-            user.username = data.username;
-        };
-
-        const checkAndSetEmail = async () => {
-            if (!data.email) return;
-
-            if (data.email == user.email)
-                return validationErrors.push({
-                    property: 'email',
-                    reasons: ['Email must differ from current'],
-                });
-
-            // TODO: Temporary, remove in next version
-            if (
-                await this.prisma.user.findFirst({
-                    where: { email: data.email },
-                })
-            )
-                return validationErrors.push({
-                    property: 'email',
-                    reasons: ['Email already used'],
-                });
-
-            const code = randomUUID();
-            await this.redis.set(
-                `confirmation:change-email:${code}`,
-                JSON.stringify({ id: user.id, email: data.email }),
-                {
-                    EX: 300,
-                },
-            );
-            if (!user.email)
-                return validationErrors.push({
-                    property: 'email',
-                    reasons: ['Email is not exists'],
-                });
-
-            const info = await this.mailer.changeConfirmationMail({
-                receiverEmail: user.email,
-                code,
-                newEmail: data.email,
-            });
-        };
-
-        const checkAndSetBirthday = () => {
-            if (!data.birthday) return;
-
-            if (data.birthday.getTime() > Date.now())
-                return validationErrors.push({
-                    property: 'birthday',
-                    reasons: ['Wierd date'],
-                });
-
-            user.birthday = data.birthday;
-        };
-
-        const checkAndSetGender = () => {
-            if (!data.gender) return;
-
-            switch (data.gender) {
-                case Gender.CUSTOM:
-                    if (!data.customGender)
-                        return validationErrors.push({
-                            property: 'gender',
-                            reasons: [
-                                "For 'CUSTOM' u must also specify 'customGender' field",
-                            ],
-                        });
-
-                    user.customGender = data.customGender;
-                    break;
-                default:
-                    user.customGender = null;
-                    break;
-            }
-
-            user.gender = data.gender;
-        };
-
-        await Promise.all([
-            checkAndSetNewPassword(),
-            checkAndSetUsername(),
-            checkAndSetEmail(),
-        ]);
-
-        checkAndSetBirthday();
-        checkAndSetGender();
-
+        const validateAll = new ValidateAll(user as any, data, true);
+        const result = await validateAll.run();
+        Object.assign(user, result);
         // TODO: write data.avatar & data.banner handlers
-
-        if (validationErrors.length > 0)
-            throw new GqlHttpException(
-                validationErrors,
-                HttpStatus.BAD_REQUEST,
-                'validationErrors',
-            );
 
         return await this.prisma.user.update({
             where: { id: user.id },

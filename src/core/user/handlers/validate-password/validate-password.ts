@@ -1,7 +1,6 @@
 import { Checker } from '../checker';
 import { compare, hash } from '../../../../common/utils/password.util';
 import { PasswordInputInterface } from '../../types/password-input.interface';
-import { ErrorObjectInterface } from '../../types/error-object.interface';
 
 export class ValidatePassword extends Checker<
     string | undefined,
@@ -13,9 +12,8 @@ export class ValidatePassword extends Checker<
     constructor(
         inputValue: PasswordInputInterface,
         sourceValue: string | undefined,
-        errorsList: Array<ErrorObjectInterface>,
     ) {
-        super(inputValue, sourceValue, errorsList);
+        super(inputValue, sourceValue);
         this._currentValue = sourceValue;
     }
 

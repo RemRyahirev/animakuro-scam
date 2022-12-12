@@ -12,7 +12,7 @@ describe('Check gender', () => {
             gender: Gender.UNSPECIFIED,
             customGender: '312312',
         };
-        const user = new ValidateGender(inputGender, sourceGender, []);
+        const user = new ValidateGender(inputGender, sourceGender);
         await user.validate();
         expect(user.value).toMatchObject({
             gender: Gender.UNSPECIFIED,
@@ -25,7 +25,7 @@ describe('Check gender', () => {
             gender: Gender.FEMALE,
             customGender: 'ffdsfsdfsd',
         };
-        const user = new ValidateGender(inputGender, sourceGender, []);
+        const user = new ValidateGender(inputGender, sourceGender);
         await user.validate();
         expect(user.value).toMatchObject({
             gender: Gender.FEMALE,
@@ -38,7 +38,7 @@ describe('Check gender', () => {
             gender: Gender.MALE,
             customGender: 'ffdsfsdfsd',
         };
-        const user = new ValidateGender(inputGender, sourceGender, []);
+        const user = new ValidateGender(inputGender, sourceGender);
         await user.validate();
         expect(user.value).toMatchObject({
             gender: Gender.MALE,
@@ -51,7 +51,7 @@ describe('Check gender', () => {
             gender: Gender.CUSTOM,
             customGender: 'custom!!!',
         };
-        const user = new ValidateGender(inputGender, sourceGender, []);
+        const user = new ValidateGender(inputGender, sourceGender);
         await user.validate();
         expect(user.value).toMatchObject({
             gender: Gender.CUSTOM,

@@ -1,5 +1,4 @@
 import { Checker } from '../checker';
-import { ErrorObjectInterface } from '../../types/error-object.interface';
 import { GenderInputInterface } from '../../types/gender-input.interface';
 import { Gender } from '../../enums/gender.enum';
 
@@ -13,9 +12,8 @@ export class ValidateGender extends Checker<
     constructor(
         inputValue: GenderInputInterface,
         sourceValue: GenderInputInterface,
-        errorsList: Array<ErrorObjectInterface>,
     ) {
-        super(inputValue, sourceValue, errorsList);
+        super(inputValue, sourceValue);
         this._currentValue = this._sourceValue;
     }
 

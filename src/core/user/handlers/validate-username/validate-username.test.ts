@@ -1,22 +1,25 @@
 import { ValidateUsername } from './validate-username';
+import Redis from '../../../../loaders/redis';
 
 describe('Check usernames', () => {
     const sourceUsername = 'srcUsername';
     const inputUsername = 'inputUsername';
     test('if source username is undefined', async () => {
-        const user = new ValidateUsername(inputUsername, undefined, []);
+        Redis.getInstance().logic;
+
+        const user = new ValidateUsername(inputUsername, undefined);
         await user.validate();
         expect(user.value).toBe(inputUsername);
     });
 
     test('if input username is undefined', async () => {
-        const user = new ValidateUsername(undefined, sourceUsername, []);
+        const user = new ValidateUsername(undefined, sourceUsername);
         await user.validate();
         expect(user.value).toBe(sourceUsername);
     });
 
     test('if input username and source username are the same', async () => {
-        const user = new ValidateUsername(sourceUsername, sourceUsername, []);
+        const user = new ValidateUsername(sourceUsername, sourceUsername);
         await user.validate();
         expect(user.errorsList[0]).toMatchObject({
             property: 'username',
@@ -25,7 +28,7 @@ describe('Check usernames', () => {
     });
 
     test('if input username and source username are undefined', async () => {
-        const user = new ValidateUsername(undefined, undefined, []);
+        const user = new ValidateUsername(undefined, undefined);
         await user.validate();
         expect(user.value).toBe(undefined);
     });

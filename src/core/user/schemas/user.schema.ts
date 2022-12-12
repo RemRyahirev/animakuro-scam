@@ -29,8 +29,8 @@ export class User {
     @Field(() => Gender, { defaultValue: Gender.UNSPECIFIED })
     gender = Gender.UNSPECIFIED;
 
-    @Field({ nullable: true })
-    customGender?: string;
+    @Field(() => String, { nullable: true })
+    customGender?: string | null;
 
     @Field(() => UserThirdParty, { nullable: true })
     thirdPartyAuth?: UserThirdParty;

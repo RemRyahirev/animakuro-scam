@@ -1,19 +1,18 @@
 import { Checker } from '../checker';
-import { ErrorObjectInterface } from '../../types/error-object.interface';
 
-export class ValidateBirthday extends Checker<Date, Date, Date> {
-    private _currentValue: Date;
+export class ValidateBirthday extends Checker<
+    Date | undefined,
+    Date | undefined,
+    Date | undefined
+> {
+    private _currentValue: Date | undefined;
 
-    constructor(
-        inputValue: Date,
-        sourceValue: Date,
-        errorsList: Array<ErrorObjectInterface>,
-    ) {
-        super(inputValue, sourceValue, errorsList);
+    constructor(inputValue: Date | undefined, sourceValue: Date | undefined) {
+        super(inputValue, sourceValue);
         this._currentValue = this._sourceValue;
     }
 
-    get value(): Date {
+    get value(): Date | undefined {
         return this._currentValue;
     }
 

@@ -1,5 +1,5 @@
 import { ValidatePassword } from './validate-password';
-import { compare, hash } from '../../../../common/utils/password.util';
+import { compare } from '../../../../common/utils/password.util';
 import { hashSync } from 'bcrypt';
 
 describe('Check passwords', () => {
@@ -7,8 +7,19 @@ describe('Check passwords', () => {
     const current = 'someNew';
     const sourcePassword = 'password';
     const hashedSourcePassword = hashSync(sourcePassword, 7);
+
+    test('If src password is ok', async () => {
+        const pwd = new ValidatePassword(
+            { next: 'newPass', current: 'password' },
+            hashedSourcePassword,
+        );
+        await pwd.validate();
+        const check = await compare('newPass', pwd.value || '');
+        expect(check).toEqual(true);
+    });
+
     test('If src password is undefined', async () => {
-        const pwd = new ValidatePassword({ next, current }, undefined, []);
+        const pwd = new ValidatePassword({ next, current }, undefined);
         await pwd.validate();
         const check = await compare(current, pwd.value || '');
         expect(check).toEqual(true);
@@ -18,7 +29,6 @@ describe('Check passwords', () => {
         const pwd = new ValidatePassword(
             { next: undefined, current },
             hashedSourcePassword,
-            [],
         );
         await pwd.validate();
         const changedPassword = await compare(current, pwd.value || '');
@@ -31,7 +41,6 @@ describe('Check passwords', () => {
         const pwd = new ValidatePassword(
             { next, current: undefined },
             hashedSourcePassword,
-            [],
         );
         await pwd.validate();
         const changedPassword = await compare(current, pwd.value || '');
@@ -44,7 +53,6 @@ describe('Check passwords', () => {
         const pwd = new ValidatePassword(
             { next: undefined, current: undefined },
             hashedSourcePassword,
-            [],
         );
         await pwd.validate();
         const changedPassword = await compare(current, pwd.value || '');
@@ -57,7 +65,6 @@ describe('Check passwords', () => {
         const pwd = new ValidatePassword(
             { next: '123', current: '123' },
             hashedSourcePassword,
-            [],
         );
         await pwd.validate();
         const changedPassword = await compare(current, pwd.value || '');
@@ -70,7 +77,6 @@ describe('Check passwords', () => {
         const pwd = new ValidatePassword(
             { next: 'someNew', current: 'some' },
             hashedSourcePassword,
-            [],
         );
         await pwd.validate();
         const changedPassword = await compare(current, pwd.value || '');
@@ -83,7 +89,6 @@ describe('Check passwords', () => {
         const pwd = new ValidatePassword(
             { next, current: sourcePassword },
             hashedSourcePassword,
-            [],
         );
         await pwd.validate();
         const changedPassword = await compare(current, pwd.value || '');

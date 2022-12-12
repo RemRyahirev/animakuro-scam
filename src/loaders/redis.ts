@@ -6,11 +6,14 @@ export default class Redis {
     private readonly _logic: RedisClientType;
     private static instance: Redis;
 
-    private constructor() {
+    constructor() {
         this._logic = createClient({
             url: this.config.redisUrl,
         });
-        this._logic
+    }
+
+    public async connect() {
+        return await this._logic
             .connect()
             .then(() => console.log('Redis connected'))
             .catch(console.log);
