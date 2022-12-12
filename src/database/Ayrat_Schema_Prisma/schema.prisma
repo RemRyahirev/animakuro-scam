@@ -10,14 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Общие модели общих баз на весь проект
+
 model User {
-    id          String      @id @default(uuid()) @db.Uuid
-    username    String
-    email       String      @unique
-    pass_hash   String      @map("password_hash")
-    birthday    DateTime
-    gender      Gender      @default(MALE)
-    created_at  DateTime    @default(now()) @db.Date
+    id              String      @id @default(uuid()) @db.Uuid
+    username        String
+    email           String      @unique
+    pass_hash       String      @map("password_hash")
+    birthday        DateTime
+    gender          Gender      @default(MALE)
+    created_at      DateTime    @default(now()) @db.Date
+
+    user_profile    UserProfile?
 
     @@map("user")
 }
@@ -136,4 +140,40 @@ model Translation {
     translation String  @db.Text
 
     @@map("translation")
+}
+
+// Модели частных индивидуальных баз
+
+model UserProfile {
+    id                  String      @id @default(uuid()) @db.Uuid
+    user_id             String      @db.Uuid
+    user                User        @relation(fields: [user_id], references:[id])   // внешний ключ  - отношение на таблицу юзер
+    displayed_name      String      @db.VarChar(30)
+    profile_picture_id  String      @db.Uuid
+
+    user_anime          UserAnime[]
+    @@map("user_profile")
+}
+
+model UserAnime {
+    id                  String          @id @default(uuid()) @db.Uuid
+    user_profile_id     String          @db.Uuid
+    anime_id            String          @db.VarChar(100)
+    user_profile        UserProfile     @relation(fields: [user_profile_id], references:[id])   // внешний ключ  - отношение на таблицу aниме
+    season              Int             @db.SmallInt
+    episode             Int             @db.SmallInt
+    status              WatchStatus     @default(WATCHING)
+    in_favourites       Boolean
+    episode_duration    Int             @db.Integer
+    paused_timestamp    Int             @db.Integer
+    watched_time        DateTime        @db.Time
+
+    @@map("user_anime")
+}
+
+enum WatchStatus {
+    WATCHING
+    PLANNED
+    SEEN
+    ABANDONED
 }
