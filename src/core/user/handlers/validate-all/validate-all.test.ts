@@ -1,5 +1,5 @@
 import { User } from '../../schemas/user.schema';
-import { UpdateUserInput } from '../../inputs/update-user.schema';
+import { UpdateUserInputType } from "../../inputs/update-user-input.type";
 import { Gender } from '../../enums/gender.enum';
 import { ValidateAll } from './validate-all';
 import loaders from '../../../../loaders';
@@ -14,7 +14,7 @@ describe('Check all', () => {
         customGender: 'custom',
         username: 'newUsername',
         birthday: new Date('2022-08-12'),
-    } as UpdateUserInput;
+    } as UpdateUserInputType;
     const userObj = {
         id: '1',
         email: 'old@mail.ru',

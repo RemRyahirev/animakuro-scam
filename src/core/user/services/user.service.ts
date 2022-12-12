@@ -1,15 +1,14 @@
 import { ThirdPartyAuthType } from '../enums/user-third-party-type.enum';
-import { User } from '../schemas/user.schema';
-import { CreateUserInput } from '../inputs/create-user.schema';
-import { ThirdPartyAuthInput } from '../../auth/inputs/third-party.schema';
 import Database from '../../../database';
+import { ThirdPartyAuthInputType } from "../../auth/inputs/third-party-input.type";
+import { CreateUserInputType } from "../inputs/create-user-input.type";
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
 
     async createUserWithThirdParty(
         userUsername: string,
-        thirdPartyInput: ThirdPartyAuthInput,
+        thirdPartyInput: ThirdPartyAuthInputType,
     ) {
         return await this.prisma.user.create({
             data: {
@@ -92,10 +91,9 @@ export class UserService {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async createUser({ ...data }: CreateUserInput & { username: string }) {
+    async createUser(args: CreateUserInputType) {
         return await this.prisma.user.create({
-            data,
+            data: args as any,
         });
     }
 }

@@ -3,22 +3,22 @@ import { Field, InputType, ID } from 'type-graphql';
 @InputType()
 class SiteAuthSessionUserInput {
     @Field()
-    id = undefined as any as string;
+    id: string;
 }
 
 @InputType()
 export class CreateSiteAuthSessionInput {
     @Field(() => String)
-    agent = undefined as any as string;
+    agent: string;
 
     @Field(() => String)
-    ip = undefined as any as string;
+    ip: string;
 
     @Field(() => ID, { nullable: true })
     userId?: string;
 
     @Field(() => Boolean)
-    active = undefined as any as boolean;
+    active: boolean;
 }
 
 @InputType()

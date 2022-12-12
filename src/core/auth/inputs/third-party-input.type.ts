@@ -1,16 +1,16 @@
 import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
-import { Field, InputType } from 'type-graphql';
+import { ArgsType, Field } from "type-graphql";
 
-@InputType()
-export class ThirdPartyAuthInput {
-    @Field(() => String)
+@ArgsType()
+export class ThirdPartyAuthInputType {
     /**
      * Third party account id
      */
-    uid = undefined as any as string;
+    @Field(() => String)
+    uid: string;
 
     @Field(() => ThirdPartyAuthType)
-    type = undefined as any as ThirdPartyAuthType;
+    type: ThirdPartyAuthType;
 
     @Field({ nullable: true })
     firstName?: string;

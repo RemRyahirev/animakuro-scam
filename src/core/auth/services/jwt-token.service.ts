@@ -52,7 +52,7 @@ export default class JwtTokenService {
     }
 
     static makeAccessToken(payload: JwtInputPayload) {
-        const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC;
+        const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC || 3600;
 
         return sign(payload, process.env.JWT_SECRET || 'animekuro', {
             expiresIn,

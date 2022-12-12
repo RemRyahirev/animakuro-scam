@@ -1,5 +1,5 @@
 import { User } from '../../schemas/user.schema';
-import { UpdateUserInput } from '../../inputs/update-user.schema';
+import { UpdateUserInputType } from "../../inputs/update-user-input.type";
 import { ErrorObjectInterface } from '../../types/error-object.interface';
 import { ValidateBirthday } from '../validate-birthday/validate-birthday';
 import { ValidateEmail } from '../validate-email/validate-email';
@@ -23,7 +23,7 @@ export class ValidateAll {
 
     constructor(
         user: User & { password: string | null },
-        data: UpdateUserInput,
+        data: UpdateUserInputType,
         isProduction: boolean,
     ) {
         this._birthDay = new ValidateBirthday(data.birthday, user.birthday);

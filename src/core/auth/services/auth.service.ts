@@ -1,5 +1,5 @@
 import Database from 'database';
-import { RegisterInput } from 'core/auth/inputs/register.schema';
+import { RegisterInputType } from "../inputs/register-input.type";
 import {
     CreateSiteAuthSessionInput,
     UpdateSiteAuthSessionInput,
@@ -10,7 +10,7 @@ export class AuthService {
     private readonly prisma = Database.getInstance().logic;
     private readonly redis = Redis.getInstance().logic;
 
-    async setRegisterConfirmation(code: string, data: RegisterInput) {
+    async setRegisterConfirmation(code: string, data: RegisterInputType) {
         await this.redis
             .set(`confirmation:register:${code}`, JSON.stringify(data), {
                 EX: 300,
@@ -18,7 +18,7 @@ export class AuthService {
             .catch(console.error);
     }
 
-    async getRegisterConfirmation(code: string): Promise<RegisterInput | null> {
+    async getRegisterConfirmation(code: string): Promise<RegisterInputType | null> {
         const data = await this.redis
             .get(`confirmation:register:${code}`)
             .catch(console.error);
@@ -26,7 +26,6 @@ export class AuthService {
         if (!data) {
             return null;
         }
-
         return JSON.parse(data);
     }
 

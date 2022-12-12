@@ -2,15 +2,13 @@ import {
     IsEmail,
     IsOptional,
     IsString,
-    isString,
     Length,
-    ValidateIf,
 } from 'class-validator';
-import { Field, InputType } from 'type-graphql';
+import { ArgsType, Field } from "type-graphql";
 import { Gender } from '../enums/gender.enum';
 
-@InputType()
-export class CreateUserInput {
+@ArgsType()
+export class CreateUserInputType {
     @Field({ nullable: true })
     @IsString()
     @Length(1, 64)

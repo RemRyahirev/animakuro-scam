@@ -1,13 +1,13 @@
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Args, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { hash } from 'common/utils/password.util';
 
 import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { User } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
-import { UpdateUserInput } from '../inputs/update-user.schema';
+import { UpdateUserInputType } from "../inputs/update-user-input.type";
 import { GqlHttpException } from '../../../common/errors/errors';
-import { CreateUserInput } from '../inputs/create-user.schema';
+import { CreateUserInputType } from "../inputs/create-user-input.type";
 import Database from '../../../database';
 import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';
@@ -25,26 +25,23 @@ export class UserResolver {
         this.userService = new UserService();
     }
 
-    @Query(() => [User])
+    @Query(() => [User], { description: 'Get user list by email' })
     users(@Arg('email') email: string) {
         return this.prisma.user.findMany({ where: { email } });
     }
 
-    @Query(() => User, { nullable: true })
+    @Query(() => User, { nullable: true, description: 'Get user by ID' })
     user(@Arg('id') id: string) {
         return this.prisma.user.findUnique({ where: { id } });
     }
 
     @ValidateSchemas()
-    @Mutation(() => User)
-    async modifyUser(
-        @Arg('id') id: string,
-        @Arg('data') data: UpdateUserInput,
-    ) {
-        const user = await this.prisma.user.findUnique({ where: { id } });
+    @Mutation(() => User, { description: 'Update user' })
+    async modifyUser(@Args() args: UpdateUserInputType) {
+        const user = await this.prisma.user.findUnique({ where: { id: args.id } });
         if (!user)
             throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
-        const validateAll = new ValidateAll(user as any, data, true);
+        const validateAll = new ValidateAll(user as any, args, true);
         const result = await validateAll.run();
         Object.assign(user, result);
         // TODO: write data.avatar & data.banner handlers
@@ -55,11 +52,11 @@ export class UserResolver {
         });
     }
 
-    @Mutation(() => User)
+    @Mutation(() => User, { description: 'Create user in database' })
     @Authorized()
     @ValidateSchemas()
     async createUser(
-        @Arg('data', () => CreateUserInput) data: CreateUserInput,
+        @Args() args: CreateUserInputType,
         @Ctx() ctx: ICustomContext,
     ) {
         const { userJwtPayload } = ctx;
@@ -69,20 +66,20 @@ export class UserResolver {
                 HttpStatus.BAD_REQUEST,
             );
         }
-        if (!data.username)
+        if (!args.username)
             throw new GqlHttpException(
                 'username is empty',
                 HttpStatus.BAD_REQUEST,
             );
 
-        if (!data.password)
+        if (!args.password)
             throw new GqlHttpException(
                 'password is empty',
                 HttpStatus.BAD_REQUEST,
             );
 
         const checkUsername = await this.userService.findUserByUsername(
-            data.username,
+            args.username,
         );
 
         if (checkUsername) {
@@ -118,11 +115,11 @@ export class UserResolver {
             );
         }
 
-        const hashedPassword = await hash(data.password);
+        const hashedPassword = await hash(args.password);
 
         return await this.userService.createUser({
-            ...data,
-            username: data.username,
+            ...args,
+            username: args.username,
             email: savedUser.email,
             password: hashedPassword,
         });
