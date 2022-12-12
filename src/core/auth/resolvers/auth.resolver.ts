@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 import { User } from 'core/user/schemas/user.schema';
 import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
 import { UserService } from 'core/user/services/user.service';
-import { ValidateSchemas } from 'common/decorators/validation';
+import { ValidateSchemas } from 'common/decorators';
 import { RegisterInput } from '../inputs/register.schema';
 import { LoginInput } from '../inputs/login.schema';
 import { Mailer } from '../../../common/utils/mailer';

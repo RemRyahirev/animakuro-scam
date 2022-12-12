@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
-import { GqlHttpException } from '../../errors/errors';
-import { HttpStatus } from '../../types/enums/http-status.enum';
+import { GqlHttpException } from '../errors/errors';
+import { HttpStatus } from '../types/enums/http-status.enum';
 import { formatClassValidatorErrors } from './format-class-validator-errors';
 
 export default async (value: object) => {

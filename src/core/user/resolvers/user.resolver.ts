@@ -1,7 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { hash } from 'common/utils/password.util';
 
-import { ValidateSchemas } from 'common/decorators/validation';
+import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { User } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';

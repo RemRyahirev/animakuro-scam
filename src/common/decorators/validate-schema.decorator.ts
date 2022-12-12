@@ -1,4 +1,4 @@
-import validateOrThrow from './validate-or-throw';
+import validateOrThrow from '../validators/validate-or-throw';
 
 /**
  * Decorator for validating input data with class-validator
