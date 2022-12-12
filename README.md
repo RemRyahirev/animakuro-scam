@@ -11,6 +11,12 @@
 ```shell
 npx prisma migrate dev --name migration-name
 npx prisma generate
+npx prisma db seed
+```
+
+### Seeding database
+```shell
+npx prisma db seed
 ```
 
 ### Start 
