@@ -1,5 +1,5 @@
 import Database from 'database';
-import { RegisterInputType } from "../inputs/register-input.type";
+import { RegisterInputType } from '../inputs/register-input.type';
 import {
     CreateSiteAuthSessionInput,
     UpdateSiteAuthSessionInput,
@@ -18,7 +18,9 @@ export class AuthService {
             .catch(console.error);
     }
 
-    async getRegisterConfirmation(code: string): Promise<RegisterInputType | null> {
+    async getRegisterConfirmation(
+        code: string,
+    ): Promise<RegisterInputType | null> {
         const data = await this.redis
             .get(`confirmation:register:${code}`)
             .catch(console.error);

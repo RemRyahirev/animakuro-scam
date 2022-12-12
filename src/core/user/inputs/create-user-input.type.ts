@@ -1,10 +1,5 @@
-import {
-    IsEmail,
-    IsOptional,
-    IsString,
-    Length,
-} from 'class-validator';
-import { ArgsType, Field } from "type-graphql";
+import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { ArgsType, Field } from 'type-graphql';
 import { Gender } from '../enums/gender.enum';
 
 @ArgsType()

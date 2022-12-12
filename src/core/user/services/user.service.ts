@@ -1,7 +1,7 @@
 import { ThirdPartyAuthType } from '../enums/user-third-party-type.enum';
 import Database from '../../../database';
-import { ThirdPartyAuthInputType } from "../../auth/inputs/third-party-input.type";
-import { CreateUserInputType } from "../inputs/create-user-input.type";
+import { ThirdPartyAuthInputType } from '../../auth/inputs/third-party-input.type';
+import { CreateUserInputType } from '../inputs/create-user-input.type';
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;

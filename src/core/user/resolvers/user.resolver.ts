@@ -1,13 +1,21 @@
-import { Arg, Args, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+    Arg,
+    Args,
+    Authorized,
+    Ctx,
+    Mutation,
+    Query,
+    Resolver,
+} from 'type-graphql';
 import { hash } from 'common/utils/password.util';
 
 import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { User } from '../schemas/user.schema';
 import { UserService } from '../services/user.service';
-import { UpdateUserInputType } from "../inputs/update-user-input.type";
+import { UpdateUserInputType } from '../inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
-import { CreateUserInputType } from "../inputs/create-user-input.type";
+import { CreateUserInputType } from '../inputs/create-user-input.type';
 import Database from '../../../database';
 import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';
@@ -38,7 +46,9 @@ export class UserResolver {
     @ValidateSchemas()
     @Mutation(() => User, { description: 'Update user' })
     async modifyUser(@Args() args: UpdateUserInputType) {
-        const user = await this.prisma.user.findUnique({ where: { id: args.id } });
+        const user = await this.prisma.user.findUnique({
+            where: { id: args.id },
+        });
         if (!user)
             throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
         const validateAll = new ValidateAll(user as any, args, true);
