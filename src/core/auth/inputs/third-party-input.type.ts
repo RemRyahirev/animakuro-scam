@@ -1,5 +1,5 @@
 import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
-import { ArgsType, Field } from "type-graphql";
+import { ArgsType, Field } from 'type-graphql';
 
 @ArgsType()
 export class ThirdPartyAuthInputType {

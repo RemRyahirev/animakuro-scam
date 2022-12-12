@@ -1,4 +1,4 @@
-import { Arg, Args, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { ThirdPartyRedirectUrlReturnType } from '../schemas/auth.schema';
 import { compare, hash } from 'common/utils/password.util';
@@ -11,11 +11,11 @@ import { User } from 'core/user/schemas/user.schema';
 import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
 import { UserService } from 'core/user/services/user.service';
 import { ValidateSchemas } from 'common/decorators';
-import { LoginInputType } from "../inputs/login-input.type";
+import { LoginInputType } from '../inputs/login-input.type';
 import { Mailer } from '../../../common/utils/mailer';
 import { HttpStatus } from '../../../common/types/enums/http-status.enum';
-import { RegisterInputType } from "../inputs/register-input.type";
-import { ThirdPartyAuthInputType } from "../inputs/third-party-input.type";
+import { RegisterInputType } from '../inputs/register-input.type';
+import { ThirdPartyAuthInputType } from '../inputs/third-party-input.type';
 
 @Resolver()
 export class AuthResolver {
@@ -40,7 +40,9 @@ export class AuthResolver {
         return `${id}User${charSum}`;
     };
 
-    @Mutation(() => Boolean, { description: 'Register user, needs confirmation' })
+    @Mutation(() => Boolean, {
+        description: 'Register user, needs confirmation',
+    })
     @ValidateSchemas()
     async register(@Args() args: RegisterInputType) {
         const user = await this.userService.findUserByEmailOrUsername(
@@ -243,7 +245,9 @@ export class AuthResolver {
         return user;
     }
 
-    @Query(() => ThirdPartyRedirectUrlReturnType, { description: 'Get 3rd party urls' })
+    @Query(() => ThirdPartyRedirectUrlReturnType, {
+        description: 'Get 3rd party urls',
+    })
     async getThirdPartyRedirectUrls() {
         return {
             facebook: this.facebookStrategy.getRedirectUrl(),

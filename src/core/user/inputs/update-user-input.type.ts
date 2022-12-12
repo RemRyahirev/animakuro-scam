@@ -6,7 +6,7 @@ import {
     Length,
     ValidateIf,
 } from 'class-validator';
-import { ArgsType, Field, ID } from "type-graphql";
+import { ArgsType, Field, ID } from 'type-graphql';
 import { Gender } from '../enums/gender.enum';
 import { IUpload } from '../../../common/types/interfaces/upload.interface';
 
