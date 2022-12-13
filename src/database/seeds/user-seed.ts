@@ -5,38 +5,33 @@ import { hash } from "../../common/utils/password.util";
 const prisma = new PrismaClient();
 
 async function userSeed() {
-    const users = await prisma.user.createMany({
+    console.log(`Start seeding users...`);
+    await prisma.user.createMany({
         skipDuplicates: true,
         data: [
             {
                 email: 'alexander@mail.ru',
                 username: 'Alexander',
-                password: await hash('password'),
+                pass_hash: await hash('password'),
                 gender: Gender.MALE,
             },
             {
                 email: 'oleg@icloud.com',
                 username: 'Oleg',
-                password: await hash('another-password'),
+                pass_hash: await hash('another-password'),
                 gender: Gender.MALE,
             },
             {
                 email: 'irina@google.com',
                 username: 'Irina',
-                password: await hash('some-password'),
+                pass_hash: await hash('some-password'),
                 gender: Gender.FEMALE,
             },
         ],
     });
-    console.log(`Users are seeded -> count -> ` + users.count);
+    console.log(`Seeding users finished.`);
 }
 
 userSeed()
-    .then(async () => {
-        await prisma.$disconnect();
-    })
-    .catch(async (e) => {
-        console.error(e);
-        await prisma.$disconnect();
-        process.exit(1);
-    });
+    .catch((e) => console.error(e))
+    .finally(async () => await prisma.$disconnect());

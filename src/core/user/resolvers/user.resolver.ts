@@ -126,7 +126,6 @@ export class UserResolver {
         }
 
         const hashedPassword = await hash(args.password);
-
         return await this.userService.createUser({
             ...args,
             username: args.username,

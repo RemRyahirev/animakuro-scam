@@ -8,6 +8,7 @@
         "dev": "ts-node-dev -r tsconfig-paths/register --exit-child ./src/app.ts",
         "build": "tsc && tsc-alias",
         "generate": "npx prisma generate",
+        "seed": "ts-node src/database/seeds/index.ts",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
     },
     "repository": {
@@ -74,6 +75,6 @@
     },
     "prisma": {
         "schema": "src/database/schema.prisma",
-        "seed": "ts-node src/database/seed.ts"
+        "seed": "ts-node src/database/seeds/index.ts"
     }
 }

@@ -56,8 +56,8 @@ const studioData: any[] = [
     },
 ];
 
-async function main() {
-    console.log(`Start seeding ...`);
+async function animeSeed() {
+    console.log(`Start seeding anime...`);
 
     for (const s of studioData) {
         const result = await prisma.studio.create({
@@ -72,9 +72,9 @@ async function main() {
         });
         console.log(`Created anime with id: ${result.id}`);
     }
-    console.log(`Seeding finished.`);
+    console.log(`Seeding anime finished.`);
 }
 
-main()
+animeSeed()
     .catch((e) => console.error(e))
     .finally(async () => await prisma.$disconnect());
