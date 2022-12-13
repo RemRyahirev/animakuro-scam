@@ -5,6 +5,7 @@ COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
 RUN pnpm i --offline --frozen-lockfile
+RUN apk add --no-cache openssl openssl-de
 RUN pnpm generate && pnpm build
 
 FROM node:16-alpine
