@@ -18,7 +18,7 @@ model User {
     email           String      @unique
     pass_hash       String      @map("password_hash")
     birthday        DateTime
-    gender          Gender      @default(MALE)
+    gender          Gender      @default(OTHER)
     created_at      DateTime    @default(now()) @db.Date
 
     user_profile    UserProfile?
