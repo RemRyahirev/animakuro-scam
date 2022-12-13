@@ -47,6 +47,8 @@ model SiteAuthSession {
   userId String  @db.Uuid
   user   User    @relation(fields: [userId], references: [id])
   active Boolean @default(true)
+
+  @@map("site_auth_session")
 }
 
 enum ThirdPartyType {
@@ -68,8 +70,9 @@ model ThirdPartyAuth {
   avatar    String?        @db.Text
   type      ThirdPartyType
 
-  user User[]
+  user      User[]
   // @@unique([serviceName, serviceId])
+  @@map("third_party_auth")
 }
 
 
