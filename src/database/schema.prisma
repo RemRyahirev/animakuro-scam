@@ -185,6 +185,7 @@ enum MediaFormat {
     MANGA
     NOVEL
     ONE_SHOT
+    OTHER
 }
 
 model Author {
