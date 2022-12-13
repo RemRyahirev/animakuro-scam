@@ -21,7 +21,27 @@ const animeData: any[] = [
         release_status: 'RELEASED',
         characters: [],
         authors: [],
-    }
+    },
+    {
+        id: 'eae825a6-7aec-11ed-a453-020017000b7b',
+        name: 'Стальной алхимик',
+        score: 6.9,
+        year: 1999,
+        genres: [],
+        type: 'ONA',
+        studio_id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
+        seasons_count: 1,
+        episodes_count: 10,
+        total_duration: 22000,
+        next_episode: new Date('2020-10-19 10:23:54'),
+        film_rating: 'R',
+        description: 'про малыша в доспехах',
+        preview_link: 'https://yandex.com',
+        status_description: 'в 1999-2001 гг',
+        release_status: 'RELEASED',
+        characters: [],
+        authors: [],
+    },
 ];
 
 const studioData: any[] = [
@@ -34,7 +54,6 @@ const studioData: any[] = [
         anime: {create:[]}
     }
 ];
-
 
 async function main() {
     console.log(`Start seeding ...`);

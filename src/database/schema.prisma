@@ -11,20 +11,19 @@ model User {    // версия с изменениями
   id               String          @id @default(uuid()) @db.Uuid
   username         String          @unique @db.VarChar(64)
   email            String?         @unique @db.VarChar(320)
-  //password         String?         @db.VarChar(60)
   pass_hash        String          @map("password_hash")
   secret2fa        String?         @db.VarChar(20)
-  //avatar           String?         @db.Text
-  //banner           String?         @db.Text
   birthday         DateTime?       @db.Date
   gender           Gender          @default(UNSPECIFIED)
-  //customGender     String?         @db.VarChar(64)
   createdAt        DateTime        @default(now()) @db.Date
   deleted          Boolean         @default(false)
   thirdPartyAuth   ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId String?
-
   user_profile    UserProfile?
+  //password         String?         @db.VarChar(60)
+  //avatar           String?         @db.Text
+  //banner           String?         @db.Text
+  //customGender     String?         @db.VarChar(64)
 
   siteAuthSessions SiteAuthSession[]
 
@@ -75,22 +74,17 @@ model ThirdPartyAuth {
   @@map("third_party_auth")
 }
 
-
-
 model Studio {
   id            String   @id @default(uuid()) @db.Uuid
   createdAt     DateTime @default(now())
-  //deleted     Boolean  @default(false)
   studio_name   String   @db.VarChar(64)
   rating        Float    @db.Real
-
   thumbnail     String   @db.Text
-  //series        Series[]    // Предлагаю удалить. Оставить указание на таблицу Аниме (строка ниже)
   anime         Anime[]     // отношение o2m - у 1 студии много онеме - таблица Anime
-
+  //deleted     Boolean  @default(false)
+  //series        Series[]    // Предлагаю удалить. Оставить указание на таблицу Аниме (строка ниже)
   @@map("studio")
 }
-
 
 // ! предлагаю удалить и ссылаться на Anime
 //model Series {
