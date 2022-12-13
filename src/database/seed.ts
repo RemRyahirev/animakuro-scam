@@ -1,4 +1,5 @@
-import { PrismaClient} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 const animeData: any[] = [
@@ -50,9 +51,9 @@ const studioData: any[] = [
         createdAt: new Date(Date.now()),
         studio_name: 'Oneme International',
         rating: 3.2,
-        thumbnail: "https://foo.bar.jpg",
-        anime: {create:[]}
-    }
+        thumbnail: 'https://foo.bar.jpg',
+        anime: { create: [] },
+    },
 ];
 
 async function main() {
@@ -60,15 +61,15 @@ async function main() {
 
     for (const s of studioData) {
         const result = await prisma.studio.create({
-            data: s
-        })
+            data: s,
+        });
         console.log(`Created studio with id: ${result.id}`);
     }
 
     for (const a of animeData) {
         const result = await prisma.anime.create({
-            data: a
-        })
+            data: a,
+        });
         console.log(`Created anime with id: ${result.id}`);
     }
     console.log(`Seeding finished.`);
