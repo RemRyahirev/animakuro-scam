@@ -44,7 +44,7 @@ model SiteAuthSession {
   id     String  @id @default(uuid())
   agent  String  @db.Text
   ip     String  @db.VarChar(64)
-  userId String
+  userId String  @db.Uuid
   user   User    @relation(fields: [userId], references: [id])
   active Boolean @default(true)
 }
@@ -75,7 +75,7 @@ model ThirdPartyAuth {
 
 
 model Studio {
-  id            String   @id @default(uuid())
+  id            String   @id @default(uuid()) @db.Uuid
   createdAt     DateTime @default(now())
   //deleted     Boolean  @default(false)
   studio_name   String   @db.VarChar(64)
@@ -125,7 +125,7 @@ model Anime {
     genres                  String[]        @db.Uuid        // массив uuid[] - ОТЛИЧНО ПОЛУЧАЕТСЯ
     type                    AnimeType       @default(OTHER)
     studio_id               String          @db.Uuid
-    studio                  Studio?         @relation(fields: [studioId], references: [id]) // ссылка на Студию
+    studio                  Studio?         @relation(fields: [studio_id], references: [id]) // ссылка на Студию
     seasons_count           Int             @db.SmallInt
     episodes_count          Int             @db.SmallInt
     total_duration          Int             @db.Integer     // секунды
@@ -210,7 +210,7 @@ model Translation {
 model UserProfile {
     id                  String      @id @default(uuid()) @db.Uuid
     user                User        @relation(fields: [user_id], references:[id])   // внешний ключ  - отношение на таблицу юзер
-    user_id             String      @db.Uuid
+    user_id             String      @unique @db.Uuid
     displayed_name      String      @db.VarChar(30)
     profile_picture_id  String      @db.Uuid
 
