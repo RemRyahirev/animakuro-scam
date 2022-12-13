@@ -209,8 +209,8 @@ model Translation {
 
 model UserProfile {
     id                  String      @id @default(uuid()) @db.Uuid
-    user_id             String      @db.Uuid
     user                User        @relation(fields: [user_id], references:[id])   // внешний ключ  - отношение на таблицу юзер
+    user_id             String      @db.Uuid
     displayed_name      String      @db.VarChar(30)
     profile_picture_id  String      @db.Uuid
 
@@ -220,9 +220,9 @@ model UserProfile {
 
 model UserAnime {
     id                  String          @id @default(uuid()) @db.Uuid
-    user_profile_id     String          @db.Uuid
     anime_id            String          @db.VarChar(100)
-    user_profile        UserProfile     @relation(fields: [user_profile_id], references:[id])   // внешний ключ  - отношение на таблицу aниме
+    user_profile        UserProfile     @relation(fields: [user_profile_id], references:[id])   // внешний ключ  - отношение на таблицу юзер профиль
+    user_profile_id     String          @db.Uuid
     season              Int             @db.SmallInt
     episode             Int             @db.SmallInt
     status              WatchStatus     @default(WATCHING)
