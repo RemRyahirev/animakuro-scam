@@ -16,7 +16,7 @@ export class UserService {
                 thirdPartyAuth: {
                     create: thirdPartyInput,
                 },
-            },
+            } as any,
             include: {
                 thirdPartyAuth: true,
                 siteAuthSessions: true,
@@ -93,7 +93,7 @@ export class UserService {
 
     async createUser(args: CreateUserInputType) {
         return await this.prisma.user.create({
-            data: args as any,
+            data: { ...args, pass_hash: args.password } as any,
         });
     }
 }

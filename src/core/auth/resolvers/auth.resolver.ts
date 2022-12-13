@@ -136,7 +136,7 @@ export class AuthResolver {
     async login(@Args() args: LoginInputType, @Ctx() ctx: ICustomContext) {
         const user = await this.userService.findUserByUsername(args.username);
 
-        if (!user || !(await compare(args.password, user.password || '')))
+        if (!user || !(await compare(args.password, user.pass_hash || '')))
             throw new GqlHttpException(
                 'INVALID_CREDENTIALS',
                 HttpStatus.BAD_REQUEST,
@@ -198,14 +198,13 @@ export class AuthResolver {
         @Ctx() ctx: ICustomContext,
     ) {
         const facebookUser = await this.facebookStrategy.getAccountData(code);
-
-        let user = await this.userService.findUserByThirdpartyAuth(
+        let user = (await this.userService.findUserByThirdpartyAuth(
             facebookUser.id,
             ThirdPartyAuthType.FACEBOOK,
-        );
+        )) as User | null;
 
         if (!user) {
-            user = await this.userService.createUserWithThirdParty(
+            user = (await this.userService.createUserWithThirdParty(
                 this.makeUniqueUsername(
                     facebookUser.id,
                     ThirdPartyAuthType.FACEBOOK,
@@ -217,7 +216,7 @@ export class AuthResolver {
                     uid: facebookUser.id,
                     type: ThirdPartyAuthType.FACEBOOK,
                 },
-            );
+            )) as User;
         }
 
         const session = await this.authService.createSiteAuthSession({
