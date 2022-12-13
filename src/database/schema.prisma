@@ -19,7 +19,7 @@ model User {    // версия с изменениями
   deleted          Boolean         @default(false)
   thirdPartyAuth   ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId String?
-  user_profile    UserProfile?
+  user_profile     UserProfile?
   //password         String?         @db.VarChar(60)
   //avatar           String?         @db.Text
   //banner           String?         @db.Text
@@ -36,7 +36,6 @@ enum Gender {
   MALE
   FEMALE
   OTHER
-  //CUSTOM
 }
 
 model SiteAuthSession {
@@ -116,22 +115,23 @@ enum FriendshipStatus {
 
 model Anime {
     id                      String          @id @default(uuid()) @db.Uuid
-    name                    String          @db.VarChar(100)
+    title                   String          @db.VarChar(100)
     score                   Float           @db.Real
     year                    Int             @db.SmallInt
-    genres                  String[]        @db.Uuid        // массив uuid[] - ОТЛИЧНО ПОЛУЧАЕТСЯ
-    type                    AnimeType       @default(OTHER)
+    genres                  String[]        @db.Uuid
+    media_format            MediaFormat     @default(OTHER)
+    source                  MediaSource     @default(OTHER)
     studio_id               String          @db.Uuid
     studio                  Studio?         @relation(fields: [studio_id], references: [id]) // ссылка на Студию
     seasons_count           Int             @db.SmallInt
     episodes_count          Int             @db.SmallInt
-    total_duration          Int             @db.Integer     // секунды
+    duration                Int             @db.Integer     // секунды - The general length of each anime episode
     next_episode            DateTime        @db.Time        // формат 4 апр. 03:30
-    film_rating             FilmRating      @default(G)
+    rating                  FilmRating      @default(G)
     description             String          @db.Text
     preview_link            String          @db.Text
     status_description      String          @db.VarChar(30)
-    release_status          ReleaseStatus   @default(OTHER)
+    release_status          ReleaseStatus   @default(FINISHED)  // в онилисте - поле status
     characters              String[]        @db.Uuid    // массив uuid[] - ОТЛИЧНО ПОЛУЧАЕТСЯ
     authors                 String[]        @db.Uuid    // массив uuid[] - ОТЛИЧНО ПОЛУЧАЕТСЯ
 
@@ -148,17 +148,43 @@ enum FilmRating {
     NC_21
 }
 
-enum ReleaseStatus {
-    RELEASED
-    PRE_RELEASE
-    OTHER
+enum MediaSource {
+    ORIGINAL // An original production not based of another work
+    MANGA // Asian comic book
+    LIGHT_NOVEL // Written work published in volumes
+    VISUAL_NOVEL // Video game driven primary by text and narrative
+    VIDEO_GAME // Video game
+    OTHER // Other
+    NOVEL // Written works not published in volumes
+    DOUJINSHI // Self-published works
+    ANIME // Japanese Anime
+    WEB_NOVEL // Written works published online
+    LIVE_ACTION // Live action media such as movies or TV show
+    GAME // Games excluding video games
+    COMIC // Comics excluding manga
+    MULTIMEDIA_PROJECT // Multimedia project
+    PICTURE_BOOK // Picture book
 }
 
-enum AnimeType {
-    TV_SERIAL
+enum ReleaseStatus {
+    FINISHED // Has completed and is no longer being released
+    RELEASING // Currently releasing
+    NOT_YET_RELEASED // To be released at a later date
+    CANCELLED // Ended before the work could be finished
+    HIATUS // Is currently paused from releasing and will resume at a later date
+}
+
+enum MediaFormat {
+    TV
+    TV_SHORT
+    MOVIE
     SPECIAL
     OVA
     ONA
+    MUSIC
+    MANGA
+    NOVEL
+    ONE_SHOT
     OTHER
 }
 
