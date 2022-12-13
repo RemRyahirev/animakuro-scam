@@ -4,6 +4,7 @@ RUN corepack enable pnpm
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY . ./
+RUN apt install openssl openssl-dev libc6
 RUN pnpm i --offline --frozen-lockfile
 RUN pnpm generate && pnpm build
 
