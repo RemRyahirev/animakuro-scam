@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { CharacterType} from "../../core/anime/types/character-type.enum";
+import { CharacterType } from '../../core/anime/types/character-type.enum';
 
 const prisma = new PrismaClient();
 
@@ -12,13 +12,13 @@ async function characterSeed() {
                 bucket_id: 'f2c57902-3981-406b-a9e6-1f15a62019a1',
                 character_name: 'Сикакунагай',
                 importance: CharacterType.PROTAGONIST,
-                description: 'этот парень был из тех, за кем летает стерх'
+                description: 'этот парень был из тех, за кем летает стерх',
             },
             {
                 bucket_id: 'f2c57902-3981-406b-a9e6-1f15a62019a1',
                 character_name: 'КтоУгодноСан',
                 importance: CharacterType.ANTAGONIST,
-                description: 'главный антагонист Сикакунагай'
+                description: 'главный антагонист Сикакунагай',
             },
         ],
     });

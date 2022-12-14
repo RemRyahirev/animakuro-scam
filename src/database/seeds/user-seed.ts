@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Gender } from '../../core/user/enums/gender.enum';
-import { hash } from "../../common/utils/password.util";
+import { hash } from '../../common/utils/password.util';
 
 const prisma = new PrismaClient();
 
