@@ -126,7 +126,7 @@ CREATE TABLE "character" (
     "id" UUID NOT NULL,
     "bucket_id" UUID NOT NULL,
     "character_name" VARCHAR(50) NOT NULL,
-    "importaice" "Importance" NOT NULL DEFAULT 'MAIN_HERO',
+    "importance" "Importance" NOT NULL DEFAULT 'MAIN_HERO',
     "description" TEXT NOT NULL,
 
     CONSTRAINT "character_pkey" PRIMARY KEY ("id")
