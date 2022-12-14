@@ -16,7 +16,7 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         @Ctx() ctx: ICustomContext,
     ): Promise<CreateAnimeResultsType> {
         const anime = await this.prisma.anime.create({
-            data: args as any,
+            data: args,
         });
         return {
             success: true,

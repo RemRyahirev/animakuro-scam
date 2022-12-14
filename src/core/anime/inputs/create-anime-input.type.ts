@@ -1,9 +1,9 @@
-import { ArgsType, Field, Float, Int, registerEnumType } from "type-graphql";
-import { IsOptional, IsString, Length } from "class-validator";
-import { MediaFormat } from "../types/media-format.enum";
-import { MediaSource } from "../types/media-source.enum";
-import { FilmRating } from "../types/film-rating.enum";
-import { ReleaseStatus } from "../types/release-status.enum";
+import { ArgsType, Field, Float, Int, registerEnumType } from 'type-graphql';
+import { IsString, Length } from 'class-validator';
+import { MediaFormat } from '../types/media-format.enum';
+import { MediaSource } from '../types/media-source.enum';
+import { FilmRating } from '../types/film-rating.enum';
+import { ReleaseStatus } from '../types/release-status.enum';
 
 registerEnumType(ReleaseStatus, {
     name: 'ReleaseStatus',
@@ -23,7 +23,6 @@ registerEnumType(MediaFormat, {
 
 @ArgsType()
 export class CreateAnimeInputType {
-
     @Field()
     @IsString()
     @Length(1, 100)
@@ -39,11 +38,11 @@ export class CreateAnimeInputType {
     genres: string[];
 
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
-    media_format: string;
+    media_format: MediaFormat;
 
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     @IsString()
-    source: string;
+    source: MediaSource;
 
     @Field(() => String, { nullable: false })
     @IsString()
@@ -68,7 +67,7 @@ export class CreateAnimeInputType {
 
     @Field(() => FilmRating, { defaultValue: FilmRating.G })
     @IsString()
-    rating: string;
+    rating: FilmRating;
 
     @Field()
     @IsString()
@@ -85,11 +84,11 @@ export class CreateAnimeInputType {
 
     @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
     @IsString()
-    release_status: string;
+    release_status: ReleaseStatus;
 
     @Field(() => [String])
-    characters: String[];
+    characters: string[];
 
     @Field(() => [String])
-    authors: String[];
+    authors: string[];
 }
