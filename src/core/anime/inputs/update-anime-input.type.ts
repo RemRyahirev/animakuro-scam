@@ -1,7 +1,7 @@
-import { Field, ID, InputType } from 'type-graphql';
+import { ArgsType, Field, ID } from 'type-graphql';
 import { CreateAnimeInputType } from './create-anime-input.type';
 
-@InputType()
+@ArgsType()
 export class UpdateAnimeInputType extends CreateAnimeInputType {
     @Field(() => ID)
     id: string;

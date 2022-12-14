@@ -13,12 +13,7 @@ export class PaginationInputType {
     @Field(() => Int, { nullable: true, defaultValue: 10 })
     take?: number;
 
+    @IsOptional()
     @Field(() => String, { nullable: true })
     orderBy?: string;
-
-    @Field(() => String, { nullable: true })
-    order?: string;
-
-    @Field(() => String, { nullable: true })
-    search?: string;
 }

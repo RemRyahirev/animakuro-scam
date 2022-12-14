@@ -3,7 +3,7 @@ import { BaseResultsType } from "../../../common/results/base-results.type";
 import { Anime } from "../schemas/anime.schema";
 
 @ObjectType()
-export class DeleteAnimeResultsType extends BaseResultsType {
+export class GetAnimeResultsType extends BaseResultsType {
     @Field(() => Anime, {
         nullable: true,
         description: 'Anime',
