@@ -7,4 +7,5 @@ export interface UserOutputInterface {
     email?: string;
     username?: string;
     password?: string;
+    pass_hash?: string;
 }
