@@ -1,35 +1,22 @@
-import { Arg, Args, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
-import { ThirdPartyRedirectUrlReturnType } from '../schemas/auth.schema';
 import { compare, hash } from 'common/utils/password.util';
 import { randomUUID } from 'crypto';
 import { GqlHttpException } from 'common/errors/errors';
 import JwtTokenService from '../services/jwt-token.service';
-import { FacebookStrategy } from '../strategies/facebook.strategy';
-import { AuthService } from '../services/auth.service';
 import { User } from 'core/user/schemas/user.schema';
 import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
-import { UserService } from 'core/user/services/user.service';
 import { ValidateSchemas } from 'common/decorators';
 import { LoginInputType } from '../inputs/login-input.type';
-import { Mailer } from '../../../common/utils/mailer';
 import { HttpStatus } from '../../../common/types/enums/http-status.enum';
 import { RegisterInputType } from '../inputs/register-input.type';
 import { ThirdPartyAuthInputType } from '../inputs/third-party-input.type';
+import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';
 
-@Resolver()
-export class AuthResolver {
-    private facebookStrategy: FacebookStrategy;
-    private userService: UserService;
-    private jwtTokenService: JwtTokenService;
-    private authService: AuthService;
-    private mailer = new Mailer();
-
+@Resolver(AuthMutationType)
+export class AuthMutationResolver extends AuthRootResolver {
     constructor() {
-        this.facebookStrategy = new FacebookStrategy();
-        this.userService = new UserService();
-        this.jwtTokenService = new JwtTokenService();
-        this.authService = new AuthService();
+        super();
     }
 
     private makeUniqueUsername = (id: string, prefix: ThirdPartyAuthType) => {
@@ -40,9 +27,7 @@ export class AuthResolver {
         return `${id}User${charSum}`;
     };
 
-    @Mutation(() => Boolean, {
-        description: 'Register user, needs confirmation',
-    })
+    @FieldResolver(() => Boolean)
     @ValidateSchemas()
     async register(@Args() args: RegisterInputType) {
         const user = await this.userService.findUserByEmailOrUsername(
@@ -82,7 +67,7 @@ export class AuthResolver {
         return true;
     }
 
-    @Mutation(() => Boolean, { description: 'Confirm registration' })
+    @FieldResolver(() => Boolean)
     async confirmRegistration(@Arg('code') code: string) {
         const registerInput = await this.authService.getRegisterConfirmation(
             code,
@@ -132,7 +117,7 @@ export class AuthResolver {
         return true;
     }
 
-    @Mutation(() => Boolean, { description: 'User login' })
+    @FieldResolver(() => Boolean)
     async login(@Args() args: LoginInputType, @Ctx() ctx: ICustomContext) {
         const user = await this.userService.findUserByUsername(args.username);
 
@@ -160,7 +145,7 @@ export class AuthResolver {
         return true;
     }
 
-    @Mutation(() => Boolean, { description: 'User logout' })
+    @FieldResolver(() => Boolean)
     async logout(@Ctx() ctx: ICustomContext) {
         const { userJwtPayload } = ctx;
         // rewrite decorator
@@ -191,7 +176,7 @@ export class AuthResolver {
         return true;
     }
 
-    @Mutation(() => User, { description: 'Login or register 3rd party' })
+    @FieldResolver(() => User)
     async loginOrRegisterThirdParty(
         @Arg('code', () => String) code: string,
         @Args() args: ThirdPartyAuthInputType,
@@ -234,22 +219,7 @@ export class AuthResolver {
                 uid: facebookUser.id,
             },
         });
-
-        // const thirdpartyAuthRedisKey = JwtTokenService.getThirdPartyAuthRedisKey(ThirdPartyAuthType.FACEBOOK, facebookUser.id)
-
-        // await this.jwtTokenService.saveJwtAccessToken(thirdpartyAuthRedisKey, accessToken)
-
         JwtTokenService.setCookieAccessToken(ctx, accessToken);
-
         return user;
-    }
-
-    @Query(() => ThirdPartyRedirectUrlReturnType, {
-        description: 'Get 3rd party urls',
-    })
-    async getThirdPartyRedirectUrls() {
-        return {
-            facebook: this.facebookStrategy.getRedirectUrl(),
-        };
     }
 }
