@@ -1,50 +1,23 @@
-import {
-    Arg,
-    Args,
-    Authorized,
-    Ctx,
-    Mutation,
-    Query,
-    Resolver,
-} from 'type-graphql';
+import { Args, Authorized, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { hash } from 'common/utils/password.util';
-
 import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
 import { User } from '../schemas/user.schema';
-import { UserService } from '../services/user.service';
 import { UpdateUserInputType } from '../inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { CreateUserInputType } from '../inputs/create-user-input.type';
-import Database from '../../../database';
-import Redis from '../../../loaders/redis';
-import { Mailer } from '../../../common/utils/mailer';
 import { HttpStatus } from '../../../common/types/enums/http-status.enum';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
+import { UserMutationType, UserRootResolver } from './user-root.resolver';
 
-@Resolver(() => User)
-export class UserResolver {
-    private readonly prisma = Database.getInstance().logic;
-    private readonly redis = Redis.getInstance().logic;
-    private readonly mailer = new Mailer();
-    userService: UserService;
-
+@Resolver(UserMutationType)
+export class UserMutationResolver extends UserRootResolver {
     constructor() {
-        this.userService = new UserService();
-    }
-
-    @Query(() => [User], { description: 'Get user list by email' })
-    users(@Arg('email') email: string) {
-        return this.prisma.user.findMany({ where: { email } });
-    }
-
-    @Query(() => User, { nullable: true, description: 'Get user by ID' })
-    user(@Arg('id') id: string) {
-        return this.prisma.user.findUnique({ where: { id } });
+        super();
     }
 
     @ValidateSchemas()
-    @Mutation(() => User, { description: 'Update user' })
+    @FieldResolver(() => User)
     async modifyUser(@Args() args: UpdateUserInputType) {
         const user = await this.prisma.user.findUnique({
             where: { id: args.id },
@@ -55,14 +28,13 @@ export class UserResolver {
         const result = await validateAll.run();
         Object.assign(user, result);
         // TODO: write data.avatar & data.banner handlers
-
         return await this.prisma.user.update({
             where: { id: user.id },
             data: { ...user },
         });
     }
 
-    @Mutation(() => User, { description: 'Create user in database' })
+    @FieldResolver(() => User)
     @Authorized()
     @ValidateSchemas()
     async createUser(
