@@ -1,5 +1,5 @@
 import { ArgsType, Field, Float, Int, registerEnumType } from 'type-graphql';
-import { IsString, Length } from 'class-validator';
+import { IsArray, IsDate, IsDecimal, IsInt, IsNumber, IsString, Length } from "class-validator";
 import { MediaFormat } from '../types/media-format.enum';
 import { MediaSource } from '../types/media-source.enum';
 import { FilmRating } from '../types/film-rating.enum';
@@ -23,67 +23,77 @@ registerEnumType(MediaFormat, {
 
 @ArgsType()
 export class CreateAnimeInputType {
-    @Field()
     @IsString()
     @Length(1, 100)
+    @Field(() => String)
     title: string;
 
+    @IsDecimal()
     @Field(() => Float)
     score: number;
 
+    @IsInt()
     @Field(() => Int)
     year: number;
 
+    @IsArray()
     @Field(() => [String])
     genres: string[];
 
+    @IsString()
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
     media_format: MediaFormat;
 
-    @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     @IsString()
+    @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     source: MediaSource;
 
-    @Field(() => String, { nullable: false })
     @IsString()
+    @Field(() => String)
     studio_id: string;
 
+    @IsInt()
     @Field(() => Int)
     seasons_count: number;
 
+    @IsInt()
     @Field(() => Int)
     episodes_count: number;
 
+    @IsInt()
     @Field(() => Int)
     duration: number;
 
+    @IsDate()
     @Field(() => Date)
     next_episode: Date;
 
-    @Field(() => FilmRating, { defaultValue: FilmRating.G })
     @IsString()
+    @Field(() => FilmRating, { defaultValue: FilmRating.G })
     rating: FilmRating;
 
-    @Field(() => String)
     @IsString()
+    @Field(() => String)
     description: string;
 
-    @Field(() => String)
     @IsString()
+    @Field(() => String)
     preview_link: string;
 
-    @Field(() => String)
     @IsString()
     @Length(1, 30)
+    @Field(() => String)
     status_description: string;
 
-    @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
     @IsString()
+    @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
     release_status: ReleaseStatus;
 
+    @IsArray()
     @Field(() => [String])
     characters: string[];
 
+    @IsArray()
     @Field(() => [String])
     authors: string[];
 }
