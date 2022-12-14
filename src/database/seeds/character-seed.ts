@@ -22,7 +22,7 @@ async function characterSeed() {
             },
         ],
     });
-    console.log(`Seeding anime finished.`);
+    console.log(`Seeding characters finished.`);
 }
 
 characterSeed()
