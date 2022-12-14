@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {    // версия с изменениями
+model User {
   id               String          @id @default(uuid()) @db.Uuid
   username         String          @unique @db.VarChar(64)
   email            String?         @unique @db.VarChar(320)
@@ -20,22 +20,9 @@ model User {    // версия с изменениями
   thirdPartyAuth   ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId String?
   user_profile     UserProfile?
-  //password         String?         @db.VarChar(60)
-  //avatar           String?         @db.Text
-  //banner           String?         @db.Text
-  //customGender     String?         @db.VarChar(64)
-
   siteAuthSessions SiteAuthSession[]
 
   @@map("user")
-}
-
-    // версия  с изменениями
-enum Gender {
-  UNSPECIFIED
-  MALE
-  FEMALE
-  OTHER
 }
 
 model SiteAuthSession {
@@ -47,13 +34,6 @@ model SiteAuthSession {
   active Boolean @default(true)
 
   @@map("site_auth_session")
-}
-
-enum ThirdPartyType {
-  DISCORD
-  GOOGLE
-  APPLE
-  FACEBOOK
 }
 
 model ThirdPartyAuth {
@@ -69,7 +49,6 @@ model ThirdPartyAuth {
   type      ThirdPartyType
 
   user      User[]
-  // @@unique([serviceName, serviceId])
   @@map("third_party_auth")
 }
 
@@ -79,23 +58,10 @@ model Studio {
   studio_name   String   @db.VarChar(64)
   rating        Float    @db.Real
   thumbnail     String   @db.Text
-  anime         Anime[]     // отношение o2m - у 1 студии много онеме - таблица Anime
-  //deleted     Boolean  @default(false)
-  //series        Series[]    // Предлагаю удалить. Оставить указание на таблицу Аниме (строка ниже)
+  anime         Anime[]
+
   @@map("studio")
 }
-
-// ! предлагаю удалить и ссылаться на Anime
-//model Series {
-//  id        String   @id @default(uuid())
-//  createdAt DateTime @default(now())
-//  deleted   Boolean  @default(false)
-//  name      String   @db.VarChar(64)
-//  studio    Studio?  @relation(fields: [studioId], references: [id])
-//  studioId  String?
-//}
-
-// добавленные модели - Айрат:
 
 model Friendship {
     friend_one  String              @db.Uuid
@@ -107,12 +73,6 @@ model Friendship {
     @@map("friendship")
 }
 
-enum FriendshipStatus {
-    AWAITING
-    REQUESTED
-    CONFIRMED
-}
-
 model Anime {
     id                      String          @id @default(uuid()) @db.Uuid
     title                   String          @db.VarChar(100)
@@ -122,20 +82,116 @@ model Anime {
     media_format            MediaFormat     @default(OTHER)
     source                  MediaSource     @default(OTHER)
     studio_id               String          @db.Uuid
-    studio                  Studio?         @relation(fields: [studio_id], references: [id]) // ссылка на Студию
+    studio                  Studio?         @relation(fields: [studio_id], references: [id])
     seasons_count           Int             @db.SmallInt
     episodes_count          Int             @db.SmallInt
-    duration                Int             @db.Integer     // секунды - The general length of each anime episode
-    next_episode            DateTime        @db.Time        // формат 4 апр. 03:30
+    duration                Int             @db.Integer
+    next_episode            DateTime        @db.Time
     rating                  FilmRating      @default(G)
     description             String          @db.Text
     preview_link            String          @db.Text
     status_description      String          @db.VarChar(30)
-    release_status          ReleaseStatus   @default(FINISHED)  // в онилисте - поле status
-    characters              String[]        @db.Uuid    // массив uuid[] - ОТЛИЧНО ПОЛУЧАЕТСЯ
-    authors                 String[]        @db.Uuid    // массив uuid[] - ОТЛИЧНО ПОЛУЧАЕТСЯ
+    release_status          ReleaseStatus   @default(FINISHED)
+    characters              String[]        @db.Uuid
+    authors                 String[]        @db.Uuid
 
     @@map("anime")
+}
+
+model Author {
+    id             String   @id @default(uuid()) @db.Uuid
+    author_name    String   @db.VarChar(50)
+    bucket_id      String   @db.Uuid
+    bio            String   @db.Text
+
+    @@map("author")
+}
+
+model Character {
+    id              String      @id @default(uuid()) @db.Uuid
+    bucket_id       String      @db.Uuid
+    character_name  String      @db.VarChar(50)
+    importaice      Importance  @default(MAIN_HERO)
+    description     String      @db.Text
+
+    @@map("character")
+}
+
+model Genre {
+    id              String   @id @default(uuid()) @db.Uuid
+    genre_name      String   @db.VarChar(50)
+
+    @@map("genre")
+}
+
+model Translation {
+    id          String  @id @default(uuid()) @db.Uuid
+    language    String  @db.VarChar(20)
+    translation String  @db.Text
+
+    @@map("translation")
+}
+
+// Модели частных индивидуальных баз
+model UserProfile {
+    id                  String      @id @default(uuid()) @db.Uuid
+    user                User        @relation(fields: [user_id], references:[id])   // внешний ключ  - отношение на таблицу юзер
+    user_id             String      @unique @db.Uuid
+    displayed_name      String      @db.VarChar(30)
+    profile_picture_id  String      @db.Uuid
+    user_anime          UserAnime[]
+
+    @@map("user_profile")
+}
+
+model UserAnime {
+    id                  String          @id @default(uuid()) @db.Uuid
+    anime_id            String          @db.VarChar(100)
+    user_profile        UserProfile     @relation(fields: [user_profile_id], references:[id])   // внешний ключ  - отношение на таблицу юзер профиль
+    user_profile_id     String          @db.Uuid
+    season              Int             @db.SmallInt
+    episode             Int             @db.SmallInt
+    status              WatchStatus     @default(WATCHING)
+    in_favourites       Boolean
+    episode_duration    Int             @db.Integer
+    paused_timestamp    Int             @db.Integer
+    watched_time        DateTime        @db.Time
+
+    @@map("user_anime")
+}
+
+//enums
+enum Gender {
+  UNSPECIFIED
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum WatchStatus {
+    WATCHING
+    PLANNED
+    SEEN
+    ABANDONED
+}
+
+enum ThirdPartyType {
+  DISCORD
+  GOOGLE
+  APPLE
+  FACEBOOK
+}
+
+enum FriendshipStatus {
+    AWAITING
+    REQUESTED
+    CONFIRMED
+}
+
+enum Importance {
+    MAIN_HERO
+    MAJOR_HERO
+    OTHER
 }
 
 enum FilmRating {
@@ -188,78 +244,3 @@ enum MediaFormat {
     OTHER
 }
 
-model Author {
-    id             String   @id @default(uuid()) @db.Uuid
-    author_name    String   @db.VarChar(50)
-    bucket_id      String   @db.Uuid
-    bio            String   @db.Text
-
-    @@map("author")
-}
-
-model Character {
-    id              String      @id @default(uuid()) @db.Uuid
-    bucket_id       String      @db.Uuid
-    character_name  String      @db.VarChar(50)
-    importaice      Importance  @default(MAIN_HERO)
-    description     String      @db.Text
-
-    @@map("character")
-}
-
-enum Importance {
-    MAIN_HERO
-    MAJOR_HERO
-    OTHER
-}
-
-model Genre {
-    id              String   @id @default(uuid()) @db.Uuid
-    genre_name      String   @db.VarChar(50)
-
-    @@map("genre")
-}
-
-model Translation {
-    id          String  @id @default(uuid()) @db.Uuid
-    language    String  @db.VarChar(20)
-    translation String  @db.Text
-
-    @@map("translation")
-}
-
-// Модели частных индивидуальных баз
-
-model UserProfile {
-    id                  String      @id @default(uuid()) @db.Uuid
-    user                User        @relation(fields: [user_id], references:[id])   // внешний ключ  - отношение на таблицу юзер
-    user_id             String      @unique @db.Uuid
-    displayed_name      String      @db.VarChar(30)
-    profile_picture_id  String      @db.Uuid
-
-    user_anime          UserAnime[]
-    @@map("user_profile")
-}
-
-model UserAnime {
-    id                  String          @id @default(uuid()) @db.Uuid
-    anime_id            String          @db.VarChar(100)
-    user_profile        UserProfile     @relation(fields: [user_profile_id], references:[id])   // внешний ключ  - отношение на таблицу юзер профиль
-    user_profile_id     String          @db.Uuid
-    season              Int             @db.SmallInt
-    episode             Int             @db.SmallInt
-    status              WatchStatus     @default(WATCHING)
-    in_favourites       Boolean
-    episode_duration    Int             @db.Integer
-    paused_timestamp    Int             @db.Integer
-    watched_time        DateTime        @db.Time
-
-    @@map("user_anime")
-}
-
-enum WatchStatus {
-    WATCHING
-    PLANNED
-    SEEN
-    ABANDONED
-}
