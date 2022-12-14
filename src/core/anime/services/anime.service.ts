@@ -7,6 +7,14 @@ import { PaginationInputType } from "../../../common/inputs/pagination-input.typ
 export class AnimeService {
     private readonly prisma = Database.getInstance().logic;
 
+    async getAnime(id: string): Promise<Anime | null> {
+        return await this.prisma.anime.findUnique({
+            where: {
+                id
+            }
+        })
+    }
+
     async getAnimeList(args: PaginationInputType): Promise<Anime[]> {
         return await this.prisma.anime.findMany({
             skip: args.skip,

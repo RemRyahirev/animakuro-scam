@@ -12,11 +12,7 @@ export class AnimeQueryResolver extends AnimeRootResolver {
 
     @FieldResolver(() => GetAnimeResultsType)
     async getAnime(@Arg('id') id: string): Promise<GetAnimeResultsType> {
-        const anime = await this.prisma.anime.findUnique({
-            where: {
-                id,
-            }
-        })
+        const anime = await this.animeService.getAnime(id);
         if (!anime){
             return {
                 success: false,
