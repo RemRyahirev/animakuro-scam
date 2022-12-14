@@ -48,11 +48,6 @@ export class CreateAnimeInputType {
     @IsString()
     studio_id: string;
 
-    // @Field(() => String, { nullable: true })
-    // @IsOptional()
-    // @IsString()
-    // studio?: string;
-
     @Field(() => Int)
     seasons_count: number;
 
@@ -69,15 +64,15 @@ export class CreateAnimeInputType {
     @IsString()
     rating: FilmRating;
 
-    @Field()
+    @Field(() => String)
     @IsString()
     description: string;
 
-    @Field()
+    @Field(() => String)
     @IsString()
     preview_link: string;
 
-    @Field()
+    @Field(() => String)
     @IsString()
     @Length(1, 30)
     status_description: string;

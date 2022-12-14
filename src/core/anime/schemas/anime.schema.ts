@@ -1,5 +1,4 @@
 import { Field, Float, ID, Int, ObjectType, registerEnumType } from "type-graphql";
-import { IsString, Length } from 'class-validator';
 import { ReleaseStatus } from '../types/release-status.enum';
 import { FilmRating } from '../types/film-rating.enum';
 import { MediaSource } from '../types/media-source.enum';
@@ -26,7 +25,7 @@ export class Anime {
     @Field(() => ID)
     id?: string;
 
-    @Field()
+    @Field(() => String)
     title: string;
 
     @Field(() => Float)
@@ -46,9 +45,6 @@ export class Anime {
 
     @Field(() => String, { nullable: false })
     studio_id: string;
-    //
-    // @Field(() => String, { nullable: true })
-    // studio?: string;
 
     @Field(() => Int)
     seasons_count: number;
@@ -56,30 +52,30 @@ export class Anime {
     @Field(() => Int)
     episodes_count: number;
 
-    @Field(() => Int)
+    @Field(() => Int, { description: 'Duration in seconds' })
     duration: number;
 
-    @Field(() => Date)
+    @Field(() => Date, { description: 'Date format "4 apr. 03:30"' })
     next_episode: Date;
 
     @Field(() => FilmRating, { defaultValue: FilmRating.G })
     rating: string;
 
-    @Field()
+    @Field(() => String)
     description: string;
 
-    @Field()
+    @Field(() => String)
     preview_link: string;
 
-    @Field()
+    @Field(() => String)
     status_description: string;
 
     @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
     release_status: string;
 
     @Field(() => [String])
-    characters: String[];
+    characters: string[];
 
     @Field(() => [String])
-    authors: String[];
+    authors: string[];
 }
