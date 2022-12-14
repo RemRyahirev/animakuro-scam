@@ -20,6 +20,7 @@ model User {
   thirdPartyAuth   ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId String?
   user_profile     UserProfile?
+
   siteAuthSessions SiteAuthSession[]
 
   @@map("user")
@@ -48,119 +49,134 @@ model ThirdPartyAuth {
   avatar    String?        @db.Text
   type      ThirdPartyType
 
-  user      User[]
+  user User[]
+
   @@map("third_party_auth")
 }
 
 model Studio {
-  id            String   @id @default(uuid()) @db.Uuid
-  createdAt     DateTime @default(now())
-  studio_name   String   @db.VarChar(64)
-  rating        Float    @db.Real
-  thumbnail     String   @db.Text
-  anime         Anime[]
+  id          String   @id @default(uuid()) @db.Uuid
+  createdAt   DateTime @default(now())
+  studio_name String   @db.VarChar(64)
+  rating      Float    @db.Real
+  thumbnail   String   @db.Text
+  anime       Anime[] // отношение o2m - у 1 студии много онеме - таблица Anime
 
   @@map("studio")
 }
 
 model Friendship {
-    friend_one  String              @db.Uuid
-    friend_two  String              @db.Uuid
-    status      FriendshipStatus    @default(AWAITING)
-    start_date  DateTime            @default(now()) @db.Date
+  friend_one String           @db.Uuid
+  friend_two String           @db.Uuid
+  status     FriendshipStatus @default(AWAITING)
+  start_date DateTime         @default(now()) @db.Date
 
-    @@unique([friend_one, friend_two])
-    @@map("friendship")
+  @@unique([friend_one, friend_two])
+  @@map("friendship")
 }
 
 model Anime {
-    id                      String          @id @default(uuid()) @db.Uuid
-    title                   String          @db.VarChar(100)
-    score                   Float           @db.Real
-    year                    Int             @db.SmallInt
-    genres                  String[]        @db.Uuid
-    media_format            MediaFormat     @default(OTHER)
-    source                  MediaSource     @default(OTHER)
-    studio_id               String          @db.Uuid
-    studio                  Studio?         @relation(fields: [studio_id], references: [id])
-    seasons_count           Int             @db.SmallInt
-    episodes_count          Int             @db.SmallInt
-    duration                Int             @db.Integer
-    next_episode            DateTime        @db.Time
-    rating                  FilmRating      @default(G)
-    description             String          @db.Text
-    preview_link            String          @db.Text
-    status_description      String          @db.VarChar(30)
-    release_status          ReleaseStatus   @default(FINISHED)
-    characters              String[]        @db.Uuid
-    authors                 String[]        @db.Uuid
+  id                 String        @id @default(uuid()) @db.Uuid
+  title              String        @db.VarChar(100)
+  score              Float         @db.Real
+  year               Int           @db.SmallInt
+  genres             String[]      @db.Uuid
+  media_format       MediaFormat   @default(OTHER)
+  source             MediaSource   @default(OTHER)
+  studio_id          String        @db.Uuid
+  studio             Studio?       @relation(fields: [studio_id], references: [id]) // ссылка на Студию
+  seasons_count      Int           @db.SmallInt
+  episodes_count     Int           @db.SmallInt
+  duration           Int           @db.Integer // секунды - The general length of each anime episode
+  next_episode       DateTime      @db.Time // формат 4 апр. 03:30
+  rating             FilmRating    @default(G)
+  description        String        @db.Text
+  preview_link       String        @db.Text
+  status_description String        @db.VarChar(30)
+  release_status     ReleaseStatus @default(FINISHED) // в онилисте - поле status
+  characters         String[]      @db.Uuid // массив uuid[]
+  authors            String[]      @db.Uuid // массив uuid[]
 
-    @@map("anime")
+  @@map("anime")
 }
 
 model Author {
-    id             String   @id @default(uuid()) @db.Uuid
-    author_name    String   @db.VarChar(50)
-    bucket_id      String   @db.Uuid
-    bio            String   @db.Text
+  id          String @id @default(uuid()) //@db.Uuid
+  author_name String @db.VarChar(50)
+  bucket_id   String @db.Uuid
+  bio         String @db.Text
 
-    @@map("author")
+  @@map("author")
 }
 
 model Character {
-    id              String      @id @default(uuid()) @db.Uuid
-    bucket_id       String      @db.Uuid
-    character_name  String      @db.VarChar(50)
-    importaice      Importance  @default(MAIN_HERO)
-    description     String      @db.Text
+  id             String        @id @default(uuid()) //@db.Uuid
+  bucket_id      String        @db.Uuid
+  character_name String        @db.VarChar(50)
+  importance     CharacterType @default(PROTAGONIST)
+  description    String        @db.Text
 
-    @@map("character")
+  @@map("character")
 }
 
 model Genre {
-    id              String   @id @default(uuid()) @db.Uuid
-    genre_name      String   @db.VarChar(50)
+  id         String @id @default(uuid()) @db.Uuid
+  genre_name String @db.VarChar(50)
 
-    @@map("genre")
+  @@map("genre")
 }
 
 model Translation {
-    id          String  @id @default(uuid()) @db.Uuid
-    language    String  @db.VarChar(20)
-    translation String  @db.Text
+  id          String @id @default(uuid()) @db.Uuid
+  language    String @db.VarChar(20)
+  translation String @db.Text
 
-    @@map("translation")
+  @@map("translation")
 }
 
 // Модели частных индивидуальных баз
-model UserProfile {
-    id                  String      @id @default(uuid()) @db.Uuid
-    user                User        @relation(fields: [user_id], references:[id])   // внешний ключ  - отношение на таблицу юзер
-    user_id             String      @unique @db.Uuid
-    displayed_name      String      @db.VarChar(30)
-    profile_picture_id  String      @db.Uuid
-    user_anime          UserAnime[]
 
-    @@map("user_profile")
+model UserProfile {
+  id                 String @id @default(uuid()) @db.Uuid
+  user               User   @relation(fields: [user_id], references: [id]) // внешний ключ  - отношение на таблицу юзер
+  user_id            String @unique @db.Uuid
+  displayed_name     String @db.VarChar(30)
+  profile_picture_id String @db.Uuid
+
+  user_anime UserAnime[]
+
+  @@map("user_profile")
 }
 
 model UserAnime {
-    id                  String          @id @default(uuid()) @db.Uuid
-    anime_id            String          @db.VarChar(100)
-    user_profile        UserProfile     @relation(fields: [user_profile_id], references:[id])   // внешний ключ  - отношение на таблицу юзер профиль
-    user_profile_id     String          @db.Uuid
-    season              Int             @db.SmallInt
-    episode             Int             @db.SmallInt
-    status              WatchStatus     @default(WATCHING)
-    in_favourites       Boolean
-    episode_duration    Int             @db.Integer
-    paused_timestamp    Int             @db.Integer
-    watched_time        DateTime        @db.Time
+  id               String      @id @default(uuid()) @db.Uuid
+  anime_id         String      @db.VarChar(100)
+  user_profile     UserProfile @relation(fields: [user_profile_id], references: [id]) // внешний ключ  - отношение на таблицу юзер профиль
+  user_profile_id  String      @db.Uuid
+  season           Int         @db.SmallInt
+  episode          Int         @db.SmallInt
+  status           WatchStatus @default(WATCHING)
+  in_favourites    Boolean
+  episode_duration Int         @db.Integer
+  paused_timestamp Int         @db.Integer
+  watched_time     DateTime    @db.Time
 
-    @@map("user_anime")
+  @@map("user_anime")
 }
 
-//enums
+enum FriendshipStatus {
+  AWAITING
+  REQUESTED
+  CONFIRMED
+}
+
+enum WatchStatus {
+  WATCHING
+  PLANNED
+  SEEN
+  ABANDONED
+}
+
 enum Gender {
   UNSPECIFIED
   MALE
@@ -168,11 +184,66 @@ enum Gender {
   OTHER
 }
 
-enum WatchStatus {
-    WATCHING
-    PLANNED
-    SEEN
-    ABANDONED
+enum FilmRating {
+  G
+  PG
+  PG_13
+  R
+  R_17
+  NC_17
+  NC_21
+}
+
+enum MediaSource {
+  ORIGINAL // An original production not based of another work
+  MANGA // Asian comic book
+  LIGHT_NOVEL // Written work published in volumes
+  VISUAL_NOVEL // Video game driven primary by text and narrative
+  VIDEO_GAME // Video game
+  OTHER // Other
+  NOVEL // Written works not published in volumes
+  DOUJINSHI // Self-published works
+  ANIME // Japanese Anime
+  WEB_NOVEL // Written works published online
+  LIVE_ACTION // Live action media such as movies or TV show
+  GAME // Games excluding video games
+  COMIC // Comics excluding manga
+  MULTIMEDIA_PROJECT // Multimedia project
+  PICTURE_BOOK // Picture book
+}
+
+enum ReleaseStatus {
+  FINISHED // Has completed and is no longer being released
+  RELEASING // Currently releasing
+  NOT_YET_RELEASED // To be released at a later date
+  CANCELLED // Ended before the work could be finished
+  HIATUS // Is currently paused from releasing and will resume at a later date
+}
+
+enum MediaFormat {
+  TV
+  TV_SHORT
+  MOVIE
+  SPECIAL
+  OVA
+  ONA
+  MUSIC
+  MANGA
+  NOVEL
+  ONE_SHOT
+  OTHER
+}
+
+enum CharacterType {
+  PROTAGONIST
+  ANTAGONIST
+  SIDEKICK
+  ORBITAL_CHARACTER
+  LOVE_INTEREST
+  CONFIDANTE
+  EXTRAS
+  FOIL
+  OTHER
 }
 
 enum ThirdPartyType {
@@ -181,66 +252,3 @@ enum ThirdPartyType {
   APPLE
   FACEBOOK
 }
-
-enum FriendshipStatus {
-    AWAITING
-    REQUESTED
-    CONFIRMED
-}
-
-enum Importance {
-    MAIN_HERO
-    MAJOR_HERO
-    OTHER
-}
-
-enum FilmRating {
-    G
-    PG
-    PG_13
-    R
-    R_17
-    NC_17
-    NC_21
-}
-
-enum MediaSource {
-    ORIGINAL // An original production not based of another work
-    MANGA // Asian comic book
-    LIGHT_NOVEL // Written work published in volumes
-    VISUAL_NOVEL // Video game driven primary by text and narrative
-    VIDEO_GAME // Video game
-    OTHER // Other
-    NOVEL // Written works not published in volumes
-    DOUJINSHI // Self-published works
-    ANIME // Japanese Anime
-    WEB_NOVEL // Written works published online
-    LIVE_ACTION // Live action media such as movies or TV show
-    GAME // Games excluding video games
-    COMIC // Comics excluding manga
-    MULTIMEDIA_PROJECT // Multimedia project
-    PICTURE_BOOK // Picture book
-}
-
-enum ReleaseStatus {
-    FINISHED // Has completed and is no longer being released
-    RELEASING // Currently releasing
-    NOT_YET_RELEASED // To be released at a later date
-    CANCELLED // Ended before the work could be finished
-    HIATUS // Is currently paused from releasing and will resume at a later date
-}
-
-enum MediaFormat {
-    TV
-    TV_SHORT
-    MOVIE
-    SPECIAL
-    OVA
-    ONA
-    MUSIC
-    MANGA
-    NOVEL
-    ONE_SHOT
-    OTHER
-}
-
