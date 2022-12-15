@@ -10,7 +10,6 @@
         "emitDecoratorMetadata": true,
         "strictPropertyInitialization": false,
         "strict": true,
-        "strictPropertyInitialization": false,
         "esModuleInterop": true,
         "sourceMap": true,
         "pretty": true,
