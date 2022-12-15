@@ -1,4 +1,5 @@
-import { Field, ObjectType, registerEnumType } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
+import { LoginType } from "../../../common/models/enums/login-type.enum";
 
 // @InputType()
 // export class TwoFAInput {
@@ -19,15 +20,6 @@ export class LoginReturnType {
     @Field(() => String)
     token = undefined as any as string;
 }
-
-export enum LoginType {
-    AUTH,
-    TWO_FA,
-}
-
-registerEnumType(LoginType, {
-    name: 'LoginType',
-});
 
 @ObjectType()
 export class ThirdPartyRedirectUrlReturnType {
