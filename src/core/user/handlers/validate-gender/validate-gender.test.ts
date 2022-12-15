@@ -1,14 +1,14 @@
-import { GenderInputInterface } from '../../types/gender-input.interface';
+import { IGenderInput } from '../../../../common/models/interfaces/gender-input.interface';
 import { Gender } from '../../../../common/models/enums/gender.enum';
 import { ValidateGender } from './validate-gender';
 
 describe('Check gender', () => {
-    const sourceGender: GenderInputInterface = {
+    const sourceGender: IGenderInput = {
         gender: Gender.CUSTOM,
         customGender: 'Some',
     };
     test('if gender is unspecified', async () => {
-        const inputGender: GenderInputInterface = {
+        const inputGender: IGenderInput = {
             gender: Gender.UNSPECIFIED,
             customGender: '312312',
         };
@@ -21,7 +21,7 @@ describe('Check gender', () => {
     });
 
     test('if gender is female', async () => {
-        const inputGender: GenderInputInterface = {
+        const inputGender: IGenderInput = {
             gender: Gender.FEMALE,
             customGender: 'ffdsfsdfsd',
         };
@@ -34,7 +34,7 @@ describe('Check gender', () => {
     });
 
     test('if gender is male', async () => {
-        const inputGender: GenderInputInterface = {
+        const inputGender: IGenderInput = {
             gender: Gender.MALE,
             customGender: 'ffdsfsdfsd',
         };
@@ -47,7 +47,7 @@ describe('Check gender', () => {
     });
 
     test('if gender is custom', async () => {
-        const inputGender: GenderInputInterface = {
+        const inputGender: IGenderInput = {
             gender: Gender.CUSTOM,
             customGender: 'custom!!!',
         };

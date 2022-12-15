@@ -1,6 +1,6 @@
 import { User } from "../../models/user.model";
 import { UpdateUserInputType } from "../../models/inputs/update-user-input.type";
-import { ErrorObjectInterface } from '../../types/error-object.interface';
+import { IErrorObject } from '../../../../common/models/interfaces/error-object.interface';
 import { ValidateBirthday } from '../validate-birthday/validate-birthday';
 import { ValidateEmail } from '../validate-email/validate-email';
 import { ValidateGender } from '../validate-gender/validate-gender';
@@ -9,12 +9,12 @@ import { ValidateUsername } from '../validate-username/validate-username';
 import { Checker } from '../checker';
 import { GqlHttpException } from '../../../../common/errors/errors';
 import { HttpStatus } from '../../../../common/models/enums/http-status.enum';
-import { UserOutputInterface } from '../../types/user-output.interface';
+import { IUserOutput } from '../../../../common/models/interfaces/user-output.interface';
 
 export class ValidateAll {
-    private readonly _errorsList: Array<ErrorObjectInterface> = [];
+    private readonly _errorsList: Array<IErrorObject> = [];
     private readonly _validateList: Array<Checker<any, any, any>> = [];
-    private readonly _resObject: UserOutputInterface = {};
+    private readonly _resObject: IUserOutput = {};
     private readonly _birthDay: ValidateBirthday;
     private readonly _email: ValidateEmail;
     private readonly _gender: ValidateGender;
@@ -57,7 +57,7 @@ export class ValidateAll {
     }
 
     private _setObj() {
-        Object.assign(this._resObject, <UserOutputInterface>{
+        Object.assign(this._resObject, <IUserOutput>{
             email: this._email.value,
             username: this._username.value,
             birthday: this._birthDay.value,

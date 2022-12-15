@@ -1,23 +1,23 @@
 import { Checker } from '../checker';
-import { GenderInputInterface } from '../../types/gender-input.interface';
+import { IGenderInput } from '../../../../common/models/interfaces/gender-input.interface';
 import { Gender } from '../../../../common/models/enums/gender.enum';
 
 export class ValidateGender extends Checker<
-    GenderInputInterface,
-    GenderInputInterface,
-    GenderInputInterface
+    IGenderInput,
+    IGenderInput,
+    IGenderInput
 > {
-    private readonly _currentValue: GenderInputInterface;
+    private readonly _currentValue: IGenderInput;
 
     constructor(
-        inputValue: GenderInputInterface,
-        sourceValue: GenderInputInterface,
+        inputValue: IGenderInput,
+        sourceValue: IGenderInput,
     ) {
         super(inputValue, sourceValue);
         this._currentValue = this._sourceValue;
     }
 
-    get value(): GenderInputInterface {
+    get value(): IGenderInput {
         return this._currentValue;
     }
 

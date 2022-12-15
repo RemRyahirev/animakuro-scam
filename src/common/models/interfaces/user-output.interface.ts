@@ -1,6 +1,6 @@
-import { Gender } from '../../../common/models/enums/gender.enum';
+import { Gender } from '../enums/gender.enum';
 
-export interface UserOutputInterface {
+export interface IUserOutput {
     gender?: Gender | null;
     customGender?: string | null;
     birthday?: Date;

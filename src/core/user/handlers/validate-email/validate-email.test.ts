@@ -1,5 +1,5 @@
 import { ValidateEmail } from './validate-email';
-import { User } from '../../schemas/user.schema';
+import { User } from '../../models/user.model';
 
 describe('Check emails', () => {
     const inputEmail = 'input@mail.ru';

@@ -1,9 +1,9 @@
-import { ErrorObjectInterface } from '../types/error-object.interface';
+import { IErrorObject } from '../../../common/models/interfaces/error-object.interface';
 
 export abstract class Checker<S, I, C> {
     protected readonly _sourceValue: S;
     protected readonly _inputValue: I;
-    protected readonly _errorsList: Array<ErrorObjectInterface> = [];
+    protected readonly _errorsList: Array<IErrorObject> = [];
 
     protected constructor(inputValue: I, sourceValue: S) {
         this._inputValue = inputValue;
@@ -12,7 +12,7 @@ export abstract class Checker<S, I, C> {
 
     abstract validate(): Promise<void>;
 
-    get errorsList(): Array<ErrorObjectInterface> {
+    get errorsList(): Array<IErrorObject> {
         return this._errorsList;
     }
 
