@@ -1,10 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 import {CharacterType} from "../../../common/models/enums";
 
-registerEnumType(CharacterType, {
-    name: 'CharacterType'
-})
-
 // здесь - обычные типы (а-ля строка), даже в enum-ах
 @ObjectType()
 export class Character {
