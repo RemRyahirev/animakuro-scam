@@ -1,4 +1,4 @@
-# генерирует клиента Prisma на основе схемы (schema.prisma).
+# генерирует клиента Prisma на основе схемы (schema.prisma):
 gen:
 	npx prisma generate
 
