@@ -1,3 +1,5 @@
+import { registerEnumType } from 'type-graphql';
+
 export enum MediaSource {
     ORIGINAL = 'ORIGINAL',
     MANGA = 'MANGA',
@@ -15,3 +17,7 @@ export enum MediaSource {
     MULTIMEDIA_PROJECT = 'MULTIMEDIA_PROJECT',
     PICTURE_BOOK = 'PICTURE_BOOK',
 }
+
+registerEnumType(MediaSource, {
+    name: 'MediaSource',
+});

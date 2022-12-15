@@ -1,3 +1,5 @@
+import { registerEnumType } from 'type-graphql';
+
 export enum MediaFormat {
     TV = 'TV',
     TV_SHORT = 'TV_SHORT',
@@ -11,3 +13,7 @@ export enum MediaFormat {
     ONE_SHOT = 'ONE_SHOT',
     OTHER = 'OTHER',
 }
+
+registerEnumType(MediaFormat, {
+    name: 'MediaFormat',
+});

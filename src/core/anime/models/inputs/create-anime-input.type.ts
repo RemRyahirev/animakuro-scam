@@ -1,4 +1,4 @@
-import { ArgsType, Field, Float, Int, registerEnumType } from 'type-graphql';
+import { ArgsType, Field, Float, Int } from 'type-graphql';
 import {
     IsArray,
     IsDate,
@@ -11,22 +11,6 @@ import { MediaFormat } from '../enums/media-format.enum';
 import { FilmRating } from '../enums/film-rating.enum';
 import { ReleaseStatus } from '../enums/release-status.enum';
 import { MediaSource } from '../enums/media-source.enum';
-
-registerEnumType(ReleaseStatus, {
-    name: 'ReleaseStatus',
-});
-
-registerEnumType(FilmRating, {
-    name: 'FilmRating',
-});
-
-registerEnumType(MediaSource, {
-    name: 'MediaSource',
-});
-
-registerEnumType(MediaFormat, {
-    name: 'MediaFormat',
-});
 
 @ArgsType()
 export class CreateAnimeInputType {

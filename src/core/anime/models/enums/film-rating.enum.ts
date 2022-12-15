@@ -1,3 +1,5 @@
+import { registerEnumType } from 'type-graphql';
+
 export enum FilmRating {
     G = 'G',
     PG = 'PG',
@@ -7,3 +9,7 @@ export enum FilmRating {
     NC_17 = 'NC_17',
     NC_21 = 'NC_21',
 }
+
+registerEnumType(FilmRating, {
+    name: 'FilmRating',
+});
