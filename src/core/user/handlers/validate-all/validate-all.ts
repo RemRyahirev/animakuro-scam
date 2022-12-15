@@ -1,6 +1,9 @@
-import { User } from "../../models/user.model";
-import { UpdateUserInputType } from "../../models/inputs/update-user-input.type";
-import { IErrorObject } from '../../../../common/models/interfaces/error-object.interface';
+import { User } from '../../models/user.model';
+import { UpdateUserInputType } from '../../models/inputs/update-user-input.type';
+import {
+    IErrorObject,
+    IUserOutput,
+} from '../../../../common/models/interfaces';
 import { ValidateBirthday } from '../validate-birthday/validate-birthday';
 import { ValidateEmail } from '../validate-email/validate-email';
 import { ValidateGender } from '../validate-gender/validate-gender';
@@ -8,8 +11,7 @@ import { ValidatePassword } from '../validate-password/validate-password';
 import { ValidateUsername } from '../validate-username/validate-username';
 import { Checker } from '../checker';
 import { GqlHttpException } from '../../../../common/errors/errors';
-import { HttpStatus } from '../../../../common/models/enums/http-status.enum';
-import { IUserOutput } from '../../../../common/models/interfaces/user-output.interface';
+import { HttpStatus } from '../../../../common/models/enums';
 
 export class ValidateAll {
     private readonly _errorsList: Array<IErrorObject> = [];

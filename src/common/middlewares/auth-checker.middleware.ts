@@ -1,13 +1,12 @@
 import { getMetadataStorage, ResolverData } from 'type-graphql';
-
 import { GqlHttpException } from 'common/errors/errors';
 import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import JwtTokenService from '../../core/auth/services/jwt-token.service';
 import { UserService } from 'core/user/services/user.service';
 import { ObjectClassMetadata } from 'type-graphql/dist/metadata/definitions/object-class-metdata';
 import { FieldNode, GraphQLResolveInfo, SelectionNode } from 'graphql';
-import { IGetRejectTypeObject } from '../models/interfaces/get-reject-type-object.interface';
-import { HttpStatus } from '../models/enums/http-status.enum';
+import { IGetRejectTypeObject } from '../models/interfaces';
+import { HttpStatus } from '../models/enums';
 /* only for testing */
 
 let allReturnTypes: Array<ObjectClassMetadata>;

@@ -1,5 +1,5 @@
 import { Arg, Args, FieldResolver, Resolver } from 'type-graphql';
-import { PaginationInputType } from '../../../common/models/inputs/pagination-input.type';
+import { PaginationInputType } from '../../../common/models/inputs';
 import { GenreQueryType, GenreRootResolver } from './genre-root.resolver';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';

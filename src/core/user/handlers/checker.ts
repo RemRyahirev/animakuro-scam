@@ -1,4 +1,4 @@
-import { IErrorObject } from '../../../common/models/interfaces/error-object.interface';
+import { IErrorObject } from '../../../common/models/interfaces';
 
 export abstract class Checker<S, I, C> {
     protected readonly _sourceValue: S;

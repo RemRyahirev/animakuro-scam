@@ -1,8 +1,10 @@
 import { Field, Float, ID, Int, ObjectType } from 'type-graphql';
-import { MediaFormat } from '../../../common/models/enums/media-format.enum';
-import { FilmRating } from '../../../common/models/enums/film-rating.enum';
-import { ReleaseStatus } from '../../../common/models/enums/release-status.enum';
-import { MediaSource } from '../../../common/models/enums/media-source.enum';
+import {
+    FilmRating,
+    MediaFormat,
+    MediaSource,
+    ReleaseStatus,
+} from '../../../common/models/enums';
 
 @ObjectType()
 export class Anime {

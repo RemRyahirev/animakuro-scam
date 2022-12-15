@@ -1,4 +1,4 @@
-import { ThirdPartyAuthType } from '../../../common/models/enums/user-third-party-type.enum';
+import { ThirdPartyAuthType } from '../../../common/models/enums';
 import Database from '../../../database';
 import { ThirdPartyAuthInputType } from '../../auth/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';

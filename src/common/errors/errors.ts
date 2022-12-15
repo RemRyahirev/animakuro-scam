@@ -1,7 +1,7 @@
 /**
  * Throws exeption that can be catched by api middleware
  **/
-import { HttpStatus } from '../models/enums/http-status.enum';
+import { HttpStatus } from '../models/enums';
 
 export class GqlHttpException extends Error {
     readonly statusCode: HttpStatus;

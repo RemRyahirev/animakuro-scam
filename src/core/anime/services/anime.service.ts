@@ -1,7 +1,7 @@
 import Database from '../../../database';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
-import { PaginationInputType } from '../../../common/models/inputs/pagination-input.type';
+import { PaginationInputType } from '../../../common/models/inputs';
 import { Anime } from '../models/anime.model';
 
 export class AnimeService {

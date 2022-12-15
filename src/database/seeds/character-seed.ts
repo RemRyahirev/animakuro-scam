@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { CharacterType } from '../../common/models/enums/character-type.enum';
+import { CharacterType } from '../../common/models/enums';
 
 const prisma = new PrismaClient();
 

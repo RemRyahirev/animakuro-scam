@@ -1,4 +1,4 @@
-import { METADATA_KEY } from '../decorators/allow-change-by.decorator';
+import { METADATA_KEY } from '../decorators';
 
 /**
  * Check if the user is allowed to change the field, use '@AllowChangeBy' decorator to define the rules

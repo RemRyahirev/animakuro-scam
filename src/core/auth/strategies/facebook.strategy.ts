@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IAccount } from '../../../common/models/interfaces/account.interface';
+import { IAccount } from '../../../common/models/interfaces';
 
 export class FacebookStrategy {
     client_id: string;

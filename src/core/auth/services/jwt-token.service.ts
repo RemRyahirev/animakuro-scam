@@ -1,7 +1,6 @@
-import { decode, JwtPayload, sign, verify } from 'jsonwebtoken';
-import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
-import { ThirdPartyAuthType } from '../../../common/models/enums/user-third-party-type.enum';
-import { IJwtInputPayload } from '../../../common/models/interfaces/jwt-input-payload.interface';
+import { decode, JwtPayload, sign, verify } from "jsonwebtoken";
+import { ICustomContext } from "common/models/interfaces/custom-context.interface";
+import { IJwtInputPayload } from "../../../common/models/interfaces";
 
 // type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
