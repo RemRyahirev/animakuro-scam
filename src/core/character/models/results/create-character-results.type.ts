@@ -8,5 +8,5 @@ export class CreateCharacterResultsType extends BaseResultsType {
         nullable: true,
         description: 'Character',
     })
-    anime: Character | null;
+    character: Character | null;
 }
