@@ -1,6 +1,6 @@
 import { User } from '../../schemas/user.schema';
 import { UpdateUserInputType } from "../../inputs/update-user-input.type";
-import { Gender } from '../../enums/gender.enum';
+import { Gender } from '../../../../common/models/enums/gender.enum';
 import { ValidateAll } from './validate-all';
 import loaders from '../../../../loaders';
 import { compare, hash } from '../../../../common/utils/password.util';

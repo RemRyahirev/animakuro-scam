@@ -1,5 +1,5 @@
 import { GenderInputInterface } from '../../types/gender-input.interface';
-import { Gender } from '../../enums/gender.enum';
+import { Gender } from '../../../../common/models/enums/gender.enum';
 import { ValidateGender } from './validate-gender';
 
 describe('Check gender', () => {

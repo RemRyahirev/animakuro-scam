@@ -1,4 +1,4 @@
-import { Gender } from '../enums/gender.enum';
+import { Gender } from '../../../common/models/enums/gender.enum';
 
 export interface UserOutputInterface {
     gender?: Gender | null;

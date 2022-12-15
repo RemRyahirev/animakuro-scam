@@ -1,10 +1,6 @@
-import { Field, ID, ObjectType, registerEnumType } from 'type-graphql';
-import { Gender } from '../enums/gender.enum';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Gender } from '../../../common/models/enums/gender.enum';
 import { UserThirdParty } from './user-third-party.schema';
-
-registerEnumType(Gender, {
-    name: 'Gender',
-});
 
 @ObjectType()
 export class User {

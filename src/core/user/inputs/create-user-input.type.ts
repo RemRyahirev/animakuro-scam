@@ -1,6 +1,6 @@
 import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
 import { ArgsType, Field } from 'type-graphql';
-import { Gender } from '../enums/gender.enum';
+import { Gender } from '../../../common/models/enums/gender.enum';
 
 @ArgsType()
 export class CreateUserInputType {

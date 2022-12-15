@@ -1,6 +1,6 @@
 import { Checker } from '../checker';
 import { GenderInputInterface } from '../../types/gender-input.interface';
-import { Gender } from '../../enums/gender.enum';
+import { Gender } from '../../../../common/models/enums/gender.enum';
 
 export class ValidateGender extends Checker<
     GenderInputInterface,

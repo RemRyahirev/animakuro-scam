@@ -1,4 +1,4 @@
-import { ThirdPartyAuthType } from '../../user/enums/user-third-party-type.enum';
+import { ThirdPartyAuthType } from '../../../common/models/enums/user-third-party-type.enum';
 
 export interface JwtInputPayload {
     uid: string;
