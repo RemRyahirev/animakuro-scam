@@ -1,11 +1,11 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import Database from '../../../database';
-import { CreateAnimeResultsType } from '../results/create-anime-results.type';
+import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
 import { AnimeService } from '../services/anime.service';
-import { UpdateAnimeResultsType } from '../results/update-anime-results.type';
-import { DeleteAnimeResultsType } from '../results/delete-anime-results.type';
-import { GetListAnimeResultsType } from '../results/get-list-anime-results.type';
-import { GetAnimeResultsType } from '../results/get-anime-results.type';
+import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
+import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
+import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
+import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaClient } from '@prisma/client';
 

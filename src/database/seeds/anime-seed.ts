@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { MediaFormat } from '../../core/anime/types/media-format.enum';
-import { MediaSource } from '../../core/anime/types/media-source.enum';
-import { FilmRating } from '../../core/anime/types/film-rating.enum';
-import { ReleaseStatus } from '../../core/anime/types/release-status.enum';
+import { MediaFormat } from "../../core/anime/models/enums/media-format.enum";
+import { FilmRating } from "../../core/anime/models/enums/film-rating.enum";
+import { ReleaseStatus } from "../../core/anime/models/enums/release-status.enum";
+import { MediaSource } from "../../core/anime/models/enums/media-source.enum";
 
 const prisma = new PrismaClient();
 

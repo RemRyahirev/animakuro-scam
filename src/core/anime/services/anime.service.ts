@@ -1,8 +1,8 @@
 import Database from '../../../database';
-import { CreateAnimeInputType } from '../inputs/create-anime-input.type';
-import { Anime } from '../schemas/anime.schema';
-import { UpdateAnimeInputType } from '../inputs/update-anime-input.type';
-import { PaginationInputType } from "../../../common/inputs/pagination-input.type";
+import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
+import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
+import { PaginationInputType } from '../../../common/inputs/pagination-input.type';
+import { Anime } from '../models/anime.model';
 
 export class AnimeService {
     private readonly prisma = Database.getInstance().logic;
@@ -10,9 +10,9 @@ export class AnimeService {
     async getAnime(id: string): Promise<Anime | null> {
         return await this.prisma.anime.findUnique({
             where: {
-                id
-            }
-        })
+                id,
+            },
+        });
     }
 
     async getAnimeList(args: PaginationInputType): Promise<Anime[]> {

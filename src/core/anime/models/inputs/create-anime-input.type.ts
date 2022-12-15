@@ -1,8 +1,16 @@
-import { Field, Float, ID, Int, ObjectType, registerEnumType } from "type-graphql";
-import { ReleaseStatus } from '../types/release-status.enum';
-import { FilmRating } from '../types/film-rating.enum';
-import { MediaSource } from '../types/media-source.enum';
-import { MediaFormat } from "../types/media-format.enum";
+import { ArgsType, Field, Float, Int, registerEnumType } from 'type-graphql';
+import {
+    IsArray,
+    IsDate,
+    IsDecimal,
+    IsInt,
+    IsString,
+    Length,
+} from 'class-validator';
+import { MediaFormat } from '../enums/media-format.enum';
+import { FilmRating } from '../enums/film-rating.enum';
+import { ReleaseStatus } from '../enums/release-status.enum';
+import { MediaSource } from '../enums/media-source.enum';
 
 registerEnumType(ReleaseStatus, {
     name: 'ReleaseStatus',
@@ -20,62 +28,79 @@ registerEnumType(MediaFormat, {
     name: 'MediaFormat',
 });
 
-@ObjectType()
-export class Anime {
-    @Field(() => ID)
-    id?: string;
-
+@ArgsType()
+export class CreateAnimeInputType {
+    @IsString()
+    @Length(1, 100)
     @Field(() => String)
     title: string;
 
+    @IsDecimal()
     @Field(() => Float)
     score: number;
 
+    @IsInt()
     @Field(() => Int)
     year: number;
 
+    @IsArray()
     @Field(() => [String])
     genres: string[];
 
+    @IsString()
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
-    media_format: string;
+    media_format: MediaFormat;
 
+    @IsString()
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
-    source: string;
+    source: MediaSource;
 
-    @Field(() => String, { nullable: false })
+    @IsString()
+    @Field(() => String)
     studio_id: string;
 
+    @IsInt()
     @Field(() => Int)
     seasons_count: number;
 
+    @IsInt()
     @Field(() => Int)
     episodes_count: number;
 
-    @Field(() => Int, { description: 'Duration in seconds' })
+    @IsInt()
+    @Field(() => Int)
     duration: number;
 
-    @Field(() => Date, { description: 'Date format "4 apr. 03:30"' })
+    @IsDate()
+    @Field(() => Date)
     next_episode: Date;
 
+    @IsString()
     @Field(() => FilmRating, { defaultValue: FilmRating.G })
-    rating: string;
+    rating: FilmRating;
 
+    @IsString()
     @Field(() => String)
     description: string;
 
+    @IsString()
     @Field(() => String)
     preview_link: string;
 
+    @IsString()
+    @Length(1, 30)
     @Field(() => String)
     status_description: string;
 
+    @IsString()
     @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
-    release_status: string;
+    release_status: ReleaseStatus;
 
+    @IsArray()
     @Field(() => [String])
     characters: string[];
 
+    @IsArray()
     @Field(() => [String])
     authors: string[];
 }

@@ -8,10 +8,10 @@ import {
     IsString,
     Length,
 } from 'class-validator';
-import { MediaFormat } from '../types/media-format.enum';
-import { MediaSource } from '../types/media-source.enum';
-import { FilmRating } from '../types/film-rating.enum';
-import { ReleaseStatus } from '../types/release-status.enum';
+import { MediaFormat } from '../enums/media-format.enum';
+import { FilmRating } from '../enums/film-rating.enum';
+import { ReleaseStatus } from '../enums/release-status.enum';
+import { MediaSource } from '../enums/media-source.enum';
 
 @ArgsType()
 export class UpdateAnimeInputType {
