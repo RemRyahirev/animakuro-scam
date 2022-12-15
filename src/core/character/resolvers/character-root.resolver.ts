@@ -38,12 +38,12 @@ export class CharacterRootResolver {
         new PaginationService('character');
 
     @Mutation(() => CharacterMutationType, { description: 'Character mutations' })
-    CharacterMutations() {
+    characterMutations() {
         return {};
     }
 
     @Query(() => CharacterQueryType, { description: 'Character queries' })
-    CharacterQueries() {
+    characterQueries() {
         return {};
     }
 }
