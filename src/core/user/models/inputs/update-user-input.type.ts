@@ -7,8 +7,8 @@ import {
     ValidateIf,
 } from 'class-validator';
 import { ArgsType, Field, ID } from 'type-graphql';
-import { Gender } from '../../../common/models/enums/gender.enum';
-import { IUpload } from '../../../common/models/interfaces/upload.interface';
+import { Gender } from '../../../../common/models/enums/gender.enum';
+import { IUpload } from '../../../../common/models/interfaces/upload.interface';
 
 @ArgsType()
 export class UpdateUserInputType {

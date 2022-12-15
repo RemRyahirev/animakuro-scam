@@ -1,5 +1,5 @@
-import { User } from '../../schemas/user.schema';
-import { UpdateUserInputType } from "../../inputs/update-user-input.type";
+import { UpdateUserInputType } from "../../models/inputs/update-user-input.type";
+import { User } from '../../models/user.model';
 import { Gender } from '../../../../common/models/enums/gender.enum';
 import { ValidateAll } from './validate-all';
 import loaders from '../../../../loaders';
