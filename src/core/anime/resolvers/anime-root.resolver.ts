@@ -1,11 +1,13 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import Database from '../../../database';
-import { CreateAnimeResultsType } from "../results/create-anime-results.type";
-import { AnimeService } from "../services/anime.service";
-import { UpdateAnimeResultsType } from "../results/update-anime-results.type";
-import { DeleteAnimeResultsType } from "../results/delete-anime-results.type";
-import { GetListAnimeResultsType } from "../results/get-list-anime-results.type";
-import { GetAnimeResultsType } from "../results/get-anime-results.type";
+import { CreateAnimeResultsType } from '../results/create-anime-results.type';
+import { AnimeService } from '../services/anime.service';
+import { UpdateAnimeResultsType } from '../results/update-anime-results.type';
+import { DeleteAnimeResultsType } from '../results/delete-anime-results.type';
+import { GetListAnimeResultsType } from '../results/get-list-anime-results.type';
+import { GetAnimeResultsType } from '../results/get-anime-results.type';
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaClient } from '@prisma/client';
 
 @ObjectType()
 export class AnimeMutationType {
@@ -30,8 +32,10 @@ export class AnimeQueryType {
 
 @Resolver()
 export class AnimeRootResolver {
-    protected readonly prisma = Database.getInstance().logic;
+    protected readonly prisma: PrismaClient = Database.getInstance().logic;
     protected readonly animeService: AnimeService = new AnimeService();
+    protected readonly paginationService: PaginationService =
+        new PaginationService('anime');
 
     @Mutation(() => AnimeMutationType, { description: 'Anime mutations' })
     animeMutations() {

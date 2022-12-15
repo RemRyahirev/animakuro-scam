@@ -17,8 +17,8 @@ export class GenreService {
 
     async getGenreList(args: PaginationInputType): Promise<Genre[]> {
         return await this.prisma.genre.findMany({
-            skip: args.skip,
-            take: args.take,
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
         });
     }
 

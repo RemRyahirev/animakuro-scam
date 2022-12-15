@@ -57,14 +57,14 @@ export class ValidateAll {
     }
 
     private _setObj() {
-        Object.assign(this._resObject, {
+        Object.assign(this._resObject, <UserOutputInterface>{
             email: this._email.value,
             username: this._username.value,
             birthday: this._birthDay.value,
             pass_hash: this._password.value,
             customGender: this._gender.value.customGender,
             gender: this._gender.value.gender,
-        } as UserOutputInterface);
+        });
     }
 
     public async run() {

@@ -6,6 +6,8 @@ import { DeleteGenreResultsType } from '../results/delete-genre-results.type';
 import { GetGenreResultsType } from '../results/get-genre-results.type';
 import { GenreService } from '../services/genre.service';
 import { UpdateGenreResultsType } from '../results/update-genre-results.type';
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaClient } from '@prisma/client';
 
 @ObjectType()
 export class GenreMutationType {
@@ -30,8 +32,10 @@ export class GenreQueryType {
 
 @Resolver()
 export class GenreRootResolver {
-    protected readonly prisma = Database.getInstance().logic;
+    protected readonly prisma: PrismaClient = Database.getInstance().logic;
     protected readonly genreService: GenreService = new GenreService();
+    protected readonly paginationService: PaginationService =
+        new PaginationService('genre');
 
     @Mutation(() => GenreMutationType, { description: 'Genre mutations' })
     genreMutations() {

@@ -29,13 +29,15 @@ export class GenreQueryResolver extends GenreRootResolver {
 
     @FieldResolver(() => GetListGenreResultsType)
     async getGenreList(
-        @Args() pagination: PaginationInputType,
+        @Args() args: PaginationInputType,
     ): Promise<GetListGenreResultsType> {
-        const genreList = await this.genreService.getGenreList(pagination);
+        const genreList = await this.genreService.getGenreList(args);
+        const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,
             errors: [],
             genreList,
+            pagination,
         };
     }
 }

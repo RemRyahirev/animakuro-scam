@@ -17,8 +17,8 @@ export class AnimeService {
 
     async getAnimeList(args: PaginationInputType): Promise<Anime[]> {
         return await this.prisma.anime.findMany({
-            skip: args.skip,
-            take: args.take,
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
         });
     }
 
