@@ -1,6 +1,6 @@
 import { Arg, Args, FieldResolver, Resolver } from 'type-graphql';
 import { AnimeQueryType, AnimeRootResolver } from './anime-root.resolver';
-import { PaginationInputType } from '../../../common/models/inputs/pagination-input.type';
+import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 

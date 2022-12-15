@@ -1,5 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
-import { ThirdPartyAuthType } from '../../../common/models/enums/user-third-party-type.enum';
+import { ThirdPartyAuthType } from '../../../common/models/enums';
 
 @ObjectType()
 export class UserThirdParty {

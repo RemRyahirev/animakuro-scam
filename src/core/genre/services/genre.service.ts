@@ -1,5 +1,5 @@
 import Database from '../../../database';
-import { PaginationInputType } from '../../../common/models/inputs/pagination-input.type';
+import { PaginationInputType } from '../../../common/models/inputs';
 import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
 import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
 import { Genre } from '../models/genre.model';

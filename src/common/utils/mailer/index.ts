@@ -1,7 +1,7 @@
 import * as nodemailer from 'nodemailer';
+import { SentMessageInfo } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import Config from '../../config/config';
-import { SentMessageInfo } from 'nodemailer';
 
 export class Mailer {
     private readonly config = Config.getInstance().logic;
@@ -41,7 +41,7 @@ export class Mailer {
         code: string;
     }) {
         const link = this.getConfirmLink(code);
-        const html = `<b>Test Confirmation Mail</b><br><a href=${link}>Tap here</a>`;
+        const html = `<b>Test Confirmation Mail</b><br><a href="${link}">Tap here</a>`;
         const subject = 'Email confirmation ✔';
         return await this.sendToMail({
             to: receiverEmail,
@@ -60,7 +60,7 @@ export class Mailer {
         newEmail: string;
     }) {
         const link = this.getChangeEmailLink(code);
-        const html = `<b>Hey, if you want to change your email to ${newEmail}</b><br><a href=${link}>Tap here</a>`;
+        const html = `<b>Hey, if you want to change your email to ${newEmail}</b><br><a href="${link}">Tap here</a>`;
         const subject = 'Change Email confirmation ✔';
         return await this.sendToMail({
             to: receiverEmail,

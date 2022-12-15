@@ -4,7 +4,7 @@ import type { ServerResponse } from 'http';
 
 import { GqlHttpException } from './errors';
 import type { ExtendedGraphQLError } from './types';
-import { HttpStatus } from '../models/enums/http-status.enum';
+import { HttpStatus } from '../models/enums';
 
 const handleExceptions = (error: ExtendedGraphQLError) => {
     if (error.originalError instanceof GqlHttpException) {

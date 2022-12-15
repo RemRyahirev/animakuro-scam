@@ -1,6 +1,6 @@
 import { Checker } from '../checker';
 import { compare, hash } from '../../../../common/utils/password.util';
-import { IPasswordInput } from '../../../../common/models/interfaces/password-input.interface';
+import { IPasswordInput } from '../../../../common/models/interfaces';
 
 export class ValidatePassword extends Checker<
     string | undefined,
@@ -9,10 +9,7 @@ export class ValidatePassword extends Checker<
 > {
     private _currentValue: string | undefined;
 
-    constructor(
-        inputValue: IPasswordInput,
-        sourceValue: string | undefined,
-    ) {
+    constructor(inputValue: IPasswordInput, sourceValue: string | undefined) {
         super(inputValue, sourceValue);
         this._currentValue = sourceValue;
     }

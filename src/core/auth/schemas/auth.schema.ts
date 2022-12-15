@@ -1,5 +1,5 @@
-import { Field, ObjectType } from 'type-graphql';
-import { LoginType } from "../../../common/models/enums/login-type.enum";
+import { Field, ObjectType } from "type-graphql";
+import { LoginType } from "../../../common/models/enums";
 
 // @InputType()
 // export class TwoFAInput {

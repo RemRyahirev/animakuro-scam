@@ -1,5 +1,5 @@
 import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
-import { ICustomContext } from '../../../common/models/interfaces/custom-context.interface';
+import { ICustomContext } from '../../../common/models/interfaces';
 import { GenreMutationType, GenreRootResolver } from './genre-root.resolver';
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';

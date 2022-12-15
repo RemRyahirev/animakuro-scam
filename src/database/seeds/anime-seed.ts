@@ -1,13 +1,17 @@
 import { PrismaClient } from '@prisma/client';
-import { MediaFormat } from "../../common/models/enums";
-import { FilmRating } from "../../common/models/enums";
-import { ReleaseStatus } from "../../common/models/enums";
-import { MediaSource } from "../../common/models/enums";
+import {
+    FilmRating,
+    MediaFormat,
+    MediaSource,
+    ReleaseStatus,
+} from '../../common/models/enums';
 
 const prisma = new PrismaClient();
 
 async function animeSeed() {
     console.log(`Start seeding anime...`);
+    const genreList = await prisma.genre.findMany();
+    console.log(genreList);
     await prisma.anime.createMany({
         skipDuplicates: true,
         data: [

@@ -1,4 +1,4 @@
-import { Field, InputType, ID } from 'type-graphql';
+import { Field, ID, InputType } from 'type-graphql';
 
 @InputType()
 class SiteAuthSessionUserInput {
