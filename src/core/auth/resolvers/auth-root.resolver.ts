@@ -1,10 +1,10 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { User } from '../../user/schemas/user.schema';
 import { Mailer } from '../../../common/utils/mailer';
 import { UserService } from '../../user/services/user.service';
 import { ThirdPartyRedirectUrlReturnType } from '../schemas/auth.schema';
 import { FacebookStrategy } from '../strategies/facebook.strategy';
 import { AuthService } from '../services/auth.service';
+import { User } from "../../user/models/user.model";
 
 @ObjectType()
 export class AuthMutationType {

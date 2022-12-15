@@ -4,7 +4,6 @@ import { compare, hash } from 'common/utils/password.util';
 import { randomUUID } from 'crypto';
 import { GqlHttpException } from 'common/errors/errors';
 import JwtTokenService from '../services/jwt-token.service';
-import { User } from 'core/user/schemas/user.schema';
 import { ThirdPartyAuthType } from 'common/models/enums/user-third-party-type.enum';
 import { ValidateSchemas } from 'common/decorators';
 import { LoginInputType } from '../inputs/login-input.type';
@@ -12,6 +11,7 @@ import { HttpStatus } from '../../../common/models/enums/http-status.enum';
 import { RegisterInputType } from '../inputs/register-input.type';
 import { ThirdPartyAuthInputType } from '../inputs/third-party-input.type';
 import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';
+import { User } from "../../user/models/user.model";
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
