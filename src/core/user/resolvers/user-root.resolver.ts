@@ -4,6 +4,10 @@ import Database from '../../../database';
 import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';
 import { UserService } from '../services/user.service';
+import { PaginationService } from '../../../common/services';
+import { PrismaClient } from '@prisma/client';
+import { RedisClientType } from 'redis';
+import { GetListUserResultsType } from '../models/results/get-list-user-results.type';
 
 @ObjectType()
 export class UserMutationType {
@@ -24,14 +28,19 @@ export class UserQueryType {
         description: 'Get user list by email',
     })
     users: [User];
+
+    @Field(() => GetListUserResultsType, { description: 'Get user list' })
+    getUserList: GetListUserResultsType;
 }
 
 @Resolver()
 export class UserRootResolver {
-    protected readonly prisma = Database.getInstance().logic;
-    protected readonly redis = Redis.getInstance().logic;
-    protected readonly mailer = new Mailer();
+    protected readonly prisma: PrismaClient = Database.getInstance().logic;
+    protected readonly redis: RedisClientType = Redis.getInstance().logic;
+    protected readonly mailer: Mailer = new Mailer();
     protected readonly userService: UserService = new UserService();
+    protected readonly paginationService: PaginationService =
+        new PaginationService('user');
 
     @Mutation(() => UserMutationType, { description: 'User mutations' })
     userMutations() {

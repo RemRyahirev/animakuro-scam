@@ -6,7 +6,7 @@ import { UpdateCharacterResultsType } from '../models/results/update-character-r
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
-import { PaginationService } from '../../../common/services/pagination.service';
+import { PaginationService } from "../../../common/services";
 import { PrismaClient } from '@prisma/client';
 
 @ObjectType()

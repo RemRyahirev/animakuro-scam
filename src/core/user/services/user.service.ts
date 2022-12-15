@@ -2,6 +2,7 @@ import { ThirdPartyAuthType } from '../../../common/models/enums';
 import Database from '../../../database';
 import { ThirdPartyAuthInputType } from '../../auth/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
+import { PaginationInputType } from "../../../common/models/inputs";
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
@@ -36,6 +37,13 @@ export class UserService {
                 thirdPartyAuth: true,
                 siteAuthSessions: true,
             },
+        });
+    }
+
+    async getUserList(args: PaginationInputType) {
+        return await this.prisma.user.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
         });
     }
 

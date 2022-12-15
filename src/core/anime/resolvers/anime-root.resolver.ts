@@ -6,7 +6,7 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
-import { PaginationService } from '../../../common/services/pagination.service';
+import { PaginationService } from "../../../common/services";
 import { PrismaClient } from '@prisma/client';
 
 @ObjectType()

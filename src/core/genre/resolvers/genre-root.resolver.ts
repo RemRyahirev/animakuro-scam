@@ -6,7 +6,7 @@ import { DeleteGenreResultsType } from '../models/results/delete-genre-results.t
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GenreService } from '../services/genre.service';
 import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
-import { PaginationService } from '../../../common/services/pagination.service';
+import { PaginationService } from "../../../common/services";
 import { PrismaClient } from '@prisma/client';
 
 @ObjectType()
