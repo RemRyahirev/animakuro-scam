@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {CharacterType} from "../../../common/models/enums";
 
 // здесь - обычные типы (а-ля строка), даже в enum-ах
