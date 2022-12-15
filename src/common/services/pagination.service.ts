@@ -1,6 +1,6 @@
-import { PaginationInputType } from '../inputs/pagination-input.type';
+import { PaginationInputType } from '../models/inputs/pagination-input.type';
 import Database from '../../database';
-import { PaginationResultsType } from '../results/pagination-results.type';
+import { PaginationResultsType } from '../models/results/pagination-results.type';
 import { PrismaClient } from '@prisma/client';
 
 export class PaginationService {

@@ -1,5 +1,5 @@
 import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
-import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
+import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { compare, hash } from 'common/utils/password.util';
 import { randomUUID } from 'crypto';
 import { GqlHttpException } from 'common/errors/errors';
@@ -8,7 +8,7 @@ import { User } from 'core/user/schemas/user.schema';
 import { ThirdPartyAuthType } from 'core/user/enums/user-third-party-type.enum';
 import { ValidateSchemas } from 'common/decorators';
 import { LoginInputType } from '../inputs/login-input.type';
-import { HttpStatus } from '../../../common/types/enums/http-status.enum';
+import { HttpStatus } from '../../../common/models/enums/http-status.enum';
 import { RegisterInputType } from '../inputs/register-input.type';
 import { ThirdPartyAuthInputType } from '../inputs/third-party-input.type';
 import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';

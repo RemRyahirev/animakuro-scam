@@ -2,7 +2,7 @@ import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
-import { ICustomContext } from '../../../common/types/interfaces/custom-context.interface';
+import { ICustomContext } from '../../../common/models/interfaces/custom-context.interface';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';

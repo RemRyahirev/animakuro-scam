@@ -8,7 +8,7 @@ import { ValidatePassword } from '../validate-password/validate-password';
 import { ValidateUsername } from '../validate-username/validate-username';
 import { Checker } from '../checker';
 import { GqlHttpException } from '../../../../common/errors/errors';
-import { HttpStatus } from '../../../../common/types/enums/http-status.enum';
+import { HttpStatus } from '../../../../common/models/enums/http-status.enum';
 import { UserOutputInterface } from '../../types/user-output.interface';
 
 export class ValidateAll {

@@ -1,8 +1,8 @@
 import Database from '../../../database';
-import { PaginationInputType } from "../../../common/inputs/pagination-input.type";
-import { Genre } from "../schemas/genre.schema";
-import { CreateGenreInputType } from "../inputs/create-genre-input.type";
-import { UpdateGenreInputType } from "../inputs/update-genre-input.type";
+import { PaginationInputType } from '../../../common/models/inputs/pagination-input.type';
+import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
+import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
+import { Genre } from '../models/genre.model';
 
 export class GenreService {
     private readonly prisma = Database.getInstance().logic;

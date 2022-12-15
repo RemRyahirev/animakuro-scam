@@ -7,10 +7,10 @@ import {
     IsString,
     Length,
 } from 'class-validator';
-import { MediaFormat } from '../enums/media-format.enum';
-import { FilmRating } from '../enums/film-rating.enum';
-import { ReleaseStatus } from '../enums/release-status.enum';
-import { MediaSource } from '../enums/media-source.enum';
+import { MediaFormat } from '../../../../common/models/enums/media-format.enum';
+import { FilmRating } from '../../../../common/models/enums/film-rating.enum';
+import { ReleaseStatus } from '../../../../common/models/enums/release-status.enum';
+import { MediaSource } from '../../../../common/models/enums/media-source.enum';
 
 @ArgsType()
 export class CreateAnimeInputType {

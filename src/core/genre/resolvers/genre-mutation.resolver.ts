@@ -1,11 +1,11 @@
-import { Arg, Args, Ctx, FieldResolver, Resolver } from "type-graphql";
-import { ICustomContext } from '../../../common/types/interfaces/custom-context.interface';
-import { GenreMutationType, GenreRootResolver } from "./genre-root.resolver";
-import { DeleteGenreResultsType } from "../results/delete-genre-results.type";
-import { CreateGenreResultsType } from "../results/create-genre-results.type";
-import { CreateGenreInputType } from "../inputs/create-genre-input.type";
-import { UpdateGenreResultsType } from "../results/update-genre-results.type";
-import { UpdateGenreInputType } from "../inputs/update-genre-input.type";
+import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
+import { ICustomContext } from '../../../common/models/interfaces/custom-context.interface';
+import { GenreMutationType, GenreRootResolver } from './genre-root.resolver';
+import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
+import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
+import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
+import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
+import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
 
 @Resolver(GenreMutationType)
 export class GenreMutationResolver extends GenreRootResolver {

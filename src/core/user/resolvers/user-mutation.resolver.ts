@@ -1,12 +1,12 @@
 import { Args, Authorized, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { hash } from 'common/utils/password.util';
 import { ValidateSchemas } from 'common/decorators';
-import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
+import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { User } from '../schemas/user.schema';
 import { UpdateUserInputType } from '../inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { CreateUserInputType } from '../inputs/create-user-input.type';
-import { HttpStatus } from '../../../common/types/enums/http-status.enum';
+import { HttpStatus } from '../../../common/models/enums/http-status.enum';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { UserMutationType, UserRootResolver } from './user-root.resolver';
 

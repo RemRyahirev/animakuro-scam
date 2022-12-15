@@ -1,5 +1,5 @@
 import { decode, JwtPayload, sign, verify } from 'jsonwebtoken';
-import { ICustomContext } from 'common/types/interfaces/custom-context.interface';
+import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { ThirdPartyAuthType } from '../../user/enums/user-third-party-type.enum';
 import { JwtInputPayload } from '../types/jwt-input-payload.interface';
 

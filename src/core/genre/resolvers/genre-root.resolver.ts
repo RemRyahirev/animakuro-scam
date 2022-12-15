@@ -1,11 +1,11 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
 import Database from '../../../database';
-import { CreateGenreResultsType } from '../results/create-genre-results.type';
-import { GetListGenreResultsType } from '../results/get-list-genre-results.type';
-import { DeleteGenreResultsType } from '../results/delete-genre-results.type';
-import { GetGenreResultsType } from '../results/get-genre-results.type';
+import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
+import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
+import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
+import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GenreService } from '../services/genre.service';
-import { UpdateGenreResultsType } from '../results/update-genre-results.type';
+import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaClient } from '@prisma/client';
 

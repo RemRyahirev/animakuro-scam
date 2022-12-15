@@ -1,3 +1,5 @@
+import { registerEnumType } from 'type-graphql';
+
 export enum CharacterType {
     PROTAGONIST = 'PROTAGONIST',
     ANTAGONIST = 'ANTAGONIST',
@@ -7,5 +9,9 @@ export enum CharacterType {
     CONFIDANTE = 'CONFIDANTE',
     EXTRAS = 'EXTRAS',
     FOIL = 'FOIL',
-    OTHER = 'OTHER'
+    OTHER = 'OTHER',
 }
+
+registerEnumType(CharacterType, {
+    name: 'CharacterType',
+});
