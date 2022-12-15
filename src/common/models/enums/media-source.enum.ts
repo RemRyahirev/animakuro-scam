@@ -1,4 +1,5 @@
 import { registerEnumType } from 'type-graphql';
+import 'reflect-metadata';
 
 export enum MediaSource {
     ORIGINAL = 'ORIGINAL',
