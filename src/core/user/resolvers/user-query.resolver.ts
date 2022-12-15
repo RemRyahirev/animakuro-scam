@@ -1,5 +1,5 @@
 import { Arg, FieldResolver, Resolver } from 'type-graphql';
-import { User } from '../schemas/user.schema';
+import { User } from '../models/user.model';
 import { UserQueryType, UserRootResolver } from './user-root.resolver';
 
 @Resolver(UserQueryType)

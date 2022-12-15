@@ -1,5 +1,5 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { User } from '../schemas/user.schema';
+import { User } from '../models/user.model';
 import Database from '../../../database';
 import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';

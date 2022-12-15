@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Account } from '../types/account.interface';
+import { IAccount } from '../../../common/models/interfaces/account.interface';
 
 export class FacebookStrategy {
     client_id: string;
@@ -12,7 +12,7 @@ export class FacebookStrategy {
         this.redirect_uri = process.env.FACEBOOK_REDIRECT_URI || '';
     }
 
-    async getAccountData(code: string): Promise<Account> {
+    async getAccountData(code: string): Promise<IAccount> {
         const {
             data: { access_token },
         } = await axios(`https://graph.facebook.com/v15.0/oauth/access_token`, {

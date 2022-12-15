@@ -1,4 +1,4 @@
-export interface GetRejectTypeObject {
+export interface IGetRejectTypeObject {
     name: string;
     fieldNames: string[];
 }

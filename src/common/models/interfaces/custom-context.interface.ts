@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { JwtInputPayload } from '../../../core/auth/types/jwt-input-payload.interface';
+import { IJwtInputPayload } from './jwt-input-payload.interface';
 
 export interface ICustomContext {
     request: Request;
@@ -8,5 +8,5 @@ export interface ICustomContext {
         json?: (data: unknown) => void;
     };
 
-    userJwtPayload?: JwtInputPayload;
+    userJwtPayload?: IJwtInputPayload;
 }

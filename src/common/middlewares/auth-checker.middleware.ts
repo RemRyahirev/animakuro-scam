@@ -6,7 +6,7 @@ import JwtTokenService from '../../core/auth/services/jwt-token.service';
 import { UserService } from 'core/user/services/user.service';
 import { ObjectClassMetadata } from 'type-graphql/dist/metadata/definitions/object-class-metdata';
 import { FieldNode, GraphQLResolveInfo, SelectionNode } from 'graphql';
-import { GetRejectTypeObject } from '../../core/auth/types/get-reject-type-object';
+import { IGetRejectTypeObject } from '../models/interfaces/get-reject-type-object.interface';
 import { HttpStatus } from '../models/enums/http-status.enum';
 /* only for testing */
 
@@ -42,7 +42,7 @@ const getReturnTypeObject = (
     allReturnTypes.find((el) => el.name === returnTypeName);
 const getRejectTypeObject = (
     returnTypeName: string,
-): GetRejectTypeObject | undefined =>
+): IGetRejectTypeObject | undefined =>
     rejectedFields.find((el) => el.name === returnTypeName);
 
 /* only for testing */
@@ -59,7 +59,7 @@ export class AuthCheckerMiddleware {
     static checkSelectionFields = (
         node: FieldNode,
         objectType: ObjectClassMetadata,
-        rejectionObject: GetRejectTypeObject,
+        rejectionObject: IGetRejectTypeObject,
     ) => {
         if (node.selectionSet) {
             node.selectionSet.selections.forEach((selection: SelectionNode) => {

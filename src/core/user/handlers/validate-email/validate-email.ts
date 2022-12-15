@@ -3,8 +3,7 @@ import Database from '../../../../database';
 import Redis from '../../../../loaders/redis';
 import { randomUUID } from 'crypto';
 import { Mailer } from '../../../../common/utils/mailer';
-
-import { User } from '../../schemas/user.schema';
+import { User } from '../../models/user.model';
 import { RedisClientType } from 'redis';
 
 export class ValidateEmail extends Checker<

@@ -1,7 +1,7 @@
 import { decode, JwtPayload, sign, verify } from 'jsonwebtoken';
 import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { ThirdPartyAuthType } from '../../../common/models/enums/user-third-party-type.enum';
-import { JwtInputPayload } from '../types/jwt-input-payload.interface';
+import { IJwtInputPayload } from '../../../common/models/interfaces/jwt-input-payload.interface';
 
 // type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
@@ -29,7 +29,7 @@ export default class JwtTokenService {
     static ACCESS_TOKEN_COOKIE_NAME = 'animakuro-access-token';
 
     static verifyAccessToken(token: string) {
-        return verify(token, process.env.JWT_SECRET!) as JwtInputPayload &
+        return verify(token, process.env.JWT_SECRET!) as IJwtInputPayload &
             JwtPayload;
     }
 
@@ -51,7 +51,7 @@ export default class JwtTokenService {
         ctx.response.clearCookie(JwtTokenService.ACCESS_TOKEN_COOKIE_NAME);
     }
 
-    static makeAccessToken(payload: JwtInputPayload) {
+    static makeAccessToken(payload: IJwtInputPayload) {
         const expiresIn = process.env.JWT_ACCESS_TOKEN_EXPIRES_IN_SEC || 3600;
 
         return sign(payload, process.env.JWT_SECRET || 'animekuro', {
@@ -62,7 +62,7 @@ export default class JwtTokenService {
     }
 
     static decodeAccessToken(token: string) {
-        const decoded = decode(token) as JwtInputPayload & JwtPayload;
+        const decoded = decode(token) as IJwtInputPayload & JwtPayload;
 
         return decoded;
     }
