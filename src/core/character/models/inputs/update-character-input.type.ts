@@ -7,6 +7,7 @@ import {
 
 import {CharacterType} from "../../../../common/models/enums";
 
+// добавлены декораторы необязательности, опциональные операторы? + опции {nullable:true}
 @ArgsType()
 export class UpdateCharacterInputType {
     @Field(() => ID)
