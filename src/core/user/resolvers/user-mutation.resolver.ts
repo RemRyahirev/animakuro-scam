@@ -2,13 +2,13 @@ import { Args, Authorized, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { hash } from 'common/utils/password.util';
 import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
+import { User } from '../models/user.model';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { HttpStatus } from '../../../common/models/enums';
+import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { UserMutationType, UserRootResolver } from './user-root.resolver';
-import { UpdateUserResultsType } from "../models/results/update-user-results.type";
-import { CreateUserResultsType } from "../models/results/create-user-results.type";
 
 @Resolver(UserMutationType)
 export class UserMutationResolver extends UserRootResolver {

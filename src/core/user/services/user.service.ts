@@ -6,6 +6,8 @@ import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
+import { PaginationInputType } from '../../../common/models/inputs';
+import { ThirdPartyAuth } from '../../../common/models/enums';
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
@@ -103,8 +105,9 @@ export class UserService {
     }
 
     async createUser(args: CreateUserInputType) {
+        const { password, ...rest } = args;
         return await this.prisma.user.create({
-            data: { ...args, pass_hash: args.password } as any,
+            data: { ...rest, pass_hash: args.password } as any,
         });
     }
 
