@@ -1,7 +1,6 @@
 import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { compare, hash } from 'common/utils/password.util';
-import { randomUUID } from 'crypto';
 import { GqlHttpException } from 'common/errors/errors';
 import JwtTokenService from '../services/jwt-token.service';
 import { ThirdPartyAuthType } from 'common/models/enums/user-third-party-type.enum';
@@ -12,6 +11,7 @@ import { RegisterInputType } from '../inputs/register-input.type';
 import { ThirdPartyAuthInputType } from '../inputs/third-party-input.type';
 import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';
 import { User } from '../../user/models/user.model';
+import * as crypto from 'crypto';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
@@ -53,10 +53,9 @@ export class AuthMutationResolver extends AuthRootResolver {
             return false;
         }
 
-        // const code = await nanoid(30)
-        const code = randomUUID();
+        const code = crypto.randomUUID();
 
-        await this.authService.setRegisterConfirmation('test', args);
+        await this.authService.setRegisterConfirmation(code, args);
 
         // Sending email
         const info = await this.mailer.sendConfirmationMail({
@@ -69,6 +68,7 @@ export class AuthMutationResolver extends AuthRootResolver {
 
     @FieldResolver(() => Boolean)
     async confirmRegistration(@Arg('code') code: string) {
+        console.log(code);
         const registerInput = await this.authService.getRegisterConfirmation(
             code,
         );

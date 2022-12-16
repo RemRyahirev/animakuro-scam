@@ -11,9 +11,10 @@ export class AuthService {
     private readonly redis = Redis.getInstance().logic;
 
     async setRegisterConfirmation(code: string, data: RegisterInputType) {
+        await Redis.getInstance().connect();
         await this.redis
             .set(`confirmation:register:${code}`, JSON.stringify(data), {
-                EX: 300,
+                EX: 999999,
             })
             .catch(console.error);
     }
@@ -21,10 +22,11 @@ export class AuthService {
     async getRegisterConfirmation(
         code: string,
     ): Promise<RegisterInputType | null> {
+        await Redis.getInstance().connect();
         const data = await this.redis
             .get(`confirmation:register:${code}`)
             .catch(console.error);
-
+        console.log(data);
         if (!data) {
             return null;
         }
@@ -32,6 +34,7 @@ export class AuthService {
     }
 
     async deleteRegisterConfirmation(code: string) {
+        await Redis.getInstance().connect();
         await this.redis
             .del(`confirmation:register:${code}`)
             .catch(console.error);

@@ -24,7 +24,11 @@ export class UserMutationResolver extends UserRootResolver {
         });
         if (!user)
             throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
-        const validateAll = new ValidateAll(user as any, args, true);
+        const validateAll = new ValidateAll(
+            { user, password: user.pass_hash } as any,
+            args,
+            true,
+        );
         const result = await validateAll.run();
         Object.assign(user, result);
         // TODO: write data.avatar & data.banner handlers
