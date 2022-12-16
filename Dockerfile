@@ -7,6 +7,7 @@ COPY . ./
 RUN pnpm i --offline --frozen-lockfile
 RUN apk add --no-cache openssl openssl-dev libssl1.1 libssl3
 RUN pnpm generate && pnpm build
+RUN find node_modules \( -name "*on-engine*" -o -wholename "*/prisma/libquery*" -o -wholename "*/@prisma*engine*/*engine*" -o -wholename "*/prisma*/*" \) -delete
 RUN pnpm prune --prod
 
 FROM node:16-alpine
