@@ -1,8 +1,11 @@
 import Database from '../../../database';
 import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
-import { PaginationInputType } from "../../../common/models/inputs";
-import { ThirdPartyAuth } from '../../../common/models/enums';
+import { PaginationInputType } from '../../../common/models/inputs';
+import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
+import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
+import { GqlHttpException } from '../../../common/errors/errors';
+import { ValidateAll } from '../handlers/validate-all/validate-all';
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
@@ -47,11 +50,11 @@ export class UserService {
         });
     }
 
-    async findUserByEmail(email: string) {
-        return await this.prisma.user.findFirst({
-            where: {
-                email,
-            },
+    async getUserListByEmail(email: string, args: PaginationInputType) {
+        return await this.prisma.user.findMany({
+            where: { email },
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
         });
     }
 
@@ -102,6 +105,21 @@ export class UserService {
     async createUser(args: CreateUserInputType) {
         return await this.prisma.user.create({
             data: { ...args, pass_hash: args.password } as any,
+        });
+    }
+
+    async updateUser(args: UpdateUserInputType) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: args.id },
+        });
+        if (!user)
+            throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
+        const validateAll = new ValidateAll(user as any, args, true);
+        const result = await validateAll.run();
+        Object.assign(user, result);
+        return await this.prisma.user.update({
+            where: { id: args.id },
+            data: args as any,
         });
     }
 }

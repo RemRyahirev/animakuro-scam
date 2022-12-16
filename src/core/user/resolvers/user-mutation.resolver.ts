@@ -2,13 +2,13 @@ import { Args, Authorized, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { hash } from 'common/utils/password.util';
 import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
-import { User } from '../models/user.model';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { HttpStatus } from '../../../common/models/enums';
-import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { UserMutationType, UserRootResolver } from './user-root.resolver';
+import { UpdateUserResultsType } from "../models/results/update-user-results.type";
+import { CreateUserResultsType } from "../models/results/create-user-results.type";
 
 @Resolver(UserMutationType)
 export class UserMutationResolver extends UserRootResolver {
@@ -17,30 +17,22 @@ export class UserMutationResolver extends UserRootResolver {
     }
 
     @ValidateSchemas()
-    @FieldResolver(() => User)
-    async modifyUser(@Args() args: UpdateUserInputType) {
-        const user = await this.prisma.user.findUnique({
-            where: { id: args.id },
-        });
-        if (!user)
-            throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
-        const validateAll = new ValidateAll(user as any, args, true);
-        const result = await validateAll.run();
-        Object.assign(user, result);
-        // TODO: write data.avatar & data.banner handlers
-        return await this.prisma.user.update({
-            where: { id: user.id },
-            data: { ...user },
-        });
+    @FieldResolver(() => UpdateUserResultsType)
+    async updateUser(@Args() args: UpdateUserInputType): Promise<UpdateUserResultsType> {
+        const user = await this.userService.updateUser(args);
+        return {
+            success: true,
+            user: user as any,
+        };
     }
 
-    @FieldResolver(() => User)
+    @FieldResolver(() => CreateUserResultsType)
     @Authorized()
     @ValidateSchemas()
     async createUser(
         @Args() args: CreateUserInputType,
         @Ctx() ctx: ICustomContext,
-    ) {
+    ): Promise<CreateUserResultsType> {
         const { userJwtPayload } = ctx;
         if (!userJwtPayload) {
             throw new GqlHttpException(
@@ -98,11 +90,15 @@ export class UserMutationResolver extends UserRootResolver {
         }
 
         const hashedPassword = await hash(args.password);
-        return await this.userService.createUser({
+        const user = await this.userService.createUser({
             ...args,
             username: args.username,
             email: savedUser.email,
             password: hashedPassword,
         });
+        return {
+            success: true,
+            user: user as any,
+        };
     }
 }
