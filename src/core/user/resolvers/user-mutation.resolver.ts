@@ -7,8 +7,8 @@ import { GqlHttpException } from '../../../common/errors/errors';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { HttpStatus } from '../../../common/models/enums';
 import { UserMutationType, UserRootResolver } from './user-root.resolver';
-import { UpdateUserResultsType } from "../models/results/update-user-results.type";
-import { CreateUserResultsType } from "../models/results/create-user-results.type";
+import { UpdateUserResultsType } from '../models/results/update-user-results.type';
+import { CreateUserResultsType } from '../models/results/create-user-results.type';
 
 @Resolver(UserMutationType)
 export class UserMutationResolver extends UserRootResolver {
@@ -18,7 +18,9 @@ export class UserMutationResolver extends UserRootResolver {
 
     @ValidateSchemas()
     @FieldResolver(() => UpdateUserResultsType)
-    async updateUser(@Args() args: UpdateUserInputType): Promise<UpdateUserResultsType> {
+    async updateUser(
+        @Args() args: UpdateUserInputType,
+    ): Promise<UpdateUserResultsType> {
         const user = await this.userService.updateUser(args);
         return {
             success: true,

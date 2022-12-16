@@ -52,6 +52,7 @@ export class UserRootResolver {
 
     @Query(() => UserQueryType, { description: 'User queries' })
     userQueries() {
+        console.log(123);
         return {};
     }
 }

@@ -18,16 +18,26 @@
         "outDir": "./dist",
         "allowJs": true,
         "paths": {
-            "@common": ["./common/*"],
-            "@core": ["./core/*"],
-            "@database": ["./database/*"],
-            "@loaders": ["./loaders/*"],
+            "@common": [
+                "./common/*"
+            ],
+            "@core": [
+                "./core/*"
+            ],
+            "@database": [
+                "./database/*"
+            ],
+            "@loaders": [
+                "./loaders/*"
+            ]
         }
     },
     "exclude": [
         "node_modules"
     ],
     "include": [
-        "./src/*.ts"
+        "./src/*.ts",
+        "./src/**/*.ts",
+        "./src/**/**/*.ts"
     ]
 }
