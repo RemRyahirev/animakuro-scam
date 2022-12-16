@@ -1,9 +1,9 @@
 import Database from 'database';
-import { RegisterInputType } from '../inputs/register-input.type';
+import { RegisterInputType } from '../models/inputs/register-input.type';
 import {
     CreateSiteAuthSessionInput,
     UpdateSiteAuthSessionInput,
-} from 'core/auth/inputs/site-auth-session.schema';
+} from 'core/auth/models/inputs/site-auth-session.schema';
 import Redis from '../../../loaders/redis';
 
 export class AuthService {

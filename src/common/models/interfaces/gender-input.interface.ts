@@ -1,4 +1,4 @@
-import { Gender } from '../enums/gender.enum';
+import { Gender } from '../enums';
 
 export interface IGenderInput {
     gender: Gender | null | undefined;

@@ -1,4 +1,4 @@
-import { Gender } from '../enums/gender.enum';
+import { Gender } from '../enums';
 
 export interface IUserOutput {
     gender?: Gender | null;
