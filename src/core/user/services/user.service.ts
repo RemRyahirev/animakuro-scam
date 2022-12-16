@@ -1,9 +1,8 @@
 import Database from '../../../database';
 import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
-import { PaginationInputType } from "../../../common/models/inputs";
-import { ThirdPartyAuth } from '../../../common/models/enums';
 import { PaginationInputType } from '../../../common/models/inputs';
+import { ThirdPartyAuth } from '../../../common/models/enums';
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
