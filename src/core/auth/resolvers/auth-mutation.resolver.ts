@@ -3,14 +3,19 @@ import { ICustomContext } from 'common/models/interfaces/custom-context.interfac
 import { compare, hash } from 'common/utils/password.util';
 import { GqlHttpException } from 'common/errors/errors';
 import JwtTokenService from '../services/jwt-token.service';
-import { ThirdPartyAuthType } from 'common/models/enums/user-third-party-type.enum';
 import { ValidateSchemas } from 'common/decorators';
-import { LoginInputType } from '../inputs/login-input.type';
-import { HttpStatus } from 'common/models/enums/http-status.enum';
-import { RegisterInputType } from '../inputs/register-input.type';
-import { ThirdPartyAuthInputType } from '../inputs/third-party-input.type';
+import { LoginInputType } from '../models/inputs/login-input.type';
+import { HttpStatus } from 'common/models/enums';
+import { RegisterInputType } from '../models/inputs/register-input.type';
+import { ThirdPartyAuthInputType } from '../models/inputs/third-party-input.type';
 import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';
 import { User } from '../../user/models/user.model';
+import { RegisterResultsType } from '../models/results/register-results.type';
+import { LoginResultsType } from '../models/results/login-results.type';
+import { LogoutResultsType } from '../models/results/logout-results.type';
+import { ConfirmRegistrationResultsType } from '../models/results/confirm-registration-results.type';
+import { LoginOrRegisterThirdPartyResultsType } from '../models/results/login-or-register-third-party-results.type';
+import { ThirdPartyAuth } from '../../../common/models/enums';
 import * as crypto from 'crypto';
 
 @Resolver(AuthMutationType)
@@ -19,17 +24,19 @@ export class AuthMutationResolver extends AuthRootResolver {
         super();
     }
 
-    private makeUniqueUsername = (id: string, prefix: ThirdPartyAuthType) => {
+    private makeUniqueUsername(id: string, prefix: ThirdPartyAuth): string {
         const charSum = prefix.split('').reduce((acc, val) => {
             return acc + val.charCodeAt(0);
         }, 0);
 
         return `${id}User${charSum}`;
-    };
+    }
 
-    @FieldResolver(() => Boolean)
+    @FieldResolver(() => RegisterResultsType)
     @ValidateSchemas()
-    async register(@Args() args: RegisterInputType) {
+    async register(
+        @Args() args: RegisterInputType,
+    ): Promise<RegisterResultsType> {
         const user = await this.userService.findUserByEmailOrUsername(
             args.email,
             args.username,
@@ -50,7 +57,7 @@ export class AuthMutationResolver extends AuthRootResolver {
                     'Auth Errors',
                 );
 
-            return false;
+            return { success: false };
         }
 
         const code = crypto.randomUUID();
@@ -63,12 +70,13 @@ export class AuthMutationResolver extends AuthRootResolver {
             code,
         });
         console.log(this.mailer.previewUrl(info));
-        return true;
+        return { success: true };
     }
 
-    @FieldResolver(() => Boolean)
-    async confirmRegistration(@Arg('code') code: string) {
-        console.log(code);
+    @FieldResolver(() => ConfirmRegistrationResultsType)
+    async confirmRegistration(
+        @Arg('code') code: string,
+    ): Promise<ConfirmRegistrationResultsType> {
         const registerInput = await this.authService.getRegisterConfirmation(
             code,
         );
@@ -104,7 +112,7 @@ export class AuthMutationResolver extends AuthRootResolver {
                     'Auth Errors',
                 );
 
-            return false;
+            return { success: false };
         }
 
         const hashedPassword = await hash(password);
@@ -114,11 +122,14 @@ export class AuthMutationResolver extends AuthRootResolver {
             username,
         });
 
-        return true;
+        return { success: true };
     }
 
-    @FieldResolver(() => Boolean)
-    async login(@Args() args: LoginInputType, @Ctx() ctx: ICustomContext) {
+    @FieldResolver(() => LoginResultsType)
+    async login(
+        @Args() args: LoginInputType,
+        @Ctx() ctx: ICustomContext,
+    ): Promise<LoginResultsType> {
         const user = await this.userService.findUserByUsername(args.username);
 
         if (!user || !(await compare(args.password, user.pass_hash || '')))
@@ -142,11 +153,14 @@ export class AuthMutationResolver extends AuthRootResolver {
 
         JwtTokenService.setCookieAccessToken(ctx, accessToken);
 
-        return true;
+        return {
+            success: true,
+            user: user as User,
+        };
     }
 
-    @FieldResolver(() => Boolean)
-    async logout(@Ctx() ctx: ICustomContext) {
+    @FieldResolver(() => LogoutResultsType)
+    async logout(@Ctx() ctx: ICustomContext): Promise<LogoutResultsType> {
         const { userJwtPayload } = ctx;
         // rewrite decorator
 
@@ -173,33 +187,33 @@ export class AuthMutationResolver extends AuthRootResolver {
                 'Auth Errors',
             );
 
-        return true;
+        return { success: true };
     }
 
-    @FieldResolver(() => User)
+    @FieldResolver(() => LoginOrRegisterThirdPartyResultsType)
     async loginOrRegisterThirdParty(
         @Arg('code', () => String) code: string,
         @Args() args: ThirdPartyAuthInputType,
         @Ctx() ctx: ICustomContext,
-    ) {
+    ): Promise<LoginOrRegisterThirdPartyResultsType> {
         const facebookUser = await this.facebookStrategy.getAccountData(code);
-        let user = (await this.userService.findUserByThirdpartyAuth(
+        let user = (await this.userService.findUserByThirdPartyAuth(
             facebookUser.id,
-            ThirdPartyAuthType.FACEBOOK,
+            ThirdPartyAuth.FACEBOOK,
         )) as User | null;
 
         if (!user) {
             user = (await this.userService.createUserWithThirdParty(
                 this.makeUniqueUsername(
                     facebookUser.id,
-                    ThirdPartyAuthType.FACEBOOK,
+                    ThirdPartyAuth.FACEBOOK,
                 ),
                 {
                     email: facebookUser.email || '',
                     firstName: facebookUser.first_name,
                     lastName: facebookUser.last_name,
                     uid: facebookUser.id,
-                    type: ThirdPartyAuthType.FACEBOOK,
+                    type: ThirdPartyAuth.FACEBOOK,
                 },
             )) as User;
         }
@@ -215,11 +229,14 @@ export class AuthMutationResolver extends AuthRootResolver {
             uid: user.id,
             sessionId: session.id,
             thirdPartyAuth: {
-                type: ThirdPartyAuthType.FACEBOOK,
+                type: ThirdPartyAuth.FACEBOOK,
                 uid: facebookUser.id,
             },
         });
         JwtTokenService.setCookieAccessToken(ctx, accessToken);
-        return user;
+        return {
+            success: true,
+            user,
+        };
     }
 }

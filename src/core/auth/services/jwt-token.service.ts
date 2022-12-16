@@ -2,13 +2,13 @@ import { decode, JwtPayload, sign, verify } from "jsonwebtoken";
 import { ICustomContext } from "common/models/interfaces/custom-context.interface";
 import { IJwtInputPayload } from "../../../common/models/interfaces";
 
-// type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuthType}:${string}`
+// type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuth}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
 
 // type RedisTokenKeys =  ThirdPartyAuthRedisKey | EmailAuthKey
 
 export default class JwtTokenService {
-    // static getThirdPartyAuthRedisKey(type: ThirdPartyAuthType, uid: string) {
+    // static getThirdPartyAuthRedisKey(type: ThirdPartyAuth, uid: string) {
     //     return `thirdparty-auth:${type}:${uid}` as ThirdPartyAuthRedisKey
     // }
 

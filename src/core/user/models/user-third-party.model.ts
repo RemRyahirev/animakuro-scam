@@ -1,13 +1,13 @@
 import { Field, ObjectType } from 'type-graphql';
-import { ThirdPartyAuthType } from '../../../common/models/enums';
+import { ThirdPartyAuth } from '../../../common/models/enums';
 
 @ObjectType()
 export class UserThirdParty {
     @Field(() => String)
     uid: string;
 
-    @Field(() => ThirdPartyAuthType)
-    type: ThirdPartyAuthType;
+    @Field(() => ThirdPartyAuth)
+    type: ThirdPartyAuth;
 
     @Field({ nullable: true })
     firstName?: string;

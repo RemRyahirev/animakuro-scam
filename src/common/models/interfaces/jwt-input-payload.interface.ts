@@ -1,10 +1,10 @@
-import { ThirdPartyAuthType } from '../enums/user-third-party-type.enum';
+import { ThirdPartyAuth } from '../enums/user-third-party.enum';
 
 export interface IJwtInputPayload {
     uid: string;
     sessionId: string;
     thirdPartyAuth?: {
         uid: string;
-        type: ThirdPartyAuthType;
+        type: ThirdPartyAuth;
     };
 }
