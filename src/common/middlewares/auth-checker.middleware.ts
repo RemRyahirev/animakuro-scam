@@ -146,7 +146,7 @@ export class AuthCheckerMiddleware {
     ) => {
         const accessToken =
             context.request.cookies[JwtTokenService.ACCESS_TOKEN_COOKIE_NAME];
-
+        console.log(accessToken);
         if (!accessToken) {
             throw new GqlHttpException(
                 'Unauthorized',

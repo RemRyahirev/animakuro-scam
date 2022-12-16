@@ -1,7 +1,7 @@
 import Database from '../../../database';
 import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
-import { PaginationInputType } from "../../../common/models/inputs";
+import { PaginationInputType } from '../../../common/models/inputs';
 import { ThirdPartyAuth } from '../../../common/models/enums';
 
 export class UserService {
@@ -100,8 +100,9 @@ export class UserService {
     }
 
     async createUser(args: CreateUserInputType) {
+        const { password, ...rest } = args;
         return await this.prisma.user.create({
-            data: { ...args, pass_hash: args.password } as any,
+            data: { ...rest, pass_hash: args.password } as any,
         });
     }
 }

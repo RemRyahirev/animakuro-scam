@@ -10,6 +10,9 @@ export default class Redis {
         this._logic = createClient({
             url: this.config.redisUrl,
         });
+        this._logic.on('disconnect', async () => {
+            await this._logic.connect();
+        });
     }
 
     public async connect() {
