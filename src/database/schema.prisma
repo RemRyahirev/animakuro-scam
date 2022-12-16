@@ -8,28 +8,28 @@ datasource db {
 }
 
 model User {
-  id               String          @id @default(uuid()) @db.Uuid
-  username         String          @unique @db.VarChar(64)
-  email            String?         @unique @db.VarChar(320)
-  pass_hash        String          @map("password_hash")
-  secret2fa        String?         @db.VarChar(20)
-  birthday         DateTime?       @db.Date
-  gender           Gender          @default(UNSPECIFIED)
-  createdAt        DateTime        @default(now()) @db.Date
-  deleted          Boolean         @default(false)
-  thirdPartyAuth   ThirdPartyAuth? @relation(fields: [thirdPartyAuthId], references: [id])
-  thirdPartyAuthId String?
+  id               String            @id @default(uuid()) @db.Uuid
+  username         String            @unique @db.VarChar(64)
+  email            String?           @unique @db.VarChar(320)
+  pass_hash        String            @map("password_hash")
+  secret2fa        String?           @db.VarChar(20)
+  birthday         DateTime?         @db.Date
+  gender           Gender            @default(UNSPECIFIED)
+  createdAt        DateTime          @default(now()) @map("created_at") @db.Date
+  deleted          Boolean           @default(false)
+  thirdPartyAuth   ThirdPartyAuth?   @relation(fields: [thirdPartyAuthId], references: [id])
+  thirdPartyAuthId String?           @map("third_party_auth_id")
   user_profile     UserProfile?
   siteAuthSessions SiteAuthSession[]
 
-  @@map("user")
+  @@map("users")
 }
 
 model SiteAuthSession {
   id     String  @id @default(uuid())
   agent  String  @db.Text
   ip     String  @db.VarChar(64)
-  userId String  @db.Uuid
+  userId String  @map("user_id") @db.Uuid
   user   User    @relation(fields: [userId], references: [id])
   active Boolean @default(true)
 
@@ -40,20 +40,20 @@ model ThirdPartyAuth {
   id        String         @id @default(uuid())
   uid       String         @db.VarChar(64)
   email     String?        @db.VarChar(320)
-  firstName String?        @db.VarChar(64)
-  lastName  String?        @db.VarChar(64)
+  firstName String?        @map("first_name") @db.VarChar(64)
+  lastName  String?        @map("last_name") @db.VarChar(64)
   avatar    String?        @db.Text
   type      ThirdPartyType
   user      User[]
   deleted   Boolean        @default(false)
-  createdAt DateTime       @default(now())
+  createdAt DateTime       @default(now()) @map("created_at")
 
   @@map("third_party_auth")
 }
 
 model Studio {
   id          String   @id @default(uuid()) @db.Uuid
-  createdAt   DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
   studio_name String   @db.VarChar(64)
   rating      Float    @db.Real
   thumbnail   String   @db.Text
@@ -133,11 +133,11 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id                 String @id @default(uuid()) @db.Uuid
-  user               User   @relation(fields: [user_id], references: [id])
-  user_id            String @unique @db.Uuid
-  displayed_name     String @db.VarChar(30)
-  profile_picture_id String @db.Uuid
+  id                 String      @id @default(uuid()) @db.Uuid
+  user               User        @relation(fields: [user_id], references: [id])
+  user_id            String      @unique @db.Uuid
+  displayed_name     String      @db.VarChar(30)
+  profile_picture_id String      @db.Uuid
   user_anime         UserAnime[]
 
   @@map("user_profile")
