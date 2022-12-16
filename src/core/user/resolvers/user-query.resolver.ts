@@ -35,13 +35,15 @@ export class UserQueryResolver extends UserRootResolver {
     }
 
     @FieldResolver(() => GetListUserResultsType)
-    async getUserList(@Args() args: PaginationInputType) {
+    async getUserList(
+        @Args() args: PaginationInputType,
+    ): Promise<GetListUserResultsType> {
         const userList = await this.userService.getUserList(args);
         const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,
             errors: [],
-            userList,
+            userList: userList as any[],
             pagination,
         };
     }

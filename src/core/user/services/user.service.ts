@@ -6,8 +6,6 @@ import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
-import { PaginationInputType } from '../../../common/models/inputs';
-import { ThirdPartyAuth } from '../../../common/models/enums';
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
