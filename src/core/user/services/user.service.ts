@@ -6,9 +6,121 @@ import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
+import { PaginationService } from '../../../common/services';
+import { RedisClientType } from 'redis';
+import Redis from '../../../loaders/redis';
+import { Mailer } from '../../../common/utils/mailer';
+import { User } from '../models/user.model';
+import { hash } from '../../../common/utils/password.util';
+import { ICustomContext } from '../../../common/models/interfaces';
 
 export class UserService {
     private readonly prisma = Database.getInstance().logic;
+    private readonly paginationService: PaginationService =
+        new PaginationService('user');
+    private readonly redis: RedisClientType = Redis.getInstance().logic;
+    private readonly mailer: Mailer = new Mailer();
+
+    async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
+        const { userJwtPayload } = ctx;
+        if (!userJwtPayload) {
+            throw new GqlHttpException(
+                'not authorized',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+        if (!args.username)
+            throw new GqlHttpException(
+                'username is empty',
+                HttpStatus.BAD_REQUEST,
+            );
+
+        if (!args.password)
+            throw new GqlHttpException(
+                'password is empty',
+                HttpStatus.BAD_REQUEST,
+            );
+
+        const checkUsername = await this.findUserByUsername(args.username);
+
+        if (checkUsername) {
+            throw new GqlHttpException(
+                'Username already used',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        const savedUser = await this.findUserById(userJwtPayload.uid);
+
+        if (!savedUser)
+            throw new GqlHttpException(
+                'There are no saved user by this email',
+                HttpStatus.NOT_FOUND,
+            );
+        if (!savedUser.email)
+            throw new GqlHttpException(
+                'email is empty',
+                HttpStatus.BAD_REQUEST,
+            );
+
+        const checkUsersCount = await this.getUserEmailCount(savedUser.email);
+
+        if (checkUsersCount >= 5) {
+            throw new GqlHttpException(
+                'Too Many accounts',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        const hashedPassword = await hash(args.password);
+        const user = await this.createUser({
+            ...args,
+            username: args.username,
+            email: savedUser.email,
+            password: hashedPassword,
+        });
+        return {
+            success: true,
+            user: user as any,
+        };
+    }
+
+    async updateUserInfo(args: UpdateUserInputType) {
+        const user = await this.updateUser(args);
+        return {
+            success: true,
+            user: user as User,
+        };
+    }
+
+    async getUserListInfo(args: PaginationInputType) {
+        const userList = await this.getUserList(args);
+        const pagination = await this.paginationService.getPagination(args);
+        return {
+            success: true,
+            errors: [],
+            userList: userList as Array<User>,
+            pagination,
+        };
+    }
+
+    async getUser(id: string) {
+        const user = await this.prisma.user.findUnique({ where: { id } });
+        return {
+            success: true,
+            user: user as any,
+        };
+    }
+
+    async getUsersByEmail(email: string, args: PaginationInputType) {
+        const userList = await this.getUserListByEmail(email, args);
+        const pagination = await this.paginationService.getPagination(args);
+        return {
+            success: true,
+            userList: userList as Array<User>,
+            pagination,
+        };
+    }
 
     async createUserWithThirdParty(
         userUsername: string,

@@ -16,35 +16,18 @@ export class UserQueryResolver extends UserRootResolver {
         @Arg('email') email: string,
         @Args() args: PaginationInputType,
     ): Promise<GetListUserByEmailResultsType> {
-        const userList = await this.userService.getUserListByEmail(email, args);
-        const pagination = await this.paginationService.getPagination(args);
-        return {
-            success: true,
-            userList: userList as any[],
-            pagination,
-        };
+        return await this.userService.getUsersByEmail(email, args);
     }
 
     @FieldResolver(() => GetUserResultsType)
     async getUser(@Arg('id') id: string): Promise<GetUserResultsType> {
-        const user = await this.prisma.user.findUnique({ where: { id } });
-        return {
-            success: true,
-            user: user as any,
-        };
+        return await this.userService.getUser(id);
     }
 
     @FieldResolver(() => GetListUserResultsType)
     async getUserList(
         @Args() args: PaginationInputType,
     ): Promise<GetListUserResultsType> {
-        const userList = await this.userService.getUserList(args);
-        const pagination = await this.paginationService.getPagination(args);
-        return {
-            success: true,
-            errors: [],
-            userList: userList as any[],
-            pagination,
-        };
+        return await this.userService.getUserListInfo(args);
     }
 }
