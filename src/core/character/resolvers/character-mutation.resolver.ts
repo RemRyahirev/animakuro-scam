@@ -1,6 +1,9 @@
 import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
-import { CharacterMutationType, CharacterRootResolver } from './character-root.resolver';
+import {
+    CharacterMutationType,
+    CharacterRootResolver,
+} from './character-root.resolver';
 import { CreateCharacterResultsType } from '../models/results/create-character-results.type';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
@@ -18,11 +21,7 @@ export class CharacterMutationResolver extends CharacterRootResolver {
         @Args() args: CreateCharacterInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<CreateCharacterResultsType> {
-        const character = await this.characterService.createCharacter(args);
-        return {
-            success: true,
-            character,
-        };
+        return await this.characterService.createCharacterInfo(args, ctx);
     }
 
     @FieldResolver(() => UpdateCharacterResultsType)
@@ -30,11 +29,7 @@ export class CharacterMutationResolver extends CharacterRootResolver {
         @Args() args: UpdateCharacterInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<UpdateCharacterResultsType> {
-        const character = await this.characterService.updateCharacter(args);
-        return {
-            success: true,
-            character,
-        };
+        return await this.characterService.updateCharacterInfo(args, ctx);
     }
 
     @FieldResolver(() => DeleteCharacterResultsType)
@@ -42,11 +37,6 @@ export class CharacterMutationResolver extends CharacterRootResolver {
         @Arg('id') id: string,
         @Ctx() ctx: ICustomContext,
     ): Promise<DeleteCharacterResultsType> {
-        const character = await this.characterService.deleteCharacter(id);
-        return {
-            success: true,
-            character,
-        };
+        return await this.characterService.deleteCharacterInfo(id, ctx);
     }
 }
-
