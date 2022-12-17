@@ -12,19 +12,19 @@ async function userSeed() {
             {
                 email: 'alexander@mail.ru',
                 username: 'Alexander',
-                pass_hash: await hash('password'),
+                password: await hash('password'),
                 gender: Gender.MALE,
             },
             {
                 email: 'oleg@icloud.com',
                 username: 'Oleg',
-                pass_hash: await hash('another-password'),
+                password: await hash('another-password'),
                 gender: Gender.MALE,
             },
             {
                 email: 'irina@google.com',
                 username: 'Irina',
-                pass_hash: await hash('some-password'),
+                password: await hash('some-password'),
                 gender: Gender.FEMALE,
             },
         ],

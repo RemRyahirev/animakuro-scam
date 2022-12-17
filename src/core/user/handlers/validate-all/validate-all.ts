@@ -63,7 +63,7 @@ export class ValidateAll {
             email: this._email.value,
             username: this._username.value,
             birthday: this._birthDay.value,
-            pass_hash: this._password.value,
+            password: this._password.value,
             customGender: this._gender.value.customGender,
             gender: this._gender.value.gender,
         });

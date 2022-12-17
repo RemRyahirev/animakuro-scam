@@ -7,5 +7,4 @@ export interface IUserOutput {
     email?: string;
     username?: string;
     password?: string;
-    pass_hash?: string;
 }

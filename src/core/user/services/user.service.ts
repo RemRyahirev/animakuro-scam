@@ -103,9 +103,8 @@ export class UserService {
     }
 
     async createUser(args: CreateUserInputType) {
-        const { password, ...rest } = args;
         return await this.prisma.user.create({
-            data: { ...rest, pass_hash: args.password } as any,
+            data: args as any,
         });
     }
 
