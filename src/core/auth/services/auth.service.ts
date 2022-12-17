@@ -145,35 +145,39 @@ export class AuthService {
 
         const { email, password, username } = registerInput;
 
-        const user = await this.userService.findUserByEmailOrUsername(
-            email,
-            username,
-        );
-
-        if (user) {
-            if (user.username === username)
-                throw new GqlHttpException(
-                    'USERNAME_TAKEN',
-                    HttpStatus.BAD_REQUEST,
-                    'Auth Errors',
-                );
-
-            if (user.email === email)
-                throw new GqlHttpException(
-                    'EMAIL_TAKEN',
-                    HttpStatus.BAD_REQUEST,
-                    'Auth Errors',
-                );
-
-            return { success: false };
-        }
+        // const user = await this.userService.findUserByEmailOrUsername(
+        //     email,
+        //     username,
+        // );
+        //
+        // if (user) {
+        //     if (user.username === username)
+        //         throw new GqlHttpException(
+        //             'USERNAME_TAKEN',
+        //             HttpStatus.BAD_REQUEST,
+        //             'Auth Errors',
+        //         );
+        //
+        //     if (user.email === email)
+        //         throw new GqlHttpException(
+        //             'EMAIL_TAKEN',
+        //             HttpStatus.BAD_REQUEST,
+        //             'Auth Errors',
+        //         );
+        //
+        //     return { success: false };
+        // }
 
         const hashedPassword = await hash(password);
-        await this.userService.createUser({
-            email,
-            password: hashedPassword,
-            username,
-        });
+        try {
+            await this.userService.createUser({
+                email,
+                password: hashedPassword,
+                username,
+            });
+        } catch (e) {
+            return { success: false };
+        }
 
         return { success: true };
     }
