@@ -183,28 +183,28 @@ export class AuthService {
     }
 
     async registerInfo(args: RegisterInputType) {
-        const user = await this.userService.findUserByEmailOrUsername(
-            args.email,
-            args.username,
-        );
-
-        if (user) {
-            if (user.username === args.username)
-                throw new GqlHttpException(
-                    'USERNAME_TAKEN',
-                    HttpStatus.BAD_REQUEST,
-                    'Auth Errors',
-                );
-
-            if (user.email === args.email)
-                throw new GqlHttpException(
-                    'EMAIL_TAKEN',
-                    HttpStatus.BAD_REQUEST,
-                    'Auth Errors',
-                );
-
-            return { success: false };
-        }
+        // const user = await this.userService.findUserByEmailOrUsername(
+        //     args.email,
+        //     args.username,
+        // );
+        //
+        // if (user) {
+        //     if (user.username === args.username)
+        //         throw new GqlHttpException(
+        //             'USERNAME_TAKEN',
+        //             HttpStatus.BAD_REQUEST,
+        //             'Auth Errors',
+        //         );
+        //
+        //     if (user.email === args.email)
+        //         throw new GqlHttpException(
+        //             'EMAIL_TAKEN',
+        //             HttpStatus.BAD_REQUEST,
+        //             'Auth Errors',
+        //         );
+        //
+        //     return { success: false };
+        // }
 
         const code = crypto.randomUUID();
 
