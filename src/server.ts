@@ -9,6 +9,11 @@ export async function createServer() {
     const app = express();
     app.use(cors());
     app.use(cookieParser());
-    app.post('/graphql', graphqlUploadExpress(), await new GraphQLMiddleware().init());
+    app.use(express.static('public'));
+    app.post(
+        '/graphql',
+        graphqlUploadExpress(),
+        await new GraphQLMiddleware().init(),
+    );
     return app;
 }

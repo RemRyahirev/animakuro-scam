@@ -37,7 +37,6 @@
     ],
     "include": [
         "./src/*.ts",
-        "./src/schema.gpl",
         "./src/**/*.ts",
         "./src/**/**/*.ts",
         "./src/**/**/**/*.ts",
