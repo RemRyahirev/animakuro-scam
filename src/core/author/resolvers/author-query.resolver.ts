@@ -12,32 +12,13 @@ export class AuthorQueryResolver extends AuthorRootResolver {
 
     @FieldResolver(() => GetAuthorResultsType)
     async getAuthor(@Arg('id') id: string): Promise<GetAuthorResultsType> {
-        const author = await this.authorService.getAuthor(id);
-        if (!author) {
-            return {
-                success: false,
-                author: null,
-                errors: ['Author not found'],
-            };
-        }
-        return {
-            success: true,
-            author,
-            errors: [],
-        };
+        return await this.authorService.getAuthorInfo(id);
     }
 
     @FieldResolver(() => GetListAuthorResultsType)
     async getAuthorList(
         @Args() args: PaginationInputType,
     ): Promise<GetListAuthorResultsType> {
-        const authorList = await this.authorService.getAuthorList(args);
-        const pagination = await this.paginationService.getPagination(args);
-        return {
-            success: true,
-            errors: [],
-            authorList,
-            pagination,
-        };
+        return await this.authorService.getAuthorListInfo(args);
     }
 }
