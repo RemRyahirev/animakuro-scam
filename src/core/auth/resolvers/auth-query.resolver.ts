@@ -10,9 +10,6 @@ export class AuthQueryResolver extends AuthRootResolver {
 
     @FieldResolver(() => ThirdPartyRedirectUrlResultsType)
     async getThirdPartyRedirectUrls() {
-        return {
-            success: true,
-            facebook: this.facebookStrategy.getRedirectUrl(),
-        };
+        return await this.authService.getThirdPartyRedirectUrls();
     }
 }
