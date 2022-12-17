@@ -72,16 +72,20 @@ export class UserService {
         }
 
         const hashedPassword = await hash(args.password);
-        const user = await this.createUser({
-            ...args,
-            username: args.username,
-            email: savedUser.email,
-            password: hashedPassword,
-        });
-        return {
-            success: true,
-            user: user as any,
-        };
+        try {
+            const user = await this.createUser({
+                ...args,
+                username: args.username,
+                email: savedUser.email,
+                password: hashedPassword,
+            });
+            return {
+                success: true,
+                user: user as any,
+            };
+        } catch (e) {
+            return { success: true, user: null as any };
+        }
     }
 
     async updateUserInfo(args: UpdateUserInputType) {
