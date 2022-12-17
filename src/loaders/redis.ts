@@ -1,15 +1,15 @@
 import { createClient, RedisClientType } from 'redis';
-import Config from '../common/config/config';
+import { Config } from './config';
 import { Singleton } from '../common/decorators';
 
 @Singleton
 export class Redis {
-    private config = Config.getInstance().logic;
+    private readonly _config = new Config().logic;
     private readonly _logic: RedisClientType;
 
     constructor() {
         this._logic = createClient({
-            url: this.config.redisUrl,
+            url: this._config.redisUrl,
         });
         this._logic.on('disconnect', async () => {
             await this._logic.connect();

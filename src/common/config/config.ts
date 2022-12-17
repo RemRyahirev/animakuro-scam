@@ -42,23 +42,3 @@ export class ConfigParent {
         return isNaN(currElement) ? element : currElement;
     }
 }
-
-export default class Config {
-    private readonly _config: ConfigParent;
-    private static instance: Config;
-
-    private constructor() {
-        this._config = new ConfigParent();
-    }
-
-    public static getInstance(): Config {
-        if (!Config.instance) {
-            Config.instance = new Config();
-        }
-        return Config.instance;
-    }
-
-    get logic(): ConfigParent {
-        return this._config;
-    }
-}

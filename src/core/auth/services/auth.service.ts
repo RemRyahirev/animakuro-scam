@@ -104,7 +104,7 @@ export class AuthService {
     async loginInfo(args: LoginInputType, ctx: ICustomContext) {
         const user = await this.userService.findUserByUsername(args.username);
 
-        if (!user || !(await compare(args.password, user.pass_hash || '')))
+        if (!user || !(await compare(args.password, user.password || '')))
             throw new GqlHttpException(
                 'INVALID_CREDENTIALS',
                 HttpStatus.BAD_REQUEST,

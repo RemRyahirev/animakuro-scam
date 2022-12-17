@@ -1,10 +1,10 @@
 import * as nodemailer from 'nodemailer';
 import { SentMessageInfo } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import Config from '../../config/config';
+import { Config } from '../../../loaders';
 
 export class Mailer {
-    private readonly config = Config.getInstance().logic;
+    private readonly config = new Config().logic;
     private readonly domain;
     private readonly mailer: nodemailer.Transporter;
 
