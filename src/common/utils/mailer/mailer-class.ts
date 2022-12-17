@@ -1,9 +1,9 @@
-import Config from '../../config/config';
 import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { Config } from '../../../loaders';
 
 export default class MailerClass {
-    private config = Config.getInstance().logic;
+    private config = new Config().logic;
     private readonly _logic: nodemailer.Transporter;
     private static instance: MailerClass;
 

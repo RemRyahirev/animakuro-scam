@@ -1,11 +1,11 @@
 import { ValidateUsername } from './validate-username';
-import Redis from '../../../../loaders/redis';
+import { Redis } from '../../../../loaders/redis';
 
 describe('Check usernames', () => {
     const sourceUsername = 'srcUsername';
     const inputUsername = 'inputUsername';
     test('if source username is undefined', async () => {
-        Redis.getInstance().logic;
+        new Redis().logic;
 
         const user = new ValidateUsername(inputUsername, undefined);
         await user.validate();

@@ -2,7 +2,7 @@ import { UpdateUserInputType } from '../../models/inputs/update-user-input.type'
 import { User } from '../../models/user.model';
 import { Gender } from '../../../../common/models/enums';
 import { ValidateAll } from './validate-all';
-import loaders from '../../../../loaders';
+import * as loaders from '../../../../loaders';
 import { compare, hash } from '../../../../common/utils/password.util';
 
 describe('Check all', () => {
@@ -27,7 +27,7 @@ describe('Check all', () => {
     test('if all ok', async () => {
         const password = await hash('password');
         userObj.password = password;
-        loaders.Redis.getInstance();
+        new loaders.Redis().logic;
         // await new Redis().connect();
         const user = new ValidateAll(userObj, inputData, false);
         const { password: newPass, ...rest } = await user.run();
