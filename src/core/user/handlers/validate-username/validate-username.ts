@@ -1,5 +1,5 @@
 import { Checker } from '../checker';
-import Database from '../../../../database';
+import { Database } from '../../../../loaders';
 
 export class ValidateUsername extends Checker<
     string | undefined,
@@ -7,7 +7,7 @@ export class ValidateUsername extends Checker<
     string | undefined
 > {
     private _currentValue: string | undefined;
-    private prisma = Database.getInstance().logic;
+    private readonly prisma = new Database().logic;
 
     constructor(
         inputValue: string | undefined,

@@ -1,6 +1,5 @@
 import { Checker } from '../checker';
-import Database from '../../../../database';
-import Redis from '../../../../loaders/redis';
+import { Database, Redis } from '../../../../loaders';
 import { randomUUID } from 'crypto';
 import { Mailer } from '../../../../common/utils/mailer';
 import { User } from '../../models/user.model';
@@ -12,7 +11,7 @@ export class ValidateEmail extends Checker<
     string | undefined
 > {
     private _currentValue: string | undefined;
-    private readonly prisma = Database.getInstance().logic;
+    private readonly prisma = new Database().logic;
     private redis: RedisClientType | undefined;
     private readonly mailer = new Mailer();
     private readonly _isProduction: boolean;
@@ -53,7 +52,7 @@ export class ValidateEmail extends Checker<
         }
         this._currentValue = this._inputValue;
         if (this._isProduction) {
-            this.redis = Redis.getInstance().logic;
+            this.redis = new Redis().logic;
             const code = randomUUID();
             await this.redis.set(
                 `confirmation:change-email:${code}`,

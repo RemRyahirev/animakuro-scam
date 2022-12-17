@@ -1,10 +1,9 @@
-import Database from 'database';
+import { Database, Redis } from '../../../loaders';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import {
     CreateSiteAuthSessionInput,
     UpdateSiteAuthSessionInput,
 } from 'core/auth/models/inputs/site-auth-session.schema';
-import Redis from '../../../loaders/redis';
 import { FacebookStrategy } from '../strategies/facebook.strategy';
 import { UserService } from '../../user/services/user.service';
 import { Mailer } from '../../../common/utils/mailer';
@@ -19,8 +18,8 @@ import { User } from '../../user/models/user.model';
 import { ThirdPartyAuthInputType } from '../models/inputs/third-party-input.type';
 
 export class AuthService {
-    private readonly prisma = Database.getInstance().logic;
-    private readonly redis = Redis.getInstance().logic;
+    private readonly prisma = new Database().logic;
+    private readonly redis = new Redis().logic;
     private readonly facebookStrategy: FacebookStrategy =
         new FacebookStrategy();
     private readonly userService: UserService = new UserService();
@@ -105,7 +104,7 @@ export class AuthService {
     async loginInfo(args: LoginInputType, ctx: ICustomContext) {
         const user = await this.userService.findUserByUsername(args.username);
 
-        if (!user || !(await compare(args.password, user.password || '')))
+        if (!user || !(await compare(args.password, user.pass_hash || '')))
             throw new GqlHttpException(
                 'INVALID_CREDENTIALS',
                 HttpStatus.BAD_REQUEST,
@@ -232,7 +231,7 @@ export class AuthService {
     }
 
     async setRegisterConfirmation(code: string, data: RegisterInputType) {
-        await Redis.getInstance().connect();
+        await new Redis().connect();
         await this.redis
             .set(`confirmation:register:${code}`, JSON.stringify(data), {
                 EX: 999999,
@@ -243,7 +242,7 @@ export class AuthService {
     async getRegisterConfirmation(
         code: string,
     ): Promise<RegisterInputType | null> {
-        await Redis.getInstance().connect();
+        await new Redis().connect();
         const data = await this.redis
             .get(`confirmation:register:${code}`)
             .catch(console.error);
@@ -255,7 +254,7 @@ export class AuthService {
     }
 
     async deleteRegisterConfirmation(code: string) {
-        await Redis.getInstance().connect();
+        await new Redis().connect();
         await this.redis
             .del(`confirmation:register:${code}`)
             .catch(console.error);

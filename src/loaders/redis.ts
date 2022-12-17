@@ -1,10 +1,11 @@
 import { createClient, RedisClientType } from 'redis';
 import Config from '../common/config/config';
+import { Singleton } from '../common/decorators';
 
-export default class Redis {
+@Singleton
+export class Redis {
     private config = Config.getInstance().logic;
     private readonly _logic: RedisClientType;
-    private static instance: Redis;
 
     constructor() {
         this._logic = createClient({
@@ -15,21 +16,14 @@ export default class Redis {
         });
     }
 
-    public async connect() {
+    public async connect(): Promise<void> {
         return await this._logic
             .connect()
             .then(() => console.log('Redis connected'))
             .catch(console.log);
     }
 
-    public static getInstance(): Redis {
-        if (!Redis.instance) {
-            Redis.instance = new Redis();
-        }
-        return Redis.instance;
-    }
-
-    get logic(): RedisClientType {
+    public get logic(): RedisClientType {
         return this._logic;
     }
 }

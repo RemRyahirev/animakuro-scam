@@ -1,4 +1,4 @@
-import Database from '../../../database';
+import { Database, Redis } from '../../../loaders';
 import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
@@ -8,17 +8,16 @@ import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { PaginationService } from '../../../common/services';
 import { RedisClientType } from 'redis';
-import Redis from '../../../loaders/redis';
 import { Mailer } from '../../../common/utils/mailer';
 import { User } from '../models/user.model';
 import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
 
 export class UserService {
-    private readonly prisma = Database.getInstance().logic;
+    private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('user');
-    private readonly redis: RedisClientType = Redis.getInstance().logic;
+    private readonly redis: RedisClientType = new Redis().logic;
     private readonly mailer: Mailer = new Mailer();
 
     async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
