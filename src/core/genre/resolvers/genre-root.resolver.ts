@@ -1,13 +1,10 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import Database from '../../../database';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GenreService } from '../services/genre.service';
 import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
-import { PaginationService } from "../../../common/services";
-import { PrismaClient } from '@prisma/client';
 
 @ObjectType()
 export class GenreMutationType {
@@ -32,10 +29,7 @@ export class GenreQueryType {
 
 @Resolver()
 export class GenreRootResolver {
-    protected readonly prisma: PrismaClient = Database.getInstance().logic;
     protected readonly genreService: GenreService = new GenreService();
-    protected readonly paginationService: PaginationService =
-        new PaginationService('genre');
 
     @Mutation(() => GenreMutationType, { description: 'Genre mutations' })
     genreMutations() {

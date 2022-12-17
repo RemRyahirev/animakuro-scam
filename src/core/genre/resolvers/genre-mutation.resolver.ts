@@ -18,11 +18,7 @@ export class GenreMutationResolver extends GenreRootResolver {
         @Args() args: CreateGenreInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<CreateGenreResultsType> {
-        const genre = await this.genreService.createGenre(args);
-        return {
-            success: true,
-            genre,
-        };
+        return await this.genreService.createGenreInfo(args, ctx);
     }
 
     @FieldResolver(() => UpdateGenreResultsType)
@@ -30,11 +26,7 @@ export class GenreMutationResolver extends GenreRootResolver {
         @Args() args: UpdateGenreInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<UpdateGenreResultsType> {
-        const genre = await this.genreService.updateGenre(args);
-        return {
-            success: true,
-            genre,
-        };
+        return await this.genreService.updateGenreInfo(args, ctx);
     }
 
     @FieldResolver(() => DeleteGenreResultsType)
@@ -42,10 +34,6 @@ export class GenreMutationResolver extends GenreRootResolver {
         @Arg('id') id: string,
         @Ctx() ctx: ICustomContext,
     ): Promise<DeleteGenreResultsType> {
-        const genre = await this.genreService.deleteGenre(id);
-        return {
-            success: true,
-            genre,
-        };
+        return await this.genreService.deleteGenreInfo(id, ctx);
     }
 }

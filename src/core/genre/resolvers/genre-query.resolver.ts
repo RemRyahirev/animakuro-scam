@@ -12,32 +12,13 @@ export class GenreQueryResolver extends GenreRootResolver {
 
     @FieldResolver(() => GetGenreResultsType)
     async getGenre(@Arg('id') id: string): Promise<GetGenreResultsType> {
-        const genre = await this.genreService.getGenre(id);
-        if (!genre) {
-            return {
-                success: false,
-                genre: null,
-                errors: ['Anime not found'],
-            };
-        }
-        return {
-            success: true,
-            genre,
-            errors: [],
-        };
+        return await this.genreService.getGenreInfo(id);
     }
 
     @FieldResolver(() => GetListGenreResultsType)
     async getGenreList(
         @Args() args: PaginationInputType,
     ): Promise<GetListGenreResultsType> {
-        const genreList = await this.genreService.getGenreList(args);
-        const pagination = await this.paginationService.getPagination(args);
-        return {
-            success: true,
-            errors: [],
-            genreList,
-            pagination,
-        };
+        return await this.genreService.getGenreListInfo(args);
     }
 }
