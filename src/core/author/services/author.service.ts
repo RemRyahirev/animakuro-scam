@@ -1,4 +1,4 @@
-import Database from '../../../database';
+import { Database } from '../../../loaders';
 import { CreateAuthorInputType } from '../models/inputs/create-author-input.type';
 import { UpdateAuthorInputType } from '../models/inputs/update-author-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
@@ -7,7 +7,7 @@ import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 
 export class AuthorService {
-    private readonly prisma = Database.getInstance().logic;
+    private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('author');
 

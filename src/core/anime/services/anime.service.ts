@@ -1,14 +1,13 @@
-import Database from '../../../database';
+import { Database } from '../../../loaders';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { Anime } from '../models/anime.model';
-import { PrismaClient } from '@prisma/client';
 import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 
 export class AnimeService {
-    private readonly prisma: PrismaClient = Database.getInstance().logic;
+    private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('anime');
 

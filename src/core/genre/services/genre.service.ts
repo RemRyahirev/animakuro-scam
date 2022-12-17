@@ -1,4 +1,4 @@
-import Database from '../../../database';
+import { Database } from '../../../loaders';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
 import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
@@ -7,13 +7,12 @@ import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 
 export class GenreService {
-    private readonly prisma = Database.getInstance().logic;
-    protected readonly genreService: GenreService = new GenreService();
+    private readonly prisma = new Database().logic;
     protected readonly paginationService: PaginationService =
         new PaginationService('genre');
 
     async createGenreInfo(args: CreateGenreInputType, ctx: ICustomContext) {
-        const genre = await this.genreService.createGenre(args);
+        const genre = await this.createGenre(args);
         return {
             success: true,
             genre,
@@ -21,7 +20,7 @@ export class GenreService {
     }
 
     async updateGenreInfo(args: UpdateGenreInputType, ctx: ICustomContext) {
-        const genre = await this.genreService.updateGenre(args);
+        const genre = await this.updateGenre(args);
         return {
             success: true,
             genre,
@@ -29,7 +28,7 @@ export class GenreService {
     }
 
     async deleteGenreInfo(id: string, ctx: ICustomContext) {
-        const genre = await this.genreService.deleteGenre(id);
+        const genre = await this.deleteGenre(id);
         return {
             success: true,
             genre,
@@ -37,7 +36,7 @@ export class GenreService {
     }
 
     async getGenreInfo(id: string) {
-        const genre = await this.genreService.getGenre(id);
+        const genre = await this.getGenre(id);
         if (!genre) {
             return {
                 success: false,
@@ -53,7 +52,7 @@ export class GenreService {
     }
 
     async getGenreListInfo(args: PaginationInputType) {
-        const genreList = await this.genreService.getGenreList(args);
+        const genreList = await this.getGenreList(args);
         const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,

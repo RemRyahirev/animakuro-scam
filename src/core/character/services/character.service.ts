@@ -1,14 +1,13 @@
-import Database from '../../../database';
+import { Database } from '../../../loaders';
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
 import { UpdateCharacterInputType } from '../models/inputs/update-character-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { Character } from '../models/character.model';
-import { PrismaClient } from '@prisma/client';
 import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 
 export class CharacterService {
-    private readonly prisma: PrismaClient = Database.getInstance().logic;
+    private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('character');
 

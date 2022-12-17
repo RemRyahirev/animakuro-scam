@@ -1,10 +1,10 @@
 import { PaginationInputType } from '../models/inputs';
-import Database from '../../database';
+import { Database } from '../../loaders';
 import { PaginationResultsType } from '../models/results';
 import { PrismaClient } from '@prisma/client';
 
 export class PaginationService {
-    protected readonly prisma = Database.getInstance().logic;
+    protected readonly prisma = new Database().logic;
     private readonly entityName: keyof PrismaClient;
 
     constructor(entityName: string) {
