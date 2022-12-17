@@ -1,0 +1,684 @@
+type BaseResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+}
+
+type PaginationResultsType {
+  """Page number"""
+  page: Int!
+
+  """Entities on page"""
+  perPage: Int!
+
+  """Total page count"""
+  pageCount: Int!
+
+  """Total entities count"""
+  totalCount: Int!
+}
+
+type Anime {
+  id: ID!
+  title: String!
+  score: Float!
+  year: Int!
+  genres: [String!]!
+  media_format: MediaFormat
+  source: MediaSource
+  studio_id: String!
+  seasons_count: Int!
+  episodes_count: Int!
+
+  """Duration in seconds"""
+  duration: Int!
+
+  """
+  Date format "4 apr. 03:30"
+  """
+  next_episode: DateTime!
+  rating: FilmRating
+  description: String!
+  preview_link: String!
+  status_description: String!
+  release_status: ReleaseStatus
+  characters: [String!]!
+  authors: [String!]!
+}
+
+enum MediaFormat {
+  TV
+  TV_SHORT
+  MOVIE
+  SPECIAL
+  OVA
+  ONA
+  MUSIC
+  MANGA
+  NOVEL
+  ONE_SHOT
+  OTHER
+}
+
+enum MediaSource {
+  ORIGINAL
+  MANGA
+  LIGHT_NOVEL
+  VISUAL_NOVEL
+  VIDEO_GAME
+  OTHER
+  NOVEL
+  DOUJINSHI
+  ANIME
+  WEB_NOVEL
+  LIVE_ACTION
+  GAME
+  COMIC
+  MULTIMEDIA_PROJECT
+  PICTURE_BOOK
+}
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
+enum FilmRating {
+  G
+  PG
+  PG_13
+  R
+  R_17
+  NC_17
+  NC_21
+}
+
+enum ReleaseStatus {
+  FINISHED
+  RELEASING
+  NOT_YET_RELEASED
+  CANCELLED
+  HIATUS
+}
+
+type CreateAnimeResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Anime"""
+  anime: Anime
+}
+
+type UpdateAnimeResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Anime"""
+  anime: Anime
+}
+
+type DeleteAnimeResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Anime"""
+  anime: Anime
+}
+
+type GetListAnimeResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Anime list"""
+  animeList: [Anime!]
+
+  """Pagination data"""
+  pagination: PaginationResultsType!
+}
+
+type GetAnimeResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Anime"""
+  anime: Anime
+}
+
+type AnimeMutationType {
+  """Create anime"""
+  createAnime(title: String!, score: Float!, year: Int!, genres: [String!]!, media_format: MediaFormat = OTHER, source: MediaSource = OTHER, studio_id: String!, seasons_count: Int!, episodes_count: Int!, duration: Int!, next_episode: DateTime!, rating: FilmRating = G, description: String!, preview_link: String!, status_description: String!, release_status: ReleaseStatus = FINISHED, characters: [String!]!, authors: [String!]!): CreateAnimeResultsType!
+
+  """Update anime"""
+  updateAnime(id: ID!, title: String, score: Float, year: Int, genres: [String!], media_format: MediaFormat = OTHER, source: MediaSource = OTHER, studio_id: String, seasons_count: Int, episodes_count: Int, duration: Int, next_episode: DateTime, rating: FilmRating = G, description: String, preview_link: String, status_description: String, release_status: ReleaseStatus = FINISHED, characters: [String!], authors: [String!]): UpdateAnimeResultsType!
+
+  """Delete anime"""
+  deleteAnime(id: String!): DeleteAnimeResultsType!
+}
+
+type AnimeQueryType {
+  """Get anime by ID"""
+  getAnime(id: String!): GetAnimeResultsType!
+
+  """Get anime list"""
+  getAnimeList(page: Int!, perPage: Int!): GetListAnimeResultsType!
+}
+
+type ThirdPartyRedirectUrlResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+  facebook: String!
+}
+
+type LogoutResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+}
+
+type UserThirdParty {
+  uid: String!
+  type: ThirdPartyAuth!
+  firstName: String
+  lastName: String
+  email: String
+  avatar: String
+}
+
+enum ThirdPartyAuth {
+  DISCORD
+  GOOGLE
+  APPLE
+  FACEBOOK
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String
+  avatar: String
+  banner: String
+  birthday: DateTime
+  gender: Gender
+  customGender: String
+  thirdPartyAuth: UserThirdParty
+}
+
+enum Gender {
+  UNSPECIFIED
+  MALE
+  FEMALE
+  CUSTOM
+}
+
+type LoginResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+  user: User!
+}
+
+type RegisterResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+}
+
+type ConfirmRegistrationResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+}
+
+type LoginOrRegisterThirdPartyResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+  user: User!
+}
+
+type AuthMutationType {
+  """Register user, needs confirmation"""
+  register(username: String!, email: String!, password: String!): RegisterResultsType!
+
+  """Confirm registration"""
+  confirmRegistration(code: String!): ConfirmRegistrationResultsType!
+
+  """User login"""
+  login(username: String!, password: String!): LoginResultsType!
+
+  """User logout"""
+  logout: LogoutResultsType!
+
+  """Login or register 3rd party"""
+  loginOrRegisterThirdParty(
+    """Third party account id"""
+    uid: String!
+    type: ThirdPartyAuth!
+    firstName: String
+    lastName: String
+    email: String
+    avatar: String
+    code: String!
+  ): LoginOrRegisterThirdPartyResultsType!
+}
+
+type AuthQueryType {
+  """Get 3rd party urls"""
+  getThirdPartyRedirectUrls: ThirdPartyRedirectUrlResultsType!
+}
+
+type Author {
+  id: ID!
+  author_name: String!
+  bucket_id: String!
+  bio: String!
+}
+
+type CreateAuthorResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Author"""
+  author: Author
+}
+
+type UpdateAuthorResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Author"""
+  author: Author
+}
+
+type DeleteAuthorResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Author"""
+  author: Author
+}
+
+type GetListAuthorResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Author list"""
+  authorList: [Author!]
+
+  """Pagination data"""
+  pagination: PaginationResultsType!
+}
+
+type GetAuthorResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Author"""
+  author: Author
+}
+
+type AuthorMutationType {
+  """Create author"""
+  createAuthor(author_name: String!, bucket_id: String!, bio: String!): CreateAuthorResultsType!
+
+  """Update author"""
+  updateAuthor(id: ID!, author_name: String, bucket_id: String, bio: String): UpdateAuthorResultsType!
+
+  """Delete author"""
+  deleteAuthor(id: String!): DeleteAuthorResultsType!
+}
+
+type AuthorQueryType {
+  """Get author by ID"""
+  getAuthor(id: String!): GetAuthorResultsType!
+
+  """Get author list"""
+  getAuthorList(page: Int!, perPage: Int!): GetListAuthorResultsType!
+}
+
+type Character {
+  id: ID!
+  bucket_id: String!
+  character_name: String!
+  importance: CharacterType
+  description: String!
+}
+
+enum CharacterType {
+  PROTAGONIST
+  ANTAGONIST
+  SIDEKICK
+  ORBITAL_CHARACTER
+  LOVE_INTEREST
+  CONFIDANTE
+  EXTRAS
+  FOIL
+  OTHER
+}
+
+type CreateCharacterResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Character"""
+  character: Character
+}
+
+type UpdateCharacterResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Character"""
+  character: Character
+}
+
+type DeleteCharacterResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Character"""
+  character: Character
+}
+
+type GetListCharacterResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Character list"""
+  characterList: [Character!]
+
+  """Pagination data"""
+  pagination: PaginationResultsType!
+}
+
+type GetCharacterResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Character"""
+  character: Character
+}
+
+type CharacterMutationType {
+  """Create character"""
+  createCharacter(bucket_id: String!, character_name: String!, importance: CharacterType = PROTAGONIST, description: String!): CreateCharacterResultsType!
+
+  """Update character"""
+  updateCharacter(id: ID!, bucket_id: String, character_name: String, importance: CharacterType = PROTAGONIST, description: String): UpdateCharacterResultsType!
+
+  """Delete character"""
+  deleteCharacter(id: String!): DeleteCharacterResultsType!
+}
+
+type CharacterQueryType {
+  """Get character by ID"""
+  getCharacter(id: String!): GetCharacterResultsType!
+
+  """Get character list"""
+  getCharacterList(page: Int!, perPage: Int!): GetListCharacterResultsType!
+}
+
+type Genre {
+  id: ID!
+  genre_name: String!
+}
+
+type CreateGenreResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Genre"""
+  genre: Genre
+}
+
+type GetListGenreResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Genre list"""
+  genreList: [Genre!]
+
+  """Pagination data"""
+  pagination: PaginationResultsType!
+}
+
+type DeleteGenreResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Genre"""
+  genre: Genre
+}
+
+type GetGenreResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Genre"""
+  genre: Genre
+}
+
+type UpdateGenreResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """Genre"""
+  genre: Genre
+}
+
+type GenreMutationType {
+  """Create genre"""
+  createGenre(genre_name: String!): CreateGenreResultsType!
+
+  """Update genre"""
+  updateGenre(id: ID!, genre_name: String!): UpdateGenreResultsType!
+
+  """Delete genre"""
+  deleteGenre(id: String!): DeleteGenreResultsType!
+}
+
+type GenreQueryType {
+  """Get genre by ID"""
+  getGenre(id: String!): GetGenreResultsType!
+
+  """Get genre list"""
+  getGenreList(page: Int!, perPage: Int!): GetListGenreResultsType!
+}
+
+type GetListUserResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """User list"""
+  userList: [User!]
+
+  """Pagination data"""
+  pagination: PaginationResultsType!
+}
+
+type UpdateUserResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """User"""
+  user: User
+}
+
+type CreateUserResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """User"""
+  user: User
+}
+
+type GetUserResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """User"""
+  user: User
+}
+
+type GetListUserByEmailResultsType {
+  """Success operation flag"""
+  success: Boolean!
+
+  """Array of errors, if exists"""
+  errors: [String!]
+
+  """User list by email"""
+  userList: [User!]
+
+  """Pagination data"""
+  pagination: PaginationResultsType!
+}
+
+type UserMutationType {
+  """Create user"""
+  createUser(username: String, email: String, password: String, birthday: DateTime, gender: String, customGender: String): CreateUserResultsType!
+
+  """Update user"""
+  updateUser(id: ID!, username: String, email: String, password: String, newPassword: String, birthday: DateTime, gender: Gender, customGender: String, avatar: Upload, banner: Upload): UpdateUserResultsType!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UserQueryType {
+  """Get user by ID"""
+  getUser(id: String!): GetUserResultsType!
+
+  """Get user list by email"""
+  getUsersByEmail(page: Int!, perPage: Int!, email: String!): GetListUserByEmailResultsType
+
+  """Get user list"""
+  getUserList(page: Int!, perPage: Int!): GetListUserResultsType!
+}
+
+type Query {
+  """Anime queries"""
+  animeQueries: AnimeQueryType!
+
+  """Auth queries"""
+  authQueries: AuthQueryType!
+
+  """Author queries"""
+  authorQueries: AuthorQueryType!
+
+  """Character queries"""
+  characterQueries: CharacterQueryType!
+
+  """Genre queries"""
+  genreQueries: GenreQueryType!
+
+  """User queries"""
+  userQueries: UserQueryType!
+}
+
+type Mutation {
+  """Anime mutations"""
+  animeMutations: AnimeMutationType!
+
+  """Auth mutations"""
+  authMutations: AuthMutationType!
+
+  """Author mutations"""
+  authorMutations: AuthorMutationType!
+
+  """Character mutations"""
+  characterMutations: CharacterMutationType!
+
+  """Genre mutations"""
+  genreMutations: GenreMutationType!
+
+  """User mutations"""
+  userMutations: UserMutationType!
+}
