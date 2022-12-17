@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 schema.gql
-src/schema.gql
+public/schema.gql
 docker-compose.yml
 package-lock.json
 
