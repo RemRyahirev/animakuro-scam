@@ -12,32 +12,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
 
     @FieldResolver(() => GetAnimeResultsType)
     async getAnime(@Arg('id') id: string): Promise<GetAnimeResultsType> {
-        const anime = await this.animeService.getAnime(id);
-        if (!anime) {
-            return {
-                success: false,
-                anime: null,
-                errors: ['Anime not found'],
-            };
-        }
-        return {
-            success: true,
-            anime,
-            errors: [],
-        };
+        return await this.animeService.getAnimeInfo(id);
     }
 
     @FieldResolver(() => GetListAnimeResultsType)
     async getAnimeList(
         @Args() args: PaginationInputType,
     ): Promise<GetListAnimeResultsType> {
-        const animeList = await this.animeService.getAnimeList(args);
-        const pagination = await this.paginationService.getPagination(args);
-        return {
-            success: true,
-            errors: [],
-            animeList,
-            pagination,
-        };
+        return await this.animeService.getAnimeListInfo(args);
     }
 }

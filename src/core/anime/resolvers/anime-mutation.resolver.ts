@@ -18,11 +18,7 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         @Args() args: CreateAnimeInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<CreateAnimeResultsType> {
-        const anime = await this.animeService.createAnime(args);
-        return {
-            success: true,
-            anime,
-        };
+        return await this.animeService.createAnimeInfo(args, ctx);
     }
 
     @FieldResolver(() => UpdateAnimeResultsType)
@@ -30,11 +26,7 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         @Args() args: UpdateAnimeInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<UpdateAnimeResultsType> {
-        const anime = await this.animeService.updateAnime(args);
-        return {
-            success: true,
-            anime,
-        };
+        return await this.animeService.updateAnimeInfo(args, ctx);
     }
 
     @FieldResolver(() => DeleteAnimeResultsType)
@@ -42,10 +34,6 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         @Arg('id') id: string,
         @Ctx() ctx: ICustomContext,
     ): Promise<DeleteAnimeResultsType> {
-        const anime = await this.animeService.deleteAnime(id);
-        return {
-            success: true,
-            anime,
-        };
+        return await this.animeService.deleteAnimeInfo(id, ctx);
     }
 }
