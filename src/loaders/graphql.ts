@@ -1,11 +1,13 @@
 import { buildSchema } from 'type-graphql';
 import { graphqlHTTP, OptionsData } from 'express-graphql';
-import { GraphQLError, GraphQLSchema } from 'graphql';
+import { GraphQLError, GraphQLSchema, printSchema } from 'graphql';
 import exceptionsHandler from '../common/errors/exception-handler';
 import { ExtendedGraphQLError } from '../common/errors/types';
 import { AuthCheckerMiddleware } from '../common/middlewares';
 import { Singleton } from '../common/decorators';
 import { RequestHandler } from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Singleton
 export class GraphQLMiddleware {
@@ -13,6 +15,15 @@ export class GraphQLMiddleware {
 
     public async init(): Promise<RequestHandler> {
         this.schema = await this.buildSchema();
+        const sdl = printSchema(this.schema);
+        await fs.writeFile(
+            path.join(__dirname + '/../schema.gpl'),
+            sdl,
+            {},
+            (err) => {
+                if (err) console.log(err);
+            },
+        );
         return graphqlHTTP((request, response) => {
             return <OptionsData>{
                 schema: this.schema,
