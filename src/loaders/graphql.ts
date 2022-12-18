@@ -17,7 +17,7 @@ export class GraphQLMiddleware {
         this.schema = await this.buildSchema();
         const sdl = printSchema(this.schema);
         await fs.writeFile(
-            path.join(__dirname + '/../public/schema.gpl'),
+            path.join(__dirname + '/../public/schema.gql'),
             sdl,
             {},
             (err) => {
