@@ -2,17 +2,25 @@ import { Database } from '../../../loaders';
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
 import { UpdateCharacterInputType } from '../models/inputs/update-character-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { Character } from '../models/character.model';
 import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
+import { GetCharacterResultsType } from '../models/results/get-character-results.type';
+import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
+import { CreateCharacterResultsType } from '../models/results/create-character-results.type';
+import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
+import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
 
 export class CharacterService {
     private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('character');
 
-    async getCharacterInfo(id: string) {
-        const character = await this.getCharacter(id);
+    async getCharacter(id: string): Promise<GetCharacterResultsType> {
+        const character = await this.prisma.character.findUnique({
+            where: {
+                id,
+            },
+        });
         if (!character) {
             return {
                 success: false,
@@ -27,8 +35,13 @@ export class CharacterService {
         };
     }
 
-    async getCharacterListInfo(args: PaginationInputType) {
-        const characterList = await this.getCharacterList(args);
+    async getCharacterList(
+        args: PaginationInputType,
+    ): Promise<GetListCharacterResultsType> {
+        const characterList = await this.prisma.character.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
+        });
         const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,
@@ -38,67 +51,43 @@ export class CharacterService {
         };
     }
 
-    async createCharacterInfo(
+    async createCharacter(
         args: CreateCharacterInputType,
         ctx: ICustomContext,
-    ) {
-        const character = await this.createCharacter(args);
-        return {
-            success: true,
-            character,
-        };
-    }
-
-    async updateCharacterInfo(
-        args: UpdateCharacterInputType,
-        ctx: ICustomContext,
-    ) {
-        const character = await this.updateCharacter(args);
-        return {
-            success: true,
-            character,
-        };
-    }
-
-    async deleteCharacterInfo(id: string, ctx: ICustomContext) {
-        const character = await this.deleteCharacter(id);
-        return {
-            success: true,
-            character,
-        };
-    }
-
-    async getCharacter(id: string): Promise<Character | null> {
-        return await this.prisma.character.findUnique({
-            where: {
-                id,
-            },
-        });
-    }
-
-    async getCharacterList(args: PaginationInputType): Promise<Character[]> {
-        return await this.prisma.character.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
-        });
-    }
-
-    async createCharacter(args: CreateCharacterInputType): Promise<Character> {
-        return await this.prisma.character.create({
+    ): Promise<CreateCharacterResultsType> {
+        const character = await this.prisma.character.create({
             data: args,
         });
+        return {
+            success: true,
+            character,
+        };
     }
 
-    async updateCharacter(args: UpdateCharacterInputType): Promise<Character> {
-        return await this.prisma.character.update({
+    async updateCharacter(
+        args: UpdateCharacterInputType,
+        ctx: ICustomContext,
+    ): Promise<UpdateCharacterResultsType> {
+        const character = await this.prisma.character.update({
             where: { id: args.id },
             data: args,
         });
+        return {
+            success: true,
+           character,
+        };
     }
 
-    async deleteCharacter(id: string) {
-        return await this.prisma.character.delete({
+    async deleteCharacter(
+        id: string,
+        ctx: ICustomContext,
+    ): Promise<DeleteCharacterResultsType> {
+        const character = await this.prisma.character.delete({
             where: { id },
         });
+        return {
+            success: true,
+           character,
+        };
     }
 }

@@ -21,7 +21,7 @@ export class CharacterMutationResolver extends CharacterRootResolver {
         @Args() args: CreateCharacterInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<CreateCharacterResultsType> {
-        return await this.characterService.createCharacterInfo(args, ctx);
+        return await this.characterService.createCharacter(args, ctx);
     }
 
     @FieldResolver(() => UpdateCharacterResultsType)
@@ -29,7 +29,7 @@ export class CharacterMutationResolver extends CharacterRootResolver {
         @Args() args: UpdateCharacterInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<UpdateCharacterResultsType> {
-        return await this.characterService.updateCharacterInfo(args, ctx);
+        return await this.characterService.updateCharacter(args, ctx);
     }
 
     @FieldResolver(() => DeleteCharacterResultsType)
@@ -37,6 +37,6 @@ export class CharacterMutationResolver extends CharacterRootResolver {
         @Arg('id') id: string,
         @Ctx() ctx: ICustomContext,
     ): Promise<DeleteCharacterResultsType> {
-        return await this.characterService.deleteCharacterInfo(id, ctx);
+        return await this.characterService.deleteCharacter(id, ctx);
     }
 }

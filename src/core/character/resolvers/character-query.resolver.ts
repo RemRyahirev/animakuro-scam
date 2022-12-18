@@ -17,13 +17,13 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacter(
         @Arg('id') id: string,
     ): Promise<GetCharacterResultsType> {
-        return await this.characterService.getCharacterInfo(id);
+        return await this.characterService.getCharacter(id);
     }
 
     @FieldResolver(() => GetListCharacterResultsType)
     async getCharacterList(
         @Args() args: PaginationInputType,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterListInfo(args);
+        return await this.characterService.getCharacterList(args);
     }
 }

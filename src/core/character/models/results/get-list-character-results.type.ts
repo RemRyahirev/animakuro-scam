@@ -11,7 +11,7 @@ export class GetListCharacterResultsType extends BaseResultsType {
         nullable: true,
         description: 'Character list',
     })
-    characterList: Character[] | null;
+    characterList: Character[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,
