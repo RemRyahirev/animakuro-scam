@@ -12,13 +12,13 @@ export class GenreQueryResolver extends GenreRootResolver {
 
     @FieldResolver(() => GetGenreResultsType)
     async getGenre(@Arg('id') id: string): Promise<GetGenreResultsType> {
-        return await this.genreService.getGenreInfo(id);
+        return await this.genreService.getGenre(id);
     }
 
     @FieldResolver(() => GetListGenreResultsType)
     async getGenreList(
         @Args() args: PaginationInputType,
     ): Promise<GetListGenreResultsType> {
-        return await this.genreService.getGenreListInfo(args);
+        return await this.genreService.getGenreList(args);
     }
 }

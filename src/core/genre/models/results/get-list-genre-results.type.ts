@@ -11,7 +11,7 @@ export class GetListGenreResultsType extends BaseResultsType {
         nullable: true,
         description: 'Genre list',
     })
-    genreList: Genre[] | null;
+    genreList: Genre[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,
