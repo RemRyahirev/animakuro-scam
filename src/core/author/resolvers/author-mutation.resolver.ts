@@ -18,7 +18,7 @@ export class AuthorMutationResolver extends AuthorRootResolver {
         @Args() args: CreateAuthorInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<CreateAuthorResultsType> {
-        return await this.authorService.createAuthorInfo(args, ctx);
+        return await this.authorService.createAuthor(args, ctx);
     }
 
     @FieldResolver(() => UpdateAuthorResultsType)
@@ -26,7 +26,7 @@ export class AuthorMutationResolver extends AuthorRootResolver {
         @Args() args: UpdateAuthorInputType,
         @Ctx() ctx: ICustomContext,
     ): Promise<UpdateAuthorResultsType> {
-        return await this.authorService.updateAuthorInfo(args, ctx);
+        return await this.authorService.updateAuthor(args, ctx);
     }
 
     @FieldResolver(() => DeleteAuthorResultsType)
@@ -34,6 +34,6 @@ export class AuthorMutationResolver extends AuthorRootResolver {
         @Arg('id') id: string,
         @Ctx() ctx: ICustomContext,
     ): Promise<DeleteAuthorResultsType> {
-        return await this.authorService.deleteAuthorInfo(id, ctx);
+        return await this.authorService.deleteAuthor(id, ctx);
     }
 }

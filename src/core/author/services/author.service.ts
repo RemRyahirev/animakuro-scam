@@ -2,17 +2,25 @@ import { Database } from '../../../loaders';
 import { CreateAuthorInputType } from '../models/inputs/create-author-input.type';
 import { UpdateAuthorInputType } from '../models/inputs/update-author-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { Author } from '../models/author.model';
 import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
+import { GetAuthorResultsType } from '../models/results/get-author-results.type';
+import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';
+import { DeleteAuthorResultsType } from '../models/results/delete-author-results.type';
+import { UpdateAuthorResultsType } from '../models/results/update-author-results.type';
+import { CreateAuthorResultsType } from '../models/results/create-author-results.type';
 
 export class AuthorService {
     private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('author');
 
-    async getAuthorInfo(id: string) {
-        const author = await this.getAuthor(id);
+    async getAuthor(id: string): Promise<GetAuthorResultsType> {
+        const author = await this.prisma.author.findUnique({
+            where: {
+                id,
+            },
+        });
         if (!author) {
             return {
                 success: false,
@@ -27,8 +35,13 @@ export class AuthorService {
         };
     }
 
-    async getAuthorListInfo(args: PaginationInputType) {
-        const authorList = await this.getAuthorList(args);
+    async getAuthorList(
+        args: PaginationInputType,
+    ): Promise<GetListAuthorResultsType> {
+        const authorList = await this.prisma.author.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
+        });
         const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,
@@ -38,61 +51,43 @@ export class AuthorService {
         };
     }
 
-    async createAuthorInfo(args: CreateAuthorInputType, ctx: ICustomContext) {
-        const author = await this.createAuthor(args);
-        return {
-            success: true,
-            author,
-        };
-    }
-
-    async updateAuthorInfo(args: UpdateAuthorInputType, ctx: ICustomContext) {
-        const author = await this.updateAuthor(args);
-        return {
-            success: true,
-            author,
-        };
-    }
-
-    async deleteAuthorInfo(id: string, ctx: ICustomContext) {
-        const author = await this.deleteAuthor(id);
-        return {
-            success: true,
-            author,
-        };
-    }
-
-    async getAuthor(id: string): Promise<Author | null> {
-        return await this.prisma.author.findUnique({
-            where: {
-                id,
-            },
-        });
-    }
-
-    async getAuthorList(args: PaginationInputType): Promise<Author[]> {
-        return await this.prisma.author.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
-        });
-    }
-
-    async createAuthor(args: CreateAuthorInputType): Promise<Author> {
-        return await this.prisma.author.create({
+    async createAuthor(
+        args: CreateAuthorInputType,
+        ctx: ICustomContext,
+    ): Promise<CreateAuthorResultsType> {
+        const author = await this.prisma.author.create({
             data: args,
         });
+        return {
+            success: true,
+            author,
+        };
     }
 
-    async updateAuthor(args: UpdateAuthorInputType): Promise<Author> {
-        return await this.prisma.author.update({
+    async updateAuthor(
+        args: UpdateAuthorInputType,
+        ctx: ICustomContext,
+    ): Promise<UpdateAuthorResultsType> {
+        const author = await this.prisma.author.update({
             where: { id: args.id },
             data: args,
         });
+        return {
+            success: true,
+            author,
+        };
     }
 
-    async deleteAuthor(id: string) {
-        return await this.prisma.author.delete({
+    async deleteAuthor(
+        id: string,
+        ctx: ICustomContext,
+    ): Promise<DeleteAuthorResultsType> {
+        const author = await this.prisma.author.delete({
             where: { id },
         });
+        return {
+            success: true,
+            author,
+        };
     }
 }

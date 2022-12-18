@@ -11,7 +11,7 @@ export class GetListAuthorResultsType extends BaseResultsType {
         nullable: true,
         description: 'Author list',
     })
-    authorList: Author[] | null;
+    authorList: Author[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,
