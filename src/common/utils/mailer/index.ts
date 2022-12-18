@@ -69,7 +69,7 @@ export class Mailer {
         });
     }
 
-    private sendToMail({
+    public sendToMail({
         to,
         subject,
         html,

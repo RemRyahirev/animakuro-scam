@@ -19,6 +19,11 @@ export class ConfigParent {
         };
     }
 
+    public get getFrontendUrl() {
+        const PORT = this.get('PORT', 8000);
+        return this.get('FRONT_DOMAIN', `http://localhost:${PORT}`);
+    }
+
     public get mailFrom() {
         return {
             name: this.get('MAILER_SENDER_NAME', 'somename'),

@@ -28,7 +28,9 @@ const exceptionsHandler = (
     error: ExtendedGraphQLError,
     response: ServerResponse,
 ): GqlHttpException => {
+    console.log(error, 12123);
     const exception = handleExceptions(error);
+    console.log(exception, 877);
 
     // unexpected errors
     if (!exception) {

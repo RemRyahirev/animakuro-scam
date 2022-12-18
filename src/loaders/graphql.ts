@@ -1,13 +1,13 @@
 import { buildSchema } from 'type-graphql';
 import { graphqlHTTP, OptionsData } from 'express-graphql';
 import { GraphQLError, GraphQLSchema, printSchema } from 'graphql';
-import exceptionsHandler from '../common/errors/exception-handler';
-import { ExtendedGraphQLError } from '../common/errors/types';
 import { AuthCheckerMiddleware } from '../common/middlewares';
 import { Singleton } from '../common/decorators';
 import { RequestHandler } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
+import exceptionsHandler from '../common/errors/exception-handler';
+import { ExtendedGraphQLError } from '../common/errors/types';
 
 @Singleton
 export class GraphQLMiddleware {

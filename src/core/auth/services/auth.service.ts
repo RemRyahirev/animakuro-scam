@@ -9,13 +9,15 @@ import { UserService } from '../../user/services/user.service';
 import { Mailer } from '../../../common/utils/mailer';
 import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { GqlHttpException } from '../../../common/errors/errors';
-import crypto from 'crypto';
 import { compare, hash } from '../../../common/utils/password.util';
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { ICustomContext } from '../../../common/models/interfaces';
 import JwtTokenService from './jwt-token.service';
 import { User } from '../../user/models/user.model';
 import { ThirdPartyAuthInputType } from '../models/inputs/third-party-input.type';
+import { ConfirmService } from '../../../common/services/confirm.serivce';
+import { PrismaClientKnownRequestError } from 'prisma/prisma-client/runtime';
+import { EnumEmailMessageType } from '../../../common/types/mail/mail.types';
 
 export class AuthService {
     private readonly prisma = new Database().logic;
@@ -24,6 +26,7 @@ export class AuthService {
         new FacebookStrategy();
     private readonly userService: UserService = new UserService();
     private readonly mailer = new Mailer();
+    private readonly confirmService = new ConfirmService();
 
     async loginOrRegisterThirdPartyInfo(
         code: string,
@@ -103,7 +106,6 @@ export class AuthService {
 
     async loginInfo(args: LoginInputType, ctx: ICustomContext) {
         const user = await this.userService.findUserByUsername(args.username);
-
         if (!user || !(await compare(args.password, user.password || '')))
             throw new GqlHttpException(
                 'INVALID_CREDENTIALS',
@@ -132,49 +134,8 @@ export class AuthService {
     }
 
     async confirmRegistrationInfo(code: string) {
-        const registerInput = await this.getRegisterConfirmation(code);
-
-        if (!registerInput)
-            throw new GqlHttpException(
-                'CODE_NOT_FOUND',
-                HttpStatus.NOT_FOUND,
-                'Auth Errors',
-            );
-
-        await this.deleteRegisterConfirmation(code);
-
-        const { email, password, username } = registerInput;
-
-        // const user = await this.userService.findUserByEmailOrUsername(
-        //     email,
-        //     username,
-        // );
-        //
-        // if (user) {
-        //     if (user.username === username)
-        //         throw new GqlHttpException(
-        //             'USERNAME_TAKEN',
-        //             HttpStatus.BAD_REQUEST,
-        //             'Auth Errors',
-        //         );
-        //
-        //     if (user.email === email)
-        //         throw new GqlHttpException(
-        //             'EMAIL_TAKEN',
-        //             HttpStatus.BAD_REQUEST,
-        //             'Auth Errors',
-        //         );
-        //
-        //     return { success: false };
-        // }
-
-        const hashedPassword = await hash(password);
         try {
-            await this.userService.createUser({
-                email,
-                password: hashedPassword,
-                username,
-            });
+            await this.confirmService.confirmEmail(code);
         } catch (e) {
             return { success: false };
         }
@@ -182,40 +143,55 @@ export class AuthService {
         return { success: true };
     }
 
+    async tryCreate(args: RegisterInputType) {
+        try {
+            args.password = await hash(args.password);
+            return await this.prisma.user.create({ data: args });
+        } catch (e: any) {
+            switch (e.constructor.name) {
+                case 'PrismaClientKnownRequestError': {
+                    const error = e as PrismaClientKnownRequestError & {
+                        meta: { target: Array<string> };
+                    };
+                    if (error.meta.target.length) {
+                        const text = error.meta.target.map(
+                            (e) => `field '${e}' is already in use`,
+                        );
+                        const errorObject = JSON.stringify({
+                            message: text.join(`\n`),
+                            statusCode: error.code,
+                            error: error.message,
+                        });
+                        throw new GqlHttpException(
+                            text.join(`\n`),
+                            402,
+                            error.message,
+                        );
+                    }
+                    break;
+                }
+            }
+            throw new GqlHttpException(e.message, 400, e);
+        }
+    }
+
     async registerInfo(args: RegisterInputType) {
-        // const user = await this.userService.findUserByEmailOrUsername(
-        //     args.email,
-        //     args.username,
-        // );
-        //
-        // if (user) {
-        //     if (user.username === args.username)
-        //         throw new GqlHttpException(
-        //             'USERNAME_TAKEN',
-        //             HttpStatus.BAD_REQUEST,
-        //             'Auth Errors',
-        //         );
-        //
-        //     if (user.email === args.email)
-        //         throw new GqlHttpException(
-        //             'EMAIL_TAKEN',
-        //             HttpStatus.BAD_REQUEST,
-        //             'Auth Errors',
-        //         );
-        //
-        //     return { success: false };
-        // }
-
-        const code = crypto.randomUUID();
-
-        await this.setRegisterConfirmation(code, args);
-
-        // Sending email
-        const info = await this.mailer.sendConfirmationMail({
-            receiverEmail: args.email,
-            code,
+        await this.tryCreate(args);
+        //НЕ ТРОГАТЬ НИЖНЮЮ СТРОКУ
+        const arg = JSON.stringify({
+            newEmail: args.email,
+            oldEmail: args.email,
         });
-        console.log(this.mailer.previewUrl(info));
+        const hash = await this.confirmService.setHash(
+            arg,
+            EnumEmailMessageType.CONFIRM_EMAIL,
+        );
+        // Sending email
+        await this.confirmService.sendLetter(
+            hash,
+            args.email,
+            EnumEmailMessageType.CONFIRM_EMAIL,
+        );
         return { success: true };
     }
 

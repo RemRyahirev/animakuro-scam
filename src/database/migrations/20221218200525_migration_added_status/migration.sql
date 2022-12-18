@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "registrationStatus" AS ENUM ('CONFIRM_EMAIL', 'ACTIVE');
+
+-- CreateEnum
 CREATE TYPE "FriendshipStatus" AS ENUM ('AWAITING', 'REQUESTED', 'CONFIRMED');
 
 -- CreateEnum
@@ -30,7 +33,8 @@ CREATE TABLE "users" (
     "id" UUID NOT NULL,
     "username" VARCHAR(64) NOT NULL,
     "email" VARCHAR(320),
-    "password_hash" TEXT NOT NULL,
+    "registration_status" "registrationStatus" NOT NULL DEFAULT 'CONFIRM_EMAIL',
+    "password" TEXT NOT NULL,
     "secret2fa" VARCHAR(20),
     "birthday" DATE,
     "gender" "Gender" NOT NULL DEFAULT 'UNSPECIFIED',
@@ -113,7 +117,7 @@ CREATE TABLE "anime" (
 
 -- CreateTable
 CREATE TABLE "author" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "author_name" VARCHAR(50) NOT NULL,
     "bucket_id" UUID NOT NULL,
     "bio" TEXT NOT NULL,
@@ -123,7 +127,7 @@ CREATE TABLE "author" (
 
 -- CreateTable
 CREATE TABLE "character" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "bucket_id" UUID NOT NULL,
     "character_name" VARCHAR(50) NOT NULL,
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
