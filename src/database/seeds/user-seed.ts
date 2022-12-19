@@ -8,7 +8,7 @@ async function userSeed() {
     console.log(`Start seeding users...`);
     await prisma.user.createMany({
         skipDuplicates: true,
-        data: [
+        data: <any[]>[
             {
                 email: 'alexander@mail.ru',
                 username: 'Alexander',

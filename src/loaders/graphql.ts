@@ -1,13 +1,14 @@
 import { buildSchema } from 'type-graphql';
 import { graphqlHTTP, OptionsData } from 'express-graphql';
 import { GraphQLError, GraphQLSchema, printSchema } from 'graphql';
+import { ExtendedGraphQLError } from '../common/errors/types';
 import { AuthCheckerMiddleware } from '../common/middlewares';
 import { Singleton } from '../common/decorators';
 import { RequestHandler } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import exceptionsHandler from '../common/errors/exception-handler';
-import { ExtendedGraphQLError } from '../common/errors/types';
+import { exceptionsHandler } from "../common/errors/exception-handler";
+import { ErrorInterceptor } from "../common/interceptors/http-exception.interceptor";
 
 @Singleton
 export class GraphQLMiddleware {
@@ -27,6 +28,7 @@ export class GraphQLMiddleware {
         return graphqlHTTP((request, response) => {
             return <OptionsData>{
                 schema: this.schema,
+                pretty: true,
                 context: { request, response },
                 graphiql: false,
                 customFormatErrorFn: (error: GraphQLError) => {
@@ -45,7 +47,8 @@ export class GraphQLMiddleware {
             emitSchemaFile: true,
             authChecker: new AuthCheckerMiddleware().check,
             authMode: 'null',
-            validate: false,
+            validate: true,
+            globalMiddlewares: [ErrorInterceptor]
         });
     }
 }

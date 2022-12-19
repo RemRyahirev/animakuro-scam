@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Gender } from '../../../common/models/enums';
 import { UserThirdParty } from './user-third-party.model';
+import { RegistrationStatus } from "../../../common/models/enums/registration-status.enum";
 
 @ObjectType()
 export class User {
@@ -12,6 +13,9 @@ export class User {
 
     @Field({ nullable: true })
     email?: string;
+
+    @Field(() => RegistrationStatus, { nullable: true })
+    registrationStatus?: string;
 
     @Field({ nullable: true })
     avatar?: string;

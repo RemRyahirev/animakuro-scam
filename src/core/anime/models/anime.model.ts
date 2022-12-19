@@ -5,6 +5,7 @@ import {
     MediaSource,
     ReleaseStatus,
 } from '../../../common/models/enums';
+import { Genre } from '../../genre/models/genre.model';
 
 @ObjectType()
 export class Anime {
@@ -20,8 +21,8 @@ export class Anime {
     @Field(() => Int)
     year: number;
 
-    @Field(() => [String])
-    genres: string[];
+    @Field(() => [Genre], { nullable: true })
+    genres?: Genre[];
 
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
     media_format: string;

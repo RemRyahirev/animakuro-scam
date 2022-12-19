@@ -1,7 +1,4 @@
 -- CreateEnum
-CREATE TYPE "registrationStatus" AS ENUM ('CONFIRM_EMAIL', 'ACTIVE');
-
--- CreateEnum
 CREATE TYPE "FriendshipStatus" AS ENUM ('AWAITING', 'REQUESTED', 'CONFIRMED');
 
 -- CreateEnum
@@ -28,12 +25,15 @@ CREATE TYPE "CharacterType" AS ENUM ('PROTAGONIST', 'ANTAGONIST', 'SIDEKICK', 'O
 -- CreateEnum
 CREATE TYPE "ThirdPartyType" AS ENUM ('DISCORD', 'GOOGLE', 'APPLE', 'FACEBOOK');
 
+-- CreateEnum
+CREATE TYPE "RegistrationStatus" AS ENUM ('CONFIRM_EMAIL', 'ACTIVE');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
     "username" VARCHAR(64) NOT NULL,
     "email" VARCHAR(320),
-    "registration_status" "registrationStatus" NOT NULL DEFAULT 'CONFIRM_EMAIL',
+    "registration_status" "RegistrationStatus" NOT NULL DEFAULT 'CONFIRM_EMAIL',
     "password" TEXT NOT NULL,
     "secret2fa" VARCHAR(20),
     "birthday" DATE,
@@ -96,7 +96,6 @@ CREATE TABLE "anime" (
     "title" VARCHAR(100) NOT NULL,
     "score" REAL NOT NULL,
     "year" SMALLINT NOT NULL,
-    "genres" UUID[],
     "media_format" "MediaFormat" NOT NULL DEFAULT 'OTHER',
     "source" "MediaSource" NOT NULL DEFAULT 'OTHER',
     "studio_id" UUID NOT NULL,
@@ -179,6 +178,12 @@ CREATE TABLE "user_anime" (
     CONSTRAINT "user_anime_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "_AnimeToGenre" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
@@ -190,6 +195,12 @@ CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("frie
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_profile_user_id_key" ON "user_profile"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AnimeToGenre_B_index" ON "_AnimeToGenre"("B");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY ("third_party_auth_id") REFERENCES "third_party_auth"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -205,3 +216,9 @@ ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_user_profile_id_fkey" FOREIGN KEY ("user_profile_id") REFERENCES "user_profile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_B_fkey" FOREIGN KEY ("B") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,12 +1,13 @@
-import { ArgsType, Field, Float, Int } from 'type-graphql';
+import { ArgsType, Field, Float, ID, Int } from "type-graphql";
 import {
+    ArrayNotEmpty,
     IsArray,
     IsDate,
     IsDecimal,
-    IsInt,
+    IsInt, IsNumber,
     IsString,
-    Length,
-} from 'class-validator';
+    Length
+} from "class-validator";
 import {
     FilmRating,
     MediaFormat,
@@ -21,7 +22,7 @@ export class CreateAnimeInputType {
     @Field(() => String)
     title: string;
 
-    @IsDecimal()
+    @IsNumber()
     @Field(() => Float)
     score: number;
 
@@ -29,8 +30,10 @@ export class CreateAnimeInputType {
     @Field(() => Int)
     year: number;
 
-    @IsArray()
-    @Field(() => [String])
+    @ArrayNotEmpty({
+        message: 'Array of genre id\'s not provided'
+    })
+    @Field(() => [String], { description: 'Array of genre id\'s' })
     genres: string[];
 
     @IsString()
