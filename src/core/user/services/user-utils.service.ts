@@ -3,7 +3,7 @@ import { PaginationService } from '../../../common/services';
 import { RedisClientType } from 'redis';
 import { Mailer } from '../../../common/utils/mailer';
 import { hash } from '../../../common/utils/password.util';
-import { RegistrationStatus } from '../../../common/models/enums/registration-status.enum';
+import { RegistrationStatus } from '../../../common/models/enums';
 
 export class UserUtilsService {
     private readonly prisma = new Database().logic;
