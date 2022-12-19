@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Gender } from '../../../common/models/enums';
 import { UserThirdParty } from './user-third-party.model';
-import { RegistrationStatus } from "../../../common/models/enums/registration-status.enum";
+import { RegistrationStatus } from '../../../common/models/enums';
 
 @ObjectType()
 export class User {

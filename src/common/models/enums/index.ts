@@ -7,3 +7,4 @@ export * from './media-format.enum';
 export * from './media-source.enum';
 export * from './release-status.enum';
 export * from './user-third-party.enum';
+export * from './registration-status.enum';
