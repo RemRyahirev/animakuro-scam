@@ -28,7 +28,6 @@ export class AnimeService {
             return {
                 success: false,
                 anime: null,
-                errors: ['Anime not found'],
             };
         }
         return {

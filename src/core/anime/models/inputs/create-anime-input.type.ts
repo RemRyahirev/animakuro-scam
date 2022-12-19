@@ -31,7 +31,7 @@ export class CreateAnimeInputType {
     year: number;
 
     @ArrayNotEmpty({
-        message: 'Array of genre id\'s not provided'
+        message: 'array of genre id\'s not provided'
     })
     @Field(() => [String], { description: 'Array of genre id\'s' })
     genres: string[];

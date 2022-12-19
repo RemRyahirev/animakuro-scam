@@ -25,7 +25,6 @@ export class GenreService {
             return {
                 success: false,
                 genre: null,
-                errors: ['Genre not found'],
             };
         }
         return {

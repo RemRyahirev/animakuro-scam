@@ -25,7 +25,6 @@ export class CharacterService {
             return {
                 success: false,
                 character: null,
-                errors: ['Character not found'],
             };
         }
         return {

@@ -25,7 +25,6 @@ export class AuthorService {
             return {
                 success: false,
                 author: null,
-                errors: ['Author not found'],
             };
         }
         return {

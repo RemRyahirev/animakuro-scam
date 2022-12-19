@@ -7,8 +7,8 @@ import { Singleton } from '../common/decorators';
 import { RequestHandler } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import { exceptionsHandler } from "../common/errors/exception-handler";
-import { ErrorInterceptor } from "../common/interceptors/http-exception.interceptor";
+import { exceptionsHandler } from '../common/errors/exception-handler';
+import { ValidationErrorInterceptor } from '../common/interceptors/validation-exception.interceptor';
 
 @Singleton
 export class GraphQLMiddleware {
@@ -48,7 +48,7 @@ export class GraphQLMiddleware {
             authChecker: new AuthCheckerMiddleware().check,
             authMode: 'null',
             validate: true,
-            globalMiddlewares: [ErrorInterceptor]
+            globalMiddlewares: [ValidationErrorInterceptor],
         });
     }
 }

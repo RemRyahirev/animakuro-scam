@@ -1,4 +1,5 @@
 import { Field, ObjectType } from 'type-graphql';
+import { CustomErrorType } from '../types';
 
 @ObjectType()
 export class BaseResultsType {
@@ -8,10 +9,10 @@ export class BaseResultsType {
     })
     success: boolean;
 
-    @Field(() => [String], {
+    @Field(() => [CustomErrorType], {
         nullable: true,
         description: 'Array of errors, if exists',
         defaultValue: null,
     })
-    errors?: string[];
+    errors?: CustomErrorType[];
 }
