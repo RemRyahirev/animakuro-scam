@@ -1,24 +1,11 @@
 import 'reflect-metadata';
 import { AxiosError } from 'axios';
 import { GqlHttpException } from './errors';
-import type { ExtendedGraphQLError } from './types';
 import { HttpStatus } from '../models/enums';
-import { ArgumentValidationError } from 'type-graphql';
-import { ValidationError } from 'class-validator';
 import { ServerResponse } from 'http';
+import { GraphQLError } from 'graphql';
 
-const handleExceptions = (error: ExtendedGraphQLError) => {
-    if (error.originalError instanceof ArgumentValidationError) {
-        let errorsArray: any[] = [];
-        error.originalError.validationErrors.map((error: ValidationError) => {
-            errorsArray.push({
-                property: error.property,
-                value: error.value,
-                message: error.constraints,
-            });
-        });
-        return errorsArray;
-    }
+const handleExceptions = (error: GraphQLError) => {
     if (error.originalError instanceof GqlHttpException) {
         return error.originalError;
     }
@@ -32,15 +19,10 @@ const handleExceptions = (error: ExtendedGraphQLError) => {
 };
 
 export const exceptionsHandler = (
-    error: ExtendedGraphQLError,
+    error: GraphQLError,
     response: ServerResponse,
-): ValidationError[] | GqlHttpException => {
+): GqlHttpException => {
     const exception = handleExceptions(error);
-    if (Array.isArray(exception)) {
-        return {
-            ...exception,
-        } as any;
-    }
     // unexpected errors
     if (!exception) {
         return new GqlHttpException(
@@ -49,8 +31,6 @@ export const exceptionsHandler = (
             'Unexpected error',
         );
     }
-    if (exception instanceof GqlHttpException) {
-        response.statusCode = exception.statusCode;
-    }
+    response.statusCode = exception.statusCode;
     return exception;
 };

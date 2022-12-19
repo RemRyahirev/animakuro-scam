@@ -1,7 +1,6 @@
 import { buildSchema } from 'type-graphql';
 import { graphqlHTTP, OptionsData } from 'express-graphql';
 import { GraphQLError, GraphQLSchema, printSchema } from 'graphql';
-import { ExtendedGraphQLError } from '../common/errors/types';
 import { AuthCheckerMiddleware } from '../common/middlewares';
 import { Singleton } from '../common/decorators';
 import { RequestHandler } from 'express';
@@ -31,12 +30,8 @@ export class GraphQLMiddleware {
                 pretty: true,
                 context: { request, response },
                 graphiql: false,
-                customFormatErrorFn: (error: GraphQLError) => {
-                    return exceptionsHandler(
-                        error as ExtendedGraphQLError,
-                        response,
-                    );
-                },
+                customFormatErrorFn: (error: GraphQLError) =>
+                    exceptionsHandler(error, response),
             };
         });
     }
