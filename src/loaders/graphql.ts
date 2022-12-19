@@ -7,7 +7,7 @@ import { RequestHandler } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { exceptionsHandler } from '../common/errors/exception-handler';
-import { ValidationErrorInterceptor } from '../common/interceptors/validation-exception.interceptor';
+import { ValidationErrorInterceptor } from '../common/interceptors';
 
 @Singleton
 export class GraphQLMiddleware {
