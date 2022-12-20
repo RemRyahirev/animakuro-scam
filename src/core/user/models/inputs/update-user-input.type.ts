@@ -2,16 +2,17 @@ import { GraphQLUpload } from 'graphql-upload';
 import {
     IsEmail,
     IsOptional,
-    IsString,
+    IsString, IsUUID,
     Length,
-    ValidateIf,
-} from 'class-validator';
+    ValidateIf
+} from "class-validator";
 import { ArgsType, Field, ID } from 'type-graphql';
 import { Gender } from '../../../../common/models/enums';
 import { IUpload } from '../../../../common/models/interfaces';
 
 @ArgsType()
 export class UpdateUserInputType {
+    @IsUUID()
     @Field(() => ID)
     id: string;
 

@@ -5,9 +5,9 @@ import {
     IsDecimal,
     IsInt,
     IsOptional,
-    IsString,
-    Length,
-} from 'class-validator';
+    IsString, IsUUID,
+    Length
+} from "class-validator";
 import {
     FilmRating,
     MediaFormat,
@@ -17,6 +17,7 @@ import {
 
 @ArgsType()
 export class UpdateAnimeInputType {
+    @IsUUID()
     @Field(() => ID)
     id: string;
 

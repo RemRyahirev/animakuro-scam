@@ -5,7 +5,7 @@ import {
     IsDate,
     IsDecimal,
     IsInt, IsNumber,
-    IsString,
+    IsString, IsUUID,
     Length
 } from "class-validator";
 import {
@@ -44,7 +44,7 @@ export class CreateAnimeInputType {
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     source: MediaSource;
 
-    @IsString()
+    @IsUUID()
     @Field(() => String)
     studio_id: string;
 

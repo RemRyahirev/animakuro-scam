@@ -1,12 +1,13 @@
 import { ArgsType, Field, ID } from 'type-graphql';
 import {
     IsOptional,
-    IsString,
-    Length,
-} from 'class-validator';
+    IsString, IsUUID,
+    Length
+} from "class-validator";
 
 @ArgsType()
 export class UpdateAuthorInputType {
+    @IsUUID()
     @Field(() => ID)
     id: string;
 
