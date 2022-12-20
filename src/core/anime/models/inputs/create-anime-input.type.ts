@@ -30,6 +30,7 @@ export class CreateAnimeInputType {
     @Field(() => Int)
     year: number;
 
+    @IsUUID(4, { each: true })
     @ArrayNotEmpty({
         message: 'array of genre id\'s not provided'
     })
@@ -44,8 +45,8 @@ export class CreateAnimeInputType {
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     source: MediaSource;
 
-    @IsUUID()
-    @Field(() => String)
+    @IsUUID(4)
+    @Field(() => ID)
     studio_id: string;
 
     @IsInt()
@@ -85,15 +86,17 @@ export class CreateAnimeInputType {
     @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
     release_status: ReleaseStatus;
 
+    @IsUUID(4, { each: true })
     @ArrayNotEmpty({
         message: 'array of character id\'s not provided'
     })
-    @Field(() => [String], { description: 'Array of character id\'s' })
+    @Field(() => [ID], { description: 'Array of character id\'s' })
     characters: string[];
 
+    @IsUUID(4, { each: true })
     @ArrayNotEmpty({
         message: 'array of author id\'s not provided'
     })
-    @Field(() => [String], { description: 'Array of author id\'s' })
+    @Field(() => [ID], { description: 'Array of author id\'s' })
     authors: string[];
 }
