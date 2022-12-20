@@ -1,9 +1,7 @@
 import { ArgsType, Field, Float, ID, Int } from "type-graphql";
 import {
     ArrayNotEmpty,
-    IsArray,
     IsDate,
-    IsDecimal,
     IsInt, IsNumber,
     IsString, IsUrl, IsUUID,
     Length

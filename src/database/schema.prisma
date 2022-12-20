@@ -203,29 +203,29 @@ enum FilmRating {
 }
 
 enum MediaSource {
-  ORIGINAL // An original production not based of another work
-  MANGA // Asian comic book
-  LIGHT_NOVEL // Written work published in volumes
-  VISUAL_NOVEL // Video game driven primary by text and narrative
-  VIDEO_GAME // Video game
-  OTHER // Other
-  NOVEL // Written works not published in volumes
-  DOUJINSHI // Self-published works
-  ANIME // Japanese Anime
-  WEB_NOVEL // Written works published online
-  LIVE_ACTION // Live action media such as movies or TV show
-  GAME // Games excluding video games
-  COMIC // Comics excluding manga
+  ORIGINAL           // An original production not based of another work
+  MANGA              // Asian comic book
+  LIGHT_NOVEL        // Written work published in volumes
+  VISUAL_NOVEL       // Video game driven primary by text and narrative
+  VIDEO_GAME         // Video game
+  OTHER              // Other
+  NOVEL              // Written works not published in volumes
+  DOUJINSHI          // Self-published works
+  ANIME              // Japanese Anime
+  WEB_NOVEL          // Written works published online
+  LIVE_ACTION        // Live action media such as movies or TV show
+  GAME               // Games excluding video games
+  COMIC              // Comics excluding manga
   MULTIMEDIA_PROJECT // Multimedia project
-  PICTURE_BOOK // Picture book
+  PICTURE_BOOK       // Picture book
 }
 
 enum ReleaseStatus {
-  FINISHED // Has completed and is no longer being released
-  RELEASING // Currently releasing
-  NOT_YET_RELEASED // To be released at a later date
-  CANCELLED // Ended before the work could be finished
-  HIATUS // Is currently paused from releasing and will resume at a later date
+  FINISHED           // Has completed and is no longer being released
+  RELEASING          // Currently releasing
+  NOT_YET_RELEASED   // To be released at a later date
+  CANCELLED          // Ended before the work could be finished
+  HIATUS             // Is currently paused from releasing and will resume at a later date
 }
 
 enum MediaFormat {
@@ -266,22 +266,18 @@ enum RegistrationStatus {
   ACTIVE
 }
 
-// ! Второй экземпляр находится в moderator-roles.enum! Меняем тут - не забываем и там!
-// Роли в качестве модератора. Накидал навскидку. Кто больше спец в этом - welcome to update
 enum ModeratorRoles {
-  ADMIN // Animakuro администратор
-  MODERATOR // модератор
-  CONTENT_FILLER // сотрудник, наполняющий сайт контентом (аниме и пр)
-  OTHER_STAFF // прочий персонал
-  VIEWER // обычный пользователь сайта без каких-то прав
+  ADMIN          // admin
+  MODERATOR      // moderator
+  CONTENT_FILLER // content maker
+  OTHER_STAFF    // other worker
+  VIEWER         // user
 }
 
-// ! Второй экземпляр находится в subscribe-tier.enum! Меняем тут - не забываем и там!
-// Уровни подписки. Накидал навскидку. Кто больше спец в этом - welcome to update
 enum SubscribeTier {
-  FREE_ACCOUNT // никакой подписки
-  BASIC // базовая
-  SILVER // серебряный уровень
-  GOLD // золотой уровень
-  PLATINUM // платиновый уровень
+  FREE_ACCOUNT   // free
+  BASIC          // base subscription
+  SILVER         // silver subscription
+  GOLD           // gold subscription
+  PLATINUM       // platinum subscription
 }
