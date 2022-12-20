@@ -5,7 +5,7 @@ import {
     IsDecimal,
     IsInt,
     IsOptional,
-    IsString, IsUUID,
+    IsString, IsUrl, IsUUID,
     Length
 } from "class-validator";
 import {
@@ -17,7 +17,7 @@ import {
 
 @ArgsType()
 export class UpdateAnimeInputType {
-    @IsUUID()
+    @IsUUID(4)
     @Field(() => ID)
     id: string;
 
@@ -38,8 +38,9 @@ export class UpdateAnimeInputType {
     year?: number;
 
     @IsOptional()
+    @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [String], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     genres?: string[];
 
     @IsOptional()
@@ -59,8 +60,8 @@ export class UpdateAnimeInputType {
     source?: MediaSource;
 
     @IsOptional()
-    @IsString()
-    @Field(() => String, { nullable: true })
+    @IsUUID(4)
+    @Field(() => ID, { nullable: true })
     studio_id?: string;
 
     @IsOptional()
@@ -94,7 +95,7 @@ export class UpdateAnimeInputType {
     description?: string;
 
     @IsOptional()
-    @IsString()
+    @IsUrl()
     @Field(() => String, { nullable: true })
     preview_link?: string;
 
@@ -113,12 +114,14 @@ export class UpdateAnimeInputType {
     release_status?: ReleaseStatus;
 
     @IsOptional()
+    @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [String], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     characters?: string[];
 
     @IsOptional()
+    @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [String], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     authors?: string[];
 }

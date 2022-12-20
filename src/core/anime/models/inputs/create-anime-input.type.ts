@@ -5,7 +5,7 @@ import {
     IsDate,
     IsDecimal,
     IsInt, IsNumber,
-    IsString, IsUUID,
+    IsString, IsUrl, IsUUID,
     Length
 } from "class-validator";
 import {
@@ -73,7 +73,7 @@ export class CreateAnimeInputType {
     @Field(() => String)
     description: string;
 
-    @IsString()
+    @IsUrl()
     @Field(() => String)
     preview_link: string;
 
