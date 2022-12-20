@@ -92,7 +92,7 @@ model Anime {
   preview_link       String        @db.Text
   status_description String        @db.VarChar(30)
   release_status     ReleaseStatus @default(FINISHED)
-  characters         String[]      @db.Uuid
+  characters         Character[]
   authors            Author[]
 
   @@map("anime")
@@ -114,6 +114,8 @@ model Character {
   character_name String        @db.VarChar(50)
   importance     CharacterType @default(PROTAGONIST)
   description    String        @db.Text
+  anime          Anime?        @relation(fields: [animeId], references: [id])
+  animeId        String?       @db.Uuid
 
   @@map("character")
 }

@@ -24,6 +24,7 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
+                characters: true
             },
         });
         return {
@@ -42,6 +43,7 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
+                characters: true
             },
         });
         const pagination = await this.paginationService.getPagination(args);
@@ -62,10 +64,12 @@ export class AnimeService {
                 ...args,
                 ...entityConnectUtil('genres', args),
                 ...entityConnectUtil('authors', args),
+                ...entityConnectUtil('characters', args),
             },
             include: {
                 genres: true,
                 authors: true,
+                characters: true
             },
         });
         return {
@@ -84,10 +88,12 @@ export class AnimeService {
                 ...args,
                 ...entityConnectUtil('genres', args),
                 ...entityConnectUtil('authors', args),
+                ...entityConnectUtil('characters', args),
             },
             include: {
                 genres: true,
-                authors: true
+                authors: true,
+                characters: true
             }
         });
         return {
@@ -105,7 +111,8 @@ export class AnimeService {
             where: { id },
             include: {
                 genres: true,
-                authors: true
+                authors: true,
+                characters: true
             }
         });
         return {

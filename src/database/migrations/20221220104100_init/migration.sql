@@ -108,7 +108,6 @@ CREATE TABLE "anime" (
     "preview_link" TEXT NOT NULL,
     "status_description" VARCHAR(30) NOT NULL,
     "release_status" "ReleaseStatus" NOT NULL DEFAULT 'FINISHED',
-    "characters" UUID[],
 
     CONSTRAINT "anime_pkey" PRIMARY KEY ("id")
 );
@@ -130,6 +129,7 @@ CREATE TABLE "character" (
     "character_name" VARCHAR(50) NOT NULL,
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "description" TEXT NOT NULL,
+    "animeId" UUID,
 
     CONSTRAINT "character_pkey" PRIMARY KEY ("id")
 );
@@ -221,6 +221,9 @@ ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "anime" ADD CONSTRAINT "anime_studio_id_fkey" FOREIGN KEY ("studio_id") REFERENCES "studio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "character" ADD CONSTRAINT "character_animeId_fkey" FOREIGN KEY ("animeId") REFERENCES "anime"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

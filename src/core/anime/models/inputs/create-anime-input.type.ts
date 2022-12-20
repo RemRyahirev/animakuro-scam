@@ -85,8 +85,10 @@ export class CreateAnimeInputType {
     @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
     release_status: ReleaseStatus;
 
-    @IsArray()
-    @Field(() => [String])
+    @ArrayNotEmpty({
+        message: 'array of character id\'s not provided'
+    })
+    @Field(() => [String], { description: 'Array of character id\'s' })
     characters: string[];
 
     @ArrayNotEmpty({

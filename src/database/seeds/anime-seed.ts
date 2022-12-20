@@ -7,9 +7,14 @@ async function animeSeed() {
     console.log(`Start seeding anime...`);
     const genreList = await prisma.genre.findMany();
     const authorList = await prisma.author.findMany();
-    if (!genreList.length || !authorList.length) {
+    const characterList = await prisma.character.findMany();
+    if (
+        !genreList.length ||
+        !authorList.length ||
+        !characterList.length
+    ) {
         console.error(
-            'seed genres and authors before seeding anime, 3 genres and 3 authors needs to connect',
+            'seed genres, characters and authors before seeding anime, 3 entities in each list',
         );
         return;
     }
@@ -38,7 +43,13 @@ async function animeSeed() {
             preview_link: 'https://google.com',
             status_description: 'в 2006-2007гг',
             release_status: ReleaseStatus.FINISHED,
-            characters: [],
+            characters: {
+                connect: [
+                    {
+                        id: characterList[0].id
+                    },
+                ]
+            },
             authors: {
                 connect: [
                     {
@@ -76,7 +87,13 @@ async function animeSeed() {
             preview_link: 'https://yandex.com',
             status_description: 'в 1999-2001 гг',
             release_status: ReleaseStatus.FINISHED,
-            characters: [],
+            characters: {
+                connect: [
+                    {
+                        id: characterList[1].id
+                    },
+                ]
+            },
             authors: {
                 connect: [
                     {
@@ -89,8 +106,10 @@ async function animeSeed() {
     animeData.map(async (item) => {
         await prisma.anime.create({
             data: item,
-           include: {
+            include: {
                genres: true,
+                authors: true,
+                characters: true
             },
         });
     });
