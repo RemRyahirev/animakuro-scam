@@ -89,7 +89,9 @@ export class CreateAnimeInputType {
     @Field(() => [String])
     characters: string[];
 
-    @IsArray()
-    @Field(() => [String])
+    @ArrayNotEmpty({
+        message: 'array of author id\'s not provided'
+    })
+    @Field(() => [String], { description: 'Array of author id\'s' })
     authors: string[];
 }

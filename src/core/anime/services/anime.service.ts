@@ -9,6 +9,7 @@ import { GetListAnimeResultsType } from '../models/results/get-list-anime-result
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
+import { entityConnectUtil } from '../../../common/utils/entity-connect.util';
 
 export class AnimeService {
     private readonly prisma = new Database().logic;
@@ -22,18 +23,13 @@ export class AnimeService {
             },
             include: {
                 genres: true,
+                authors: true,
             },
         });
-        if (!anime) {
-            return {
-                success: false,
-                anime: null,
-            };
-        }
         return {
             success: true,
-            anime,
             errors: [],
+            anime,
         };
     }
 
@@ -45,6 +41,7 @@ export class AnimeService {
             take: args.perPage,
             include: {
                 genres: true,
+                authors: true,
             },
         });
         const pagination = await this.paginationService.getPagination(args);
@@ -63,13 +60,13 @@ export class AnimeService {
         const anime = await this.prisma.anime.create({
             data: {
                 ...args,
-                genres: {
-                    connect: [...this.connectGenres(args.genres)],
-                },
+                ...entityConnectUtil('genres', args),
+                ...entityConnectUtil('authors', args),
             },
             include: {
-                genres: true
-            }
+                genres: true,
+                authors: true,
+            },
         });
         return {
             success: true,
@@ -85,17 +82,18 @@ export class AnimeService {
             where: { id: args.id },
             data: {
                 ...args,
-                genres: {
-                    connect: [...this.connectGenres(args.genres ? args.genres : [])],
-                },
+                ...entityConnectUtil('genres', args),
+                ...entityConnectUtil('authors', args),
             },
             include: {
-                genres: true
+                genres: true,
+                authors: true
             }
         });
         return {
             success: true,
-            anime,
+            errors: [],
+            anime
         };
     }
 
@@ -105,20 +103,15 @@ export class AnimeService {
     ): Promise<DeleteAnimeResultsType> {
         const anime = await this.prisma.anime.delete({
             where: { id },
+            include: {
+                genres: true,
+                authors: true
+            }
         });
         return {
             success: true,
-            anime,
+            errors: [],
+            anime
         };
-    }
-
-    private connectGenres(argsArray: any[]) {
-        let array: any[] = [];
-        argsArray.forEach(id => {
-            array.push({
-                id
-            })
-        })
-        return array;
     }
 }

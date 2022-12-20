@@ -6,6 +6,7 @@ import {
     ReleaseStatus,
 } from '../../../common/models/enums';
 import { Genre } from '../../genre/models/genre.model';
+import { Author } from "../../author/models/author.model";
 
 @ObjectType()
 export class Anime {
@@ -63,6 +64,6 @@ export class Anime {
     @Field(() => [String])
     characters: string[];
 
-    @Field(() => [String])
-    authors: string[];
+    @Field(() => [Author])
+    authors?: Author[];
 }

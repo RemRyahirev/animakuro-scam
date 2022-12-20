@@ -7,7 +7,7 @@ import {
 import { FacebookStrategy } from '../strategies/facebook.strategy';
 import { UserService } from '../../user/services/user.service';
 import { Mailer } from '../../../common/utils/mailer';
-import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
+import { EmailMessage, HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { compare, hash } from '../../../common/utils/password.util';
 import { LoginInputType } from '../models/inputs/login-input.type';
@@ -17,7 +17,6 @@ import { User } from '../../user/models/user.model';
 import { ThirdPartyAuthInputType } from '../models/inputs/third-party-input.type';
 import { ConfirmService } from '../../../common/services/confirm.serivce';
 import { PrismaClientKnownRequestError } from 'prisma/prisma-client/runtime';
-import { EnumEmailMessageType } from '../../../common/types/mail/mail.types';
 
 export class AuthService {
     private readonly prisma = new Database().logic;
@@ -184,13 +183,13 @@ export class AuthService {
         });
         const hash = await this.confirmService.setHash(
             arg,
-            EnumEmailMessageType.CONFIRM_EMAIL,
+            EmailMessage.CONFIRM_EMAIL,
         );
         // Sending email
         await this.confirmService.sendLetter(
             hash,
             args.email,
-            EnumEmailMessageType.CONFIRM_EMAIL,
+            EmailMessage.CONFIRM_EMAIL,
         );
         return { success: true };
     }

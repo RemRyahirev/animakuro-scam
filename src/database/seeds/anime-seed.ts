@@ -6,9 +6,10 @@ const prisma = new PrismaClient();
 async function animeSeed() {
     console.log(`Start seeding anime...`);
     const genreList = await prisma.genre.findMany();
-    if (!genreList.length) {
+    const authorList = await prisma.author.findMany();
+    if (!genreList.length || !authorList.length) {
         console.error(
-            'seed genres before seeding anime, 3 genres needs to connect',
+            'seed genres and authors before seeding anime, 3 genres and 3 authors needs to connect',
         );
         return;
     }
@@ -38,7 +39,16 @@ async function animeSeed() {
             status_description: 'в 2006-2007гг',
             release_status: ReleaseStatus.FINISHED,
             characters: [],
-            authors: [],
+            authors: {
+                connect: [
+                    {
+                        id: authorList[0].id
+                    },
+                    {
+                        id: authorList[1].id
+                    }
+                ]
+            },
         }, {
             id: "f2d82632-d15d-496f-a45b-dd57b1297f6e",
             title: 'Стальной алхимик',
@@ -67,7 +77,13 @@ async function animeSeed() {
             status_description: 'в 1999-2001 гг',
             release_status: ReleaseStatus.FINISHED,
             characters: [],
-            authors: [],
+            authors: {
+                connect: [
+                    {
+                        id: authorList[2].id
+                    },
+                ]
+            },
         }
     ];
     animeData.map(async (item) => {

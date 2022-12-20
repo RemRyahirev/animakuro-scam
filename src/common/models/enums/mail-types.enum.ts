@@ -1,4 +1,4 @@
-export enum EnumEmailMessageType {
+export enum EmailMessage {
     CONFIRM_EMAIL,
     RESET_PASSWORD,
 }

@@ -109,7 +109,6 @@ CREATE TABLE "anime" (
     "status_description" VARCHAR(30) NOT NULL,
     "release_status" "ReleaseStatus" NOT NULL DEFAULT 'FINISHED',
     "characters" UUID[],
-    "authors" UUID[],
 
     CONSTRAINT "anime_pkey" PRIMARY KEY ("id")
 );
@@ -184,6 +183,12 @@ CREATE TABLE "_AnimeToGenre" (
     "B" UUID NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "_AnimeToAuthor" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
@@ -201,6 +206,12 @@ CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_AnimeToGenre_B_index" ON "_AnimeToGenre"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AnimeToAuthor_AB_unique" ON "_AnimeToAuthor"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AnimeToAuthor_B_index" ON "_AnimeToAuthor"("B");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY ("third_party_auth_id") REFERENCES "third_party_auth"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -222,3 +233,9 @@ ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_B_fkey" FOREIGN KEY ("B") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_B_fkey" FOREIGN KEY ("B") REFERENCES "author"("id") ON DELETE CASCADE ON UPDATE CASCADE;

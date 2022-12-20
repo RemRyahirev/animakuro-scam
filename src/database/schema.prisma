@@ -93,16 +93,17 @@ model Anime {
   status_description String        @db.VarChar(30)
   release_status     ReleaseStatus @default(FINISHED)
   characters         String[]      @db.Uuid
-  authors            String[]      @db.Uuid
+  authors            Author[]
 
   @@map("anime")
 }
 
 model Author {
-  id          String @id @default(uuid()) @db.Uuid
-  author_name String @db.VarChar(50)
-  bucket_id   String @db.Uuid
-  bio         String @db.Text
+  id          String  @id @default(uuid()) @db.Uuid
+  author_name String  @db.VarChar(50)
+  bucket_id   String  @db.Uuid
+  bio         String  @db.Text
+  animes      Anime[]
 
   @@map("author")
 }
