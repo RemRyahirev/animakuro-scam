@@ -138,11 +138,19 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id                 String      @id @default(uuid()) @db.Uuid
-  user               User        @relation(fields: [user_id], references: [id])
-  user_id            String      @unique @db.Uuid
-  displayed_name     String      @db.VarChar(30)
-  profile_picture_id String      @db.Uuid
+  id                 String         @id @default(uuid()) @db.Uuid
+  user               User           @relation(fields: [user_id], references: [id])
+  user_id            String         @unique @db.Uuid
+  displayed_name     String         @db.VarChar(30)
+  profile_picture_id String         @db.Uuid // аватар!
+  banner_image       String         @db.Uuid
+  about              String         @db.Text
+  country            String         @db.VarChar(30)
+  language           String         @db.VarChar(30)
+  createdAt          DateTime?      @default(now()) @db.Date
+  subscribe_tier     SubscribeTier  @default(FREE_ACCOUNT)
+  moderator_role     ModeratorRoles @default(VIEWER)
+  isBlocked          Boolean
   user_anime         UserAnime[]
 
   @@map("user_profile")
@@ -256,4 +264,24 @@ enum ThirdPartyType {
 enum RegistrationStatus {
   CONFIRM_EMAIL
   ACTIVE
+}
+
+// ! Второй экземпляр находится в moderator-roles.enum! Меняем тут - не забываем и там!
+// Роли в качестве модератора. Накидал навскидку. Кто больше спец в этом - welcome to update
+enum ModeratorRoles {
+  ADMIN // Animakuro администратор
+  MODERATOR // модератор
+  CONTENT_FILLER // сотрудник, наполняющий сайт контентом (аниме и пр)
+  OTHER_STAFF // прочий персонал
+  VIEWER // обычный пользователь сайта без каких-то прав
+}
+
+// ! Второй экземпляр находится в subscribe-tier.enum! Меняем тут - не забываем и там!
+// Уровни подписки. Накидал навскидку. Кто больше спец в этом - welcome to update
+enum SubscribeTier {
+  FREE_ACCOUNT // никакой подписки
+  BASIC // базовая
+  SILVER // серебряный уровень
+  GOLD // золотой уровень
+  PLATINUM // платиновый уровень
 }
