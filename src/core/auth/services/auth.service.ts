@@ -15,7 +15,7 @@ import { ICustomContext } from '../../../common/models/interfaces';
 import JwtTokenService from './jwt-token.service';
 import { User } from '../../user/models/user.model';
 import { ThirdPartyAuthInputType } from '../models/inputs/third-party-input.type';
-import { ConfirmService } from '../../../common/services/confirm.serivce';
+import { ConfirmService } from '../../../common/services/confirm.service';
 import { PrismaClientKnownRequestError } from 'prisma/prisma-client/runtime';
 
 export class AuthService {
