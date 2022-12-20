@@ -9,7 +9,6 @@ export class RegisterInputType {
 
     @Field(() => String)
     @Length(1, 320)
-    @IsString()
     @IsEmail()
     email: string;
 

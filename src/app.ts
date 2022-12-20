@@ -4,10 +4,10 @@ import { Config } from './loaders';
 async function bootstrap(): Promise<void> {
     try {
         const config = new Config().logic;
-        const PORT = config.get('PORT', 8080);
+        const port = config.get('PORT', 8080);
         const app = await createServer();
-        app.listen(PORT);
-        console.log(`🚀 Server started at port ${PORT}`);
+        app.listen(port);
+        console.log(`🚀 Server is running on: http://localhost:${port}/graphql`);
     } catch (error) {
         console.error(`❌ Error starting server, ${error}`);
         process.exit();

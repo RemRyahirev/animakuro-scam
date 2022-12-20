@@ -1,8 +1,9 @@
 import { ArgsType, Field, ID } from 'type-graphql';
-import { IsString, Length } from 'class-validator';
+import { IsString, IsUUID, Length } from "class-validator";
 
 @ArgsType()
 export class UpdateTranslationInputType {
+    @IsUUID(4)
     @Field(() => ID)
     id: string;
 
