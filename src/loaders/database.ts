@@ -6,7 +6,9 @@ export class Database {
     private readonly _db: PrismaClient;
 
     constructor() {
-        this._db = new PrismaClient();
+        this._db = new PrismaClient({
+            errorFormat: 'minimal',
+        });
     }
 
     public get logic(): PrismaClient {
