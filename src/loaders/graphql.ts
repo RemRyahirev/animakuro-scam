@@ -7,7 +7,10 @@ import { RequestHandler } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { exceptionsHandler } from '../common/errors/exception-handler';
-import { ValidationErrorInterceptor } from '../common/interceptors';
+import {
+    PrismaExceptionInterceptor,
+    ValidationErrorInterceptor,
+} from '../common/interceptors';
 
 @Singleton
 export class GraphQLMiddleware {
@@ -43,7 +46,10 @@ export class GraphQLMiddleware {
             authChecker: new AuthCheckerMiddleware().check,
             authMode: 'null',
             validate: true,
-            globalMiddlewares: [ValidationErrorInterceptor],
+            globalMiddlewares: [
+                PrismaExceptionInterceptor,
+                ValidationErrorInterceptor,
+            ],
         });
     }
 }
