@@ -1,13 +1,7 @@
 import { ArgsType, Field, ID } from 'type-graphql';
-import {
-    IsOptional,
-    IsString, IsUUID,
-    Length
-} from "class-validator";
+import { IsEnum, IsOptional, IsString, IsUUID, Length } from 'class-validator';
+import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 
-import {CharacterType} from "../../../../common/models/enums";
-
-// добавлены декораторы необязательности, опциональные операторы? + опции {nullable:true}
 @ArgsType()
 export class UpdateCharacterInputType {
     @IsUUID()
@@ -26,16 +20,20 @@ export class UpdateCharacterInputType {
     character_name?: string;
 
     @IsOptional()
-    @IsString()
+    @IsEnum(CharacterType)
     @Field(() => CharacterType, {
         nullable: true,
-        defaultValue: CharacterType.PROTAGONIST
+        defaultValue: CharacterType.PROTAGONIST,
     })
     importance?: CharacterType;
+
+    @IsOptional()
+    @IsEnum(CharacterRole)
+    @Field(() => CharacterRole, { defaultValue: CharacterRole.MAIN })
+    role?: CharacterRole;
 
     @IsOptional()
     @IsString()
     @Field(() => String, { nullable: true })
     description?: string;
-
 }

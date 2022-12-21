@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { CharacterType } from '../../common/models/enums';
+import { CharacterRole } from '../../common/models/enums';
 
 const prisma = new PrismaClient();
 
@@ -12,12 +13,14 @@ async function characterSeed() {
                 bucket_id: 'f2c57902-3981-406b-a9e6-1f15a62019a1',
                 character_name: 'Сикакунагай',
                 importance: CharacterType.PROTAGONIST,
+                role: CharacterRole.MAIN,
                 description: 'этот парень был из тех, за кем летает стерх',
             },
             {
                 bucket_id: 'f2c57902-3981-406b-a9e6-1f15a62019a1',
                 character_name: 'КтоУгодноСан',
                 importance: CharacterType.ANTAGONIST,
+                role: CharacterRole.BACKGROUND,
                 description: 'главный антагонист Сикакунагай',
             },
         ],

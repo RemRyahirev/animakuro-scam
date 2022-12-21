@@ -34,6 +34,9 @@ CREATE TYPE "ModeratorRoles" AS ENUM ('ADMIN', 'MODERATOR', 'CONTENT_FILLER', 'O
 -- CreateEnum
 CREATE TYPE "SubscribeTier" AS ENUM ('FREE_ACCOUNT', 'BASIC', 'SILVER', 'GOLD', 'PLATINUM');
 
+-- CreateEnum
+CREATE TYPE "CharacterRole" AS ENUM ('MAIN', 'SUPPORTING', 'BACKGROUND');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
@@ -134,6 +137,7 @@ CREATE TABLE "character" (
     "bucket_id" UUID NOT NULL,
     "character_name" VARCHAR(50) NOT NULL,
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
+    "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
     "description" TEXT NOT NULL,
     "animeId" UUID,
 

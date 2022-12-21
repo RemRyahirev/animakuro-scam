@@ -1,7 +1,6 @@
-import { Field, ID, ObjectType } from "type-graphql";
-import {CharacterType} from "../../../common/models/enums";
+import { Field, ID, ObjectType } from 'type-graphql';
+import { CharacterRole, CharacterType } from '../../../common/models/enums';
 
-// здесь - обычные типы (а-ля строка), даже в enum-ах
 @ObjectType()
 export class Character {
     @Field(() => ID)
@@ -15,6 +14,9 @@ export class Character {
 
     @Field(() => CharacterType, { defaultValue: CharacterType.PROTAGONIST })
     importance: string;
+
+    @Field(() => CharacterRole, { defaultValue: CharacterRole.MAIN })
+    role: string;
 
     @Field(() => String)
     description: string;

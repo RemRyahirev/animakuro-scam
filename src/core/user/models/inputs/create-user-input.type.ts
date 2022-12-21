@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { IsDate, IsEmail, IsOptional, IsString, Length } from "class-validator";
 import { ArgsType, Field } from 'type-graphql';
 import { Gender } from '../../../../common/models/enums';
 
@@ -25,6 +25,7 @@ export class CreateUserInputType {
     // secret2fa?: string
 
     @IsOptional()
+    @IsDate()
     @Field({ nullable: true })
     birthday?: Date;
 

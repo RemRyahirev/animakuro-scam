@@ -113,6 +113,7 @@ model Character {
   bucket_id      String        @db.Uuid
   character_name String        @db.VarChar(50)
   importance     CharacterType @default(PROTAGONIST)
+  role           CharacterRole @default(MAIN)
   description    String        @db.Text
   anime          Anime?        @relation(fields: [animeId], references: [id])
   animeId        String?       @db.Uuid
@@ -280,4 +281,10 @@ enum SubscribeTier {
   SILVER         // silver subscription
   GOLD           // gold subscription
   PLATINUM       // platinum subscription
+}
+
+enum CharacterRole {
+  MAIN          // Primary role
+  SUPPORTING    // Supporting role
+  BACKGROUND    // Background role
 }

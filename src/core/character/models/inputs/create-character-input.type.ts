@@ -1,14 +1,9 @@
-import { ArgsType, Field, registerEnumType } from 'type-graphql';
-import {IsString, Length } from "class-validator";
-import {CharacterType} from "../../../../common/models/enums";
+import { ArgsType, Field } from 'type-graphql';
+import { IsEnum, IsString, Length } from 'class-validator';
+import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 
-registerEnumType(CharacterType, {
-    name: 'CharacterType',
-});
-// здесь - усложнённые типы: в enum-ах = enumы
 @ArgsType()
 export class CreateCharacterInputType {
-
     @IsString()
     @Field(() => String)
     bucket_id: string;
@@ -18,12 +13,15 @@ export class CreateCharacterInputType {
     @Field(() => String)
     character_name: string;
 
-    @IsString()
+    @IsEnum(CharacterType)
     @Field(() => CharacterType, { defaultValue: CharacterType.PROTAGONIST })
     importance: CharacterType;
+
+    @IsEnum(CharacterRole)
+    @Field(() => CharacterRole, { defaultValue: CharacterRole.MAIN })
+    role: CharacterRole;
 
     @IsString()
     @Field(() => String)
     description: string;
-
 }
