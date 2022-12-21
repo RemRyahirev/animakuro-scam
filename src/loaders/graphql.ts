@@ -16,11 +16,11 @@ export class GraphQLMiddleware {
     public async init(): Promise<RequestHandler> {
         this.schema = await this.buildSchema();
         const sdl = printSchema(this.schema);
-        await fs.writeFile(
+        fs.writeFile(
             path.join(__dirname + '/../public/schema.gql'),
             sdl,
             {},
-            (err) => {
+            (err: NodeJS.ErrnoException | null) => {
                 if (err) console.log(err);
             },
         );
