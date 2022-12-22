@@ -116,8 +116,7 @@ model Character {
   importance     CharacterType @default(PROTAGONIST)
   role           CharacterRole @default(MAIN)
   description    String        @db.Text
-  anime          Anime?        @relation(fields: [animeId], references: [id])
-  animeId        String?       @db.Uuid
+  animes         Anime[]
 
   @@map("character")
 }

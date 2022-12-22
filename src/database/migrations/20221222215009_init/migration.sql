@@ -2,7 +2,7 @@
 CREATE TYPE "FriendshipStatus" AS ENUM ('AWAITING', 'REQUESTED', 'CONFIRMED');
 
 -- CreateEnum
-CREATE TYPE "WatchStatus" AS ENUM ('WATCHING', 'PLANNED', 'SEEN', 'ABANDONED');
+CREATE TYPE "WatchStatus" AS ENUM ('WATCHING', 'PLANNED', 'COMPLETED', 'DROPPED');
 
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('UNSPECIFIED', 'MALE', 'FEMALE', 'OTHER');
@@ -23,6 +23,9 @@ CREATE TYPE "MediaFormat" AS ENUM ('TV', 'TV_SHORT', 'MOVIE', 'SPECIAL', 'OVA', 
 CREATE TYPE "CharacterType" AS ENUM ('PROTAGONIST', 'ANTAGONIST', 'SIDEKICK', 'ORBITAL_CHARACTER', 'LOVE_INTEREST', 'CONFIDANTE', 'EXTRAS', 'FOIL', 'OTHER');
 
 -- CreateEnum
+CREATE TYPE "CharacterRole" AS ENUM ('MAIN', 'SUPPORTING', 'BACKGROUND');
+
+-- CreateEnum
 CREATE TYPE "ThirdPartyType" AS ENUM ('DISCORD', 'GOOGLE', 'APPLE', 'FACEBOOK');
 
 -- CreateEnum
@@ -33,9 +36,6 @@ CREATE TYPE "ModeratorRoles" AS ENUM ('ADMIN', 'MODERATOR', 'CONTENT_FILLER', 'O
 
 -- CreateEnum
 CREATE TYPE "SubscribeTier" AS ENUM ('FREE_ACCOUNT', 'BASIC', 'SILVER', 'GOLD', 'PLATINUM');
-
--- CreateEnum
-CREATE TYPE "CharacterRole" AS ENUM ('MAIN', 'SUPPORTING', 'BACKGROUND');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -139,7 +139,6 @@ CREATE TABLE "character" (
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
     "description" TEXT NOT NULL,
-    "animeId" UUID,
 
     CONSTRAINT "character_pkey" PRIMARY KEY ("id")
 );
@@ -182,21 +181,26 @@ CREATE TABLE "user_profile" (
 -- CreateTable
 CREATE TABLE "user_anime" (
     "id" UUID NOT NULL,
-    "anime_id" VARCHAR(100) NOT NULL,
     "user_profile_id" UUID NOT NULL,
-    "season" SMALLINT NOT NULL,
-    "episode" SMALLINT NOT NULL,
+    "anime_id" UUID NOT NULL,
     "status" "WatchStatus" NOT NULL DEFAULT 'WATCHING',
     "in_favourites" BOOLEAN NOT NULL,
-    "episode_duration" INTEGER NOT NULL,
-    "paused_timestamp" INTEGER NOT NULL,
-    "watched_time" TIME NOT NULL,
+    "season" SMALLINT,
+    "episode" SMALLINT,
+    "episode_duration" INTEGER,
+    "watched_duration" INTEGER,
 
     CONSTRAINT "user_anime_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "_AnimeToGenre" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_AnimeToCharacter" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
@@ -220,10 +224,19 @@ CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("frie
 CREATE UNIQUE INDEX "user_profile_user_id_key" ON "user_profile"("user_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "user_anime_user_profile_id_key" ON "user_anime"("user_profile_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_AnimeToGenre_B_index" ON "_AnimeToGenre"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AnimeToCharacter_AB_unique" ON "_AnimeToCharacter"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AnimeToCharacter_B_index" ON "_AnimeToCharacter"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_AnimeToAuthor_AB_unique" ON "_AnimeToAuthor"("A", "B");
@@ -241,19 +254,25 @@ ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" 
 ALTER TABLE "anime" ADD CONSTRAINT "anime_studio_id_fkey" FOREIGN KEY ("studio_id") REFERENCES "studio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "character" ADD CONSTRAINT "character_animeId_fkey" FOREIGN KEY ("animeId") REFERENCES "anime"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_user_profile_id_fkey" FOREIGN KEY ("user_profile_id") REFERENCES "user_profile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_B_fkey" FOREIGN KEY ("B") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToCharacter" ADD CONSTRAINT "_AnimeToCharacter_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToCharacter" ADD CONSTRAINT "_AnimeToCharacter_B_fkey" FOREIGN KEY ("B") REFERENCES "character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
