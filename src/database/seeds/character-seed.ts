@@ -2,9 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import { CharacterType } from '../../common/models/enums';
 import { CharacterRole } from '../../common/models/enums';
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function characterSeed() {
+export async function characterSeed(prisma: PrismaClient) {
     console.log(`Start seeding characters...`);
     await prisma.character.createMany({
         skipDuplicates: true,
@@ -28,6 +28,7 @@ async function characterSeed() {
     console.log(`Seeding characters finished.`);
 }
 
-characterSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// characterSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());

@@ -20,7 +20,7 @@ model User {
   deleted            Boolean            @default(false)
   thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId   String?            @map("third_party_auth_id")
-  user_profile       UserProfile? //o-2-o relation
+  user_profile       UserProfile?       //o-2-o relation
   siteAuthSessions   SiteAuthSession[]
 
   @@map("users")
@@ -140,19 +140,19 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id                 String         @id @default(uuid()) @db.Uuid
-  user               User           @relation(fields: [user_id], references: [id])
-  user_id            String         @unique @db.Uuid
-  displayed_name     String         @db.VarChar(30)
-  profile_picture_id String         @db.Uuid // аватар!
-  banner_image       String         @db.Uuid
-  about              String         @db.Text
-  country            String         @db.VarChar(30)
-  language           String         @db.VarChar(30)
-  createdAt          DateTime?      @default(now()) @db.Date
-  subscribe_tier     SubscribeTier  @default(FREE_ACCOUNT)
-  moderator_role     ModeratorRoles @default(VIEWER)
-  isBlocked          Boolean
+  id                 String          @id @default(uuid()) @db.Uuid
+  user               User            @relation(fields: [user_id], references: [id])
+  user_id            String          @unique @db.Uuid
+  displayed_name     String          @db.VarChar(30)
+  profile_picture_id String          @db.Uuid // аватар!
+  banner_image       String          @db.Uuid
+  about              String          @db.Text
+  country            String          @db.VarChar(30)
+  language           String          @db.VarChar(30)
+  createdAt          DateTime?       @default(now()) @db.Date
+  subscribe_tier     SubscribeTier   @default(FREE_ACCOUNT)
+  moderator_role     ModeratorRoles? @default(VIEWER)
+  isBlocked          Boolean         @default(false)
   user_anime         UserAnime? // o-2-o relation
 
   @@map("user_profile")
@@ -168,7 +168,7 @@ model UserAnime {
   anime_id         String      @db.Uuid
   // информативный блок
   status           WatchStatus @default(WATCHING)
-  in_favourites    Boolean
+  in_favourites    Boolean     @default(false)
   // блок для аниме со статусом WATCHING
   season           Int?        @db.SmallInt // какой сезон данного аниме смотрит юзер
   episode          Int?        @db.SmallInt // какой эпизод(серию)

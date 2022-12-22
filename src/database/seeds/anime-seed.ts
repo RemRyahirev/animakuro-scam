@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import { FilmRating, MediaFormat, MediaSource, ReleaseStatus } from "../../common/models/enums";
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function animeSeed() {
+export async function animeSeed(prisma: PrismaClient) {
     console.log(`Start seeding anime...`);
     const genreList = await prisma.genre.findMany();
     const authorList = await prisma.author.findMany();
@@ -116,6 +116,7 @@ async function animeSeed() {
     console.log(`Seeding anime finished.`);
 }
 
-animeSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// animeSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());

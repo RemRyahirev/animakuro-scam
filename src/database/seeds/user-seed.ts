@@ -2,9 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import { Gender } from '../../common/models/enums';
 import { hash } from '../../common/utils/password.util';
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function userSeed() {
+export async function userSeed(prisma: PrismaClient) {
     console.log(`Start seeding users...`);
     await prisma.user.createMany({
         skipDuplicates: true,
@@ -32,6 +32,7 @@ async function userSeed() {
     console.log(`Seeding users finished.`);
 }
 
-userSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// userSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());
