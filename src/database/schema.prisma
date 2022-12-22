@@ -184,10 +184,10 @@ enum FriendshipStatus {
 }
 
 enum WatchStatus {
-  WATCHING
-  PLANNED
-  SEEN
-  ABANDONED
+  WATCHING  // Currently watching
+  PLANNED   // Planned to watch
+  COMPLETED // renamed from SEEN. Finished watching
+  DROPPED   // renamed from ABANDONED. Stopped watching before completing
 }
 
 enum Gender {
