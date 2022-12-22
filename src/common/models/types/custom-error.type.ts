@@ -11,7 +11,7 @@ export class CustomErrorType {
     @Field(
         () => String || Number || [String],
         {
-            nullable: false,
+            nullable: true,
             description: 'Not valid property value',
         },
     )
