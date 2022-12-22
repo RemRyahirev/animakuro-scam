@@ -15,7 +15,7 @@ studio:
 	npx prisma studio
 
 # приводит схему призмы в красивый вид + добавляет недостающие связи:
-align:
+format:
 	npx prisma format
 
 # миграция схемы с дефолтным именем

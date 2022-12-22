@@ -20,7 +20,7 @@ model User {
   deleted            Boolean            @default(false)
   thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId   String?            @map("third_party_auth_id")
-  user_profile       UserProfile?
+  user_profile       UserProfile?       //o-2-o relation
   siteAuthSessions   SiteAuthSession[]
 
   @@map("users")
@@ -94,6 +94,7 @@ model Anime {
   release_status     ReleaseStatus @default(FINISHED)
   characters         Character[]
   authors            Author[]
+  UserAnime          UserAnime[]    //o-2-m relation
 
   @@map("anime")
 }
@@ -152,16 +153,19 @@ model UserProfile {
   subscribe_tier     SubscribeTier  @default(FREE_ACCOUNT)
   moderator_role     ModeratorRoles @default(VIEWER)
   isBlocked          Boolean
-  user_anime         UserAnime[]
+  user_anime         UserAnime?     // o-2-o relation
 
   @@map("user_profile")
 }
 
 model UserAnime {
-  id               String      @id @default(uuid()) @db.Uuid
-  anime_id         String      @db.VarChar(100)
+  id String @id @default(uuid()) //@db.Uuid
+
   user_profile     UserProfile @relation(fields: [user_profile_id], references: [id])
-  user_profile_id  String      @db.Uuid
+  user_profile_id  String      @unique @db.Uuid // o-2-o relation
+  anime            Anime       @relation(fields: [anime_id], references: [id])
+  anime_id         String      @db.Uuid
+
   season           Int         @db.SmallInt
   episode          Int         @db.SmallInt
   status           WatchStatus @default(WATCHING)
@@ -204,29 +208,29 @@ enum FilmRating {
 }
 
 enum MediaSource {
-  ORIGINAL           // An original production not based of another work
-  MANGA              // Asian comic book
-  LIGHT_NOVEL        // Written work published in volumes
-  VISUAL_NOVEL       // Video game driven primary by text and narrative
-  VIDEO_GAME         // Video game
-  OTHER              // Other
-  NOVEL              // Written works not published in volumes
-  DOUJINSHI          // Self-published works
-  ANIME              // Japanese Anime
-  WEB_NOVEL          // Written works published online
-  LIVE_ACTION        // Live action media such as movies or TV show
-  GAME               // Games excluding video games
-  COMIC              // Comics excluding manga
+  ORIGINAL // An original production not based of another work
+  MANGA // Asian comic book
+  LIGHT_NOVEL // Written work published in volumes
+  VISUAL_NOVEL // Video game driven primary by text and narrative
+  VIDEO_GAME // Video game
+  OTHER // Other
+  NOVEL // Written works not published in volumes
+  DOUJINSHI // Self-published works
+  ANIME // Japanese Anime
+  WEB_NOVEL // Written works published online
+  LIVE_ACTION // Live action media such as movies or TV show
+  GAME // Games excluding video games
+  COMIC // Comics excluding manga
   MULTIMEDIA_PROJECT // Multimedia project
-  PICTURE_BOOK       // Picture book
+  PICTURE_BOOK // Picture book
 }
 
 enum ReleaseStatus {
-  FINISHED           // Has completed and is no longer being released
-  RELEASING          // Currently releasing
-  NOT_YET_RELEASED   // To be released at a later date
-  CANCELLED          // Ended before the work could be finished
-  HIATUS             // Is currently paused from releasing and will resume at a later date
+  FINISHED // Has completed and is no longer being released
+  RELEASING // Currently releasing
+  NOT_YET_RELEASED // To be released at a later date
+  CANCELLED // Ended before the work could be finished
+  HIATUS // Is currently paused from releasing and will resume at a later date
 }
 
 enum MediaFormat {
@@ -255,6 +259,12 @@ enum CharacterType {
   OTHER
 }
 
+enum CharacterRole {
+  MAIN // Primary role
+  SUPPORTING // Supporting role
+  BACKGROUND // Background role
+}
+
 enum ThirdPartyType {
   DISCORD
   GOOGLE
@@ -268,23 +278,17 @@ enum RegistrationStatus {
 }
 
 enum ModeratorRoles {
-  ADMIN          // admin
-  MODERATOR      // moderator
+  ADMIN // admin
+  MODERATOR // moderator
   CONTENT_FILLER // content maker
-  OTHER_STAFF    // other worker
-  VIEWER         // user
+  OTHER_STAFF // other worker
+  VIEWER // user
 }
 
 enum SubscribeTier {
-  FREE_ACCOUNT   // free
-  BASIC          // base subscription
-  SILVER         // silver subscription
-  GOLD           // gold subscription
-  PLATINUM       // platinum subscription
-}
-
-enum CharacterRole {
-  MAIN          // Primary role
-  SUPPORTING    // Supporting role
-  BACKGROUND    // Background role
+  FREE_ACCOUNT // free
+  BASIC // base subscription
+  SILVER // silver subscription
+  GOLD // gold subscription
+  PLATINUM // platinum subscription
 }
