@@ -9,7 +9,7 @@ import * as path from 'path';
 import { exceptionsHandler } from '../common/errors/exception-handler';
 import {
     PrismaExceptionInterceptor,
-    ValidationErrorInterceptor,
+    ValidationExceptionInterceptor
 } from '../common/interceptors';
 
 @Singleton
@@ -48,7 +48,7 @@ export class GraphQLMiddleware {
             validate: true,
             globalMiddlewares: [
                 PrismaExceptionInterceptor,
-                ValidationErrorInterceptor,
+                ValidationExceptionInterceptor,
             ],
         });
     }

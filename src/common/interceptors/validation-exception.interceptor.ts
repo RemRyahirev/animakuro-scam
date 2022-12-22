@@ -8,7 +8,7 @@ import { ValidationError } from 'class-validator';
 import { BaseResultsType } from '../models/results';
 import { CustomErrorType } from '../models/types';
 
-export const ValidationErrorInterceptor: MiddlewareFn<any> = async (
+export const ValidationExceptionInterceptor: MiddlewareFn<any> = async (
     resolverData: ResolverData<{}>,
     next: NextFn,
 ) => {
