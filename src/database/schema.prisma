@@ -20,7 +20,7 @@ model User {
   deleted            Boolean            @default(false)
   thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId   String?            @map("third_party_auth_id")
-  user_profile       UserProfile?       //o-2-o relation
+  user_profile       UserProfile? //o-2-o relation
   siteAuthSessions   SiteAuthSession[]
 
   @@map("users")
@@ -94,7 +94,7 @@ model Anime {
   release_status     ReleaseStatus @default(FINISHED)
   characters         Character[]
   authors            Author[]
-  UserAnime          UserAnime[]    //o-2-m relation
+  UserAnime          UserAnime[] //o-2-m relation
 
   @@map("anime")
 }
@@ -153,26 +153,27 @@ model UserProfile {
   subscribe_tier     SubscribeTier  @default(FREE_ACCOUNT)
   moderator_role     ModeratorRoles @default(VIEWER)
   isBlocked          Boolean
-  user_anime         UserAnime?     // o-2-o relation
+  user_anime         UserAnime? // o-2-o relation
 
   @@map("user_profile")
 }
 
 model UserAnime {
-  id String @id @default(uuid()) //@db.Uuid
-
+  // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
+  id               String      @id @default(uuid()) @db.Uuid
+  //  блок привязок
   user_profile     UserProfile @relation(fields: [user_profile_id], references: [id])
   user_profile_id  String      @unique @db.Uuid // o-2-o relation
   anime            Anime       @relation(fields: [anime_id], references: [id])
   anime_id         String      @db.Uuid
-
-  season           Int         @db.SmallInt
-  episode          Int         @db.SmallInt
+  // информативный блок
   status           WatchStatus @default(WATCHING)
   in_favourites    Boolean
-  episode_duration Int         @db.Integer
-  paused_timestamp Int         @db.Integer
-  watched_time     DateTime    @db.Time
+  // блок для аниме со статусом WATCHING
+  season           Int?        @db.SmallInt // какой сезон данного аниме смотрит юзер
+  episode          Int?        @db.SmallInt // какой эпизод(серию)
+  episode_duration Int?        @db.Integer // секунды: продолжительность этого эпизода
+  watched_duration Int?        @db.Integer // секунды: сколько просмотрел из этой серии
 
   @@map("user_anime")
 }
@@ -184,10 +185,10 @@ enum FriendshipStatus {
 }
 
 enum WatchStatus {
-  WATCHING  // Currently watching
-  PLANNED   // Planned to watch
+  WATCHING // Currently watching
+  PLANNED // Planned to watch
   COMPLETED // renamed from SEEN. Finished watching
-  DROPPED   // renamed from ABANDONED. Stopped watching before completing
+  DROPPED // renamed from ABANDONED. Stopped watching before completing
 }
 
 enum Gender {
