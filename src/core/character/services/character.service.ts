@@ -6,6 +6,7 @@ import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
+import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
 import { CreateCharacterResultsType } from '../models/results/create-character-results.type';
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
@@ -50,6 +51,38 @@ export class CharacterService {
         };
     }
 
+    async getCharacterListByAnimeId(
+        id: string,
+        args: PaginationInputType,
+    ): Promise<GetListCharacterByAnimeIdResultsType> {
+        const anime = await this.prisma.anime.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                characters: true,
+            },
+        });
+        const pagination = await this.paginationService.getPagination(args);
+
+        if (!anime) {
+            return {
+                success: false,
+                characterList: [],
+                pagination,
+            };
+        }
+
+        const characterList = anime?.characters;
+
+        return {
+            success: true,
+            errors: [],
+            characterList,
+            pagination,
+        };
+    }
+
     async createCharacter(
         args: CreateCharacterInputType,
         ctx: ICustomContext,
@@ -73,7 +106,7 @@ export class CharacterService {
         });
         return {
             success: true,
-           character,
+            character,
         };
     }
 
@@ -86,7 +119,7 @@ export class CharacterService {
         });
         return {
             success: true,
-           character,
+            character,
         };
     }
 }

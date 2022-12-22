@@ -4,6 +4,7 @@ import { CharacterService } from '../services/character.service';
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
+import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 
 @ObjectType()
@@ -35,6 +36,11 @@ export class CharacterQueryType {
         description: 'Get character list',
     })
     getCharacterList: GetListCharacterResultsType;
+
+    @Field(() => GetListCharacterByAnimeIdResultsType, {
+        description: 'Get character list by anime ID',
+    })
+    getCharacterListByAnimeId: GetListCharacterByAnimeIdResultsType;
 }
 
 @Resolver()

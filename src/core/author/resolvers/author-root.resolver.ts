@@ -4,6 +4,7 @@ import { AuthorService } from '../services/author.service';
 import { UpdateAuthorResultsType } from '../models/results/update-author-results.type';
 import { DeleteAuthorResultsType } from '../models/results/delete-author-results.type';
 import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';
+import { GetListAuthorByAnimeIdResultsType } from '../models/results/get-list-author-by-anime-id-results.type';
 import { GetAuthorResultsType } from '../models/results/get-author-results.type';
 
 @ObjectType()
@@ -25,6 +26,11 @@ export class AuthorQueryType {
 
     @Field(() => GetListAuthorResultsType, { description: 'Get author list' })
     getAuthorList: GetListAuthorResultsType;
+
+    @Field(() => GetListAuthorByAnimeIdResultsType, {
+        description: 'Get author list by anime ID',
+    })
+    getAuthorListByAnimeId: GetListAuthorByAnimeIdResultsType;
 }
 
 @Resolver()

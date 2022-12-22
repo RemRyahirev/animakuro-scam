@@ -21,4 +21,12 @@ export class AuthorQueryResolver extends AuthorRootResolver {
     ): Promise<GetListAuthorResultsType> {
         return await this.authorService.getAuthorList(args);
     }
+
+    @FieldResolver(() => GetListAuthorResultsType)
+    async getAuthorListByAnimeId(
+        @Arg('id') id: string,
+        @Args() args: PaginationInputType,
+    ): Promise<GetListAuthorResultsType> {
+        return await this.authorService.getAuthorListByAnimeId(id, args);
+    }
 }
