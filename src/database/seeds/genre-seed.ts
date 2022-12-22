@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function genreSeed() {
+export async function genreSeed(prisma: PrismaClient) {
     console.log(`Start seeding genre...`);
     await prisma.genre.createMany({
         skipDuplicates: true,
@@ -21,6 +21,7 @@ async function genreSeed() {
     console.log(`Seeding genre finished.`);
 }
 
-genreSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// genreSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());

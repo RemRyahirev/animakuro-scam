@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function translationSeed() {
+export async function translationSeed(prisma: PrismaClient) {
     console.log(`Start seeding translation...`);
     await prisma.translation.createMany({
         skipDuplicates: true,
@@ -22,6 +22,7 @@ async function translationSeed() {
     console.log(`Seeding translation finished.`);
 }
 
-translationSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// translationSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());

@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function authorSeed() {
+export async function authorSeed(prisma: PrismaClient) {
     console.log(`Start seeding authors...`);
     await prisma.author.createMany({
         skipDuplicates: true,
@@ -27,6 +27,7 @@ async function authorSeed() {
     console.log(`Seeding authors finished.`);
 }
 
-authorSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// authorSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());

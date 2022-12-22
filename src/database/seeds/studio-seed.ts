@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
-async function studioSeed() {
+export async function studioSeed(prisma: PrismaClient) {
     console.log(`Start seeding studio...`);
     const animeArray = await prisma.anime.findMany(); // TODO add array into 'anime' field
     await prisma.studio.createMany({
@@ -21,6 +21,7 @@ async function studioSeed() {
     console.log(`Seeding studio finished.`);
 }
 
-studioSeed()
-    .catch((e) => console.error(e))
-    .finally(async () => await prisma.$disconnect());
+// перенёс промис в index.ts
+// studioSeed()
+//     .catch((e) => console.error(e))
+//     .finally(async () => await prisma.$disconnect());

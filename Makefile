@@ -22,4 +22,8 @@ format:
 mig:
 	npx prisma migrate dev --name nextMigrate
 
+migResetWithSeed:
+	npx prisma migrate reset --preview-feature
 
+migResetNoSeed:
+	npx prisma migrate reset --preview-feature --skip-seed
