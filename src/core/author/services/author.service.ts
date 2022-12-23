@@ -55,26 +55,18 @@ export class AuthorService {
         id: string,
         args: PaginationInputType,
     ): Promise<GetListAuthorByAnimeIdResultsType> {
-        const anime = await this.prisma.anime.findUnique({
+        const authorList = await this.prisma.author.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
             where: {
-                id,
-            },
-            include: {
-                authors: true,
-            },
+                animes: {
+                    some: {
+                        id
+                    }
+                }
+            }
         });
         const pagination = await this.paginationService.getPagination(args);
-
-        if (!anime) {
-            return {
-                success: false,
-                authorList: [],
-                pagination,
-            };
-        }
-
-        const authorList = anime?.authors;
-
         return {
             success: true,
             errors: [],
