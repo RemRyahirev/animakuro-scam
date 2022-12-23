@@ -6,6 +6,7 @@ import { genreData } from './genre-data';
 import { characterData } from './character-data';
 import { authorData } from './author-data';
 import { animeData } from './anime-data';
+import { deepEqual } from "../../common/utils/deep-equal";
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,7 @@ async function createEntities(
                 id: entity.id,
             },
         });
+
         if (deepEqual(existenceEntity, entity)) {
             console.log(
                 `Update ${entityName} with id: ${existenceEntity.id} skipped`,
@@ -58,10 +60,6 @@ async function createEntities(
         }
     }
     console.log(`Seeding ${entityName}s finished...`);
-}
-
-function deepEqual(obj1: any, obj2: any): boolean {
-    return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
 
 seedAll()
