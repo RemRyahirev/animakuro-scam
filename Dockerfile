@@ -6,6 +6,7 @@ RUN pnpm fetch
 COPY . ./
 RUN pnpm i --offline --frozen-lockfile
 RUN apk add --no-cache openssl openssl-dev libssl1.1 libssl3
+RUN rm -rf dist/
 RUN pnpm generate && pnpm build
 RUN pnpm prune --prod
 #RUN find node_modules \( -name "*on-engine*" -o -wholename "*/prisma/libquery*" -o -wholename "*/*prisma*engine*/*" -o -wholename "*/prisma@*/*" \) -delete
