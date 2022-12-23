@@ -30,18 +30,12 @@ async function seedAll(){
     await animeSeed(prisma);
     await translationSeed(prisma);
     await userProfileSeed(prisma);
-    setTimeout(async () => {
-        console.log('Waiting before anime table is created');
-        await userAnimeSeed(prisma);
-    }, 1000);
+    await userAnimeSeed(prisma);    // removed setTimeout()
 }
 
 seedAll()
     .catch((e) => console.error(e))
     .finally(async () => {
         await prisma.$disconnect();
-        console.log(
-            '--------------------------\n ' +
-            'If you caught an Error, \n report me in Discord: #4745 ' +
-            '\n--------------------------')
+        console.log('seedAll final message.')
     });
