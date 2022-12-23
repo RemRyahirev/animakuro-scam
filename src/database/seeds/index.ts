@@ -5,6 +5,7 @@ import { translationData } from './translation-data';
 import { genreData } from './genre-data';
 import { characterData } from './character-data';
 import { authorData } from './author-data';
+import { animeData } from './anime-data';
 
 const prisma = new PrismaClient();
 
@@ -16,7 +17,7 @@ async function seedAll() {
     await translationData().then((array) =>
         createEntities(array, 'translation'),
     );
-    // await animeData().then((array) => createEntities(array, 'anime'));
+    await animeData().then((array) => createEntities(array, 'anime'));
     await studioData().then((array) => createEntities(array, 'studio'));
 }
 
