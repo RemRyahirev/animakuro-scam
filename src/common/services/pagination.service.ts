@@ -21,8 +21,8 @@ export class PaginationService {
             return {
                 page: args.page,
                 perPage: args.perPage,
-                totalCount,
-                pageCount,
+                totalCount: totalCount ?? 0,
+                pageCount: pageCount ?? 0,
             };
         }
         return Promise.reject(

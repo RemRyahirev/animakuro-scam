@@ -23,8 +23,8 @@ export class Anime {
     @Field(() => Int)
     year: number;
 
-    @Field(() => [Genre], { nullable: true })
-    genres?: Genre[];
+    @Field(() => [Genre])
+    genres: Genre[];
 
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
     media_format: string;
@@ -66,5 +66,5 @@ export class Anime {
     characters: Character[];
 
     @Field(() => [Author])
-    authors?: Author[];
+    authors: Author[];
 }
