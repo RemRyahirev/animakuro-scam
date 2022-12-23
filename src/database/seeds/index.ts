@@ -6,7 +6,7 @@ import { genreData } from './genre-data';
 import { characterData } from './character-data';
 import { authorData } from './author-data';
 import { animeData } from './anime-data';
-import { deepEqual } from "../../common/utils/deep-equal";
+import { deepEqual } from '../../common/utils/deep-equal';
 
 const prisma = new PrismaClient();
 
