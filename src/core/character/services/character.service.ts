@@ -55,26 +55,18 @@ export class CharacterService {
         id: string,
         args: PaginationInputType,
     ): Promise<GetListCharacterByAnimeIdResultsType> {
-        const anime = await this.prisma.anime.findUnique({
+        const characterList = await this.prisma.character.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
             where: {
-                id,
-            },
-            include: {
-                characters: true,
-            },
+                animes: {
+                    some: {
+                        id
+                    }
+                }
+            }
         });
         const pagination = await this.paginationService.getPagination(args);
-
-        if (!anime) {
-            return {
-                success: false,
-                characterList: [],
-                pagination,
-            };
-        }
-
-        const characterList = anime?.characters;
-
         return {
             success: true,
             errors: [],
