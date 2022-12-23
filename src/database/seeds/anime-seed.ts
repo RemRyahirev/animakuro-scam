@@ -14,10 +14,15 @@ export async function animeSeed(prisma: PrismaClient) {
         !characterList.length
     ) {
         console.error(
-            'seed genres, characters and authors before seeding anime, 3 entities in each list',
+            'Seed genres, characters and authors before seeding anime, 3 entities in each list',
         );
         return;
     }
+
+    const [genre1, genre2, genre3] = genreList;
+    const [author1, author2, author3] = authorList;
+    const [character1, character2, character3] = characterList;
+
     const animeData = [
         {
             id: 'eae8238a-7aec-11ed-a453-020017000b7b',
@@ -27,7 +32,7 @@ export async function animeSeed(prisma: PrismaClient) {
             genres: {
                 connect: [
                     {
-                        id: genreList[0].id,
+                        id: genre1.id,
                     },
                 ],
             },
@@ -46,14 +51,14 @@ export async function animeSeed(prisma: PrismaClient) {
             characters: {
                 connect: [
                     {
-                        id: characterList[0].id
+                        id: character1.id
                     },
                 ]
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[0].id
+                        id: author1.id
                     },
                     {
                         id: authorList[1].id
@@ -68,10 +73,10 @@ export async function animeSeed(prisma: PrismaClient) {
             genres: {
                 connect: [
                     {
-                        id: genreList[1].id,
+                        id: genre2.id,
                     },
                     {
-                        id: genreList[2].id,
+                        id: genre3.id,
                     },
                 ],
             },
@@ -90,14 +95,14 @@ export async function animeSeed(prisma: PrismaClient) {
             characters: {
                 connect: [
                     {
-                        id: characterList[1].id
+                        id: character2.id
                     },
                 ]
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[2].id
+                        id: author3.id
                     },
                 ]
             },
