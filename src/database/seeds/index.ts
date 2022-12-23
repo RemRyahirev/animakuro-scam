@@ -30,10 +30,7 @@ async function seedAll(){
     await animeSeed(prisma);
     await translationSeed(prisma);
     await userProfileSeed(prisma);
-    setTimeout(async () => {
-        console.log('Waiting before anime table is created');
-        await userAnimeSeed(prisma);
-    }, 1000);
+    await userAnimeSeed(prisma);    // removed setTimeout()
 }
 
 seedAll()
