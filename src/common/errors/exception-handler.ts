@@ -23,6 +23,7 @@ export const exceptionsHandler = (
     response: ServerResponse,
 ): GqlHttpException => {
     const exception = handleExceptions(error);
+    console.error(error)
     // unexpected errors
     if (!exception) {
         return new GqlHttpException(
