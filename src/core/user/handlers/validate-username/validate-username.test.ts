@@ -1,5 +1,5 @@
 import { ValidateUsername } from './validate-username';
-import { Redis } from '../../../../loaders/redis';
+import { Redis } from '../../../../loaders';
 
 describe('Check usernames', () => {
     const sourceUsername = 'srcUsername';

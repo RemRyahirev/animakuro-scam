@@ -14,8 +14,8 @@ export const PrismaExceptionInterceptor: MiddlewareFn<any> = async (
                 errors: [
                     {
                         property: 'prisma client error',
-                        value: 'error code - ' + error.code,
-                        reason: error?.meta?.cause || error?.meta?.message,
+                        value: error.code ? 'error code - ' + error.code : 'invalid value',
+                        reason: error?.meta?.cause || error?.meta?.message || error?.message,
                     },
                 ],
             };

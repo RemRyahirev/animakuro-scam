@@ -1,29 +1,18 @@
-import { PrismaClient } from "@prisma/client";
-import { FilmRating, MediaFormat, MediaSource, ReleaseStatus } from "../../common/models/enums";
+import { PrismaClient } from '@prisma/client';
+import {
+    FilmRating,
+    MediaFormat,
+    MediaSource,
+    ReleaseStatus,
+} from '../../common/models/enums';
 
-//const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-export async function animeSeed(prisma: PrismaClient) {
-    console.log(`Start seeding anime...`);
+export const animeData = async () => {
     const genreList = await prisma.genre.findMany();
     const authorList = await prisma.author.findMany();
     const characterList = await prisma.character.findMany();
-    if (
-        !genreList.length ||
-        !authorList.length ||
-        !characterList.length
-    ) {
-        console.error(
-            'Seed genres, characters and authors before seeding anime, 3 entities in each list',
-        );
-        return;
-    }
-
-    const [genre1, genre2, genre3] = genreList;
-    const [author1, author2, author3] = authorList;
-    const [character1, character2, character3] = characterList;
-
-    const animeData = [
+    return [
         {
             id: 'eae8238a-7aec-11ed-a453-020017000b7b',
             title: 'Гуррен-лаганн',
@@ -32,7 +21,7 @@ export async function animeSeed(prisma: PrismaClient) {
             genres: {
                 connect: [
                     {
-                        id: genre1.id,
+                        id: genreList[0].id,
                     },
                 ],
             },
@@ -51,32 +40,33 @@ export async function animeSeed(prisma: PrismaClient) {
             characters: {
                 connect: [
                     {
-                        id: character1.id
+                        id: characterList[0].id,
                     },
-                ]
+                ],
             },
             authors: {
                 connect: [
                     {
-                        id: author1.id
+                        id: authorList[0].id,
                     },
                     {
-                        id: authorList[1].id
-                    }
-                ]
+                        id: authorList[1].id,
+                    },
+                ],
             },
-        }, {
-            id: "f2d82632-d15d-496f-a45b-dd57b1297f6e",
+        },
+        {
+            id: 'f2d82632-d15d-496f-a45b-dd57b1297f6e',
             title: 'Стальной алхимик',
             score: 6.9,
             year: 1999,
             genres: {
                 connect: [
                     {
-                        id: genre2.id,
+                        id: genreList[1].id,
                     },
                     {
-                        id: genre3.id,
+                        id: genreList[2].id,
                     },
                 ],
             },
@@ -95,33 +85,17 @@ export async function animeSeed(prisma: PrismaClient) {
             characters: {
                 connect: [
                     {
-                        id: character2.id
+                        id: characterList[1].id,
                     },
-                ]
+                ],
             },
             authors: {
                 connect: [
                     {
-                        id: author3.id
+                        id: authorList[2].id,
                     },
-                ]
+                ],
             },
-        }
+        },
     ];
-    animeData.map(async (item) => {
-        await prisma.anime.create({
-            data: item,
-            include: {
-               genres: true,
-                authors: true,
-                characters: true
-            },
-        });
-    });
-    console.log(`Seeding anime finished.`);
-}
-
-// перенёс промис в index.ts
-// animeSeed()
-//     .catch((e) => console.error(e))
-//     .finally(async () => await prisma.$disconnect());
+};
