@@ -27,9 +27,9 @@ async function seedAll() {
     await userAnimeData().then((array) => createEntities(array, 'userAnime'));
 }
 
-async function createEntities(
-    entityArray: any[],
-    entityName: string,
+async function createEntities<T extends Array<any>, K extends keyof PrismaClient>(
+    entityArray: T,
+    entityName: K,
 ): Promise<void> {
     console.log(`Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
@@ -76,9 +76,9 @@ async function createEntities(
     console.log(`Seeding ${entityName}s finished...`);
 }
 
-async function createDependencies(
-    dependenciesArray: any[],
-    entityName: string,
+async function createDependencies<T extends Array<any>, K extends keyof PrismaClient>(
+    dependenciesArray: T,
+    entityName: K,
 ){
     console.log(`Start create dependencies in ${entityName}s...`);
     for (const dependency of dependenciesArray) {
