@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { studioData } from './studio-data';
+import { studioData, studioDependencies } from "./studio-data";
 import { userData } from './user-data';
 import { translationData } from './translation-data';
 import { genreData } from './genre-data';
@@ -18,8 +18,9 @@ async function seedAll() {
     await translationData().then((array) =>
         createEntities(array, 'translation'),
     );
-    await animeData().then((array) => createEntities(array, 'anime'));
     await studioData().then((array) => createEntities(array, 'studio'));
+    await animeData().then((array) => createEntities(array, 'anime'));
+    await studioDependencies().then((array) => createDependencies(array, 'studio'));
 }
 
 async function createEntities(
@@ -62,6 +63,33 @@ async function createEntities(
     console.log(`Seeding ${entityName}s finished...`);
 }
 
+async function createDependencies(
+    dependenciesArray: any[],
+    entityName: string,
+){
+    console.log(`Start create dependencies in ${entityName}s...`);
+    for (const dependency of dependenciesArray){
+        // @ts-ignore
+        const existenceEntity = await prisma[entityName].findUnique({
+            where: {
+                id: dependency.id,
+            },
+        });
+        if (existenceEntity) {
+            // @ts-ignore
+            await prisma[entityName].update({
+                where: {
+                    id: dependency.id,
+                },
+                data: {
+                    ...dependency
+                },
+            });
+            console.log(`Updated dependency in ${entityName}s with id: ${dependency.id}`);
+        }
+    }
+    console.log(`Create dependencies in ${entityName}s finished...`);
+}
 seedAll()
     .catch(console.error)
     .finally(async () => {

@@ -172,8 +172,8 @@ CREATE TABLE "user_profile" (
     "language" VARCHAR(30) NOT NULL,
     "createdAt" DATE DEFAULT CURRENT_TIMESTAMP,
     "subscribe_tier" "SubscribeTier" NOT NULL DEFAULT 'FREE_ACCOUNT',
-    "moderator_role" "ModeratorRoles" NOT NULL DEFAULT 'VIEWER',
-    "isBlocked" BOOLEAN NOT NULL,
+    "moderator_role" "ModeratorRoles" DEFAULT 'VIEWER',
+    "isBlocked" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "user_profile_pkey" PRIMARY KEY ("id")
 );
@@ -184,7 +184,7 @@ CREATE TABLE "user_anime" (
     "user_profile_id" UUID NOT NULL,
     "anime_id" UUID NOT NULL,
     "status" "WatchStatus" NOT NULL DEFAULT 'WATCHING',
-    "in_favourites" BOOLEAN NOT NULL,
+    "in_favourites" BOOLEAN NOT NULL DEFAULT false,
     "season" SMALLINT,
     "episode" SMALLINT,
     "episode_duration" INTEGER,
