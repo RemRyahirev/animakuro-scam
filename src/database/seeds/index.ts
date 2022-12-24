@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { studioData, studioDependencies } from "./studio-data";
+import { studioData, studioDependencies } from './studio-data';
 import { userData } from './user-data';
 import { translationData } from './translation-data';
 import { genreData } from './genre-data';
@@ -8,7 +8,7 @@ import { authorData } from './author-data';
 import { animeData } from './anime-data';
 import { deepEqual } from '../../common/utils/deep-equal';
 import { userProfileData } from './user-profile-data';
-import { userAnimeData } from "./user-anime-data";
+import { userAnimeData } from './user-anime-data';
 
 const prisma = new PrismaClient();
 
@@ -81,7 +81,13 @@ async function createDependencies(
     entityName: string,
 ){
     console.log(`Start create dependencies in ${entityName}s...`);
-    for (const dependency of dependenciesArray){
+    for (const dependency of dependenciesArray) {
+        if (!dependency.id) {
+            console.log(
+                `Entity id in dependency ${entityName}Dependencies not provided. Create dependency skipped`,
+            );
+            continue;
+        }
         // @ts-ignore
         const existenceEntity = await prisma[entityName].findUnique({
             where: {
@@ -95,10 +101,12 @@ async function createDependencies(
                     id: dependency.id,
                 },
                 data: {
-                    ...dependency
+                    ...dependency,
                 },
             });
-            console.log(`Updated dependency in ${entityName}s with id: ${dependency.id}`);
+            console.log(
+                `Updated dependency in ${entityName}s with id: ${dependency.id}`,
+            );
         }
     }
     console.log(`Create dependencies in ${entityName}s finished...`);
