@@ -12,6 +12,11 @@ export const animeData = async () => {
     const genreList = await prisma.genre.findMany();
     const authorList = await prisma.author.findMany();
     const characterList = await prisma.character.findMany();
+    if (!genreList.length || !authorList.length || !characterList.length) {
+        throw new Error(
+            'Genre, author or character table is empty or not available',
+        );
+    }
     return [
         {
             id: 'eae8238a-7aec-11ed-a453-020017000b7b',

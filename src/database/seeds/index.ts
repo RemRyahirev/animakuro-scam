@@ -7,6 +7,8 @@ import { characterData } from './character-data';
 import { authorData } from './author-data';
 import { animeData } from './anime-data';
 import { deepEqual } from '../../common/utils/deep-equal';
+import { userProfileData } from './user-profile-data';
+import { userAnimeData } from "./user-anime-data";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +23,8 @@ async function seedAll() {
     await studioData().then((array) => createEntities(array, 'studio'));
     await animeData().then((array) => createEntities(array, 'anime'));
     await studioDependencies().then((array) => createDependencies(array, 'studio'));
+    await userProfileData().then((array) => createEntities(array, 'userProfile'));
+    await userAnimeData().then((array) => createEntities(array, 'userAnime'));
 }
 
 async function createEntities(
@@ -29,6 +33,15 @@ async function createEntities(
 ): Promise<void> {
     console.log(`Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
+        if (!entity.id){
+            console.log(`Entity id ${entityName} not defined, will be create random`);
+            // @ts-ignore
+            const createdEntity = await prisma[entityName].create({
+                data: entity as any,
+            });
+            console.log(`Created ${entityName} with id: ${createdEntity.id}`);
+            continue;
+        }
         // @ts-ignore
         const existenceEntity = await prisma[entityName].findUnique({
             where: {
