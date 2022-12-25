@@ -4,7 +4,7 @@ export function entityConnectUtil<F extends keyof I, I>(
 ): any {
     let array: { id: string }[] = [];
     const currentField = input[field] as string[];
-    currentField.forEach((id: string) => {
+    currentField?.forEach((id: string) => {
         array.push({
             id,
         });
