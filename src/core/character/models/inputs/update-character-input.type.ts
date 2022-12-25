@@ -29,7 +29,7 @@ export class UpdateCharacterInputType {
 
     @IsOptional()
     @IsEnum(CharacterRole)
-    @Field(() => CharacterRole, { defaultValue: CharacterRole.MAIN })
+    @Field(() => CharacterRole, { nullable: true, defaultValue: CharacterRole.MAIN })
     role?: CharacterRole;
 
     @IsOptional()

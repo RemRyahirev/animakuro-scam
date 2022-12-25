@@ -20,7 +20,7 @@ export const studioDependencies = async () => {
         {
             id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
             anime: {
-                connect: [
+                set: [
                     {
                         id: animeList[0].id,
                     },

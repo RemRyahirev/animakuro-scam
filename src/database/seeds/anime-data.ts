@@ -19,7 +19,7 @@ export const animeData = async () => {
     }
     return [
         {
-            id: 'eae8238a-7aec-11ed-a453-020017000b7b',
+            id: '1484d58b-bd26-4fed-99a0-d0ba53da3827',
             title: 'Гуррен-лаганн',
             score: 4.7,
             year: 2010,

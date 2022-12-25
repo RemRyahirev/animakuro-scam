@@ -24,7 +24,7 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
-                characters: true
+                characters: true,
             },
         });
         return {
@@ -43,7 +43,7 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
-                characters: true
+                characters: true,
             },
         });
         const pagination = await this.paginationService.getPagination(args);
@@ -69,7 +69,7 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
-                characters: true
+                characters: true,
             },
         });
         return {
@@ -93,13 +93,13 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
-                characters: true
-            }
+                characters: true,
+            },
         });
         return {
             success: true,
             errors: [],
-            anime
+            anime,
         };
     }
 
@@ -112,13 +112,13 @@ export class AnimeService {
             include: {
                 genres: true,
                 authors: true,
-                characters: true
-            }
+                characters: true,
+            },
         });
         return {
             success: true,
             errors: [],
-            anime
+            anime,
         };
     }
 }

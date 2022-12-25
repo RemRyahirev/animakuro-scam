@@ -26,5 +26,4 @@ export class UpdateAuthorInputType {
     @IsString()
     @Field(() => String, { nullable: true })
     bio?: string;
-
 }

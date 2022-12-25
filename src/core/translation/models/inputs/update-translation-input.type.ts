@@ -9,10 +9,10 @@ export class UpdateTranslationInputType {
 
     @IsString()
     @Length(1, 20)
-    @Field(() => String)
-    language: string;
+    @Field(() => String, { nullable: true })
+    language?: string;
 
     @IsString()
-    @Field(() => String)
-    translation: string;
+    @Field(() => String, { nullable: true })
+    translation?: string;
 }

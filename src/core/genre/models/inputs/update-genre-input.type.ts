@@ -9,6 +9,6 @@ export class UpdateGenreInputType {
 
     @IsString()
     @Length(1, 50)
-    @Field(() => String)
-    genre_name: string;
+    @Field(() => String, { nullable: true })
+    genre_name?: string;
 }
