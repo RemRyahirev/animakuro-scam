@@ -81,7 +81,7 @@ model Anime {
   genres             Genre[]
   media_format       MediaFormat   @default(OTHER)
   source             MediaSource   @default(OTHER)
-  studio_id          String
+  studio_id          String        @db.Uuid
   studio             Studio        @relation(fields: [studio_id], references: [id])
   seasons_count      Int           @db.SmallInt
   episodes_count     Int           @db.SmallInt
