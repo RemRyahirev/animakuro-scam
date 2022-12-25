@@ -30,7 +30,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            anime,
+            anime: anime as any,
         };
     }
 
@@ -50,7 +50,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            animeList,
+            animeList: animeList as any,
             pagination,
         };
     }
@@ -74,7 +74,7 @@ export class AnimeService {
         });
         return {
             success: true,
-            anime,
+            anime: anime as any,
         };
     }
 
@@ -99,7 +99,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            anime,
+            anime: anime as any,
         };
     }
 
@@ -118,7 +118,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            anime,
+            anime: anime as any,
         };
     }
 }

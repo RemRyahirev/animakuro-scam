@@ -39,7 +39,7 @@ export class StudioService {
         }
         return {
             success: true,
-            studio,
+            studio: studio as any,
             errors: [],
         };
     }
@@ -64,7 +64,7 @@ export class StudioService {
         return {
             success: true,
             errors: [],
-            studioList,
+            studioList: studioList as any,
             pagination,
         };
     }
@@ -90,7 +90,7 @@ export class StudioService {
         });
         return {
             success: true,
-            studio,
+            studio: studio as any,
         };
     }
 
@@ -116,7 +116,7 @@ export class StudioService {
         });
         return {
             success: true,
-            studio,
+            studio: studio as any,
         };
     }
 
@@ -138,7 +138,7 @@ export class StudioService {
         });
         return {
             success: true,
-            studio,
+            studio: studio as any,
         };
     }
 }
