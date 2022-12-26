@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
@@ -53,12 +54,15 @@ model ThirdPartyAuth {
 }
 
 model Studio {
-  id          String   @id @default(uuid()) @db.Uuid
-  createdAt   DateTime @default(now()) @map("created_at")
-  studio_name String   @db.VarChar(64)
-  rating      Float    @db.Real
-  thumbnail   String   @db.Text
-  anime       Anime[]
+  id            String   @id @default(uuid()) @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at")
+  studio_name   String   @db.VarChar(64)
+  rating        Float    @db.Real
+  thumbnail     String   @db.Text
+  anime_count   Float    @default(0) @db.Real
+  anime_starts  Float    @db.Real
+  anime_ends    Float    @db.Real
+  anime         Anime[]
 
   @@map("studio")
 }

@@ -1,4 +1,4 @@
-import { Field, Float, ID, ObjectType } from 'type-graphql';
+import { Field, Float, ID, Int, ObjectType } from 'type-graphql';
 import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
@@ -17,6 +17,15 @@ export class Studio {
 
     @Field(() => [Anime])
     anime: Anime[];
+
+    @Field(() => Int)
+    anime_count: number;
+
+    @Field(() => Int)
+    anime_starts: number;
+
+    @Field(() => Int)
+    anime_ends: number;
 
     @Field(() => Date)
     createdAt: Date;

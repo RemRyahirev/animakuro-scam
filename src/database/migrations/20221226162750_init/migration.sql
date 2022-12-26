@@ -87,6 +87,9 @@ CREATE TABLE "studio" (
     "studio_name" VARCHAR(64) NOT NULL,
     "rating" REAL NOT NULL,
     "thumbnail" TEXT NOT NULL,
+    "anime_count" REAL NOT NULL DEFAULT 0,
+    "anime_starts" REAL NOT NULL,
+    "anime_ends" REAL NOT NULL,
 
     CONSTRAINT "studio_pkey" PRIMARY KEY ("id")
 );

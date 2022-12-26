@@ -10,6 +10,9 @@ export const studioData = async () => {
             studio_name: 'Anime International',
             rating: 3.2,
             thumbnail: 'https://foo.bar.jpg',
+            anime_count: 2,
+            anime_starts: 1999,
+            anime_ends: 2010,
         },
     ];
 };

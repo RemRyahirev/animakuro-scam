@@ -4,7 +4,6 @@ import {UserAnime} from "../../../user-anime/models/user-anime.model";
 import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
 import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-validator";
 
-
 @ArgsType()
 export class CreateUserProfileInputType{
 

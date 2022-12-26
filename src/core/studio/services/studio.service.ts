@@ -73,9 +73,24 @@ export class StudioService {
         args: CreateStudioInputType,
         ctx: ICustomContext,
     ): Promise<CreateStudioResultsType> {
+        const animeYearArray = await this.prisma.anime
+            .findMany({
+                where: {
+                    id: { in: args.anime },
+                },
+                orderBy: {
+                    year: 'asc',
+                },
+            })
+            .then((array) => array.map((item) => item.year));
         const studio = await this.prisma.studio.create({
             data: {
                 ...args,
+                ...{
+                    anime_count: args.anime.length,
+                    anime_starts: animeYearArray[0],
+                    anime_ends: animeYearArray[animeYearArray.length - 1],
+                },
                 ...entityConnectUtil('anime', args),
             },
             include: {
