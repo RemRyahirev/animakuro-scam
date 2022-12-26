@@ -102,5 +102,56 @@ export const animeData = async () => {
                 ],
             },
         },
+        {
+            id: '1033dd1c-2401-402a-afd2-858e78eb7475',
+            title: 'Стальной охотник',
+            score: 9.1,
+            year: 2016,
+            genres: {
+                connect: [
+                    {
+                        id: genreList[3].id,
+                    },
+                    {
+                        id: genreList[4].id,
+                    },
+                    {
+                        id: genreList[5].id,
+                    },
+                ],
+            },
+            media_format: MediaFormat.SPECIAL,
+            source: MediaSource.LIGHT_NOVEL,
+            studio_id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
+            seasons_count: 1,
+            episodes_count: 10,
+            duration: 12075,
+            next_episode: new Date('2020-10-19 10:23:54'),
+            rating: FilmRating.R,
+            description: 'про охотника',
+            preview_link: 'https://icloud.com',
+            status_description: 'в 2015-2016 гг',
+            release_status: ReleaseStatus.FINISHED,
+            characters: {
+                connect: [
+                    {
+                        id: characterList[3].id,
+                    },
+                    {
+                        id: characterList[4].id,
+                    },
+                ],
+            },
+            authors: {
+                connect: [
+                    {
+                        id: authorList[3].id,
+                    },
+                    {
+                        id: authorList[4].id,
+                    },
+                ],
+            },
+        },
     ];
 };

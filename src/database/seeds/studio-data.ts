@@ -14,6 +14,16 @@ export const studioData = async () => {
             anime_starts: 1999,
             anime_ends: 2010,
         },
+        {
+            id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
+            createdAt: new Date(Date.now()),
+            studio_name: 'Anime China',
+            rating: 5.4,
+            thumbnail: 'https://foo.else.jpg',
+            anime_count: 1,
+            anime_starts: 1999,
+            anime_ends: 2010,
+        },
     ];
 };
 
@@ -29,6 +39,16 @@ export const studioDependencies = async () => {
                     },
                     {
                         id: animeList[1].id,
+                    },
+                ],
+            },
+        },
+        {
+            id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
+            anime: {
+                set: [
+                    {
+                        id: animeList[2].id,
                     },
                 ],
             },
