@@ -11,11 +11,11 @@ export class UpdateUserProfileInputType{
     id?: string;
 
     @IsOptional()
-    @Field(() => User,{ nullable: true })
+    //@Field(() => User,{ nullable: true })
     user?: User;
 
     @IsOptional()
-    @Field(() => UserAnime,{ nullable: true })
+    //@Field(() => UserAnime,{ nullable: true })
     user_anime?: UserAnime;
 
     @IsOptional()
