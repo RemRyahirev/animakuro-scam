@@ -5,17 +5,17 @@ import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
 import {IsBoolean, IsOptional, IsString, IsUUID, Length} from "class-validator";
 
 @ArgsType()
-export class CreateUserProfileInputType{
+export class UpdateUserProfileInputType{
     @IsUUID()
     @Field(() => ID)
     id?: string;
 
     @IsOptional()
-    @Field(() => User,{ nullable: true })
+    //@Field(() => User,{ nullable: true })
     user?: User;
 
     @IsOptional()
-    @Field(() => UserAnime,{ nullable: true })
+    //@Field(() => UserAnime,{ nullable: true })
     user_anime?: UserAnime;
 
     @IsOptional()

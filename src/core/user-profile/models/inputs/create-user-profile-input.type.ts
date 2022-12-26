@@ -7,10 +7,10 @@ import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-val
 @ArgsType()
 export class CreateUserProfileInputType{
 
-    @Field(() => User)
+    //@Field(() => User)
     user: User;
 
-    @Field(() => UserAnime)
+    //@Field(() => UserAnime)
     user_anime: UserAnime;
 
     @IsString()
@@ -45,7 +45,7 @@ export class CreateUserProfileInputType{
     language: string;
 
     @IsDate()
-    @Field({defaultValue: Date.now()})
+    @Field({defaultValue: new Date()})
     createdAt: Date;
 
     @IsString()

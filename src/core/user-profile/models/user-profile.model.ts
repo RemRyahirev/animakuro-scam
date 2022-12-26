@@ -33,7 +33,7 @@ export class UserProfile {
     @Field()
     language: string;
 
-    @Field({defaultValue: Date.now()})
+    @Field({defaultValue: new Date()})
     createdAt: Date;
 
     @Field(() => SubscribeTier,

@@ -8,5 +8,5 @@ export class GetUserProfileResultsType extends BaseResultsType {
         nullable: true,
         description: 'UserProfile',
     })
-    user_profile: UserProfile | null; // имя для поля - обратить внимание. После тестов удалить коммент
+    userProfile: UserProfile | null; // имя для поля - обратить внимание. После тестов удалить коммент
 }
