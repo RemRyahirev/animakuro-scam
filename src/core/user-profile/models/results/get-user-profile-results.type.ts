@@ -3,7 +3,7 @@ import { BaseResultsType } from '../../../../common/models/results';
 import { UserProfile } from "../user-profile.model";
 
 @ObjectType()
-export class CreateUserProfileResultsType extends BaseResultsType {
+export class GetUserProfileResultsType extends BaseResultsType {
     @Field(() => UserProfile, {
         nullable: true,
         description: 'UserProfile',
