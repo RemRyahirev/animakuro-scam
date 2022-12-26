@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { CharacterRole, CharacterType } from '../../../common/models/enums';
+import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class Character {
@@ -20,4 +21,7 @@ export class Character {
 
     @Field(() => String)
     description: string;
+
+    @Field(() => [Anime], { nullable: true })
+    animes: Anime[];
 }

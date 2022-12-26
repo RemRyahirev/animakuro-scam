@@ -21,6 +21,15 @@ export class CharacterService {
             where: {
                 id,
             },
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true
+                    }
+                }
+            }
         });
         if (!character) {
             return {
@@ -30,7 +39,7 @@ export class CharacterService {
         }
         return {
             success: true,
-            character,
+            character: character as any,
             errors: [],
         };
     }
@@ -41,12 +50,21 @@ export class CharacterService {
         const characterList = await this.prisma.character.findMany({
             skip: (args.page - 1) * args.perPage,
             take: args.perPage,
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true
+                    }
+                }
+            }
         });
         const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,
             errors: [],
-            characterList,
+            characterList: characterList as any,
             pagination,
         };
     }
@@ -70,7 +88,7 @@ export class CharacterService {
         return {
             success: true,
             errors: [],
-            characterList,
+            characterList: characterList as any,
             pagination,
         };
     }
@@ -81,10 +99,19 @@ export class CharacterService {
     ): Promise<CreateCharacterResultsType> {
         const character = await this.prisma.character.create({
             data: args,
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true
+                    }
+                }
+            }
         });
         return {
             success: true,
-            character,
+            character: character as any,
         };
     }
 
@@ -95,10 +122,19 @@ export class CharacterService {
         const character = await this.prisma.character.update({
             where: { id: args.id },
             data: args,
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true
+                    }
+                }
+            }
         });
         return {
             success: true,
-            character,
+            character: character as any,
         };
     }
 
@@ -108,10 +144,19 @@ export class CharacterService {
     ): Promise<DeleteCharacterResultsType> {
         const character = await this.prisma.character.delete({
             where: { id },
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true
+                    }
+                }
+            }
         });
         return {
             success: true,
-            character,
+            character: character as any,
         };
     }
 }
