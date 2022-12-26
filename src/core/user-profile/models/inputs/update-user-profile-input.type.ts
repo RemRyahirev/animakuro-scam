@@ -5,7 +5,7 @@ import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
 import {IsBoolean, IsOptional, IsString, IsUUID, Length} from "class-validator";
 
 @ArgsType()
-export class CreateUserProfileInputType{
+export class UpdateUserProfileInputType{
     @IsUUID()
     @Field(() => ID)
     id?: string;
