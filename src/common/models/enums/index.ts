@@ -13,4 +13,4 @@ export * from './mail-types.enum';
 export * from './moderator-roles.enum';
 export * from './subscribe-tier.enum';
 export * from './watch-status.enum';
-
+export * from './anime-connection.enum';

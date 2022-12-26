@@ -9,6 +9,8 @@ import { GetListAnimeResultsType } from '../models/results/get-list-anime-result
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
+import { GetListConnectedAnimeByAnimeIdResultsType } from '../models/results/get-list-connected-anime-by-anime-id-results.type';
+
 import { entityConnectUtil } from '../../../common/utils/entity-connect.util';
 
 export class AnimeService {
@@ -51,6 +53,30 @@ export class AnimeService {
             success: true,
             errors: [],
             animeList,
+            pagination,
+        };
+    }
+
+    async getConnectedAnimeListByAnimeId(
+        id: string,
+        args: PaginationInputType,
+    ): Promise<GetListConnectedAnimeByAnimeIdResultsType> {
+        const connectedAnimeList = await this.prisma.anime.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
+            where: {
+                animes: {
+                    some: {
+                        id,
+                    },
+                },
+            },
+        });
+        const pagination = await this.paginationService.getPagination(args);
+        return {
+            success: true,
+            errors: [],
+            authorList,
             pagination,
         };
     }

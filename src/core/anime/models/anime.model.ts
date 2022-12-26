@@ -6,8 +6,9 @@ import {
     ReleaseStatus,
 } from '../../../common/models/enums';
 import { Genre } from '../../genre/models/genre.model';
-import { Author } from "../../author/models/author.model";
-import { Character } from "../../character/models/character.model";
+import { Author } from '../../author/models/author.model';
+import { Character } from '../../character/models/character.model';
+import { AnimeConnectionType } from '../../../common/models/types/anime-connection.type';
 
 @ObjectType()
 export class Anime {
@@ -67,4 +68,7 @@ export class Anime {
 
     @Field(() => [Author])
     authors: Author[];
+
+    @Field(() => [AnimeConnectionType])
+    connected_animes: [AnimeConnectionType];
 }

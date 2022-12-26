@@ -1,17 +1,22 @@
-import { ArgsType, Field, Float, ID, Int } from "type-graphql";
+import { ArgsType, Field, Float, ID, Int } from 'type-graphql';
 import {
     ArrayNotEmpty,
     IsDate,
-    IsInt, IsNumber,
-    IsString, IsUrl, IsUUID,
-    Length
-} from "class-validator";
+    IsInt,
+    IsNumber,
+    IsOptional,
+    IsString,
+    IsUrl,
+    IsUUID,
+    Length,
+} from 'class-validator';
 import {
     FilmRating,
     MediaFormat,
     MediaSource,
     ReleaseStatus,
 } from '../../../../common/models/enums';
+import { AnimeConnectionType } from '../../../../common/models/types/anime-connection.type';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -30,9 +35,9 @@ export class CreateAnimeInputType {
 
     @IsUUID(4, { each: true })
     @ArrayNotEmpty({
-        message: 'array of genre id\'s not provided'
+        message: "array of genre id's not provided",
     })
-    @Field(() => [String], { description: 'Array of genre id\'s' })
+    @Field(() => [String], { description: "Array of genre id's" })
     genres: string[];
 
     @IsString()
@@ -86,15 +91,19 @@ export class CreateAnimeInputType {
 
     @IsUUID(4, { each: true })
     @ArrayNotEmpty({
-        message: 'array of character id\'s not provided'
+        message: "array of character id's not provided",
     })
-    @Field(() => [ID], { description: 'Array of character id\'s' })
+    @Field(() => [ID], { description: "Array of character id's" })
     characters: string[];
 
     @IsUUID(4, { each: true })
     @ArrayNotEmpty({
-        message: 'array of author id\'s not provided'
+        message: "array of author id's not provided",
     })
-    @Field(() => [ID], { description: 'Array of author id\'s' })
+    @Field(() => [ID], { description: "Array of author id's" })
     authors: string[];
+
+    @IsOptional()
+    @Field(() => [AnimeConnectionType])
+    connected_animes?: AnimeConnectionType[];
 }

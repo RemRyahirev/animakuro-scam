@@ -5,15 +5,18 @@ import {
     IsDecimal,
     IsInt,
     IsOptional,
-    IsString, IsUrl, IsUUID,
-    Length
-} from "class-validator";
+    IsString,
+    IsUrl,
+    IsUUID,
+    Length,
+} from 'class-validator';
 import {
     FilmRating,
     MediaFormat,
     MediaSource,
     ReleaseStatus,
 } from '../../../../common/models/enums';
+import { AnimeConnectionType } from '../../../../common/models/types/anime-connection.type';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -124,4 +127,8 @@ export class UpdateAnimeInputType {
     @IsArray()
     @Field(() => [ID], { nullable: true })
     authors?: string[];
+
+    @IsOptional()
+    @Field(() => [AnimeConnectionType])
+    connected_animes?: AnimeConnectionType[];
 }
