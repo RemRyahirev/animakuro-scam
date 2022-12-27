@@ -9,7 +9,9 @@ import { UpdateStudioInputType } from '../models/inputs/update-studio-input.type
 import { UpdateStudioResultsType } from '../models/results/update-studio-results.type';
 import { CreateStudioInputType } from '../models/inputs/create-studio-input.type';
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
-import { entityConnectUtil } from '../../../common/utils/entity-connect.util';
+import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Studio } from "../models/studio.model";
 
 export class StudioService {
     private readonly prisma = new Database().logic;
