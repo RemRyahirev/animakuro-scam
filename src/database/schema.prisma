@@ -85,8 +85,7 @@ model Anime {
   genres             Genre[]
   media_format       MediaFormat   @default(OTHER)
   source             MediaSource   @default(OTHER)
-  studio_id          String        @db.Uuid
-  studio             Studio        @relation(fields: [studio_id], references: [id])
+  studio             Studio[]
   seasons_count      Int           @db.SmallInt
   episodes_count     Int           @db.SmallInt
   duration           Int           @db.Integer
@@ -98,7 +97,7 @@ model Anime {
   release_status     ReleaseStatus @default(FINISHED)
   characters         Character[]
   authors            Author[]
-  UserAnime          UserAnime[] //o-2-m relation
+  UserAnime          UserAnime[]
 
   @@map("anime")
 }

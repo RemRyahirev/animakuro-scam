@@ -49,6 +49,7 @@ specifiers:
   tsc-alias: ^1.7.0
   tsconfig-paths: ^4.1.0
   type-graphql: ^1.1.1
+  typedi: ^0.10.0
   typescript: ^4.9.4
   validator: ^13.7.0
 
@@ -73,6 +74,7 @@ dependencies:
   reflect-metadata: 0.1.13
   speakeasy: 2.0.0
   type-graphql: 1.1.1_v2revtygxcm7xrdg2oz3ssohfu
+  typedi: 0.10.0
   validator: 13.7.0
 
 devDependencies:
@@ -6228,6 +6230,10 @@ packages:
     dependencies:
       media-typer: 0.3.0
       mime-types: 2.1.35
+
+  /typedi/0.10.0:
+    resolution: {integrity: sha512-v3UJF8xm68BBj6AF4oQML3ikrfK2c9EmZUyLOfShpJuItAqVBHWP/KtpGinkSsIiP6EZyyb6Z3NXyW9dgS9X1w==}
+    dev: false
 
   /typescript/4.9.4:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
