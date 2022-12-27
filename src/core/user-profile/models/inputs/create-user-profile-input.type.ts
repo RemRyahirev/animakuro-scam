@@ -1,4 +1,4 @@
-import {ArgsType, Field} from "type-graphql";
+import {ArgsType, Field, ID} from "type-graphql";
 import {User} from "../../../user/models/user.model";
 import {UserAnime} from "../../../user-anime/models/user-anime.model";
 import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
@@ -7,11 +7,12 @@ import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-val
 @ArgsType()
 export class CreateUserProfileInputType{
 
-    //@Field(() => User)
-    user: User;
+    // укажет на id юзера (поле ведёт на таблицу User)
+    @IsUUID()
+    @Field(() => ID)
+    user_id: string;
 
-    //@Field(() => UserAnime)
-    user_anime: UserAnime;
+    // указать на таблицу userAnime - такого поля нет в БД, есть только в схеме Призмы
 
     @IsString()
     @Length(1,30)
