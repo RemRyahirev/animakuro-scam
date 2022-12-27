@@ -33,8 +33,17 @@ export class UpdateStudioInputType {
     @IsUUID(4, { each: true })
     @ArrayNotEmpty({
         message:
+            "array of anime id's not provided.",
+    })
+    @Field(() => [String], { nullable: true })
+    animeToAdd?: string[];
+
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    @ArrayNotEmpty({
+        message:
             "array of anime id's not provided. If you want drop relation -> change studio in anime at first",
     })
     @Field(() => [String], { nullable: true })
-    anime?: string[];
+    animeToRemove?: string[];
 }

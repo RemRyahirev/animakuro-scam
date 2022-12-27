@@ -21,5 +21,5 @@ export class CreateStudioInputType {
         message: 'array of anime id\'s not provided'
     })
     @Field(() => [String])
-    anime: string[];
+    animeToAdd: string[];
 }
