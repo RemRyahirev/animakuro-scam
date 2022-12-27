@@ -21,9 +21,9 @@ export class UserProfileService {
             where: {
                 id,
             },
-            // select:{
-            //     displayed_name:true
-            // }
+            include:{
+                user: true
+            }
         });
         return {
             success: true,
@@ -53,7 +53,7 @@ export class UserProfileService {
     ): Promise<CreateUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.create({
             data: args as any,
-            include: {},
+            //include: {},
         });
         return {
             success: true,
@@ -68,7 +68,7 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
             data: args as any,
-            include: {},
+            //include: {},
         });
         return {
             success: true,

@@ -5,6 +5,9 @@ import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
 import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-validator";
 
 @ArgsType()
+// перечисляем, какие аргументы вводим в инпут GraphQL при запросе на создание
+// в том числе обязательные и необязательные
+// проработать эти поля!
 export class CreateUserProfileInputType{
 
     // укажет на id юзера (поле ведёт на таблицу User)
