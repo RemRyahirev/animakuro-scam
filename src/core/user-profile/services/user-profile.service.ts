@@ -37,7 +37,6 @@ export class UserProfileService {
         const userProfileList = await this.prisma.userProfile.findMany({
             skip: (args.page - 1) * args.perPage,
             take: args.perPage,
-            include: {},
         });
         const pagination = await this.paginationService.getPagination(args);
         return {
