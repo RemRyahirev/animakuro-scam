@@ -66,7 +66,11 @@ export class AuthorService {
                 }
             }
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination(args, {
+            nested_field: 'animes',
+            search_property: 'id',
+            search_value: id
+        });
         return {
             success: true,
             errors: [],

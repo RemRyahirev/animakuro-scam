@@ -3,8 +3,9 @@
         "target": "ESNext",
         "module": "commonjs",
         "lib": [
-            "dom",
-            "esnext.asynciterable"
+          "dom",
+          "esnext.asynciterable",
+          "es2015.iterable"
         ],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
