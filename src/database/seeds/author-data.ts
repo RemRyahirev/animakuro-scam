@@ -13,8 +13,20 @@ export const authorData = async () => [
     },
     {
         id: '996e603b-d3dc-4fd8-b6fe-f5e2837168e5',
-        author_name: 'Хулио Иглесиас',
+        author_name: 'Depeshe Mode',
         bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
-        bio: 'Что-то прям незнакомый автор - думал что он артист',
+        bio: 'Synth wave',
+    },
+    {
+        id: '43580db0-1e6f-463d-82d5-883aeae2457f',
+        author_name: 'Rammstein',
+        bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
+        bio: 'Rock',
+    },
+    {
+        id: 'ea5a020b-40ad-402a-8215-e9050a817b64',
+        author_name: 'The Architects',
+        bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
+        bio: 'Metal core',
     },
 ];

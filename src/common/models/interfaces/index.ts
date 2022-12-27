@@ -7,3 +7,4 @@ export * from './jwt-input-payload.interface';
 export * from './password-input.interface';
 export * from './upload.interface';
 export * from './user-output.interface';
+export * from './nested-pagination.interface';

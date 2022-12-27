@@ -3,7 +3,7 @@ import { CreateUserProfileResultsType } from '../models/results/create-user-prof
 import { UserProfileService } from '../services/user-profile.service'; //!!! заполнить файл, коммент - удалить!
 import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
-//import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
+import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
 
 @ObjectType()
@@ -23,8 +23,8 @@ export class UserProfileQueryType {
     @Field(() => GetUserProfileResultsType, { description: 'Get user profile by ID' })
     getUserProfile: GetUserProfileResultsType;
 
-    //@Field(() => GetListUserProfileResultsType, { description: 'Get user profile list' })
-    //getUserProfileList: GetListUserProfileResultsType;
+    @Field(() => GetListUserProfileResultsType, { description: 'Get user profile list' })
+    getUserProfileList: GetListUserProfileResultsType;
 }
 
 @Resolver()

@@ -9,11 +9,11 @@ export class UserProfile {
     @Field(() => ID)
     id?: string;
 
-    @Field(() => User)
-    user: User;
-
-    @Field(() => UserAnime)
-    user_anime: UserAnime;
+    // @Field(() => User)
+    // user: User;
+    //
+    // @Field(() => UserAnime)
+    // user_anime: UserAnime;
 
     @Field()
     displayed_name: string;
@@ -33,7 +33,7 @@ export class UserProfile {
     @Field()
     language: string;
 
-    @Field({defaultValue: Date.now()})
+    @Field({defaultValue: new Date()})
     createdAt: Date;
 
     @Field(() => SubscribeTier,
