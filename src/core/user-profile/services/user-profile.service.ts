@@ -5,7 +5,7 @@ import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
-//import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
+import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
 import { CreateUserProfileResultsType } from '../models/results/create-user-profile-results.type';
 import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
@@ -20,9 +20,9 @@ export class UserProfileService {
             where: {
                 id,
             },
-            select:{
-                displayed_name:true
-            }
+            // select:{
+            //     displayed_name:true
+            // }
         });
         return {
             success: true,
@@ -31,22 +31,22 @@ export class UserProfileService {
         };
     }
 
-    // async getUserProfileList(
-    //     args: PaginationInputType,
-    // ): Promise<GetListUserProfileResultsType> {
-    //     const userProfileList = await this.prisma.userProfile.findMany({
-    //         skip: (args.page - 1) * args.perPage,
-    //         take: args.perPage,
-    //         include: {},
-    //     });
-    //     const pagination = await this.paginationService.getPagination(args);
-    //     return {
-    //         success: true,
-    //         errors: [],
-    //         userProfileList: userProfileList as any,
-    //         pagination,
-    //     };
-    // }
+    async getUserProfileList(
+        args: PaginationInputType,
+    ): Promise<GetListUserProfileResultsType> {
+        const userProfileList = await this.prisma.userProfile.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
+            include: {},
+        });
+        const pagination = await this.paginationService.getPagination(args);
+        return {
+            success: true,
+            errors: [],
+            userProfileList: userProfileList as any,
+            pagination,
+        };
+    }
 
     async createUserProfile(
         args: CreateUserProfileInputType,
