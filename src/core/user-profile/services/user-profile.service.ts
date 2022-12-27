@@ -20,11 +20,9 @@ export class UserProfileService {
             where: {
                 id,
             },
-            include: {
-                // genres: true,
-                // authors: true,
-                // characters: true,
-            },
+            select:{
+                displayed_name:true
+            }
         });
         return {
             success: true,
