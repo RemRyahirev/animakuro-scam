@@ -50,8 +50,7 @@ export class StudioService {
         args: PaginationInputType,
     ): Promise<GetListStudioResultsType> {
         const studioList = await this.prisma.studio.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             include: {
                 anime: {
                     include: {
@@ -66,7 +65,7 @@ export class StudioService {
         return {
             success: true,
             errors: [],
-            studioList: studioList as any,
+            studioList: studioList as Array<Studio>,
             pagination,
         };
     }
@@ -75,25 +74,12 @@ export class StudioService {
         args: CreateStudioInputType,
         ctx: ICustomContext,
     ): Promise<CreateStudioResultsType> {
-        const animeYearArray = await this.prisma.anime
-            .findMany({
-                where: {
-                    id: { in: args.anime },
-                },
-                orderBy: {
-                    year: 'asc',
-                },
-            })
-            .then((array) => array.map((item) => item.year));
         const studio = await this.prisma.studio.create({
             data: {
                 ...args,
-                ...{
-                    anime_count: args.anime.length,
-                    anime_starts: animeYearArray[0],
-                    anime_ends: animeYearArray[animeYearArray.length - 1],
-                },
-                ...entityConnectUtil('anime', args),
+                anime_count: args.animeToAdd.length,
+                ...await this.calculateAdditionalFields(args),
+                ...entityUpdateUtil('animeToAdd', args),
             },
             include: {
                 anime: {
@@ -115,11 +101,31 @@ export class StudioService {
         args: UpdateStudioInputType,
         ctx: ICustomContext,
     ): Promise<UpdateStudioResultsType> {
+        const arrayToAdd = args.animeToAdd || undefined;
+        const arrayToRemove = args.animeToRemove || undefined;
+        delete args.animeToAdd;
+        delete args.animeToRemove;
+        await this.prisma.studio.update({
+            where: { id: args.id },
+            data: {
+                ...args,
+                anime_count: arrayToRemove?.length,
+                anime: {
+                    disconnect: [{
+                         id: arrayToRemove ? arrayToRemove[0] : undefined
+                    }]
+                },
+            }
+        })
         const studio = await this.prisma.studio.update({
             where: { id: args.id },
             data: {
                 ...args,
-                ...entityConnectUtil('anime', args),
+                anime: {
+                    connect: [{
+                        id: arrayToAdd ? arrayToAdd[0] : undefined
+                    }]
+                },
             },
             include: {
                 anime: {
@@ -131,6 +137,12 @@ export class StudioService {
                 },
             },
         });
+        if (!studio) {
+            return {
+                success: false,
+                studio: null,
+            };
+        }
         return {
             success: true,
             studio: studio as any,
@@ -155,7 +167,19 @@ export class StudioService {
         });
         return {
             success: true,
-            studio: studio as any,
+            studio: studio as Studio,
         };
+    }
+
+    private async calculateAdditionalFields(args: CreateStudioInputType | UpdateStudioInputType){
+        const animeYearArray = await this.prisma.anime
+            .findMany({
+                where: { id: { in: args.animeToAdd } },
+                orderBy: { year: 'asc' },
+            }).then((array) => array.map((item) => item.year));
+        return {
+            anime_starts: animeYearArray[0],
+            anime_ends: animeYearArray[animeYearArray.length - 1],
+        }
     }
 }
