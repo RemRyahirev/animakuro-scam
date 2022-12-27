@@ -8,7 +8,7 @@ import {
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
 import { Character } from '../../character/models/character.model';
-import { AnimeConnectionType } from '../../../common/models/types/anime-connection.type';
+import { AnimeRelation } from '../../../common/models/enums/anime-relation.enum';
 import { Studio } from '../../studio/models/studio.model';
 
 @ObjectType()
@@ -70,6 +70,9 @@ export class Anime {
     @Field(() => [Author])
     authors: Author[];
 
-    @Field(() => [AnimeConnectionType])
-    connected_animes: [AnimeConnectionType];
+    @Field(() => [Anime])
+    related_animes: [Anime];
+
+    @Field(() => AnimeRelation)
+    related_status: AnimeRelation;
 }

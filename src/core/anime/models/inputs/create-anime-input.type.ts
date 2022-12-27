@@ -16,7 +16,8 @@ import {
     MediaSource,
     ReleaseStatus,
 } from '../../../../common/models/enums';
-import { AnimeConnectionType } from '../../../../common/models/types/anime-connection.type';
+import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
+import { Anime } from '../anime.model';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -104,6 +105,12 @@ export class CreateAnimeInputType {
     authors: string[];
 
     @IsOptional()
-    @Field(() => [AnimeConnectionType])
-    connected_animes?: AnimeConnectionType[];
+    @Field(() => [Anime])
+    related_animes: Anime[];
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 20)
+    @Field(() => AnimeRelation, { defaultValue: null })
+    related_status: AnimeRelation;
 }

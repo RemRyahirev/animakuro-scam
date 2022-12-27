@@ -21,7 +21,7 @@ model User {
   deleted            Boolean            @default(false)
   thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId   String?            @map("third_party_auth_id")
-  user_profile       UserProfile?       //o-2-o relation
+  user_profile       UserProfile? //o-2-o relation
   siteAuthSessions   SiteAuthSession[]
 
   @@map("users")
@@ -54,15 +54,15 @@ model ThirdPartyAuth {
 }
 
 model Studio {
-  id            String   @id @default(uuid()) @db.Uuid
-  createdAt     DateTime @default(now()) @map("created_at")
-  studio_name   String   @db.VarChar(64)
-  rating        Float    @db.Real
-  thumbnail     String   @db.Text
-  anime_count   Float    @default(0) @db.Real
-  anime_starts  Float    @db.Real
-  anime_ends    Float    @db.Real
-  anime         Anime[]
+  id           String   @id @default(uuid()) @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at")
+  studio_name  String   @db.VarChar(64)
+  rating       Float    @db.Real
+  thumbnail    String   @db.Text
+  anime_count  Float    @default(0) @db.Real
+  anime_starts Float    @db.Real
+  anime_ends   Float    @db.Real
+  anime        Anime[]
 
   @@map("studio")
 }
@@ -78,27 +78,30 @@ model Friendship {
 }
 
 model Anime {
-  id                 String        @id @default(uuid()) @db.Uuid
-  title              String        @db.VarChar(100)
-  score              Float         @db.Real
-  year               Int           @db.SmallInt
+  id                 String          @id @default(uuid()) @db.Uuid
+  title              String          @db.VarChar(100)
+  score              Float           @db.Real
+  year               Int             @db.SmallInt
   genres             Genre[]
-  media_format       MediaFormat   @default(OTHER)
-  source             MediaSource   @default(OTHER)
-  studio_id          String        @db.Uuid
-  studio             Studio        @relation(fields: [studio_id], references: [id])
-  seasons_count      Int           @db.SmallInt
-  episodes_count     Int           @db.SmallInt
-  duration           Int           @db.Integer
-  next_episode       DateTime      @db.Time
-  rating             FilmRating    @default(G)
-  description        String        @db.Text
-  preview_link       String        @db.Text
-  status_description String        @db.VarChar(30)
-  release_status     ReleaseStatus @default(FINISHED)
+  media_format       MediaFormat     @default(OTHER)
+  source             MediaSource     @default(OTHER)
+  studio_id          String          @db.Uuid
+  studio             Studio          @relation(fields: [studio_id], references: [id])
+  seasons_count      Int             @db.SmallInt
+  episodes_count     Int             @db.SmallInt
+  duration           Int             @db.Integer
+  next_episode       DateTime        @db.Time
+  rating             FilmRating      @default(G)
+  description        String          @db.Text
+  preview_link       String          @db.Text
+  status_description String          @db.VarChar(30)
+  release_status     ReleaseStatus   @default(FINISHED)
   characters         Character[]
   authors            Author[]
   UserAnime          UserAnime[] //o-2-m relation
+  related_animes     Anime[]         @relation("related_animes")
+  animes_relation    Anime[]         @relation("related_animes")
+  connected_status   AnimeConnection
 
   @@map("anime")
 }
@@ -185,6 +188,12 @@ enum FriendshipStatus {
   AWAITING
   REQUESTED
   CONFIRMED
+}
+
+enum AnimeConnection {
+  DIRECT
+  CHRONOLOGY
+  FRANCHISE
 }
 
 enum WatchStatus {

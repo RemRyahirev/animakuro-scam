@@ -3,15 +3,16 @@ import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
-import { AnimeConnectionType } from '../../../../common/models/types/anime-connection.type';
+import { Anime } from '../anime.model';
+import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
 
 @ObjectType()
-export class GetListConnectedAnimeByAnimeIdResultsType extends BaseResultsType {
-    @Field(() => [AnimeConnectionType], {
+export class GetListRelatedAnimeByAnimeIdResultsType extends BaseResultsType {
+    @Field(() => [Anime], {
         nullable: true,
-        description: 'Connected anime list',
+        description: 'Related anime list',
     })
-    authorList: AnimeConnectionType[];
+    related_animes: Anime[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

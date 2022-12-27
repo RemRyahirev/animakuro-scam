@@ -1,12 +1,12 @@
 import { registerEnumType } from 'type-graphql';
 import 'reflect-metadata';
 
-export enum AnimeConnection {
+export enum AnimeRelation {
     DIRECT = 'DIRECT',
     CHRONOLOGY = 'CHRONOLOGY',
     FRANCHISE = 'FRANCHISE',
 }
 
-registerEnumType(AnimeConnection, {
+registerEnumType(AnimeRelation, {
     name: 'AnimeConnection',
 });

@@ -5,7 +5,7 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
-import { GetListConnectedAnimeByAnimeIdResultsType } from '../models/results/get-list-connected-anime-by-anime-id-results.type';
+import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 
 @ObjectType()
 export class AnimeMutationType {
@@ -27,10 +27,10 @@ export class AnimeQueryType {
     @Field(() => GetListAnimeResultsType, { description: 'Get anime list' })
     getAnimeList: GetListAnimeResultsType;
 
-    @Field(() => GetListConnectedAnimeByAnimeIdResultsType, {
-        description: 'Get connected anime list by anime ID',
+    @Field(() => GetListRelatedAnimeByAnimeIdResultsType, {
+        description: 'Get Related anime list by anime ID',
     })
-    getAuthorListByAnimeId: GetListConnectedAnimeByAnimeIdResultsType;
+    getAuthorListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
 }
 
 @Resolver()
