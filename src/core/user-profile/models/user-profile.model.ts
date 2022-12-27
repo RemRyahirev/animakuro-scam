@@ -9,11 +9,11 @@ export class UserProfile {
     @Field(() => ID)
     id?: string;
 
-    @Field(() => User)
-    user: User;
-
-    @Field(() => UserAnime)
-    user_anime: UserAnime;
+    // @Field(() => User)
+    // user: User;
+    //
+    // @Field(() => UserAnime)
+    // user_anime: UserAnime;
 
     @Field()
     displayed_name: string;
