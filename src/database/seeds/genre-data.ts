@@ -11,4 +11,16 @@ export const genreData = async () => [
         id: 'cab8c75f-9544-41fc-a042-f2909bd9be32',
         genre_name: 'Detective',
     },
+    {
+        id: 'c71ec9c1-ee65-4412-a89b-529ae69dca99',
+        genre_name: 'Fantastic',
+    },
+    {
+        id: '050a2fb2-667c-4048-8cdf-aa1181e98fa4',
+        genre_name: 'Thriller',
+    },
+    {
+        id: 'c2c51789-bbff-490b-a817-31665c905ea7',
+        genre_name: 'Horror',
+    },
 ];
