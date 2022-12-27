@@ -9,6 +9,7 @@ import { GetListUserProfileResultsType } from '../models/results/get-list-user-p
 import { CreateUserProfileResultsType } from '../models/results/create-user-profile-results.type';
 import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class UserProfileService {
     private readonly prisma = new Database().logic;
@@ -35,8 +36,7 @@ export class UserProfileService {
         args: PaginationInputType,
     ): Promise<GetListUserProfileResultsType> {
         const userProfileList = await this.prisma.userProfile.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
         });
         const pagination = await this.paginationService.getPagination(args);
         return {

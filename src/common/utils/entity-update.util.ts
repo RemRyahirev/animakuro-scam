@@ -1,4 +1,4 @@
-export function entityConnectUtil<F extends keyof I, I>(
+export function entityUpdateUtil<F extends keyof I, I>(
     field: F,
     input: I,
 ): any {

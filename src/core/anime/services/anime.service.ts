@@ -9,7 +9,8 @@ import { GetListAnimeResultsType } from '../models/results/get-list-anime-result
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
-import { entityConnectUtil } from '../../../common/utils/entity-connect.util';
+import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class AnimeService {
     private readonly prisma = new Database().logic;
@@ -25,6 +26,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studio: true
             },
         });
         return {
@@ -38,8 +40,7 @@ export class AnimeService {
         args: PaginationInputType,
     ): Promise<GetListAnimeResultsType> {
         const animeList = await this.prisma.anime.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             include: {
                 genres: true,
                 authors: true,
@@ -62,9 +63,9 @@ export class AnimeService {
         const anime = await this.prisma.anime.create({
             data: {
                 ...args,
-                ...entityConnectUtil('genres', args),
-                ...entityConnectUtil('authors', args),
-                ...entityConnectUtil('characters', args),
+                ...entityUpdateUtil('genres', args),
+                ...entityUpdateUtil('authors', args),
+                ...entityUpdateUtil('characters', args),
             },
             include: {
                 genres: true,
@@ -86,9 +87,9 @@ export class AnimeService {
             where: { id: args.id },
             data: {
                 ...args,
-                ...entityConnectUtil('genres', args),
-                ...entityConnectUtil('authors', args),
-                ...entityConnectUtil('characters', args),
+                ...entityUpdateUtil('genres', args),
+                ...entityUpdateUtil('authors', args),
+                ...entityUpdateUtil('characters', args),
             },
             include: {
                 genres: true,

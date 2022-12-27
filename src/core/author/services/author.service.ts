@@ -10,6 +10,7 @@ import { GetListAuthorByAnimeIdResultsType } from '../models/results/get-list-au
 import { DeleteAuthorResultsType } from '../models/results/delete-author-results.type';
 import { UpdateAuthorResultsType } from '../models/results/update-author-results.type';
 import { CreateAuthorResultsType } from '../models/results/create-author-results.type';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class AuthorService {
     private readonly prisma = new Database().logic;
@@ -39,8 +40,7 @@ export class AuthorService {
         args: PaginationInputType,
     ): Promise<GetListAuthorResultsType> {
         const authorList = await this.prisma.author.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
         });
         const pagination = await this.paginationService.getPagination(args);
         return {
@@ -56,8 +56,7 @@ export class AuthorService {
         args: PaginationInputType,
     ): Promise<GetListAuthorByAnimeIdResultsType> {
         const authorList = await this.prisma.author.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             where: {
                 animes: {
                     some: {

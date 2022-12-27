@@ -9,6 +9,7 @@ import { GetListGenreResultsType } from '../models/results/get-list-genre-result
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
 import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class GenreService {
     private readonly prisma = new Database().logic;
@@ -38,8 +39,7 @@ export class GenreService {
         args: PaginationInputType,
     ): Promise<GetListGenreResultsType> {
         const genreList = await this.prisma.genre.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
         });
         const pagination = await this.paginationService.getPagination(args);
         return {
