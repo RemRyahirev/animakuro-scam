@@ -9,7 +9,7 @@ import * as path from 'path';
 import { exceptionsHandler } from '../common/errors/exception-handler';
 import {
     PrismaExceptionInterceptor,
-    ValidationExceptionInterceptor
+    ValidationExceptionInterceptor,
 } from '../common/interceptors';
 
 @Singleton

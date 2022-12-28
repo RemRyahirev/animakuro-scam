@@ -11,7 +11,7 @@ import { CreateStudioInputType } from '../models/inputs/create-studio-input.type
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import { Studio } from "../models/studio.model";
+import { Studio } from '../models/studio.model';
 
 export class StudioService {
     private readonly prisma = new Database().logic;
@@ -76,10 +76,9 @@ export class StudioService {
     ): Promise<CreateStudioResultsType> {
         const studio = await this.prisma.studio.create({
             data: {
-                ...args,
-                anime_count: args.animeToAdd.length,
                 ...await this.calculateAdditionalFields(args),
-                ...entityUpdateUtil('animeToAdd', args),
+                ...entityUpdateUtil('anime', args),
+                ...args,
             },
             include: {
                 anime: {
@@ -101,31 +100,12 @@ export class StudioService {
         args: UpdateStudioInputType,
         ctx: ICustomContext,
     ): Promise<UpdateStudioResultsType> {
-        const arrayToAdd = args.animeToAdd || undefined;
-        const arrayToRemove = args.animeToRemove || undefined;
-        delete args.animeToAdd;
-        delete args.animeToRemove;
-        await this.prisma.studio.update({
-            where: { id: args.id },
-            data: {
-                ...args,
-                anime_count: arrayToRemove?.length,
-                anime: {
-                    disconnect: [{
-                         id: arrayToRemove ? arrayToRemove[0] : undefined
-                    }]
-                },
-            }
-        })
         const studio = await this.prisma.studio.update({
             where: { id: args.id },
             data: {
+                ...await this.calculateAdditionalFields(args),
+                ...entityUpdateUtil('anime', args),
                 ...args,
-                anime: {
-                    connect: [{
-                        id: arrayToAdd ? arrayToAdd[0] : undefined
-                    }]
-                },
             },
             include: {
                 anime: {
@@ -167,19 +147,42 @@ export class StudioService {
         });
         return {
             success: true,
-            studio: studio as Studio,
+            studio: studio as Studio
         };
     }
 
-    private async calculateAdditionalFields(args: CreateStudioInputType | UpdateStudioInputType){
-        const animeYearArray = await this.prisma.anime
+    private async calculateAdditionalFields(
+        args: CreateStudioInputType | UpdateStudioInputType
+    ) {
+        let animeCount: number;
+        if (args instanceof CreateStudioInputType) {
+            animeCount = args.animeToAdd.length;
+        }
+        if (args instanceof UpdateStudioInputType) {
+            animeCount = await this.prisma.studio
+                .findUnique({
+                    where: { id: args.id },
+                    include: {
+                        _count: {
+                            select: {
+                                anime: true
+                            }
+                        }
+                    }
+                })
+                .then((item) => item?._count.anime ?? 0);
+        }
+        const animeYearArray: number[] = await this.prisma.anime
             .findMany({
                 where: { id: { in: args.animeToAdd } },
-                orderBy: { year: 'asc' },
-            }).then((array) => array.map((item) => item.year));
+                orderBy: { year: "asc" }
+            })
+            .then((array) => array.map((item) => item.year));
         return {
+            // @ts-ignore
+            anime_count: animeCount,
             anime_starts: animeYearArray[0],
-            anime_ends: animeYearArray[animeYearArray.length - 1],
-        }
+            anime_ends: animeYearArray[animeYearArray?.length - 1]
+        };
     }
 }

@@ -1,17 +1,38 @@
-export function entityUpdateUtil<F extends keyof I, I>(
+export function entityUpdateUtil<F , I>(
     field: F,
     input: I,
-): any {
-    let array: { id: string }[] = [];
-    const currentField = input[field] as string[];
-    currentField?.forEach((id: string) => {
-        array.push({
-            id,
-        });
-    });
+) {
+    let arrayToAdd: { id: string }[] = [];
+    let arrayToRemove: { id: string }[] = [];
+    const normalizeArray = (inputArray: I[Extract<keyof I, string>], outputArray: { id: string }[]) => {
+        if (Array.isArray(inputArray)){
+            inputArray.forEach((id: string) => {
+                outputArray.push({
+                    id,
+                });
+            });
+        }
+    }
+    for (const key in input) {
+        if (key.toLowerCase().includes('add')){
+            normalizeArray(input[key], arrayToAdd);
+            delete input[key];
+        }
+        if (key.toLowerCase().includes('remove')){
+            normalizeArray(input[key], arrayToRemove);
+            delete input[key];
+        }
+    }
+    const connectObj = {
+        connect: [...arrayToAdd],
+    }
+    const disconnectObj = {
+        disconnect: [...arrayToRemove],
+    }
     return {
-        [field]: {
-            connect: [...array]
+        [field as string]: {
+            ...(arrayToAdd.length ? connectObj : false),
+            ...(arrayToRemove.length ? disconnectObj : false),
         }
     }
 }

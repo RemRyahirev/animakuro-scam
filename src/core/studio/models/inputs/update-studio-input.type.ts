@@ -1,6 +1,6 @@
 import { ArgsType, Field, Float, ID } from 'type-graphql';
 import {
-    ArrayNotEmpty,
+    IsArray,
     IsNumber,
     IsOptional,
     IsString,
@@ -31,19 +31,13 @@ export class UpdateStudioInputType {
 
     @IsOptional()
     @IsUUID(4, { each: true })
-    @ArrayNotEmpty({
-        message:
-            "array of anime id's not provided.",
-    })
+    @IsArray()
     @Field(() => [String], { nullable: true })
     animeToAdd?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
-    @ArrayNotEmpty({
-        message:
-            "array of anime id's not provided. If you want drop relation -> change studio in anime at first",
-    })
+    @IsArray()
     @Field(() => [String], { nullable: true })
     animeToRemove?: string[];
 }

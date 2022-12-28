@@ -1,5 +1,12 @@
 import { ArgsType, Field, Float } from 'type-graphql';
-import { ArrayNotEmpty, IsNumber, IsString, IsUrl, IsUUID, Length } from "class-validator";
+import {
+    IsArray,
+    IsNumber,
+    IsString,
+    IsUrl,
+    IsUUID,
+    Length,
+} from 'class-validator';
 
 @ArgsType()
 export class CreateStudioInputType {
@@ -17,9 +24,7 @@ export class CreateStudioInputType {
     thumbnail: string;
 
     @IsUUID(4, { each: true })
-    @ArrayNotEmpty({
-        message: 'array of anime id\'s not provided'
-    })
+    @IsArray()
     @Field(() => [String])
     animeToAdd: string[];
 }

@@ -1,11 +1,14 @@
-import { ArgsType, Field, Float, ID, Int } from "type-graphql";
+import { ArgsType, Field, Float, ID, Int } from 'type-graphql';
 import {
-    ArrayNotEmpty,
+    IsArray,
     IsDate,
-    IsInt, IsNumber,
-    IsString, IsUrl, IsUUID,
-    Length
-} from "class-validator";
+    IsInt,
+    IsNumber,
+    IsString,
+    IsUrl,
+    IsUUID,
+    Length,
+} from 'class-validator';
 import {
     FilmRating,
     MediaFormat,
@@ -29,11 +32,9 @@ export class CreateAnimeInputType {
     year: number;
 
     @IsUUID(4, { each: true })
-    @ArrayNotEmpty({
-        message: 'array of genre id\'s not provided'
-    })
-    @Field(() => [String], { description: 'Array of genre id\'s' })
-    genres: string[];
+    @IsArray()
+    @Field(() => [String], { description: "Array of genre id's to add" })
+    genresToAdd: string[];
 
     @IsString()
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
@@ -85,16 +86,12 @@ export class CreateAnimeInputType {
     release_status: ReleaseStatus;
 
     @IsUUID(4, { each: true })
-    @ArrayNotEmpty({
-        message: 'array of character id\'s not provided'
-    })
-    @Field(() => [ID], { description: 'Array of character id\'s' })
-    characters: string[];
+    @IsArray()
+    @Field(() => [ID], { description: "Array of character id's to add" })
+    charactersToAdd: string[];
 
     @IsUUID(4, { each: true })
-    @ArrayNotEmpty({
-        message: 'array of author id\'s not provided'
-    })
-    @Field(() => [ID], { description: 'Array of author id\'s' })
-    authors: string[];
+    @IsArray()
+    @Field(() => [ID], { description: "Array of author id's to add" })
+    authorsToAdd: string[];
 }
