@@ -39,9 +39,6 @@ export class Anime {
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     source: string;
 
-    @Field(() => String, { nullable: false })
-    studio_id: string;
-
     @Field(() => Int)
     seasons_count: number;
 
