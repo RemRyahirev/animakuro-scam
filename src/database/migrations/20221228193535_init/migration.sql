@@ -167,7 +167,7 @@ CREATE TABLE "translation" (
 -- CreateTable
 CREATE TABLE "user_profile" (
     "id" UUID NOT NULL,
-    "user_id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
     "displayed_name" VARCHAR(30) NOT NULL,
     "profile_picture_id" UUID NOT NULL,
     "banner_image" UUID NOT NULL,
@@ -185,8 +185,8 @@ CREATE TABLE "user_profile" (
 -- CreateTable
 CREATE TABLE "user_anime" (
     "id" UUID NOT NULL,
-    "user_profile_id" UUID NOT NULL,
-    "anime_id" UUID NOT NULL,
+    "userProfileId" UUID NOT NULL,
+    "animeId" UUID NOT NULL,
     "status" "WatchStatus" NOT NULL DEFAULT 'WATCHING',
     "in_favourites" BOOLEAN NOT NULL DEFAULT false,
     "season" SMALLINT,
@@ -231,10 +231,10 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("friend_one", "friend_two");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_profile_user_id_key" ON "user_profile"("user_id");
+CREATE UNIQUE INDEX "user_profile_userId_key" ON "user_profile"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_anime_user_profile_id_key" ON "user_anime"("user_profile_id");
+CREATE UNIQUE INDEX "user_anime_userProfileId_key" ON "user_anime"("userProfileId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
@@ -267,13 +267,13 @@ ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY 
 ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_user_profile_id_fkey" FOREIGN KEY ("user_profile_id") REFERENCES "user_profile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_userProfileId_fkey" FOREIGN KEY ("userProfileId") REFERENCES "user_profile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_animeId_fkey" FOREIGN KEY ("animeId") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
