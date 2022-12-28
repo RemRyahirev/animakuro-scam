@@ -26,7 +26,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
-                studio: true
+                studios: true,
             },
         });
         return {
@@ -45,6 +45,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         const pagination = await this.paginationService.getPagination(args);
@@ -71,6 +72,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         return {
@@ -95,6 +97,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         return {
@@ -114,6 +117,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         return {
