@@ -57,6 +57,7 @@ export class UserProfileService {
         });
         return {
             success: true,
+            errors: [],
             userProfile: userProfile as any,
         };
     }
