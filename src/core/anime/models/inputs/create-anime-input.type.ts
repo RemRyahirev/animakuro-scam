@@ -31,6 +31,14 @@ export class CreateAnimeInputType {
     @Field(() => Int)
     year: number;
 
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    dateStart: Date;
+
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    dateEnd: Date;
+
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String], { description: "Array of genre id's to add" })

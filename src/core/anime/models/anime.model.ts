@@ -8,7 +8,6 @@ import {
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
 import { Character } from '../../character/models/character.model';
-import { Studio } from '../../studio/models/studio.model';
 
 @ObjectType()
 export class Anime {
@@ -23,6 +22,12 @@ export class Anime {
 
     @Field(() => Int)
     year: number;
+
+    @Field(() => Date, { nullable: true })
+    dateStart: Date;
+
+    @Field(() => Date, { nullable: true })
+    dateEnd: Date;
 
     @Field(() => [Genre])
     genres: Genre[];

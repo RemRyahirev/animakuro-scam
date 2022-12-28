@@ -108,6 +108,8 @@ CREATE TABLE "anime" (
     "title" VARCHAR(100) NOT NULL,
     "score" REAL NOT NULL,
     "year" SMALLINT NOT NULL,
+    "dateStart" DATE,
+    "dateEnd" DATE,
     "media_format" "MediaFormat" NOT NULL DEFAULT 'OTHER',
     "source" "MediaSource" NOT NULL DEFAULT 'OTHER',
     "seasons_count" SMALLINT NOT NULL,

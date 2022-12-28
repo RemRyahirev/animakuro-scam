@@ -82,6 +82,8 @@ model Anime {
   title              String        @db.VarChar(100)
   score              Float         @db.Real
   year               Int           @db.SmallInt
+  dateStart          DateTime?     @db.Date
+  dateEnd            DateTime?     @db.Date
   genres             Genre[]
   media_format       MediaFormat   @default(OTHER)
   source             MediaSource   @default(OTHER)

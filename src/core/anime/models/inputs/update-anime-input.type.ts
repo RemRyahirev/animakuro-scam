@@ -38,6 +38,16 @@ export class UpdateAnimeInputType {
     year?: number;
 
     @IsOptional()
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    dateStart: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    dateEnd: Date;
+
+    @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
