@@ -63,10 +63,11 @@ export class AnimeService {
     ): Promise<CreateAnimeResultsType> {
         const anime = await this.prisma.anime.create({
             data: {
-                ...args,
                 ...entityUpdateUtil('genres', args),
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
+                ...entityUpdateUtil('studios', args),
+                ...args,
             },
             include: {
                 genres: true,
@@ -88,10 +89,11 @@ export class AnimeService {
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
             data: {
-                ...args,
                 ...entityUpdateUtil('genres', args),
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
+                ...entityUpdateUtil('studios', args),
+                ...args,
             },
             include: {
                 genres: true,
