@@ -25,6 +25,12 @@ export class Anime {
     @Field(() => Int)
     year: number;
 
+    @Field(() => Date, { nullable: true })
+    dateStart: Date;
+
+    @Field(() => Date, { nullable: true })
+    dateEnd: Date;
+
     @Field(() => [Genre])
     genres: Genre[];
 
