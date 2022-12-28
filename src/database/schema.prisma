@@ -157,7 +157,7 @@ model UserProfile {
   subscribe_tier     SubscribeTier   @default(FREE_ACCOUNT)
   moderator_role     ModeratorRoles? @default(VIEWER)
   isBlocked          Boolean         @default(false)
-  userAnime          UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
+  userAnime          UserAnime?      // o-2-o relation. Field name changed 28/12 from user_anime
 
   @@map("user_profile")
 }
