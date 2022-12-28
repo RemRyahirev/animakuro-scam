@@ -87,7 +87,6 @@ model Anime {
   genres             Genre[]
   media_format       MediaFormat   @default(OTHER)
   source             MediaSource   @default(OTHER)
-  studio             Studio[]
   seasons_count      Int           @db.SmallInt
   episodes_count     Int           @db.SmallInt
   duration           Int           @db.Integer
@@ -97,6 +96,7 @@ model Anime {
   preview_link       String        @db.Text
   status_description String        @db.VarChar(30)
   release_status     ReleaseStatus @default(FINISHED)
+  studios            Studio[]
   characters         Character[]
   authors            Author[]
   UserAnime          UserAnime[]

@@ -8,6 +8,7 @@ import {
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
 import { Character } from '../../character/models/character.model';
+import { Studio } from '../../studio/models/studio.model';
 
 @ObjectType()
 export class Anime {
@@ -73,4 +74,7 @@ export class Anime {
 
     @Field(() => [Author])
     authors: Author[];
+
+    @Field(() => [Studio])
+    studios: Studio[];
 }

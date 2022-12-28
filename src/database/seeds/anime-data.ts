@@ -32,7 +32,7 @@ export const animeData = async () => {
             },
             media_format: MediaFormat.OTHER,
             source: MediaSource.OTHER,
-            studio: {
+            studios: {
               connect: [{
                   id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
               }]
@@ -81,7 +81,7 @@ export const animeData = async () => {
             },
             media_format: MediaFormat.MOVIE,
             source: MediaSource.GAME,
-            studio: {
+            studios: {
                 connect: [{
                     id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
                 }]
@@ -130,7 +130,7 @@ export const animeData = async () => {
             },
             media_format: MediaFormat.SPECIAL,
             source: MediaSource.LIGHT_NOVEL,
-            studio: {
+            studios: {
                 connect: [{
                     id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
                 }]
