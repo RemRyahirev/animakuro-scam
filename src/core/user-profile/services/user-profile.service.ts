@@ -84,7 +84,7 @@ export class UserProfileService {
     ): Promise<DeleteUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.delete({
             where: { id },
-            include: {},
+            //include: {},
         });
         return {
             success: true,
