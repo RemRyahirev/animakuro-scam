@@ -45,7 +45,13 @@ export class UpdateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    genres?: string[];
+    genresToAdd?: string[];
+
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true })
+    genresToRemove?: string[];
 
     @IsOptional()
     @IsString()
@@ -121,13 +127,25 @@ export class UpdateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    characters?: string[];
+    charactersToAdd?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    authors?: string[];
+    charactersToRemove?: string[];
+
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true })
+    authorsToAdd?: string[];
+
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true })
+    authorsToRemove?: string[];
 
     @IsOptional()
     @Field(() => [Anime])

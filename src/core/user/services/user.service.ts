@@ -12,6 +12,7 @@ import { Mailer } from '../../../common/utils/mailer';
 import { User } from '../models/user.model';
 import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class UserService {
     private readonly prisma = new Database().logic;
@@ -160,16 +161,14 @@ export class UserService {
 
     async getUserList(args: PaginationInputType) {
         return await this.prisma.user.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
         });
     }
 
     async getUserListByEmail(email: string, args: PaginationInputType) {
         return await this.prisma.user.findMany({
             where: { email },
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
         });
     }
 

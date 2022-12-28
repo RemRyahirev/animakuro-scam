@@ -9,6 +9,7 @@ import { GetListTranslationResultsType } from '../models/results/get-list-transl
 import { CreateTranslationResultsType } from '../models/results/create-translation-results.type';
 import { UpdateTranslationResultsType } from '../models/results/update-translation-results.type';
 import { DeleteTranslationResultsType } from '../models/results/delete-translation-results.type';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class TranslationService {
     private readonly prisma = new Database().logic;
@@ -38,8 +39,7 @@ export class TranslationService {
         args: PaginationInputType,
     ): Promise<GetListTranslationResultsType> {
         const translationList = await this.prisma.translation.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
         });
         const pagination = await this.paginationService.getPagination(args);
         return {

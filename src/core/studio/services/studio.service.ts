@@ -9,7 +9,9 @@ import { UpdateStudioInputType } from '../models/inputs/update-studio-input.type
 import { UpdateStudioResultsType } from '../models/results/update-studio-results.type';
 import { CreateStudioInputType } from '../models/inputs/create-studio-input.type';
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
-import { entityConnectUtil } from '../../../common/utils/entity-connect.util';
+import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Studio } from '../models/studio.model';
 
 export class StudioService {
     private readonly prisma = new Database().logic;
@@ -48,8 +50,7 @@ export class StudioService {
         args: PaginationInputType,
     ): Promise<GetListStudioResultsType> {
         const studioList = await this.prisma.studio.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             include: {
                 anime: {
                     include: {
@@ -64,7 +65,7 @@ export class StudioService {
         return {
             success: true,
             errors: [],
-            studioList: studioList as any,
+            studioList: studioList as Array<Studio>,
             pagination,
         };
     }
@@ -73,25 +74,11 @@ export class StudioService {
         args: CreateStudioInputType,
         ctx: ICustomContext,
     ): Promise<CreateStudioResultsType> {
-        const animeYearArray = await this.prisma.anime
-            .findMany({
-                where: {
-                    id: { in: args.anime },
-                },
-                orderBy: {
-                    year: 'asc',
-                },
-            })
-            .then((array) => array.map((item) => item.year));
         const studio = await this.prisma.studio.create({
             data: {
+                ...await this.calculateAdditionalFields(args),
+                ...entityUpdateUtil('anime', args),
                 ...args,
-                ...{
-                    anime_count: args.anime.length,
-                    anime_starts: animeYearArray[0],
-                    anime_ends: animeYearArray[animeYearArray.length - 1],
-                },
-                ...entityConnectUtil('anime', args),
             },
             include: {
                 anime: {
@@ -116,8 +103,9 @@ export class StudioService {
         const studio = await this.prisma.studio.update({
             where: { id: args.id },
             data: {
+                ...await this.calculateAdditionalFields(args),
+                ...entityUpdateUtil('anime', args),
                 ...args,
-                ...entityConnectUtil('anime', args),
             },
             include: {
                 anime: {
@@ -129,6 +117,12 @@ export class StudioService {
                 },
             },
         });
+        if (!studio) {
+            return {
+                success: false,
+                studio: null,
+            };
+        }
         return {
             success: true,
             studio: studio as any,
@@ -153,7 +147,42 @@ export class StudioService {
         });
         return {
             success: true,
-            studio: studio as any,
+            studio: studio as Studio
+        };
+    }
+
+    private async calculateAdditionalFields(
+        args: CreateStudioInputType | UpdateStudioInputType
+    ) {
+        let animeCount: number;
+        if (args instanceof CreateStudioInputType) {
+            animeCount = args.animeToAdd.length;
+        }
+        if (args instanceof UpdateStudioInputType) {
+            animeCount = await this.prisma.studio
+                .findUnique({
+                    where: { id: args.id },
+                    include: {
+                        _count: {
+                            select: {
+                                anime: true
+                            }
+                        }
+                    }
+                })
+                .then((item) => item?._count.anime ?? 0);
+        }
+        const animeYearArray: number[] = await this.prisma.anime
+            .findMany({
+                where: { id: { in: args.animeToAdd } },
+                orderBy: { year: "asc" }
+            })
+            .then((array) => array.map((item) => item.year));
+        return {
+            // @ts-ignore
+            anime_count: animeCount,
+            anime_starts: animeYearArray[0],
+            anime_ends: animeYearArray[animeYearArray?.length - 1]
         };
     }
 }

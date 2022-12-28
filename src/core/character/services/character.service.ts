@@ -10,6 +10,7 @@ import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list
 import { CreateCharacterResultsType } from '../models/results/create-character-results.type';
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 export class CharacterService {
     private readonly prisma = new Database().logic;
@@ -48,8 +49,7 @@ export class CharacterService {
         args: PaginationInputType,
     ): Promise<GetListCharacterResultsType> {
         const characterList = await this.prisma.character.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             include: {
                 animes: {
                     include: {
@@ -74,8 +74,7 @@ export class CharacterService {
         args: PaginationInputType,
     ): Promise<GetListCharacterByAnimeIdResultsType> {
         const characterList = await this.prisma.character.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             where: {
                 animes: {
                     some: {

@@ -9,9 +9,10 @@ export class UserProfile {
     @Field(() => ID)
     id?: string;
 
-    // @Field(() => User)
-    // user: User;
-    //
+    @Field(() => User)
+    user: User;
+
+    // ! вернуть это поле после того, как оформлю UserAnime целиком
     // @Field(() => UserAnime)
     // user_anime: UserAnime;
 

@@ -110,7 +110,6 @@ CREATE TABLE "anime" (
     "year" SMALLINT NOT NULL,
     "media_format" "MediaFormat" NOT NULL DEFAULT 'OTHER',
     "source" "MediaSource" NOT NULL DEFAULT 'OTHER',
-    "studio_id" UUID NOT NULL,
     "seasons_count" SMALLINT NOT NULL,
     "episodes_count" SMALLINT NOT NULL,
     "duration" INTEGER NOT NULL,
@@ -203,6 +202,12 @@ CREATE TABLE "_AnimeToGenre" (
 );
 
 -- CreateTable
+CREATE TABLE "_AnimeToStudio" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "_AnimeToCharacter" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
@@ -236,6 +241,12 @@ CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
 CREATE INDEX "_AnimeToGenre_B_index" ON "_AnimeToGenre"("B");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "_AnimeToStudio_AB_unique" ON "_AnimeToStudio"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AnimeToStudio_B_index" ON "_AnimeToStudio"("B");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_AnimeToCharacter_AB_unique" ON "_AnimeToCharacter"("A", "B");
 
 -- CreateIndex
@@ -254,9 +265,6 @@ ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY 
 ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "anime" ADD CONSTRAINT "anime_studio_id_fkey" FOREIGN KEY ("studio_id") REFERENCES "studio"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -270,6 +278,12 @@ ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_B_fkey" FOREIGN KEY ("B") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToStudio" ADD CONSTRAINT "_AnimeToStudio_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToStudio" ADD CONSTRAINT "_AnimeToStudio_B_fkey" FOREIGN KEY ("B") REFERENCES "studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToCharacter" ADD CONSTRAINT "_AnimeToCharacter_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
