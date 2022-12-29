@@ -166,7 +166,7 @@ model UserAnime {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
   id               String       @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  userProfile      UserProfile? @relation(fields: [userProfileId], references: [id])
+  userProfile      UserProfile? @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
   userProfileId    String       @unique @db.Uuid // o-2-o relation
   anime            Anime?       @relation(fields: [animeId], references: [id])
   animeId          String       @db.Uuid
