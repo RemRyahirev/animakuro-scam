@@ -1,4 +1,4 @@
-import {ArgsType, Field, ID} from "type-graphql";
+import {ArgsType, Field, ID, ObjectType} from "type-graphql";
 import {User} from "../../../user/models/user.model";
 import {UserAnime} from "../../../user-anime/models/user-anime.model";
 import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
@@ -10,11 +10,9 @@ import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-val
 // проработать эти поля!
 export class CreateUserProfileInputType{
 
-    // укажет на id юзера (поле ведёт на таблицу User)
-    @IsUUID()
-    @Field(() => ID)
-    user_id: string;
-
+    @IsString()
+    @Field()
+    userId: string;
     // указать на таблицу userAnime - такого поля нет в БД, есть только в схеме Призмы
 
     @IsString()
@@ -43,25 +41,30 @@ export class CreateUserProfileInputType{
     @Field({nullable: true})
     country?: string
 
+    @IsOptional()
     @IsString()
     @Length(1,30)
-    @Field()
+    @Field({nullable: true})
     language: string;
 
+    @IsOptional()
     @IsDate()
     @Field({defaultValue: new Date()})
     createdAt: Date;
 
+    @IsOptional()
     @IsString()
     @Field(() => SubscribeTier,
         {defaultValue: SubscribeTier.FREE_ACCOUNT})
     subscribe_tier: string;
 
+    @IsOptional()
     @IsString()
     @Field(() => ModeratorRoles,
         {defaultValue: ModeratorRoles.VIEWER})
     moderator_role: string;
 
+    @IsOptional()
     @IsBoolean()
     @Field({defaultValue: false})
     isBlocked: boolean

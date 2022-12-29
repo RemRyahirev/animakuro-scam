@@ -9,15 +9,15 @@ export class UserProfile {
     @Field(() => ID)
     id?: string;
 
-    @Field(() => User)
-    user: User;
+    @Field()
+    userId: User;
 
     // ! вернуть это поле после того, как оформлю UserAnime целиком
     // @Field(() => UserAnime)
     // user_anime: UserAnime;
 
-    @Field()
-    displayed_name: string;
+    @Field({nullable: true})
+    displayed_name?: string;
 
     @Field({nullable: true})
     profile_picture_id?: string;
@@ -31,8 +31,8 @@ export class UserProfile {
     @Field({nullable: true})
     country?: string
 
-    @Field()
-    language: string;
+    @Field({nullable: true})
+    language?: string;
 
     @Field({defaultValue: new Date()})
     createdAt: Date;

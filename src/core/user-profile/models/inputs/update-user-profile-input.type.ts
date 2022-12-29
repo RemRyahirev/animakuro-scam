@@ -12,11 +12,11 @@ export class UpdateUserProfileInputType{
 
     @IsOptional()
     //@Field(() => User,{ nullable: true })
-    user?: User;
+    user?: User; // такое поле в GraphQL отсутствует!!!
 
     @IsOptional()
     //@Field(() => UserAnime,{ nullable: true })
-    user_anime?: UserAnime;
+    user_anime?: UserAnime; // такое поле в GraphQL отсутствует!!!
 
     @IsOptional()
     @IsString()
