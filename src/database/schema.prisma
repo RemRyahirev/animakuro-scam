@@ -21,7 +21,7 @@ model User {
   deleted            Boolean            @default(false)
   thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId   String?            @map("third_party_auth_id")
-  userProfile        UserProfile?       //o-2-o relation. Field name changed 28/12 from user_profile
+  userProfile        UserProfile? //o-2-o relation. Field name changed 28/12 from user_profile
   siteAuthSessions   SiteAuthSession[]
 
   @@map("users")
@@ -144,20 +144,20 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id                 String          @id @default(uuid()) @db.Uuid
-  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             String          @unique @db.Uuid //Field name changed 28/12 from user_id
-  displayed_name     String          @db.VarChar(30)
-  profile_picture_id String          @db.Uuid // аватар!
-  banner_image       String          @db.Uuid
-  about              String          @db.Text
-  country            String          @db.VarChar(30)
-  language           String          @db.VarChar(30)
-  createdAt          DateTime?       @default(now()) @db.Date
-  subscribe_tier     SubscribeTier   @default(FREE_ACCOUNT)
-  moderator_role     ModeratorRoles? @default(VIEWER)
-  isBlocked          Boolean         @default(false)
-  userAnime          UserAnime?      // o-2-o relation. Field name changed 28/12 from user_anime
+  id                 String           @id @default(uuid()) @db.Uuid
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  displayed_name     String           @db.VarChar(30)
+  profile_picture_id String?          @db.Uuid // аватар!
+  banner_image       String?          @db.Uuid
+  about              String?          @db.Text
+  country            ProfileCountries @default(UNSPECIFIED)
+  language           ProfileLanguages @default(ENGLISH)
+  createdAt          DateTime?        @default(now()) @db.Date
+  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
+  moderator_role     ModeratorRoles   @default(VIEWER)
+  isBlocked          Boolean          @default(false)
+  userAnime          UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
 
   @@map("user_profile")
 }
@@ -296,4 +296,19 @@ enum SubscribeTier {
   SILVER // silver subscription
   GOLD // gold subscription
   PLATINUM // platinum subscription
+}
+
+enum ProfileLanguages {
+  ENGLISH
+  RUSSIAN
+  JAPANESE
+  UKRAINIAN
+}
+
+enum ProfileCountries {
+    USA
+    RUSSIA
+    JAPAN
+    UKRAINE
+    UNSPECIFIED
 }
