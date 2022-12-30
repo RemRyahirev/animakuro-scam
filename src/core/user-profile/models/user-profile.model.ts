@@ -9,8 +9,13 @@ export class UserProfile {
     @Field(() => ID)
     id?: string;
 
+    // это поле - для вложенной выдачи связанного User!
+    @Field(()=> User)
+    user: User;
+
+    // это поле - на общем уровне, показывает просто id подключенного Юзера
     @Field()
-    userId: User;
+    userId: string;
 
     // ! вернуть это поле после того, как оформлю UserAnime целиком
     // @Field(() => UserAnime)
