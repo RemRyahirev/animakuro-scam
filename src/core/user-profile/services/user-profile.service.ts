@@ -65,7 +65,7 @@ export class UserProfileService {
                 user: true
             }
         });
-        console.log(userProfile)
+        //console.log(userProfile)
 
         return {
             success: true,
