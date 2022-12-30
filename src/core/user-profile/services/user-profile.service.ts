@@ -51,12 +51,15 @@ export class UserProfileService {
         args: CreateUserProfileInputType,
         ctx: ICustomContext,
     ): Promise<CreateUserProfileResultsType> {
+        const xz = {...args, user:{connect: args.userId}}
+        console.log(xz)
         const userProfile = await this.prisma.userProfile.create({
             data: args as any,
-            //include: {},
         });
+        console.log('userId = ',args.userId);
         return {
             success: true,
+            errors: [],
             userProfile: userProfile as any,
         };
     }
@@ -67,8 +70,7 @@ export class UserProfileService {
     ): Promise<UpdateUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
-            data: args as any,
-            //include: {},
+            data: args as any
         });
         return {
             success: true,
@@ -82,8 +84,7 @@ export class UserProfileService {
         ctx: ICustomContext,
     ): Promise<DeleteUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.delete({
-            where: { id },
-            include: {},
+            where: { id }
         });
         return {
             success: true,

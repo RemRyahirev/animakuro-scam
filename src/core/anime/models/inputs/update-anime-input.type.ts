@@ -80,9 +80,16 @@ export class UpdateAnimeInputType {
     source?: MediaSource;
 
     @IsOptional()
-    @IsUUID(4)
-    @Field(() => ID, { nullable: true })
-    studio_id?: string;
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true })
+    studiosToAdd?: string[];
+
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true })
+    studiosToRemove?: string[];
 
     @IsOptional()
     @IsInt()

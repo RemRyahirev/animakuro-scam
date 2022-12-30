@@ -14,11 +14,11 @@ export function entityUpdateUtil<F , I>(
         }
     }
     for (const key in input) {
-        if (key.toLowerCase().includes('add')){
+        if (key.toLowerCase().includes('add') && key.includes(field as string)){
             normalizeArray(input[key], arrayToAdd);
             delete input[key];
         }
-        if (key.toLowerCase().includes('remove')){
+        if (key.toLowerCase().includes('remove') && key.includes(field as string)){
             normalizeArray(input[key], arrayToRemove);
             delete input[key];
         }

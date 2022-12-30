@@ -55,9 +55,10 @@ export class CreateAnimeInputType {
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     source: MediaSource;
 
-    @IsUUID(4)
-    @Field(() => ID)
-    studio_id: string;
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { description: "Array of studio id's to add" })
+    studiosToAdd: string[];
 
     @IsInt()
     @Field(() => Int)

@@ -10,16 +10,20 @@ import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-val
 // проработать эти поля!
 export class CreateUserProfileInputType{
 
-    // укажет на id юзера (поле ведёт на таблицу User)
+    @IsOptional() // сам сгенерится Призмой
     @IsUUID()
-    @Field(() => ID)
-    user_id: string;
-
-    // указать на таблицу userAnime - такого поля нет в БД, есть только в схеме Призмы
+    @Field({nullable: true})
+    id?:string;
 
     @IsString()
-    @Length(1,30)
     @Field()
+    userId: string;
+    // указать на таблицу userAnime - такого поля нет в БД, есть только в схеме Призмы
+
+    @IsOptional()
+    @IsString()
+    @Length(1,30)
+    @Field({nullable: true})
     displayed_name: string;
 
     @IsOptional()
@@ -43,25 +47,30 @@ export class CreateUserProfileInputType{
     @Field({nullable: true})
     country?: string
 
+    @IsOptional()
     @IsString()
     @Length(1,30)
-    @Field()
+    @Field({nullable: true})
     language: string;
 
+    @IsOptional()
     @IsDate()
     @Field({defaultValue: new Date()})
     createdAt: Date;
 
+    @IsOptional()
     @IsString()
     @Field(() => SubscribeTier,
         {defaultValue: SubscribeTier.FREE_ACCOUNT})
     subscribe_tier: string;
 
+    @IsOptional()
     @IsString()
     @Field(() => ModeratorRoles,
         {defaultValue: ModeratorRoles.VIEWER})
     moderator_role: string;
 
+    @IsOptional()
     @IsBoolean()
     @Field({defaultValue: false})
     isBlocked: boolean

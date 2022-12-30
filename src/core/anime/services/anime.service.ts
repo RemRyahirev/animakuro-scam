@@ -29,7 +29,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
-                studio: true,
+                studios: true,
             },
         });
         return {
@@ -48,6 +48,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         const pagination = await this.paginationService.getPagination(args);
@@ -89,15 +90,17 @@ export class AnimeService {
     ): Promise<CreateAnimeResultsType> {
         const anime = await this.prisma.anime.create({
             data: {
-                ...args,
                 ...entityUpdateUtil('genres', args),
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
+                ...entityUpdateUtil('studios', args),
+                ...args,
             },
             include: {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         return {
@@ -113,15 +116,17 @@ export class AnimeService {
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
             data: {
-                ...args,
                 ...entityUpdateUtil('genres', args),
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
+                ...entityUpdateUtil('studios', args),
+                ...args,
             },
             include: {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         return {
@@ -141,6 +146,7 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
+                studios: true,
             },
         });
         return {

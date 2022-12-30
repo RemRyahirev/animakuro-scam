@@ -21,7 +21,7 @@ model User {
   deleted            Boolean            @default(false)
   thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
   thirdPartyAuthId   String?            @map("third_party_auth_id")
-  user_profile       UserProfile? //o-2-o relation
+  userProfile        UserProfile? //o-2-o relation. Field name changed 28/12 from user_profile
   siteAuthSessions   SiteAuthSession[]
 
   @@map("users")
@@ -85,19 +85,18 @@ model Anime {
   dateStart          DateTime?     @db.Date
   dateEnd            DateTime?     @db.Date
   genres             Genre[]
-  media_format       MediaFormat     @default(OTHER)
-  source             MediaSource     @default(OTHER)
-  studio_id          String          @db.Uuid
-  studio             Studio          @relation(fields: [studio_id], references: [id])
-  seasons_count      Int             @db.SmallInt
-  episodes_count     Int             @db.SmallInt
-  duration           Int             @db.Integer
-  next_episode       DateTime        @db.Time
-  rating             FilmRating      @default(G)
-  description        String          @db.Text
-  preview_link       String          @db.Text
-  status_description String          @db.VarChar(30)
-  release_status     ReleaseStatus   @default(FINISHED)
+  media_format       MediaFormat   @default(OTHER)
+  source             MediaSource   @default(OTHER)
+  seasons_count      Int           @db.SmallInt
+  episodes_count     Int           @db.SmallInt
+  duration           Int           @db.Integer
+  next_episode       DateTime      @db.Time
+  rating             FilmRating    @default(G)
+  description        String        @db.Text
+  preview_link       String        @db.Text
+  status_description String        @db.VarChar(30)
+  release_status     ReleaseStatus @default(FINISHED)
+  studios            Studio[]
   characters         Character[]
   authors            Author[]
   UserAnime          UserAnime[] //o-2-m relation
@@ -148,40 +147,40 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id                 String          @id @default(uuid()) @db.Uuid
-  user               User            @relation(fields: [user_id], references: [id])
-  user_id            String          @unique @db.Uuid
-  displayed_name     String          @db.VarChar(30)
-  profile_picture_id String          @db.Uuid // аватар!
-  banner_image       String          @db.Uuid
-  about              String          @db.Text
-  country            String          @db.VarChar(30)
-  language           String          @db.VarChar(30)
-  createdAt          DateTime?       @default(now()) @db.Date
-  subscribe_tier     SubscribeTier   @default(FREE_ACCOUNT)
-  moderator_role     ModeratorRoles? @default(VIEWER)
-  isBlocked          Boolean         @default(false)
-  user_anime         UserAnime? // o-2-o relation
+  id                 String           @id @default(uuid()) @db.Uuid
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  displayed_name     String           @db.VarChar(30)
+  profile_picture_id String?          @db.Uuid // аватар!
+  banner_image       String?          @db.Uuid
+  about              String?          @db.Text
+  country            ProfileCountries @default(UNSPECIFIED)
+  language           ProfileLanguages @default(ENGLISH)
+  createdAt          DateTime?        @default(now()) @db.Date
+  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
+  moderator_role     ModeratorRoles   @default(VIEWER)
+  isBlocked          Boolean          @default(false)
+  userAnime          UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
 
   @@map("user_profile")
 }
 
 model UserAnime {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
-  id               String      @id @default(uuid()) @db.Uuid
-  //  блок привязок
-  user_profile     UserProfile @relation(fields: [user_profile_id], references: [id])
-  user_profile_id  String      @unique @db.Uuid // o-2-o relation
-  anime            Anime       @relation(fields: [anime_id], references: [id])
-  anime_id         String      @db.Uuid
+  id               String       @id @default(uuid()) @db.Uuid
+  //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
+  userProfile      UserProfile? @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+  userProfileId    String       @unique @db.Uuid // o-2-o relation
+  anime            Anime?       @relation(fields: [animeId], references: [id])
+  animeId          String       @db.Uuid
   // информативный блок
-  status           WatchStatus @default(WATCHING)
-  in_favourites    Boolean     @default(false)
+  status           WatchStatus  @default(WATCHING)
+  in_favourites    Boolean      @default(false)
   // блок для аниме со статусом WATCHING
-  season           Int?        @db.SmallInt // какой сезон данного аниме смотрит юзер
-  episode          Int?        @db.SmallInt // какой эпизод(серию)
-  episode_duration Int?        @db.Integer // секунды: продолжительность этого эпизода
-  watched_duration Int?        @db.Integer // секунды: сколько просмотрел из этой серии
+  season           Int?         @db.SmallInt // какой сезон данного аниме смотрит юзер
+  episode          Int?         @db.SmallInt // какой эпизод(серию)
+  episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода
+  watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
 
   @@map("user_anime")
 }
@@ -306,4 +305,19 @@ enum SubscribeTier {
   SILVER // silver subscription
   GOLD // gold subscription
   PLATINUM // platinum subscription
+}
+
+enum ProfileLanguages {
+  ENGLISH
+  RUSSIAN
+  JAPANESE
+  UKRAINIAN
+}
+
+enum ProfileCountries {
+    USA
+    RUSSIA
+    JAPAN
+    UKRAINE
+    UNSPECIFIED
 }
