@@ -171,6 +171,6 @@ export class UpdateAnimeInputType {
     @IsOptional()
     @IsString()
     @Length(1, 20)
-    @Field(() => AnimeRelation, { defaultValue: null })
+    @Field(() => AnimeRelation, { nullable: true, defaultValue: null })
     related_status: AnimeRelation;
 }

@@ -33,9 +33,11 @@ export const animeData = async () => {
             media_format: MediaFormat.OTHER,
             source: MediaSource.OTHER,
             studios: {
-              connect: [{
-                  id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
-              }]
+                connect: [
+                    {
+                        id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
+                    },
+                ],
             },
             seasons_count: 3,
             episodes_count: 6,
@@ -82,9 +84,11 @@ export const animeData = async () => {
             media_format: MediaFormat.MOVIE,
             source: MediaSource.GAME,
             studios: {
-                connect: [{
-                    id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
-                }]
+                connect: [
+                    {
+                        id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
+                    },
+                ],
             },
             seasons_count: 1,
             episodes_count: 10,
@@ -131,9 +135,11 @@ export const animeData = async () => {
             media_format: MediaFormat.SPECIAL,
             source: MediaSource.LIGHT_NOVEL,
             studios: {
-                connect: [{
-                    id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
-                }]
+                connect: [
+                    {
+                        id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
+                    },
+                ],
             },
             seasons_count: 1,
             episodes_count: 10,

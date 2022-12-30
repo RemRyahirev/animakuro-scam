@@ -11,7 +11,6 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 
-import { entityConnectUtil } from '../../../common/utils/entity-connect.util';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 

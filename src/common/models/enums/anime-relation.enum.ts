@@ -5,6 +5,7 @@ export enum AnimeRelation {
     DIRECT = 'DIRECT',
     CHRONOLOGY = 'CHRONOLOGY',
     FRANCHISE = 'FRANCHISE',
+    NULL = 'NULL',
 }
 
 registerEnumType(AnimeRelation, {

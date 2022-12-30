@@ -100,9 +100,9 @@ model Anime {
   characters         Character[]
   authors            Author[]
   UserAnime          UserAnime[] //o-2-m relation
-  related_animes     Anime[]         @relation("related_animes")
-  animes_relation    Anime[]         @relation("related_animes")
-  connected_status   AnimeConnection
+  related_animes     Anime[]       @relation("related_animes")
+  animes_relation    Anime[]       @relation("related_animes")
+  related_status     AnimeRelation @default(NULL)
 
   @@map("anime")
 }
@@ -191,10 +191,11 @@ enum FriendshipStatus {
   CONFIRMED
 }
 
-enum AnimeConnection {
+enum AnimeRelation {
   DIRECT
   CHRONOLOGY
   FRANCHISE
+  NULL
 }
 
 enum WatchStatus {
@@ -315,9 +316,9 @@ enum ProfileLanguages {
 }
 
 enum ProfileCountries {
-    USA
-    RUSSIA
-    JAPAN
-    UKRAINE
-    UNSPECIFIED
+  USA
+  RUSSIA
+  JAPAN
+  UKRAINE
+  UNSPECIFIED
 }

@@ -76,8 +76,9 @@ export class Anime {
     @Field(() => [Anime])
     related_animes: [Anime];
 
-    @Field(() => AnimeRelation)
+    @Field(() => AnimeRelation, { nullable: true, defaultValue: null })
     related_status: AnimeRelation;
+
     @Field(() => [Studio])
     studios: Studio[];
 }
