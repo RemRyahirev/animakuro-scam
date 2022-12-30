@@ -1,6 +1,4 @@
 import {ArgsType, Field, ID} from "type-graphql";
-import {User} from "../../../user/models/user.model";
-import {UserAnime} from "../../../user-anime/models/user-anime.model";
 import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
 import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-validator";
 
@@ -18,12 +16,11 @@ export class CreateUserProfileInputType{
     @IsString()
     @Field()
     userId: string;
-    // указать на таблицу userAnime - такого поля нет в БД, есть только в схеме Призмы
 
     @IsOptional()
     @IsString()
     @Length(1,30)
-    @Field({nullable: true})
+    @Field({nullable: true, defaultValue: 'incognito'})
     displayed_name: string;
 
     @IsOptional()
@@ -38,7 +35,7 @@ export class CreateUserProfileInputType{
 
     @IsOptional()
     @IsString()
-    @Field({nullable: true})
+    @Field({nullable: true, defaultValue: 'personal data not filled'})
     about?: string
 
     @IsOptional()

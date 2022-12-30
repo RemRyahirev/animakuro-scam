@@ -147,7 +147,7 @@ model UserProfile {
   id                 String           @id @default(uuid()) @db.Uuid
   user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String           @unique @db.Uuid //Field name changed 28/12 from user_id
-  displayed_name     String           @db.VarChar(30)
+  displayed_name     String?          @db.VarChar(30)
   profile_picture_id String?          @db.Uuid // аватар!
   banner_image       String?          @db.Uuid
   about              String?          @db.Text

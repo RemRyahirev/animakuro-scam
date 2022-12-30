@@ -51,12 +51,22 @@ export class UserProfileService {
         args: CreateUserProfileInputType,
         ctx: ICustomContext,
     ): Promise<CreateUserProfileResultsType> {
-        const xz = {...args, user:{connect: args.userId}}
-        console.log(xz)
+        const {userId, ...other} = args;
         const userProfile = await this.prisma.userProfile.create({
-            data: args as any,
+            data: {
+                ...other as any,
+                user: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            },
+            include:{
+                user: true
+            }
         });
-        console.log('userId = ',args.userId);
+        console.log(userProfile)
+
         return {
             success: true,
             errors: [],
