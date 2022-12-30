@@ -100,8 +100,8 @@ model Anime {
   characters         Character[]
   authors            Author[]
   UserAnime          UserAnime[] //o-2-m relation
-  related_animes     Anime[]       @relation("related_animes")
-  animes_relation    Anime[]       @relation("related_animes")
+  related_animes     Anime[]       @relation("RelatedAnimes")
+  animes_relation    Anime[]       @relation("RelatedAnimes")
   related_status     AnimeRelation @default(NULL)
 
   @@map("anime")

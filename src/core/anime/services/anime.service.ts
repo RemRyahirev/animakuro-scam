@@ -119,6 +119,7 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
+                ...entityUpdateUtil('related_animes', args),
                 ...args,
             },
             include: {
