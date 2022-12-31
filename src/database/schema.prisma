@@ -9,53 +9,53 @@ datasource db {
 }
 
 model User {
-  id                 String             @id @default(uuid()) @db.Uuid
-  username           String             @unique @db.VarChar(64)
-  email              String?            @unique @db.VarChar(320)
-  registrationStatus RegistrationStatus @default(CONFIRM_EMAIL) @map("registration_status")
-  password           String             @map("password")
-  secret2fa          String?            @db.VarChar(20)
-  birthday           DateTime?          @db.Date
-  gender             Gender             @default(UNSPECIFIED)
-  createdAt          DateTime           @default(now()) @map("created_at") @db.Date
-  deleted            Boolean            @default(false)
-  thirdPartyAuth     ThirdPartyAuth?    @relation(fields: [thirdPartyAuthId], references: [id])
-  thirdPartyAuthId   String?            @map("third_party_auth_id")
-  userProfile        UserProfile? //o-2-o relation. Field name changed 28/12 from user_profile
-  siteAuthSessions   SiteAuthSession[]
+  id                  String             @id @default(uuid()) @db.Uuid
+  username            String             @unique @db.VarChar(64)
+  email               String?            @unique @db.VarChar(320)
+  registration_status RegistrationStatus @default(CONFIRM_EMAIL) @map("registration_status")
+  password            String             @map("password")
+  secret2fa           String?            @db.VarChar(20)
+  birthday            DateTime?          @db.Date
+  gender              Gender             @default(UNSPECIFIED)
+  created_at          DateTime           @default(now()) @map("created_at") @db.Date
+  deleted             Boolean            @default(false)
+  third_party_auth    ThirdPartyAuth?    @relation(fields: [third_party_auth_id], references: [id])
+  third_party_auth_id String?            @map("third_party_auth_id")
+  user_profile        UserProfile? //o-2-o relation. Field name changed 28/12 from user_profile
+  site_auth_sessions  SiteAuthSession[]
 
   @@map("users")
 }
 
 model SiteAuthSession {
-  id     String  @id @default(uuid())
-  agent  String  @db.Text
-  ip     String  @db.VarChar(64)
-  userId String  @map("user_id") @db.Uuid
-  user   User    @relation(fields: [userId], references: [id])
-  active Boolean @default(true)
+  id      String  @id @default(uuid())
+  agent   String  @db.Text
+  ip      String  @db.VarChar(64)
+  user_id String  @map("user_id") @db.Uuid
+  user    User    @relation(fields: [user_id], references: [id])
+  active  Boolean @default(true)
 
   @@map("site_auth_session")
 }
 
 model ThirdPartyAuth {
-  id        String         @id @default(uuid())
-  uid       String         @db.VarChar(64)
-  email     String?        @db.VarChar(320)
-  firstName String?        @map("first_name") @db.VarChar(64)
-  lastName  String?        @map("last_name") @db.VarChar(64)
-  avatar    String?        @db.Text
-  type      ThirdPartyType
-  user      User[]
-  deleted   Boolean        @default(false)
-  createdAt DateTime       @default(now()) @map("created_at")
+  id         String         @id @default(uuid())
+  uid        String         @db.VarChar(64)
+  email      String?        @db.VarChar(320)
+  first_name String?        @map("first_name") @db.VarChar(64)
+  last_name  String?        @map("last_name") @db.VarChar(64)
+  avatar     String?        @db.Text
+  type       ThirdPartyType
+  user       User[]
+  deleted    Boolean        @default(false)
+  created_at DateTime       @default(now()) @map("created_at")
 
   @@map("third_party_auth")
 }
 
 model Studio {
   id           String   @id @default(uuid()) @db.Uuid
-  createdAt    DateTime @default(now()) @map("created_at")
+  created_at   DateTime @default(now()) @map("created_at")
   studio_name  String   @db.VarChar(64)
   rating       Float    @db.Real
   thumbnail    String   @db.Text
@@ -82,24 +82,30 @@ model Anime {
   title              String        @db.VarChar(100)
   score              Float         @db.Real
   year               Int           @db.SmallInt
-  dateStart          DateTime?     @db.Date
-  dateEnd            DateTime?     @db.Date
+  date_start         DateTime?     @db.Date
+  date_end           DateTime?     @db.Date
+  country_of_origin  String        @db.VarChar(2)
   genres             Genre[]
-  media_format       MediaFormat   @default(OTHER)
+  format             MediaFormat   @default(OTHER)
   source             MediaSource   @default(OTHER)
+  season             YearSeason    @default(FALL)
+  type               AnimeType     @default(ANIME)
+  hashtags           String[]
+  synonyms           String[]
+  is_licensed        Boolean
   seasons_count      Int           @db.SmallInt
-  episodes_count     Int           @db.SmallInt
+  episodes           Int           @db.SmallInt
   duration           Int           @db.Integer
   next_episode       DateTime      @db.Time
   rating             FilmRating    @default(G)
   description        String        @db.Text
   preview_link       String        @db.Text
   status_description String        @db.VarChar(30)
-  release_status     ReleaseStatus @default(FINISHED)
+  release_status     ReleaseStatus @default(COMPLETED)
   studios            Studio[]
   characters         Character[]
   authors            Author[]
-  UserAnime          UserAnime[]
+  user_anime         UserAnime[]
 
   @@map("anime")
 }
@@ -145,19 +151,19 @@ model Translation {
 // Модели частных индивидуальных баз
 model UserProfile {
   id                 String           @id @default(uuid()) @db.Uuid
-  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id            String           @unique @db.Uuid //Field name changed 28/12 from user_id
   displayed_name     String?          @db.VarChar(30)
   profile_picture_id String?          @db.Uuid // аватар!
   banner_image       String?          @db.Uuid
   about              String?          @db.Text
   country            ProfileCountries @default(UNSPECIFIED)
   language           ProfileLanguages @default(ENGLISH)
-  createdAt          DateTime?        @default(now()) @db.Date
+  created_at         DateTime?        @default(now()) @db.Date
   subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
   moderator_role     ModeratorRoles   @default(VIEWER)
-  isBlocked          Boolean          @default(false)
-  userAnime          UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
+  is_blocked         Boolean          @default(false)
+  user_anime         UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
 
   @@map("user_profile")
 }
@@ -166,10 +172,10 @@ model UserAnime {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
   id               String       @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  userProfile      UserProfile? @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
-  userProfileId    String       @unique @db.Uuid // o-2-o relation
-  anime            Anime?       @relation(fields: [animeId], references: [id])
-  animeId          String       @db.Uuid
+  user_profile     UserProfile? @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id  String       @unique @db.Uuid // o-2-o relation
+  anime            Anime?       @relation(fields: [anime_id], references: [id])
+  anime_id         String       @db.Uuid
   // информативный блок
   status           WatchStatus  @default(WATCHING)
   in_favourites    Boolean      @default(false)
@@ -231,8 +237,10 @@ enum MediaSource {
 }
 
 enum ReleaseStatus {
-  FINISHED // Has completed and is no longer being released
+  COMPLETED // Has completed and is no longer being released
+  ANNOUNCEMENT
   RELEASING // Currently releasing
+  AIRING
   NOT_YET_RELEASED // To be released at a later date
   CANCELLED // Ended before the work could be finished
   HIATUS // Is currently paused from releasing and will resume at a later date
@@ -250,6 +258,18 @@ enum MediaFormat {
   NOVEL
   ONE_SHOT
   OTHER
+}
+
+enum YearSeason {
+  FALL
+  SUMMER
+  SPRING
+  WINTER
+}
+
+enum AnimeType {
+  ANIME
+  MANGA
 }
 
 enum CharacterType {
@@ -306,9 +326,9 @@ enum ProfileLanguages {
 }
 
 enum ProfileCountries {
-    USA
-    RUSSIA
-    JAPAN
-    UKRAINE
-    UNSPECIFIED
+  USA
+  RUSSIA
+  JAPAN
+  UKRAINE
+  UNSPECIFIED
 }

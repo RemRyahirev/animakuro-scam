@@ -15,7 +15,7 @@ export class CreateSiteAuthSessionInput {
     ip: string;
 
     @Field(() => ID, { nullable: true })
-    userId?: string;
+    user_id?: string;
 
     @Field(() => Boolean)
     active: boolean;
@@ -30,7 +30,7 @@ export class UpdateSiteAuthSessionInput {
     ip?: string;
 
     @Field(() => ID, { nullable: true })
-    userId?: string;
+    user_id?: string;
 
     @Field({ nullable: true })
     active?: boolean;

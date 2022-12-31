@@ -1,6 +1,7 @@
 import { ArgsType, Field, Float, ID, Int } from 'type-graphql';
 import {
     IsArray,
+    IsBoolean,
     IsDate,
     IsInt,
     IsNumber,
@@ -10,10 +11,12 @@ import {
     Length,
 } from 'class-validator';
 import {
+    AnimeType,
     FilmRating,
     MediaFormat,
     MediaSource,
     ReleaseStatus,
+    YearSeason,
 } from '../../../../common/models/enums';
 
 @ArgsType()
@@ -31,13 +34,18 @@ export class CreateAnimeInputType {
     @Field(() => Int)
     year: number;
 
-    @IsDate()
-    @Field(() => Date, { nullable: true })
-    dateStart: Date;
+    @IsString()
+    @Length(1, 2)
+    @Field(() => String, { nullable: true })
+    country_of_origin: string;
 
     @IsDate()
     @Field(() => Date, { nullable: true })
-    dateEnd: Date;
+    date_start: Date;
+
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    date_end: Date;
 
     @IsUUID(4, { each: true })
     @IsArray()
@@ -46,7 +54,7 @@ export class CreateAnimeInputType {
 
     @IsString()
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
-    media_format: MediaFormat;
+    format: MediaFormat;
 
     @IsString()
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
@@ -63,7 +71,7 @@ export class CreateAnimeInputType {
 
     @IsInt()
     @Field(() => Int)
-    episodes_count: number;
+    episodes: number;
 
     @IsInt()
     @Field(() => Int)
@@ -90,9 +98,27 @@ export class CreateAnimeInputType {
     @Field(() => String)
     status_description: string;
 
+    @IsBoolean()
+    @Field(() => Boolean, { defaultValue: true })
+    is_licensed: boolean;
+
+    @Field(() => [String], { nullable: true })
+    hashtags: string[];
+
+    @Field(() => [String], { nullable: true })
+    synonyms: string[];
+
     @IsString()
-    @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
+    @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.COMPLETED })
     release_status: ReleaseStatus;
+
+    @IsString()
+    @Field(() => AnimeType, { defaultValue: AnimeType.ANIME })
+    type: AnimeType;
+
+    @IsString()
+    @Field(() => YearSeason, { defaultValue: YearSeason.FALL })
+    season: YearSeason;
 
     @IsUUID(4, { each: true })
     @IsArray()

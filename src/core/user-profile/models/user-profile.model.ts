@@ -15,7 +15,7 @@ export class UserProfile {
 
     // это поле - на общем уровне, показывает просто id подключенного Юзера
     @Field()
-    userId: string;
+    user_id: string;
 
     // ! вернуть это поле после того, как оформлю UserAnime целиком
     // @Field(() => UserAnime)

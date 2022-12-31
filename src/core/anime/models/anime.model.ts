@@ -4,6 +4,8 @@ import {
     MediaFormat,
     MediaSource,
     ReleaseStatus,
+    YearSeason,
+    AnimeType,
 } from '../../../common/models/enums';
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
@@ -15,7 +17,9 @@ export class Anime {
     @Field(() => ID)
     id?: string;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'The official titles of the media in various languages',
+    })
     title: string;
 
     @Field(() => Float)
@@ -24,26 +28,43 @@ export class Anime {
     @Field(() => Int)
     year: number;
 
-    @Field(() => Date, { nullable: true })
-    dateStart: Date;
+    @Field(() => String, {
+        description: 'Where the media was created. (ISO 3166-1 alpha-2)',
+    })
+    country_of_origin: string;
 
-    @Field(() => Date, { nullable: true })
-    dateEnd: Date;
+    @Field(() => Date, {
+        nullable: true,
+        description: 'The first official release date of the media',
+    })
+    date_start: Date;
 
-    @Field(() => [Genre])
+    @Field(() => Date, {
+        nullable: true,
+        description: 'The last official release date of the media',
+    })
+    date_end: Date;
+
+    @Field(() => [Genre], { description: 'The genres of the media' })
     genres: Genre[];
 
-    @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
-    media_format: string;
+    @Field(() => MediaFormat, {
+        defaultValue: MediaFormat.OTHER,
+        description: 'The format the media was released in',
+    })
+    format: string;
 
-    @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
+    @Field(() => MediaSource, {
+        defaultValue: MediaSource.OTHER,
+        description: 'Source type the media was adapted from',
+    })
     source: string;
 
     @Field(() => Int)
     seasons_count: number;
 
     @Field(() => Int)
-    episodes_count: number;
+    episodes: number;
 
     @Field(() => Int, { description: 'Duration in seconds' })
     duration: number;
@@ -60,18 +81,53 @@ export class Anime {
     @Field(() => String)
     preview_link: string;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: `Short description of the media's story and characters`,
+    })
     status_description: string;
 
-    @Field(() => ReleaseStatus, { defaultValue: ReleaseStatus.FINISHED })
+    @Field(() => Boolean, {
+        defaultValue: true,
+        description:
+            'If the media is officially licensed or a self-published doujin release',
+    })
+    is_licensed: boolean;
+
+    @Field(() => [String], {
+        nullable: true,
+        description: 'Official Twitter hashtags for the media',
+    })
+    hashtags: string[];
+
+    @Field(() => [String], {
+        nullable: true,
+        description: 'Alternative titles of the media',
+    })
+    synonyms: string[];
+
+    @Field(() => ReleaseStatus, {
+        defaultValue: ReleaseStatus.COMPLETED,
+        description: 'The current releasing status of the media',
+    })
     release_status: string;
 
-    @Field(() => [Character])
+    @Field(() => AnimeType, { defaultValue: AnimeType.ANIME })
+    type: AnimeType;
+
+    @Field(() => YearSeason, {
+        defaultValue: YearSeason.FALL,
+        description: 'The season the media was initially released in',
+    })
+    season: YearSeason;
+
+    @Field(() => [Character], { description: 'The characters in the media' })
     characters: Character[];
 
     @Field(() => [Author])
     authors: Author[];
 
-    @Field(() => [Studio])
+    @Field(() => [Studio], {
+        description: 'The companies who produced the media',
+    })
     studios: Studio[];
 }

@@ -1,7 +1,7 @@
 import { registerEnumType } from 'type-graphql';
 import 'reflect-metadata';
 
-export enum SubscribeTier{
+export enum SubscribeTier {
     FREE_ACCOUNT = 'FREE_ACCOUNT',
     BASIC = 'BASIC',
     SILVER = 'SILVER',
@@ -12,4 +12,3 @@ export enum SubscribeTier{
 registerEnumType(SubscribeTier, {
     name: 'SubscribeTier',
 });
-

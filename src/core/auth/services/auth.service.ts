@@ -58,7 +58,7 @@ export class AuthService {
             agent: ctx.request.headers['user-agent'] || '',
             ip: ctx.request.socket.remoteAddress || '',
             active: true,
-            userId: user.id,
+            user_id: user.id,
         });
 
         const accessToken = JwtTokenService.makeAccessToken({
@@ -116,7 +116,7 @@ export class AuthService {
             agent: ctx.request.headers['user-agent'] || '',
             ip: ctx.request.socket.remoteAddress || '', // TODO: recheck
             active: true,
-            userId: user.id,
+            user_id: user.id,
         });
 
         const accessToken = JwtTokenService.makeAccessToken({
@@ -240,12 +240,12 @@ export class AuthService {
     }
 
     async createSiteAuthSession({
-        userId,
+        user_id,
         ...rest
     }: CreateSiteAuthSessionInput) {
         return await this.prisma.siteAuthSession.create({
             data: {
-                userId: userId || '0',
+                user_id: user_id || '0',
                 ...rest,
             },
         });
