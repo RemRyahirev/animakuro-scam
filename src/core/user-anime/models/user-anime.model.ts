@@ -6,13 +6,23 @@ import {Anime} from "../../anime/models/anime.model";
 @ObjectType()
 export class UserAnime {
     @Field(() => ID)
-    id: string;
+    id?: string;
 
+    // это поле - для вложенной выдачи связанного UserProfile
     @Field(() => UserProfile)
-    user_profile: UserProfile;
+    userProfile: UserProfile;
 
+    // это поле - на общем уровне, показывает просто id подключенного UserProfile
+    @Field()
+    userProfileId: string;
+
+    // это поле - для вложенной выдачи связанного Anime
     @Field(() => Anime)
     anime: Anime;
+
+    // это поле - на общем уровне, показывает просто id подключенного Anime
+    @Field()
+    animeId: string;
 
     @Field(() => WatchStatus,
         {defaultValue: WatchStatus.WATCHING})
@@ -21,18 +31,21 @@ export class UserAnime {
     @Field({defaultValue: false})
     in_favourites: boolean
 
-    @Field(() => Int, {description: "какой сезон данного аниме смотрит юзер"})
+    @Field(() => Int, { nullable: true,
+        description: "какой сезон данного аниме смотрит юзер"})
     season?: number
 
-    @Field(() => Int, {description: "какой эпизод(серию)"})
+    @Field(() => Int, {nullable: true,
+        description: "какой эпизод(серию)"})
     episode?: number
 
-    @Field(() => Int, {description: "секунды: продолжительность этого эпизода"})
+    @Field(() => Int, {nullable: true,
+        description: "секунды: продолжительность этого эпизода"})
     episode_duration?: number
 
-    @Field(() => Int, {description: "секунды: сколько просмотрел из этой серии"})
+    @Field(() => Int, {nullable: true,
+        description: "секунды: сколько просмотрел из этой серии"})
     watched_duration?: number
-
 
 }
 

@@ -10,13 +10,11 @@ export class UpdateUserProfileInputType{
     @Field(() => ID)
     id?: string;
 
-    @IsOptional()
-    //@Field(() => User,{ nullable: true })
-    user?: User; // такое поле в GraphQL отсутствует!!!
-
-    @IsOptional()
-    //@Field(() => UserAnime,{ nullable: true })
-    user_anime?: UserAnime; // такое поле в GraphQL отсутствует!!!
+    @IsOptional()   // нужны ли эти поля здесь в принципе + будем ли редактировать ссылки на связанные таблицы?
+    user?: User; // такое поле в GraphQL отсутствует!
+    @IsOptional()   // нужны ли эти поля здесь в принципе + будем ли редактировать ссылки на связанные таблицы?
+    userAnime?: UserAnime; // такое поле в GraphQL отсутствует!
+    // не добавить ли вместо них userId и userAnimeId ?!??!
 
     @IsOptional()
     @IsString()
