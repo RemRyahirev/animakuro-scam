@@ -21,6 +21,7 @@ export const animeData = async () => {
         {
             id: '1484d58b-bd26-4fed-99a0-d0ba53da3827',
             title: 'Гуррен-лаганн',
+            country_of_origin: 'JP',
             score: 4.7,
             year: 2010,
             genres: {
@@ -30,7 +31,7 @@ export const animeData = async () => {
                     },
                 ],
             },
-            media_format: MediaFormat.OTHER,
+            format: MediaFormat.OTHER,
             source: MediaSource.OTHER,
             studios: {
                 connect: [
@@ -40,7 +41,7 @@ export const animeData = async () => {
                 ],
             },
             seasons_count: 3,
-            episodes_count: 6,
+            episodes: 6,
             duration: 13000,
             next_episode: new Date('2004-10-19 10:23:54'),
             rating: FilmRating.R,
@@ -69,6 +70,7 @@ export const animeData = async () => {
         {
             id: 'f2d82632-d15d-496f-a45b-dd57b1297f6e',
             title: 'Стальной алхимик',
+            country_of_origin: 'JP',
             score: 6.9,
             year: 1999,
             genres: {
@@ -81,7 +83,7 @@ export const animeData = async () => {
                     },
                 ],
             },
-            media_format: MediaFormat.MOVIE,
+            format: MediaFormat.MOVIE,
             source: MediaSource.GAME,
             studios: {
                 connect: [
@@ -91,7 +93,7 @@ export const animeData = async () => {
                 ],
             },
             seasons_count: 1,
-            episodes_count: 10,
+            episodes: 10,
             duration: 22000,
             next_episode: new Date('2020-10-19 10:23:54'),
             rating: FilmRating.R,
@@ -117,6 +119,7 @@ export const animeData = async () => {
         {
             id: '1033dd1c-2401-402a-afd2-858e78eb7475',
             title: 'Стальной охотник',
+            country_of_origin: 'JP',
             score: 9.1,
             year: 2016,
             genres: {
@@ -132,7 +135,7 @@ export const animeData = async () => {
                     },
                 ],
             },
-            media_format: MediaFormat.SPECIAL,
+            format: MediaFormat.SPECIAL,
             source: MediaSource.LIGHT_NOVEL,
             studios: {
                 connect: [
@@ -142,7 +145,7 @@ export const animeData = async () => {
                 ],
             },
             seasons_count: 1,
-            episodes_count: 10,
+            episodes: 10,
             duration: 12075,
             next_episode: new Date('2020-10-19 10:23:54'),
             rating: FilmRating.R,
