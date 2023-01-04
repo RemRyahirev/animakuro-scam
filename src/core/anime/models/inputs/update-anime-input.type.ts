@@ -1,18 +1,23 @@
 import { ArgsType, Field, Float, ID, Int } from 'type-graphql';
 import {
     IsArray,
+    IsBoolean,
     IsDate,
     IsDecimal,
     IsInt,
     IsOptional,
-    IsString, IsUrl, IsUUID,
-    Length
-} from "class-validator";
+    IsString,
+    IsUrl,
+    IsUUID,
+    Length,
+} from 'class-validator';
 import {
+    AnimeType,
     FilmRating,
     MediaFormat,
     MediaSource,
     ReleaseStatus,
+    YearSeason,
 } from '../../../../common/models/enums';
 
 @ArgsType()
@@ -37,15 +42,20 @@ export class UpdateAnimeInputType {
     @Field(() => Int, { nullable: true })
     year?: number;
 
-    @IsOptional()
-    @IsDate()
-    @Field(() => Date, { nullable: true })
-    dateStart: Date;
+    @IsString()
+    @Length(1, 2)
+    @Field(() => String)
+    country_of_origin: string;
 
     @IsOptional()
     @IsDate()
     @Field(() => Date, { nullable: true })
-    dateEnd: Date;
+    date_start: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    date_end: Date;
 
     @IsOptional()
     @IsUUID(4, { each: true })
@@ -65,7 +75,7 @@ export class UpdateAnimeInputType {
         nullable: true,
         defaultValue: MediaFormat.OTHER,
     })
-    media_format?: MediaFormat;
+    format?: MediaFormat;
 
     @IsOptional()
     @IsString()
@@ -95,7 +105,7 @@ export class UpdateAnimeInputType {
     @IsOptional()
     @IsInt()
     @Field(() => Int, { nullable: true })
-    episodes_count?: number;
+    episodes?: number;
 
     @IsOptional()
     @IsInt()
@@ -128,13 +138,31 @@ export class UpdateAnimeInputType {
     @Field(() => String, { nullable: true })
     status_description?: string;
 
+    @IsBoolean()
+    @Field(() => Boolean, { defaultValue: true })
+    is_licensed: boolean;
+
+    @Field(() => [String], { nullable: true })
+    hashtags: string[];
+
+    @Field(() => [String], { nullable: true })
+    synonyms: string[];
+
     @IsOptional()
     @IsString()
     @Field(() => ReleaseStatus, {
         nullable: true,
-        defaultValue: ReleaseStatus.FINISHED,
+        defaultValue: ReleaseStatus.COMPLETED,
     })
     release_status?: ReleaseStatus;
+
+    @IsString()
+    @Field(() => AnimeType, { defaultValue: AnimeType.ANIME })
+    type: AnimeType;
+
+    @IsString()
+    @Field(() => YearSeason, { defaultValue: YearSeason.FALL })
+    season: YearSeason;
 
     @IsOptional()
     @IsUUID(4, { each: true })

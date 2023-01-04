@@ -15,7 +15,7 @@ export class CreateUserProfileInputType{
 
     @IsString()
     @Field()
-    userId: string;
+    user_id: string;
 
     @IsOptional()
     @IsString()
@@ -53,7 +53,7 @@ export class CreateUserProfileInputType{
     @IsOptional()
     @IsDate()
     @Field({defaultValue: new Date()})
-    createdAt: Date;
+    created_at: Date;
 
     @IsOptional()
     @IsString()
@@ -70,6 +70,6 @@ export class CreateUserProfileInputType{
     @IsOptional()
     @IsBoolean()
     @Field({defaultValue: false})
-    isBlocked: boolean
+    is_blocked: boolean
 
 }

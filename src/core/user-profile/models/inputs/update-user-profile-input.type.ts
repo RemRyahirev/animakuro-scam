@@ -73,6 +73,6 @@ export class UpdateUserProfileInputType{
         nullable: true,
         defaultValue: false
     })
-    isBlocked?: boolean
+    is_blocked?: boolean
 
 }

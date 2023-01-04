@@ -184,7 +184,7 @@ export class UserService {
         return await this.prisma.siteAuthSession.findFirst({
             where: {
                 id: sessionId,
-                userId: uid,
+                user_id: uid,
             },
         });
     }
