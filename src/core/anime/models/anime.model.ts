@@ -10,11 +10,14 @@ import {
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
 import { Character } from '../../character/models/character.model';
+import { AnimeRelation } from '../../../common/models/enums/anime-relation.enum';
 import { Studio } from '../../studio/models/studio.model';
 
 @ObjectType()
 export class Anime {
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'Unique ID of the media',
+    })
     id?: string;
 
     @Field(() => String, {
@@ -25,11 +28,14 @@ export class Anime {
     @Field(() => Float)
     score: number;
 
-    @Field(() => Int)
+    @Field(() => Int, {
+        description: 'Year of production of the media',
+    })
     year: number;
 
     @Field(() => String, {
-        description: 'Where the media was created. (ISO 3166-1 alpha-2)',
+        description:
+            'Country where the media was created. (ISO 3166-1 alpha-2)',
     })
     country_of_origin: string;
 
@@ -60,10 +66,14 @@ export class Anime {
     })
     source: string;
 
-    @Field(() => Int)
+    @Field(() => Int, {
+        description: 'Number of seasons',
+    })
     seasons_count: number;
 
-    @Field(() => Int)
+    @Field(() => Int, {
+        description: 'Number of episodes',
+    })
     episodes: number;
 
     @Field(() => Int, { description: 'Duration in seconds' })
@@ -72,13 +82,16 @@ export class Anime {
     @Field(() => Date, { description: 'Date format "4 apr. 03:30"' })
     next_episode: Date;
 
-    @Field(() => FilmRating, { defaultValue: FilmRating.G })
+    @Field(() => FilmRating, {
+        defaultValue: FilmRating.G,
+        description: 'Popularity rating of the media',
+    })
     rating: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Brief description of the media' })
     description: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Link to the media preview' })
     preview_link: string;
 
     @Field(() => String, {
@@ -111,7 +124,10 @@ export class Anime {
     })
     release_status: string;
 
-    @Field(() => AnimeType, { defaultValue: AnimeType.ANIME })
+    @Field(() => AnimeType, {
+        defaultValue: AnimeType.ANIME,
+        description: 'Original anime or manga-based type of the media',
+    })
     type: AnimeType;
 
     @Field(() => YearSeason, {
@@ -123,8 +139,22 @@ export class Anime {
     @Field(() => [Character], { description: 'The characters in the media' })
     characters: Character[];
 
-    @Field(() => [Author])
+    @Field(() => [Author], {
+        description: 'List of the authors of the media',
+    })
     authors: Author[];
+
+    @Field(() => [Anime], {
+        description: 'List of the related media',
+    })
+    related_animes: [Anime];
+
+    @Field(() => AnimeRelation, {
+        nullable: true,
+        defaultValue: null,
+        description: 'Media relation type',
+    })
+    related_status: AnimeRelation;
 
     @Field(() => [Studio], {
         description: 'The companies who produced the media',

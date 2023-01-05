@@ -4,24 +4,37 @@ import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class Character {
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'Unique ID of the character',
+    })
     id: string;
 
     @Field(() => String)
     bucket_id: string;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'Name of the character',
+    })
     character_name: string;
 
-    @Field(() => CharacterType, { defaultValue: CharacterType.PROTAGONIST })
+    @Field(() => CharacterType, {
+        defaultValue: CharacterType.PROTAGONIST,
+        description: 'Type of the character',
+    })
     importance: string;
 
-    @Field(() => CharacterRole, { defaultValue: CharacterRole.MAIN })
+    @Field(() => CharacterRole, {
+        defaultValue: CharacterRole.MAIN,
+        description: 'Role of the character',
+    })
     role: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Brief description of the character' })
     description: string;
 
-    @Field(() => [Anime], { nullable: true })
+    @Field(() => [Anime], {
+        nullable: true,
+        description: 'List of the animes in which the character appears',
+    })
     animes: Anime[];
 }

@@ -105,6 +105,9 @@ model Anime {
   studios            Studio[]
   characters         Character[]
   authors            Author[]
+  related_animes     Anime[]       @relation("RelatedAnimes")
+  animes_relation    Anime[]       @relation("RelatedAnimes")
+  related_status     AnimeRelation @default(NULL)
   user_anime         UserAnime[]
 
   @@map("anime")
@@ -192,6 +195,13 @@ enum FriendshipStatus {
   AWAITING
   REQUESTED
   CONFIRMED
+}
+
+enum AnimeRelation {
+  DIRECT
+  CHRONOLOGY
+  FRANCHISE
+  NULL
 }
 
 enum WatchStatus {

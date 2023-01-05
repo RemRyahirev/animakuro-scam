@@ -1,16 +1,18 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import {SubscribeTier} from "../../../common/models/enums";
-import {ModeratorRoles} from "../../../common/models/enums";
-import {User} from "../../user/models/user.model";
-import {UserAnime} from "../../user-anime/models/user-anime.model";
+import { SubscribeTier } from '../../../common/models/enums';
+import { ModeratorRoles } from '../../../common/models/enums';
+import { User } from '../../user/models/user.model';
+import { UserAnime } from '../../user-anime/models/user-anime.model';
 
 @ObjectType()
 export class UserProfile {
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'Unique ID of the user-profile',
+    })
     id?: string;
 
     // это поле - для вложенной выдачи связанного User!
-    @Field(()=> User)
+    @Field(() => User)
     user: User;
 
     // это поле - на общем уровне, показывает просто id подключенного Юзера
@@ -21,36 +23,33 @@ export class UserProfile {
     // @Field(() => UserAnime)
     // user_anime: UserAnime;
 
-    @Field({nullable: true})
+    @Field({ nullable: true })
     displayed_name?: string;
 
-    @Field({nullable: true})
+    @Field({ nullable: true })
     profile_picture_id?: string;
 
-    @Field({nullable: true})
+    @Field({ nullable: true })
     banner_image?: string;
 
-    @Field({nullable: true})
-    about?: string
+    @Field({ nullable: true })
+    about?: string;
 
-    @Field({nullable: true})
-    country?: string
+    @Field({ nullable: true })
+    country?: string;
 
-    @Field({nullable: true})
+    @Field({ nullable: true })
     language?: string;
 
-    @Field({defaultValue: new Date()})
+    @Field({ defaultValue: new Date() })
     createdAt: Date;
 
-    @Field(() => SubscribeTier,
-        {defaultValue: SubscribeTier.FREE_ACCOUNT})
+    @Field(() => SubscribeTier, { defaultValue: SubscribeTier.FREE_ACCOUNT })
     subscribe_tier: string;
 
-    @Field(() => ModeratorRoles,
-        {defaultValue: ModeratorRoles.VIEWER})
+    @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
     moderator_role: string;
 
-    @Field({defaultValue: false})
-    isBlocked: boolean
-
+    @Field({ defaultValue: false })
+    isBlocked: boolean;
 }

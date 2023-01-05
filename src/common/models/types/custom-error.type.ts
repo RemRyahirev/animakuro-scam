@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ObjectType } from 'type-graphql';
 
 @ObjectType()
 export class CustomErrorType {
@@ -8,13 +8,10 @@ export class CustomErrorType {
     })
     property: string;
 
-    @Field(
-        () => String || Number || [String],
-        {
-            nullable: true,
-            description: 'Not valid property value',
-        },
-    )
+    @Field(() => String || Number || [String], {
+        nullable: true,
+        description: 'Not valid property value',
+    })
     value: any;
 
     @Field(() => String, {

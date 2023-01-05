@@ -13,6 +13,7 @@ export * from './mail-types.enum';
 export * from './moderator-roles.enum';
 export * from './subscribe-tier.enum';
 export * from './watch-status.enum';
+export * from './anime-relation.enum';
 export * from './profile-languages.enum';
 export * from './profile-countries.enum';
 export * from './year-season.enum';

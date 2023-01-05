@@ -9,6 +9,8 @@ import { GetListAnimeResultsType } from '../models/results/get-list-anime-result
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
+import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
+
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
@@ -57,6 +59,30 @@ export class AnimeService {
         };
     }
 
+    async getRelatedAnimeListByAnimeId(
+        id: string,
+        args: PaginationInputType,
+    ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
+        const relatedAnimeList = await this.prisma.anime.findMany({
+            skip: (args.page - 1) * args.perPage,
+            take: args.perPage,
+            where: {
+                related_animes: {
+                    some: {
+                        id,
+                    },
+                },
+            },
+        });
+        const pagination = await this.paginationService.getPagination(args);
+        return {
+            success: true,
+            errors: [],
+            related_animes: relatedAnimeList as any,
+            pagination,
+        };
+    }
+
     async createAnime(
         args: CreateAnimeInputType,
         ctx: ICustomContext,
@@ -67,6 +93,7 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
+                ...entityUpdateUtil('related_animes', args),
                 ...args,
             },
             include: {
@@ -74,6 +101,7 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                related_animes: true,
             },
         });
         return {
@@ -93,6 +121,7 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
+                ...entityUpdateUtil('related_animes', args),
                 ...args,
             },
             include: {
@@ -100,6 +129,7 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                related_animes: true,
             },
         });
         return {

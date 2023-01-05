@@ -19,6 +19,8 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
+import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
+import { Anime } from '../anime.model';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -187,4 +189,27 @@ export class UpdateAnimeInputType {
     @IsArray()
     @Field(() => [ID], { nullable: true })
     authorsToRemove?: string[];
+
+    @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Add to the list of related animes',
+    })
+    related_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Remove from the list of related animes',
+    })
+    related_animes_remove: string[];
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 20)
+    @Field(() => AnimeRelation, {
+        nullable: true,
+        defaultValue: AnimeRelation.NULL,
+    })
+    related_status: AnimeRelation;
 }

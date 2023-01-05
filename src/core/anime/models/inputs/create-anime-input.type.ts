@@ -5,6 +5,7 @@ import {
     IsDate,
     IsInt,
     IsNumber,
+    IsOptional,
     IsString,
     IsUrl,
     IsUUID,
@@ -18,6 +19,8 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
+import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
+import { Anime } from '../anime.model';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -129,4 +132,14 @@ export class CreateAnimeInputType {
     @IsArray()
     @Field(() => [ID], { description: "Array of author id's to add" })
     authorsToAdd: string[];
+
+    @IsOptional()
+    @Field(() => [ID], { description: 'Add to the list of related animes' })
+    related_animes_add: string[];
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 20)
+    @Field(() => AnimeRelation, { nullable: true, defaultValue: null })
+    related_status: AnimeRelation;
 }
