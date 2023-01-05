@@ -93,6 +93,7 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
+                ...entityUpdateUtil('related_animes', args),
                 ...args,
             },
             include: {
@@ -100,6 +101,7 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                related_animes: true,
             },
         });
         return {
@@ -127,6 +129,7 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                related_animes: true,
             },
         });
         return {

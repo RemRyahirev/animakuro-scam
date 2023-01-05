@@ -165,12 +165,25 @@ export class UpdateAnimeInputType {
     authorsToRemove?: string[];
 
     @IsOptional()
-    @Field(() => [Anime], { description: 'List of related animes' })
-    related_animes: Anime[];
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Add to the list of related animes',
+    })
+    related_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Remove from the list of related animes',
+    })
+    related_animes_remove: string[];
 
     @IsOptional()
     @IsString()
     @Length(1, 20)
-    @Field(() => AnimeRelation, { nullable: true, defaultValue: null })
+    @Field(() => AnimeRelation, {
+        nullable: true,
+        defaultValue: AnimeRelation.NULL,
+    })
     related_status: AnimeRelation;
 }

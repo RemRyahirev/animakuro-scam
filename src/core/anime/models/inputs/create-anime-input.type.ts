@@ -108,8 +108,8 @@ export class CreateAnimeInputType {
     authorsToAdd: string[];
 
     @IsOptional()
-    @Field(() => [Anime], { description: 'List of related animes' })
-    related_animes: Anime[];
+    @Field(() => [ID], { description: 'Add to the list of related animes' })
+    related_animes_add: string[];
 
     @IsOptional()
     @IsString()
