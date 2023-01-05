@@ -21,9 +21,9 @@ export class UserProfileService {
             where: {
                 id,
             },
-            include:{
-                user: true
-            }
+            include: {
+                user: true,
+            },
         });
         return {
             success: true,
@@ -51,19 +51,19 @@ export class UserProfileService {
         args: CreateUserProfileInputType,
         ctx: ICustomContext,
     ): Promise<CreateUserProfileResultsType> {
-        const {userId, ...other} = args;
+        const { user_id, ...other } = args;
         const userProfile = await this.prisma.userProfile.create({
             data: {
-                ...other as any,
+                ...(other as any),
                 user: {
                     connect: {
-                        id: userId
-                    }
-                }
+                        id: user_id,
+                    },
+                },
             },
-            include:{
-                user: true
-            }
+            include: {
+                user: true,
+            },
         });
         //console.log(userProfile)
 
@@ -80,7 +80,7 @@ export class UserProfileService {
     ): Promise<UpdateUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
-            data: args as any
+            data: args as any,
         });
         return {
             success: true,
@@ -94,7 +94,7 @@ export class UserProfileService {
         ctx: ICustomContext,
     ): Promise<DeleteUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.delete({
-            where: { id }
+            where: { id },
         });
         return {
             success: true,

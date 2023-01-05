@@ -19,16 +19,16 @@ export const userAnimeData = async () => {
     return [
         {
             id: '809d1892-92fc-421d-9889-10e4be311057',
-            userProfileId: profile1.id,
-            animeId: anime1.id,
+            user_profile_id: profile1.id,
+            anime_id: anime1.id,
             // информативный блок
             status: WatchStatus.DROPPED,
             in_favourites: true,
         },
         {
             id: 'c892638f-bc77-4ae8-ac7f-2ffcfb9a2f32',
-            userProfileId: profile2.id,
-            animeId: anime2.id,
+            user_profile_id: profile2.id,
+            anime_id: anime2.id,
             // информативный блок
             in_favourites: true,
             // блок для аниме со статусом WATCHING

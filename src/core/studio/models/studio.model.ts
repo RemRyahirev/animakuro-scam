@@ -3,22 +3,32 @@ import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class Studio {
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'Unique ID of the studio',
+    })
     id?: string;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'Name of the studio',
+    })
     studio_name: string;
 
-    @Field(() => Float)
+    @Field(() => Float, {
+        description: 'Rating of the studio',
+    })
     rating: number;
 
     @Field(() => String)
     thumbnail: string;
 
-    @Field(() => [Anime])
+    @Field(() => [Anime], {
+        description: 'Animes produced by the studio',
+    })
     anime: Anime[];
 
-    @Field(() => Int)
+    @Field(() => Int, {
+        description: 'Number of animes produced by the studio',
+    })
     anime_count: number;
 
     @Field(() => Int)
