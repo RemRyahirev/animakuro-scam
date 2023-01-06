@@ -3,7 +3,7 @@ import 'reflect-metadata';
 export enum AuthType {
     JWT = 'jwt',
     GOOGLE = 'google',
-    APPLE = 'APPLE',
+    APPLE = 'apple',
     DISCORD = 'discord',
     FACEBOOK = 'facebook',
 }
