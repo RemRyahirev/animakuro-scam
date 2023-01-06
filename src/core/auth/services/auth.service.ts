@@ -190,22 +190,6 @@ export class AuthService {
 
     async register(args: RegisterInputType, ctx: Context,): Promise<RegisterResultsType> {
         args.password = await hash(args.password);
-        const usedEmailCount = await this.prisma.user.count({
-            where: {
-                email: args.email
-            }
-        });
-        if (usedEmailCount >= 5) {
-            return {
-                success: false,
-                user: null,
-                errors: [{
-                    property: 'Email',
-                    value: usedEmailCount,
-                    reason: 'Account limit exceeded'
-                }]
-            }
-        }
         const user = await this.prisma.user.create({ data: args });
         const hashGen = generateHash();
         await this.mailer.sendMail({
