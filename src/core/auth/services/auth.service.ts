@@ -196,7 +196,7 @@ export class AuthService {
         });
         if (usedEmailCount >= 5) {
             return {
-                success: true,
+                success: false,
                 user: null,
                 errors: [{
                     property: 'Email',
