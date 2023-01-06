@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800|Rokkitt:600,700,800');
+        * {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+
+        body {
+            background-color: #f6f6f6;
+            font-family: sans-serif;
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        table {
+            border-collapse: separate;
+            mso-table-lspace: 0;
+            mso-table-rspace: 0;
+            width: 100%;
+        }
+
+        table td {
+            font-family: sans-serif;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .body {
+            background-color: #ffffff;
+            width: 100%;
+        }
+
+        .container {
+            display: block;
+            margin: 0 auto !important;
+            max-width: 580px;
+            padding: 10px;
+            width: 580px;
+        }
+
+        .logo_img {
+            margin-bottom: 40px;
+        }
+
+        .big_text {
+            font-weight: 800;
+            font-size: 36px;
+            line-height: 42px;
+            max-width: 480px;
+            margin-bottom: 20px;
+        }
+
+        .name_text {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.87);
+        }
+
+        .info_text {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.87);
+        }
+
+        .footer_text {
+            color: rgba(255, 255, 255, 0.87);
+        }
+
+        .content {
+            box-sizing: border-box;
+            display: block;
+            margin: 0 auto;
+            max-width: 580px;
+            padding: 10px;
+        }
+
+        .main {
+            background: #0e161f;
+            border-radius: 3px;
+            padding: 60px;
+        }
+
+        .wrapper {
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .footer td,
+        .footer p,
+        .footer span,
+        .footer a {
+            color: #999999;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #000000;
+            font-family: sans-serif;
+            font-weight: 400;
+            line-height: 1.4;
+            margin: 0 0 30px;
+        }
+
+        h1 {
+            font-size: 35px;
+            font-weight: 300;
+            text-align: center;
+            text-transform: capitalize;
+        }
+
+        p,
+        ul,
+        ol {
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            margin: 0 0 15px;
+        }
+
+        p li,
+        ul li,
+        ol li {
+            list-style-position: inside;
+            margin-left: 5px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        /* -------------------------------------
+                  BUTTONS
+              ------------------------------------- */
+        .btn {
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .btn > tbody > tr > td {
+            padding-bottom: 15px;
+        }
+
+        .btn table {
+            width: 100%;
+        }
+
+        .btn table td {
+            background-color: #ffffff;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .btn a {
+            background-color: #ffffff;
+            border: solid 1px #1c90ff;
+            border-radius: 12px;
+            box-sizing: border-box;
+            color: #1c90ff;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+            padding: 13px 25px;
+            text-decoration: none;
+            text-transform: capitalize;
+            line-height: 22px;
+        }
+
+        .btn-primary table td {
+            background-color: #1c90ff;
+        }
+
+        .btn-primary a {
+            background-color: #1c90ff;
+            border-color: #1c90ff;
+            color: #ffffff;
+        }
+
+        .powered-by a {
+            text-decoration: none;
+        }
+
+        hr {
+            border: 0;
+            border-bottom: 1px solid #f6f6f6;
+            margin: 20px 0;
+        }
+
+        @media only screen and (max-width: 620px) {
+            table.body h1 {
+                font-size: 28px !important;
+                margin-bottom: 10px !important;
+            }
+
+            table.body p,
+            table.body ul,
+            table.body ol,
+            table.body td,
+            table.body span,
+            table.body a {
+                font-size: 16px !important;
+            }
+
+            table.body .wrapper,
+            table.body .article {
+                padding: 10px !important;
+            }
+
+            table.body .content {
+                padding: 0 !important;
+            }
+
+            table.body .container {
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            table.body .main {
+                border-left-width: 0 !important;
+                border-radius: 0 !important;
+                border-right-width: 0 !important;
+            }
+
+            table.body .btn table {
+                width: 100% !important;
+            }
+
+            table.body .btn a {
+                width: 100% !important;
+            }
+
+            table.body {
+                height: auto !important;
+                max-width: 100% !important;
+                width: auto !important;
+            }
+        }
+
+        @media all {
+            .ExternalClass p,
+            .ExternalClass span,
+            .ExternalClass font,
+            .ExternalClass td,
+            .ExternalClass div {
+                line-height: 100%;
+            }
+
+            .apple-link a {
+                color: inherit !important;
+                font-family: inherit !important;
+                font-size: inherit !important;
+                font-weight: inherit !important;
+                line-height: inherit !important;
+                text-decoration: none !important;
+            }
+
+            #MessageViewBody a {
+                color: inherit;
+                text-decoration: none;
+                font-size: inherit;
+                font-family: inherit;
+                font-weight: inherit;
+                line-height: inherit;
+            }
+
+            .btn-primary table td:hover {
+                background-color: #34495e !important;
+            }
+
+            .btn-primary a:hover {
+                background-color: #34495e !important;
+                border-color: #34495e !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<table role="presentation" class="body">
+    <tr>
+        <td>&nbsp;</td>
+        <td class="container">
+            <div class="content">
+                <table role="presentation" class="main">
+                    <tr>
+                        <td class="wrapper">
+                            <table role="presentation">
+                                <tr>
+                                    <td>
+                                        <svg class="logo_img" width="68" height="36" viewBox="0 0 68 36" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M28.2757 17.9679C28.3395 19.3797 28.0204 20.6631 27.5736 21.8824C27.1268 23.0374 26.4247 24.1283 25.4673 25.0909C24.5099 26.0535 23.4886 26.8235 22.3397 27.3369C21.1908 27.7861 19.9781 28.0428 18.6377 28.0428C17.2973 28.0428 16.0846 27.7861 14.9995 27.3369C13.8506 26.8235 12.8294 26.0535 11.872 25.0909C10.9146 24.1283 10.2124 23.0374 9.76565 21.8182C9.31886 20.5989 9.06355 19.3155 9.06355 17.9679C9.06355 16.6203 9.31886 15.3369 9.76565 14.1176C10.2124 12.9626 10.9146 11.8717 11.872 10.9091C12.8294 9.94653 13.8506 9.17647 14.9357 8.6631C16.0208 8.2139 17.2335 7.95722 18.5739 7.95722C19.9143 7.95722 21.127 8.2139 22.2759 8.6631C23.4248 9.17647 24.446 9.94653 25.4035 10.9091C26.3609 11.8717 27.063 12.9626 27.5098 14.1176C27.9566 15.3369 28.2757 16.6203 28.2757 17.9679ZM28.2119 0.256685V5.26203C27.7013 4.62032 27.1268 3.97861 26.4247 3.40107C25.7864 2.82353 25.0843 2.24599 24.2546 1.79679C23.4248 1.28342 22.4674 0.898396 21.51 0.641711C20.5526 0.320856 19.4675 0.128342 18.3824 0.0641712C18.3186 9.22751e-08 18.1909 0 18.0633 0H17.7441H17.1058C15.7655 0 14.4251 0.192513 13.1485 0.513369C11.8081 0.834225 10.5316 1.28342 9.1912 1.9893C7.85082 2.69519 6.70192 3.46524 5.61685 4.42781C4.5956 5.39037 3.63818 6.54546 2.80842 7.76471C2.36163 8.47059 1.97866 9.17647 1.65952 9.88235C1.34038 10.6524 1.02124 11.4225 0.765934 12.2567C0.510622 13.0909 0.319139 13.9251 0.191483 14.8235C0.0638278 15.7219 0 16.6203 0 17.5829C0 18.6738 0.0638278 19.6364 0.191483 20.5989C0.319139 21.5615 0.510622 22.5241 0.765934 23.3583C0.957417 24.1925 1.27656 25.0267 1.59569 25.861C1.97866 26.631 2.36163 27.4011 2.80842 28.107C3.63818 29.3904 4.5956 30.5455 5.61685 31.508C6.70192 32.4706 7.85082 33.3048 9.1912 34.0107C10.4678 34.7166 11.7443 35.1658 13.0847 35.4866C14.4251 35.8075 15.7655 36 17.1058 36H17.425H17.7441C18.7015 36 19.7228 35.8717 20.6802 35.5508C21.6376 35.2299 22.595 34.8449 23.5525 34.3957C24.5099 33.9465 25.3396 33.369 26.1694 32.7273C26.9353 32.0856 27.6374 31.3797 28.3395 30.5455C28.6587 31.7005 29.0416 32.7273 29.297 33.5615L29.9991 35.7433H37.4031V0.256685H28.2119Z"
+                                                fill="white" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M52.6177 35.8075C51.788 35.9358 50.8944 36 50.0646 36C49.2348 36 48.3412 35.9358 47.5115 35.8075C46.8139 35.6996 46.1614 35.5463 45.4781 35.3858L45.4781 35.3858C45.3487 35.3554 45.2181 35.3248 45.086 35.2941C44.2563 35.1016 43.4903 34.7808 42.7882 34.4599C42.0223 34.139 41.3202 33.754 40.6181 33.3048C39.4054 32.5348 38.2565 31.6364 37.2352 30.5455C36.214 29.4545 35.3204 28.2353 34.4906 26.8877C33.7247 25.5401 33.1502 24.1283 32.7673 22.6524C32.3843 21.1765 32.1928 19.5722 32.1928 17.9679C32.1928 17.1337 32.2566 16.2353 32.3843 15.4011C32.4916 14.6997 32.6441 14.0437 32.8037 13.3567L32.8037 13.3567L32.8037 13.3567C32.8339 13.2266 32.8644 13.0954 32.8949 12.9626C33.0864 12.1283 33.4055 11.3583 33.7247 10.6524C34.0438 9.94653 34.4268 9.17647 34.8736 8.47059C35.6395 7.25134 36.5331 6.09626 37.6182 5.06952C38.7032 4.04278 39.916 3.14439 41.2564 2.31016C42.5967 1.54011 44.001 0.962566 45.469 0.577539C46.937 0.192513 48.4689 0 50.0646 0C50.8944 0 51.788 0.0641696 52.6177 0.192512C53.3153 0.300418 53.9679 0.453686 54.6511 0.614176L54.6512 0.614198C54.7806 0.644587 54.9111 0.675234 55.0432 0.705882C55.8729 0.898395 56.6389 1.21925 57.341 1.54011C58.0431 1.86096 58.809 2.24599 59.5111 2.69519C60.7239 3.46524 61.8728 4.36364 62.894 5.45455C63.9152 6.54545 64.8088 7.76471 65.6386 9.1123C66.4684 10.4599 67.0428 11.8717 67.4258 13.3476C67.8087 14.8235 68.0002 16.3636 68.0002 17.9679C68.0002 19.5722 67.8087 21.1765 67.4258 22.6524C67.0428 24.1283 66.4684 25.5401 65.6386 26.8877C64.8088 28.2353 63.9152 29.4545 62.894 30.5455C61.8728 31.6364 60.7239 32.5348 59.5111 33.3048C58.809 33.754 58.0431 34.139 57.341 34.4599C56.6389 34.7808 55.8729 35.1016 55.0432 35.2941C54.9117 35.3246 54.7818 35.3551 54.653 35.3854L54.6516 35.3857L54.6511 35.3858L54.6511 35.3858L54.6511 35.3858C53.9678 35.5463 53.3153 35.6996 52.6177 35.8075ZM56.7951 19.9852C57.0022 19.7815 57.2658 19.4666 57.3223 19.3925C57.6236 19.0036 57.7742 18.522 57.7742 18.0423C57.7742 17.5034 57.6047 17.0033 57.2846 16.5958C57.2584 16.57 57.207 16.515 57.1401 16.4433C57.0148 16.3091 56.835 16.1166 56.6633 15.9476C55.1193 14.3177 51.0898 11.6506 48.9809 10.8357C48.6608 10.7079 47.8512 10.4282 47.4181 10.4097C47.0039 10.4097 46.6085 10.5023 46.2319 10.6875C45.7611 10.9468 45.3846 11.3543 45.1774 11.8359C45.0456 12.1692 44.8385 13.1694 44.8385 13.1879C44.6314 14.2807 44.5184 16.0587 44.5184 18.022C44.5184 19.8945 44.6314 21.5966 44.8008 22.7078C44.8055 22.7124 44.8217 22.7919 44.8469 22.9154C44.9234 23.2907 45.0827 24.0727 45.2527 24.3933C45.667 25.1712 46.4766 25.6527 47.3428 25.6527H47.4181C47.983 25.6342 49.1692 25.1527 49.1692 25.1341C51.1651 24.3192 55.1004 21.7818 56.6821 20.0963L56.7951 19.9852Z"
+                                                  fill="url(#paint0_angular_1_8)" />
+                                            <defs>
+                                                <radialGradient id="paint0_angular_1_8" cx="0" cy="0" r="1"
+                                                                gradientUnits="userSpaceOnUse"
+                                                                gradientTransform="translate(51.7687 36) rotate(157.274) scale(39.8684 43.6314)">
+                                                    <stop stop-color="#1C90FF" />
+                                                    <stop offset="0.239583" stop-color="#42BAFD" />
+                                                    <stop offset="0.510237" stop-color="#5AE5B7" />
+                                                    <stop offset="0.776042" stop-color="#7DEFA3" />
+                                                    <stop offset="1" stop-color="#A9F7AE" />
+                                                </radialGradient>
+                                            </defs>
+                                        </svg>
+                                        <p class="big_text">Подтверждение электронной почты</p>
+                                        <p class="name_text">Здравствуй, {{ username }}.</p>
+                                        <p class="info_text">
+                                            Спасибо, что ты зарегистрировался на AnimeKuro, мы
+                                            рады видеть тебя! Пожалуйста, подтвердите адрес
+                                            электронной почты, нажав на ссылку ниже.
+                                        </p>
+                                        <table
+                                            role="presentation"
+                                            class="btn btn-primary">
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table role="presentation">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <a href="{{ confirm_link }}" target="_blank">
+                                                                    Подтвердить адрес электронной почты
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <p class="footer_text">Спасибо!</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -13,6 +13,7 @@ export class RegisterInputType {
     email: string;
 
     @Field(() => String)
+    @IsString()
     @Length(1, 255)
     password: string;
 }

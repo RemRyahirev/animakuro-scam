@@ -64,17 +64,20 @@ export class AnimeService {
         args: PaginationInputType,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
         const relatedAnimeList = await this.prisma.anime.findMany({
-            skip: (args.page - 1) * args.perPage,
-            take: args.perPage,
+            ...transformPaginationUtil(args),
             where: {
                 related_animes: {
                     some: {
                         id,
                     },
                 },
-            },
+            } as any,
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination(args, {
+            nested_field: 'animes',
+            search_property: 'id',
+            search_value: id
+        });
         return {
             success: true,
             errors: [],
@@ -102,7 +105,7 @@ export class AnimeService {
                 characters: true,
                 studios: true,
                 related_animes: true,
-            },
+            } as any,
         });
         return {
             success: true,
@@ -130,7 +133,7 @@ export class AnimeService {
                 characters: true,
                 studios: true,
                 related_animes: true,
-            },
+            } as any,
         });
         return {
             success: true,

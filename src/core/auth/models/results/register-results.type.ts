@@ -1,5 +1,12 @@
-import { ObjectType } from 'type-graphql';
+import { Field, ObjectType } from 'type-graphql';
 import { BaseResultsType } from '../../../../common/models/results';
+import { User } from '../../../user/models/user.model';
 
 @ObjectType()
-export class RegisterResultsType extends BaseResultsType {}
+export class RegisterResultsType extends BaseResultsType {
+    @Field(() => User, {
+        nullable: true,
+        description: 'User',
+    })
+    user: User | null;
+}

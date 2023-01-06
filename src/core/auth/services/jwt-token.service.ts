@@ -1,6 +1,6 @@
-import { decode, JwtPayload, sign, verify } from 'jsonwebtoken';
-import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
-import { IJwtInputPayload } from '../../../common/models/interfaces';
+import { decode, JwtPayload, sign, verify } from "jsonwebtoken";
+import { ICustomContext } from "common/models/interfaces/custom-context.interface";
+import { IJwtInputPayload } from "../../../common/models/interfaces";
 
 // type ThirdPartyAuthRedisKey = `thirdparty-auth:${ThirdPartyAuth}:${string}`
 // type EmailAuthKey = `email-auth:${string}`
@@ -61,9 +61,7 @@ export default class JwtTokenService {
     }
 
     static decodeAccessToken(token: string) {
-        const decoded = decode(token) as IJwtInputPayload & JwtPayload;
-
-        return decoded;
+        return decode(token) as IJwtInputPayload & JwtPayload;
     }
 
     // async saveJwtAccessToken(key: RedisTokenKeys, token: string) {

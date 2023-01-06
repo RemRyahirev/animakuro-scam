@@ -4,36 +4,36 @@ import { PrismaClient } from '@prisma/client';
 import { PATHS_AND_PREFIXES } from '../config/constants';
 import { generateHash, getFrontendUrl } from '../utils/uills';
 import { ConfigParent } from '../config/config';
-import { Mailer } from '../utils/mailer';
+import { MailerOld } from '../utils/mailer';
 import { GraphQLError } from 'graphql';
 import { UserUtilsService } from '../../core/user/services/user-utils.service';
 import { GqlHttpException } from '../errors/errors';
-import { EmailMessage } from '../models/enums';
+import { MailPurpose } from '../models/enums';
 
 export class ConfirmService {
     private readonly redis: RedisClientType;
     private readonly prisma: PrismaClient;
     private readonly config: ConfigParent;
-    private readonly mailer: Mailer;
+    private readonly mailer: MailerOld;
     private readonly userUtils: UserUtilsService;
 
     constructor() {
         this.prisma = new Database().logic;
         this.redis = new Redis().logic;
         this.config = new Config().logic;
-        this.mailer = new Mailer();
+        this.mailer = new MailerOld();
         this.userUtils = new UserUtilsService();
     }
 
-    emailServiceTS(url: string, type: EmailMessage) {
+    emailServiceTS(url: string, type: MailPurpose) {
         switch (type) {
-            case 0: {
+            case MailPurpose.CONFIRM_REGISTRATION: {
                 return {
                     title: `Подтверждение email`,
                     message: `Чтобы подтвердить свою электронную почту, перейдите по <a href="${url}" target="_blank">ссылке</a>.`,
                 };
             }
-            case 1: {
+            case MailPurpose.RESET_PASSWORD: {
                 return {
                     title: `Подтверждение пароля`,
                     message: `Чтобы подтвердить свой пароль, перейдите по <a href="${url}" target="_blank">ссылке</a>.`,
@@ -41,18 +41,19 @@ export class ConfirmService {
             }
             default: {
                 return {
-                    title: 'Неотвечайте',
+                    title: 'Не отвечайте',
                     message: 'Это письмо пришло ошибкой',
                 };
             }
         }
     }
 
-    getRedisCode(hash: string, type: EmailMessage) {
+    getRedisCode(hash: string, type: MailPurpose) {
+        // @ts-ignore
         return `${PATHS_AND_PREFIXES[type].redisPrefix}:${hash}`;
     }
 
-    async setHash<T>(obj: T, type: EmailMessage): Promise<string> {
+    async setHash<T>(obj: T, type: MailPurpose): Promise<string> {
         const hash = generateHash();
         const EX = this.config.get('CONFIRM_CODE_EXPIRES', 9999);
         const redisCode = this.getRedisCode(hash, type);
@@ -60,8 +61,10 @@ export class ConfirmService {
         return hash;
     }
 
-    async sendLetter(hash: string, email: string, type: EmailMessage) {
+    async sendLetter(hash: string, email: string, type: MailPurpose) {
+
         const url = getFrontendUrl({
+            // @ts-ignore
             pathname: PATHS_AND_PREFIXES[type].path + hash,
         });
         const text = this.emailServiceTS(url, type);
@@ -73,10 +76,7 @@ export class ConfirmService {
     }
 
     public async confirmPassword(hash: string, password: string) {
-        const key = this.getRedisCode(
-            hash,
-            EmailMessage.RESET_PASSWORD,
-        );
+        const key = this.getRedisCode(hash, MailPurpose.RESET_PASSWORD);
         const res = (await this.redis.get(key)) || '';
         if (!res) {
             throw new GraphQLError('Срок жизни hash истек');
@@ -88,7 +88,7 @@ export class ConfirmService {
     }
 
     public async confirmEmail(code: string): Promise<boolean> {
-        const key = this.getRedisCode(code, EmailMessage.CONFIRM_EMAIL);
+        const key = this.getRedisCode(code, MailPurpose.CONFIRM_REGISTRATION);
         const res = (await this.redis.get(key)) || '';
         if (!res) {
             throw new GqlHttpException('Срок жизни hash истек', 400);

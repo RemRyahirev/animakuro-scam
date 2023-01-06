@@ -1,4 +1,4 @@
-import { Args, Authorized, Ctx, FieldResolver, Resolver } from 'type-graphql';
+import { Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
 import { ValidateSchemas } from 'common/decorators';
 import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
@@ -22,7 +22,6 @@ export class UserMutationResolver extends UserRootResolver {
     }
 
     @FieldResolver(() => CreateUserResultsType)
-    @Authorized()
     @ValidateSchemas()
     async createUser(
         @Args() args: CreateUserInputType,

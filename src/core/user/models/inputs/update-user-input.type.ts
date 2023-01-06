@@ -19,36 +19,47 @@ export class UpdateUserInputType {
     @IsOptional()
     @Field(() => String, { nullable: true })
     @Length(1, 64)
-    username: string;
+    username?: string;
 
     @IsOptional()
     @Field(() => String, { nullable: true })
     @Length(1, 320)
     @IsEmail()
-    email: string;
+    email?: string;
 
+    @IsOptional()
+    @Field(() => Boolean, { nullable: true })
+    isEmailConfirmed?: boolean;
+
+    @IsOptional()
     @IsString()
     @ValidateIf((o) => o.newPassword)
     @Field(() => String, { nullable: true })
-    password: string;
+    password?: string;
 
+    @IsOptional()
     @IsString()
     @ValidateIf((o) => o.password)
     @Field(() => String, { nullable: true })
-    newPassword: string;
+    newPassword?: string;
 
+    @IsOptional()
     @Field(() => Date, { nullable: true })
-    birthday: Date;
+    birthday?: Date;
 
+    @IsOptional()
     @Field(() => Gender, { nullable: true })
-    gender: Gender;
+    gender?: Gender;
 
+    @IsOptional()
     @Field(() => String, { nullable: true })
-    customGender: string;
+    customGender?: string;
 
+    @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
-    avatar: IUpload;
+    avatar?: IUpload;
 
+    @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
-    banner: IUpload;
+    banner?: IUpload;
 }

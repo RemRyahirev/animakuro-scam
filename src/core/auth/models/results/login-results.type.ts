@@ -4,6 +4,9 @@ import { User } from '../../../user/models/user.model';
 
 @ObjectType()
 export class LoginResultsType extends BaseResultsType {
-    @Field(() => User)
-    user: User;
+    @Field(() => String, { nullable: true })
+    access_token?: string;
+
+    @Field(() => User, { nullable: true })
+    user: User | null;
 }

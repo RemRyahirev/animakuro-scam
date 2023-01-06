@@ -22,7 +22,7 @@ export class UserAnimeService {
                 id,
             },
             include:{
-                userProfile: true
+                user_profile: true
             }
         });
         return {
@@ -67,7 +67,7 @@ export class UserAnimeService {
                 }
             },
             include:{
-                userProfile: true,
+                user_profile: true,
                 anime: true
             }
         });

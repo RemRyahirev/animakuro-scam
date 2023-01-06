@@ -14,21 +14,21 @@ export class AuthMutationType {
     })
     register: RegisterResultsType;
 
-    @Field(() => ConfirmRegistrationResultsType, {
-        description: 'Confirm registration',
-    })
-    confirmRegistration: ConfirmRegistrationResultsType;
-
+    // @Field(() => ConfirmRegistrationResultsType, {
+    //     description: 'Confirm registration',
+    // })
+    // confirmRegistration: ConfirmRegistrationResultsType;
+    //
     @Field(() => LoginResultsType, { description: 'User login' })
     login: LoginResultsType;
 
-    @Field(() => LogoutResultsType, { description: 'User logout' })
-    logout: LogoutResultsType;
-
-    @Field(() => LoginOrRegisterThirdPartyResultsType, {
-        description: 'Login or register 3rd party',
-    })
-    loginOrRegisterThirdParty: LoginOrRegisterThirdPartyResultsType;
+    // @Field(() => LogoutResultsType, { description: 'User logout' })
+    // logout: LogoutResultsType;
+    //
+    // @Field(() => LoginOrRegisterThirdPartyResultsType, {
+    //     description: 'Login or register 3rd party',
+    // })
+    // loginOrRegisterThirdParty: LoginOrRegisterThirdPartyResultsType;
 }
 
 @ObjectType()

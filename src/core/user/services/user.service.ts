@@ -8,7 +8,7 @@ import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { PaginationService } from '../../../common/services';
 import { RedisClientType } from 'redis';
-import { Mailer } from '../../../common/utils/mailer';
+import { MailerOld } from '../../../common/utils/mailer';
 import { User } from '../models/user.model';
 import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
@@ -19,7 +19,7 @@ export class UserService {
     private readonly paginationService: PaginationService =
         new PaginationService('user');
     private readonly redis: RedisClientType = new Redis().logic;
-    private readonly mailer: Mailer = new Mailer();
+    private readonly mailer: MailerOld = new MailerOld();
 
     async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
         const { userJwtPayload } = ctx;
@@ -93,7 +93,7 @@ export class UserService {
         const user = await this.updateUser(args);
         return {
             success: true,
-            user: user as User,
+            user: user as any,
         };
     }
 
@@ -103,7 +103,7 @@ export class UserService {
         return {
             success: true,
             errors: [],
-            userList: userList as Array<User>,
+            userList: userList as any,
             pagination,
         };
     }
@@ -121,7 +121,7 @@ export class UserService {
         const pagination = await this.paginationService.getPagination(args);
         return {
             success: true,
-            userList: userList as Array<User>,
+            userList: userList as any,
             pagination,
         };
     }
@@ -138,8 +138,8 @@ export class UserService {
                 },
             } as any,
             include: {
-                thirdPartyAuth: true,
-                siteAuthSessions: true,
+                third_party_auth: true,
+                site_auth_sessions: true,
             },
         });
     }
@@ -147,14 +147,14 @@ export class UserService {
     async findUserByThirdPartyAuth(uid: string, type: ThirdPartyAuth) {
         return await this.prisma.user.findFirst({
             where: {
-                thirdPartyAuth: {
+                third_party_auth: {
                     uid,
                     type,
                 },
             },
             include: {
-                thirdPartyAuth: true,
-                siteAuthSessions: true,
+                third_party_auth: true,
+                site_auth_sessions: true,
             },
         });
     }

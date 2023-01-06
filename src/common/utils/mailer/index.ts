@@ -3,7 +3,7 @@ import { SentMessageInfo } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { Config } from '../../../loaders';
 
-export class Mailer {
+export class MailerOld {
     private readonly config = new Config().logic;
     private readonly domain;
     private readonly mailer: nodemailer.Transporter;

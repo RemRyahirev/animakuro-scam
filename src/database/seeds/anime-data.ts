@@ -33,6 +33,7 @@ export const animeData = async () => {
             },
             format: MediaFormat.OTHER,
             source: MediaSource.OTHER,
+            is_licensed: true,
             studios: {
                 connect: [
                     {
@@ -85,6 +86,7 @@ export const animeData = async () => {
             },
             format: MediaFormat.MOVIE,
             source: MediaSource.GAME,
+            is_licensed: true,
             studios: {
                 connect: [
                     {
@@ -137,6 +139,7 @@ export const animeData = async () => {
             },
             format: MediaFormat.SPECIAL,
             source: MediaSource.LIGHT_NOVEL,
+            is_licensed: false,
             studios: {
                 connect: [
                     {

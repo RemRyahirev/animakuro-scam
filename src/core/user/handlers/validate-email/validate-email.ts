@@ -1,7 +1,7 @@
 import { Checker } from '../checker';
 import { Database, Redis } from '../../../../loaders';
 import { randomUUID } from 'crypto';
-import { Mailer } from '../../../../common/utils/mailer';
+import { MailerOld } from '../../../../common/utils/mailer';
 import { User } from '../../models/user.model';
 import { RedisClientType } from 'redis';
 
@@ -13,7 +13,7 @@ export class ValidateEmail extends Checker<
     private _currentValue: string | undefined;
     private readonly prisma = new Database().logic;
     private redis: RedisClientType | undefined;
-    private readonly mailer = new Mailer();
+    private readonly mailer = new MailerOld();
     private readonly _isProduction: boolean;
 
     constructor(

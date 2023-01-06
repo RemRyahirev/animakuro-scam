@@ -8,8 +8,8 @@ export class AuthQueryResolver extends AuthRootResolver {
         super();
     }
 
-    @FieldResolver(() => ThirdPartyRedirectUrlResultsType)
-    async getThirdPartyRedirectUrls() {
-        return await this.authService.getThirdPartyRedirectUrls();
-    }
+    // @FieldResolver(() => ThirdPartyRedirectUrlResultsType)
+    // async getThirdPartyRedirectUrls() {
+    //     return await this.authService.getThirdPartyRedirectUrls();
+    // }
 }

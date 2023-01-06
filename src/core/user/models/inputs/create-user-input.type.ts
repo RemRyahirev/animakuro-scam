@@ -4,20 +4,19 @@ import { Gender } from '../../../../common/models/enums';
 
 @ArgsType()
 export class CreateUserInputType {
-    @Field({ nullable: true })
-    @IsString()
+    @Field(() => String)
     @Length(1, 64)
-    username?: string;
+    username: string;
 
-    @IsOptional()
-    @Field({ nullable: true })
+    @Field(() => String)
     @Length(1, 320)
     @IsEmail()
-    email?: string;
+    email: string;
 
+    @Field(() => String)
     @IsString()
-    @Field({ nullable: true })
-    password?: string;
+    @Length(1, 255)
+    password: string;
 
     // @IsOptional()
     // @Field({ nullable: true })

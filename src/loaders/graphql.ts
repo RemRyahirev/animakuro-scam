@@ -31,7 +31,7 @@ export class GraphQLMiddleware {
             return <OptionsData>{
                 schema: this.schema,
                 pretty: true,
-                context: { request, response },
+                context: { headers: request.headers, request, response },
                 graphiql: false,
                 customFormatErrorFn: (error: GraphQLError) =>
                     exceptionsHandler(error, response),
@@ -43,7 +43,7 @@ export class GraphQLMiddleware {
         return await buildSchema({
             resolvers: [__dirname + '/../core/**/resolvers/*.resolver.{ts,js}'],
             emitSchemaFile: true,
-            authChecker: new AuthCheckerMiddleware().check,
+            // authChecker: new AuthCheckerMiddleware().check,
             authMode: 'null',
             validate: true,
             globalMiddlewares: [
