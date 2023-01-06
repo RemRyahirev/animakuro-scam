@@ -47,7 +47,7 @@ specifiers:
   passport-apple: ^2.0.1
   passport-discord: ^0.1.4
   passport-facebook: ^3.0.0
-  passport-google-oauth: ^2.0.0
+  passport-google-oauth20: ^2.0.0
   passport-jwt: ^4.0.1
   prettier: ^2.8.1
   prisma: ^4.8.0
@@ -87,7 +87,7 @@ dependencies:
   passport-apple: 2.0.1
   passport-discord: 0.1.4
   passport-facebook: 3.0.0
-  passport-google-oauth: 2.0.0
+  passport-google-oauth20: 2.0.0
   passport-jwt: 4.0.1
   redis: 4.5.1
   reflect-metadata: 0.1.13
@@ -5481,20 +5481,6 @@ packages:
       passport-oauth2: 1.6.1
     dev: false
 
-  /passport-google-oauth/2.0.0:
-    resolution: {integrity: sha512-JKxZpBx6wBQXX1/a1s7VmdBgwOugohH+IxCy84aPTZNq/iIPX6u7Mqov1zY7MKRz3niFPol0KJz8zPLBoHKtYA==}
-    engines: {node: '>= 0.4.0'}
-    dependencies:
-      passport-google-oauth1: 1.0.0
-      passport-google-oauth20: 2.0.0
-    dev: false
-
-  /passport-google-oauth1/1.0.0:
-    resolution: {integrity: sha512-qpCEhuflJgYrdg5zZIpAq/K3gTqa1CtHjbubsEsidIdpBPLkEVq6tB1I8kBNcH89RdSiYbnKpCBXAZXX/dtx1Q==}
-    dependencies:
-      passport-oauth1: 1.2.0
-    dev: false
-
   /passport-google-oauth20/2.0.0:
     resolution: {integrity: sha512-KSk6IJ15RoxuGq7D1UKK/8qKhNfzbLeLrG3gkLZ7p4A6DBCcv7xpyQwuXtWdpyR0+E0mwkpjY1VfPOhxQrKzdQ==}
     engines: {node: '>= 0.4.0'}
@@ -5507,15 +5493,6 @@ packages:
     dependencies:
       jsonwebtoken: 9.0.0
       passport-strategy: 1.0.0
-    dev: false
-
-  /passport-oauth1/1.2.0:
-    resolution: {integrity: sha512-Sv2YWodC6jN12M/OXwmR4BIXeeIHjjbwYTQw4kS6tHK4zYzSEpxBgSJJnknBjICA5cj0ju3FSnG1XmHgIhYnLg==}
-    engines: {node: '>= 0.4.0'}
-    dependencies:
-      oauth: 0.9.15
-      passport-strategy: 1.0.0
-      utils-merge: 1.0.1
     dev: false
 
   /passport-oauth2/1.6.1:
