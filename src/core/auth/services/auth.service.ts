@@ -2,7 +2,7 @@ import { Config, Database } from "../../../loaders";
 import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
-import { FacebookStrategy } from '../strategies/facebook.strategy';
+import { FacebookStrategy } from "../strategies";
 import { UserService } from '../../user/services/user.service';
 import { MailPurpose, HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { GqlHttpException } from '../../../common/errors/errors';
@@ -189,6 +189,22 @@ export class AuthService {
 
     async register(args: RegisterInputType, ctx: Context,): Promise<RegisterResultsType> {
         args.password = await hash(args.password);
+        const usedEmailCount = await this.prisma.user.count({
+            where: {
+                email: args.email
+            }
+        });
+        if (usedEmailCount >= 5) {
+            return {
+                success: true,
+                user: null,
+                errors: [{
+                    property: 'Email',
+                    value: usedEmailCount,
+                    reason: 'Account limit exceeded'
+                }]
+            }
+        }
         const user = await this.prisma.user.create({ data: args });
         const hashGen = generateHash();
         await this.mailer.sendMail({

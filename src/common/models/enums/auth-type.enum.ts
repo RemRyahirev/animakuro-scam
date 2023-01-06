@@ -1,3 +1,4 @@
+import { registerEnumType } from 'type-graphql';
 import 'reflect-metadata';
 
 export enum AuthType {
@@ -7,3 +8,7 @@ export enum AuthType {
     DISCORD = 'discord',
     FACEBOOK = 'facebook',
 }
+
+registerEnumType(AuthType, {
+    name: 'AuthType',
+});
