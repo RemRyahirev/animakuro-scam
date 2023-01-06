@@ -111,6 +111,7 @@ export class AuthService {
 
     async login(args: LoginInputType, ctx: Context): Promise<LoginResultsType> {
         const user = await this.userService.findUserByUsername(args.username);
+        // TODO handle exceptions in custom decorators(include username existance)
         if (!user) {
             return <LoginResultsType>{
                 success: false,
