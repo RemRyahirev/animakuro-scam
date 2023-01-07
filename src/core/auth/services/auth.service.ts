@@ -6,9 +6,8 @@ import { FacebookStrategy } from "../strategies";
 import { UserService } from '../../user/services/user.service';
 import { MailPurpose, HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { GqlHttpException } from '../../../common/errors/errors';
-import { compare, hash } from '../../../common/utils/password.util';
+import { hash } from '../../../common/utils/password.util';
 import { LoginInputType } from '../models/inputs/login-input.type';
-import { ICustomContext } from '../../../common/models/interfaces';
 import JwtTokenService from './jwt-token.service';
 import { User } from '../../user/models/user.model';
 import { ThirdPartyAuthInputType } from '../models/inputs/third-party-input.type';
@@ -19,8 +18,6 @@ import { Mailer } from "../../../mailer/mailer";
 import { generateHash } from "../../../common/utils/uills";
 import { ConfigParent } from "../../../common/config/config";
 import { Context } from "vm";
-import { ValidationError } from "class-validator";
-import { BaseResultsType } from "../../../common/models/results";
 import { LoginResultsType } from "../models/results/login-results.type";
 
 export class AuthService {
@@ -110,28 +107,7 @@ export class AuthService {
     // }
 
     async login(args: LoginInputType, ctx: Context): Promise<LoginResultsType> {
-        const user = await this.userService.findUserByUsername(args.username);
-        // TODO handle exceptions in custom decorators(include username existance)
-        if (!user) {
-            return <LoginResultsType>{
-                success: false,
-                errors: [{
-                    property: 'user',
-                    value: null,
-                    reason: 'User not found'
-                }],
-            };
-        }
-        if (!(await compare(args.password, user?.password || ''))) {
-            return <LoginResultsType>{
-                success: false,
-                errors: [{
-                    property: 'password',
-                    value: args.password,
-                    reason: 'Invalid password'
-                }],
-            };
-        }
+        const user = await this.userService.findUserByUsername(args.username) as NonNullable<User>;
         const session = await this.sessionService.createSiteAuthSession({
             agent: ctx.request.headers['user-agent'] || '',
             ip: ctx.request.socket.remoteAddress || '', // TODO: recheck
@@ -188,7 +164,7 @@ export class AuthService {
     //     return { success: true };
     // }
 
-    async register(args: RegisterInputType, ctx: Context,): Promise<RegisterResultsType> {
+    async register(args: RegisterInputType, ctx: Context): Promise<RegisterResultsType> {
         args.password = await hash(args.password);
         const user = await this.prisma.user.create({ data: args });
         const hashGen = generateHash();
