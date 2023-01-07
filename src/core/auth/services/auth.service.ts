@@ -79,32 +79,10 @@ export class AuthService {
     //     };
     // }
     //
-    // async logoutInfo(ctx: ICustomContext) {
-    //     const { userJwtPayload } = ctx;
-    //     // rewrite decorator
-    //
-    //     if (!userJwtPayload)
-    //         throw new GqlHttpException(
-    //             'INVALID_SESSION',
-    //             HttpStatus.BAD_REQUEST,
-    //             'Auth Errors',
-    //         );
-    //
-    //     const session = this.sessionService.updateSiteAuthSession(userJwtPayload.sessionId, {
-    //         active: false,
-    //     });
-    //
-    //     JwtTokenService.removeCookieAccessToken(ctx);
-    //
-    //     if (!session)
-    //         throw new GqlHttpException(
-    //             'INVALID_SESSION',
-    //             HttpStatus.BAD_REQUEST,
-    //             'Auth Errors',
-    //         );
-    //
-    //     return { success: true };
-    // }
+    async logout(ctx: Context) {
+        // TODO rewrite logout logic
+        return { success: true };
+    }
 
     async login(args: LoginInputType, ctx: Context): Promise<LoginResultsType> {
         const user = await this.userService.findUserByUsername(args.username) as NonNullable<User>;

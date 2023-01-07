@@ -30,7 +30,7 @@ export class AnimeQueryType {
     @Field(() => GetListRelatedAnimeByAnimeIdResultsType, {
         description: 'Get Related anime list by anime ID',
     })
-    getAuthorListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
+    getRelatedAnimeListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
 }
 
 @Resolver()

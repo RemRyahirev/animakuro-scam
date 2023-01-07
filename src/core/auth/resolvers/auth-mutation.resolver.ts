@@ -1,5 +1,4 @@
 import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
-import { ICustomContext } from 'common/models/interfaces/custom-context.interface';
 import { ValidateSchemas } from 'common/decorators';
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { RegisterInputType } from '../models/inputs/register-input.type';
@@ -42,10 +41,10 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.login(args, ctx);
     }
 
-    // @FieldResolver(() => LogoutResultsType)
-    // async logout(@Ctx() ctx: ICustomContext): Promise<LogoutResultsType> {
-    //     return await this.authService.logoutInfo(ctx);
-    // }
+    @FieldResolver(() => LogoutResultsType)
+    async logout(@Ctx() ctx: Context): Promise<LogoutResultsType> {
+        return await this.authService.logout(ctx);
+    }
 
     // @FieldResolver(() => LoginOrRegisterThirdPartyResultsType)
     // async loginOrRegisterThirdParty(
