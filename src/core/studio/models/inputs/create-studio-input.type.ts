@@ -1,4 +1,4 @@
-import { ArgsType, Field, Float } from 'type-graphql';
+import { ArgsType, Field, Float } from '@nestjs/graphql';
 import {
     IsArray,
     IsNumber,
@@ -6,7 +6,7 @@ import {
     IsUrl,
     IsUUID,
     Length,
-} from 'class-validator';
+} from '@nestjs/class-validator';
 
 @ArgsType()
 export class CreateStudioInputType {

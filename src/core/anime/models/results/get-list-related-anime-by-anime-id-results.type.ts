@@ -1,10 +1,9 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
 import { Anime } from '../anime.model';
-import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
 
 @ObjectType()
 export class GetListRelatedAnimeByAnimeIdResultsType extends BaseResultsType {

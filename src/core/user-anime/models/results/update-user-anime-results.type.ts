@@ -1,6 +1,6 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseResultsType } from '../../../../common/models/results';
-import { UserAnime } from "../user-anime.model";
+import { UserAnime } from '../user-anime.model';
 
 @ObjectType()
 export class UpdateUserAnimeResultsType extends BaseResultsType {

@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { CharacterRole, CharacterType } from '../../../common/models/enums';
 import { Anime } from '../../anime/models/anime.model';
 

@@ -1,8 +1,6 @@
-import { Field, ID, ObjectType } from 'type-graphql';
-import { SubscribeTier } from '../../../common/models/enums';
-import { ModeratorRoles } from '../../../common/models/enums';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { ModeratorRoles, SubscribeTier } from '../../../common/models/enums';
 import { User } from '../../user/models/user.model';
-import { UserAnime } from '../../user-anime/models/user-anime.model';
 
 @ObjectType()
 export class UserProfile {

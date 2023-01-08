@@ -1,4 +1,4 @@
-import { Field, Float, ID, Int, ObjectType } from 'type-graphql';
+import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()

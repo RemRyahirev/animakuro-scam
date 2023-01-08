@@ -1,5 +1,5 @@
-import { ArgsType, Field } from 'type-graphql';
-import { IsString, Length } from 'class-validator';
+import { ArgsType, Field } from '@nestjs/graphql';
+import { IsString, Length } from '@nestjs/class-validator';
 
 @ArgsType()
 export class CreateGenreInputType {

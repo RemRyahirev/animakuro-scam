@@ -1,9 +1,9 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
-import { Character } from "../character.model";
+import { Character } from '../character.model';
 
 @ObjectType()
 export class GetListCharacterResultsType extends BaseResultsType {

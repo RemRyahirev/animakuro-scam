@@ -1,4 +1,4 @@
-import { ArgsType, Field, Float, ID, Int } from 'type-graphql';
+import { ArgsType, Field, Float, ID, Int } from '@nestjs/graphql';
 import {
     IsArray,
     IsBoolean,
@@ -10,7 +10,7 @@ import {
     IsUrl,
     IsUUID,
     Length,
-} from 'class-validator';
+} from '@nestjs/class-validator';
 import {
     AnimeType,
     FilmRating,
@@ -20,7 +20,6 @@ import {
     YearSeason,
 } from '../../../../common/models/enums';
 import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
-import { Anime } from '../anime.model';
 
 @ArgsType()
 export class CreateAnimeInputType {

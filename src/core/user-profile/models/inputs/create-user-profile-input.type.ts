@@ -1,17 +1,23 @@
-import {ArgsType, Field, ID} from "type-graphql";
-import {ModeratorRoles, SubscribeTier} from "../../../../common/models/enums";
-import {IsBoolean, IsDate, IsOptional, IsString, IsUUID, Length} from "class-validator";
+import { ArgsType, Field } from '@nestjs/graphql';
+import { ModeratorRoles, SubscribeTier } from '../../../../common/models/enums';
+import {
+    IsBoolean,
+    IsDate,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Length,
+} from '@nestjs/class-validator';
 
 @ArgsType()
 // перечисляем, какие аргументы вводим в инпут GraphQL при запросе на создание
 // в том числе обязательные и необязательные
 // проработать эти поля!
-export class CreateUserProfileInputType{
-
+export class CreateUserProfileInputType {
     @IsOptional() // сам сгенерится Призмой
     @IsUUID()
-    @Field({nullable: true})
-    id?:string;
+    @Field({ nullable: true })
+    id?: string;
 
     @IsString()
     @Field()
@@ -19,8 +25,8 @@ export class CreateUserProfileInputType{
 
     @IsOptional()
     @IsString()
-    @Length(1,30)
-    @Field({nullable: true, defaultValue: 'incognito'})
+    @Length(1, 30)
+    @Field({ nullable: true, defaultValue: 'incognito' })
     displayed_name: string;
 
     @IsOptional()
@@ -40,36 +46,33 @@ export class CreateUserProfileInputType{
 
     @IsOptional()
     @IsString()
-    @Length(1,30)
-    @Field({nullable: true})
-    country?: string
+    @Length(1, 30)
+    @Field({ nullable: true })
+    country?: string;
 
     @IsOptional()
     @IsString()
-    @Length(1,30)
-    @Field({nullable: true})
+    @Length(1, 30)
+    @Field({ nullable: true })
     language: string;
 
     @IsOptional()
     @IsDate()
-    @Field({defaultValue: new Date()})
+    @Field({ defaultValue: new Date() })
     created_at: Date;
 
     @IsOptional()
     @IsString()
-    @Field(() => SubscribeTier,
-        {defaultValue: SubscribeTier.FREE_ACCOUNT})
+    @Field(() => SubscribeTier, { defaultValue: SubscribeTier.FREE_ACCOUNT })
     subscribe_tier: string;
 
     @IsOptional()
     @IsString()
-    @Field(() => ModeratorRoles,
-        {defaultValue: ModeratorRoles.VIEWER})
+    @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
     moderator_role: string;
 
     @IsOptional()
     @IsBoolean()
-    @Field({defaultValue: false})
-    is_blocked: boolean
-
+    @Field({ defaultValue: false })
+    is_blocked: boolean;
 }

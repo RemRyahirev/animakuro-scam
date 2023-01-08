@@ -1,8 +1,8 @@
-import { ArgsType, Field } from 'type-graphql';
+import { ArgsType, Field } from '@nestjs/graphql';
 import {
     IsString,
     Length,
-} from 'class-validator';
+} from '@nestjs/class-validator';
 
 @ArgsType()
 export class CreateAuthorInputType {

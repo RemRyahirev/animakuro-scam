@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID } from 'type-graphql';
-import { IsString, IsUUID, Length } from "class-validator";
+import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { IsString, IsUUID, Length } from '@nestjs/class-validator';
 
 @ArgsType()
 export class UpdateTranslationInputType {

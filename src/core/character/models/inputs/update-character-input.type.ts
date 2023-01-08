@@ -1,5 +1,5 @@
-import { ArgsType, Field, ID } from 'type-graphql';
-import { IsEnum, IsOptional, IsString, IsUUID, Length } from 'class-validator';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { IsEnum, IsOptional, IsString, IsUUID, Length } from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 
 @ArgsType()

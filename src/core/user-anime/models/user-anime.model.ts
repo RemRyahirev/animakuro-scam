@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from 'type-graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { WatchStatus } from '../../../common/models/enums';
 import { UserProfile } from '../../user-profile/models/user-profile.model';
 import { Anime } from '../../anime/models/anime.model';
