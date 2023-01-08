@@ -10,7 +10,7 @@
         "generate": "prisma generate",
         "seed": "ts-node src/database/seeds/index.ts",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-        "docs": "npx @compodoc/compodoc -p tsconfig.json -s"
+        "docs": "npx @compodoc/compodoc -p tsconfig.json -s -r 8081"
     },
     "repository": {
         "type": "git",
