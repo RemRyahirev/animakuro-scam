@@ -1,5 +1,4 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
-import { UserService } from '../services/user.service';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { GetListUserResultsType } from '../models/results/get-list-user-results.type';
 import { UpdateUserResultsType } from '../models/results/update-user-results.type';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
@@ -32,7 +31,6 @@ export class UserQueryType {
 
 @Resolver()
 export class UserRootResolver {
-    protected readonly userService: UserService = new UserService();
 
     @Mutation(() => UserMutationType, { description: 'User mutations' })
     userMutations() {

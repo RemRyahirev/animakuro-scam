@@ -1,5 +1,5 @@
-import { IsInt, IsPositive } from 'class-validator';
-import { ArgsType, Field, Int } from 'type-graphql';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
+import { IsInt, IsPositive } from '@nestjs/class-validator';
 
 @ArgsType()
 export class PaginationInputType {

@@ -4,12 +4,13 @@ import {
     ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-} from 'class-validator';
-import { Database } from '../../loaders';
+} from '@nestjs/class-validator';
+import { PrismaService } from '../services';
 
 @ValidatorConstraint({ async: true })
 export class UniqueConstraint implements ValidatorConstraintInterface {
-    private readonly prisma = new Database().logic;
+    constructor(private prisma: PrismaService) {}
+
     async validate(value: any, args: ValidationArguments) {
         const username = await this.prisma.user
             .findFirst({
@@ -18,7 +19,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
                 },
                 select: {
                     username: true,
-                }
+                },
             })
             .then((val) => val?.username);
         return username !== value;

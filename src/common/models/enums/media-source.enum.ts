@@ -1,4 +1,4 @@
-import { registerEnumType } from 'type-graphql';
+import { registerEnumType } from '@nestjs/graphql';
 import 'reflect-metadata';
 
 export enum MediaSource {

@@ -1,25 +1,35 @@
-import { MiddlewareFn, NextFn, ResolverData } from 'type-graphql';
 import { BaseResultsType } from '../models/results';
+import {
+    CallHandler,
+    ExecutionContext,
+    Injectable,
+    NestInterceptor,
+} from '@nestjs/common';
+import { catchError, Observable, throwError } from 'rxjs';
 
-export const PrismaExceptionInterceptor: MiddlewareFn<any> = async (
-    resolverData: ResolverData<{}>,
-    next: NextFn,
-) => {
-    try {
-        return await next();
-    } catch (error: any) {
-        if (error) {
-            return <BaseResultsType>{
-                success: false,
-                errors: [
-                    {
-                        property: 'prisma client error',
-                        value: error.code ? 'error code - ' + error.code : 'invalid value',
-                        reason: error?.meta?.cause || error?.meta?.message || error?.message,
-                    },
-                ],
-            };
-        }
-        throw error;
+@Injectable()
+export class PrismaExceptionInterceptor implements NestInterceptor {
+    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+        return next.handle().pipe(
+            catchError((error) =>
+                throwError(() => {
+                    return <BaseResultsType>{
+                        success: false,
+                        errors: [
+                            {
+                                property: 'prisma client error',
+                                value: error.code
+                                    ? 'error code - ' + error.code
+                                    : 'invalid value',
+                                reason:
+                                    error?.meta?.cause ||
+                                    error?.meta?.message ||
+                                    error?.message,
+                            },
+                        ],
+                    };
+                }),
+            ),
+        );
     }
-};
+}

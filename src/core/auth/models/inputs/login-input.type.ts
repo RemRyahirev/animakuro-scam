@@ -1,6 +1,6 @@
-import { Length } from 'class-validator';
-import { ArgsType, Field } from 'type-graphql';
 import { ComparePassword, EntityExists } from '../../../../common/decorators';
+import { ArgsType, Field } from '@nestjs/graphql';
+import { Length } from '@nestjs/class-validator';
 
 @ArgsType()
 export class LoginInputType {

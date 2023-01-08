@@ -4,7 +4,7 @@ import {
     ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-} from 'class-validator';
+} from '@nestjs/class-validator';
 
 /**
  * check if two fields match

@@ -4,13 +4,13 @@ import {
     ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-} from 'class-validator';
-import { Database } from '../../loaders';
+} from '@nestjs/class-validator';
 import { LoginInputType } from '../../core/auth/models/inputs/login-input.type';
+import { PrismaService } from '../services';
 
 @ValidatorConstraint({ async: true })
 export class EntityExistsConstraint implements ValidatorConstraintInterface {
-    private readonly prisma = new Database().logic;
+    constructor(private prisma: PrismaService) {}
 
     async validate(value: any, args: ValidationArguments) {
         const inputArgs = args.object as LoginInputType;

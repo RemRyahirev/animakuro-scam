@@ -1,4 +1,3 @@
-import { Database, Redis } from '../../../loaders';
 import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
@@ -6,20 +5,18 @@ import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
-import { PaginationService } from '../../../common/services';
-import { RedisClientType } from 'redis';
-import { MailerOld } from '../../../common/utils/mailer';
-import { User } from '../models/user.model';
+import { PaginationService, PrismaService } from '../../../common/services';
 import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserService {
-    private readonly prisma = new Database().logic;
     private readonly paginationService: PaginationService =
         new PaginationService('user');
-    private readonly redis: RedisClientType = new Redis().logic;
-    private readonly mailer: MailerOld = new MailerOld();
+
+    constructor(private prisma: PrismaService) {}
 
     async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
         const { userJwtPayload } = ctx;

@@ -1,4 +1,4 @@
-import { ArgsType, Field } from 'type-graphql';
+import { ArgsType, Field } from '@nestjs/graphql';
 import { ThirdPartyAuth } from "../../../../common/models/enums";
 
 @ArgsType()

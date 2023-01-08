@@ -6,7 +6,7 @@ import {
     Length,
     ValidateIf
 } from "class-validator";
-import { ArgsType, Field, ID } from 'type-graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Gender } from '../../../../common/models/enums';
 import { IUpload } from '../../../../common/models/interfaces';
 

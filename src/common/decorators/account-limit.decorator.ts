@@ -4,12 +4,12 @@ import {
     ValidationOptions,
     ValidatorConstraint,
     ValidatorConstraintInterface,
-} from 'class-validator';
-import { Database } from '../../loaders';
+} from '@nestjs/class-validator';
+import { PrismaService } from '../services';
 
 @ValidatorConstraint({ async: true })
 export class AccountLimitConstraint implements ValidatorConstraintInterface {
-    private readonly prisma = new Database().logic;
+    constructor(private prisma: PrismaService) {}
 
     async validate(value: any, args: ValidationArguments) {
         const usedEmailCount = await this.prisma.user.count({

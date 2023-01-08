@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Gender } from '../../../common/models/enums';
 import { UserThirdParty } from './user-third-party.model';
 

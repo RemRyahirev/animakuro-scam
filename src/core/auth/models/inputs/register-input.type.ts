@@ -1,6 +1,6 @@
-import { IsEmail, IsString, Length } from 'class-validator';
-import { ArgsType, Field } from 'type-graphql';
 import { AccountLimit, Unique } from '../../../../common/decorators';
+import { ArgsType, Field } from '@nestjs/graphql';
+import { IsEmail, IsString, Length } from '@nestjs/class-validator';
 
 @ArgsType()
 export class RegisterInputType {

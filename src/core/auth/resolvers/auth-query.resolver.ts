@@ -1,6 +1,5 @@
-import { FieldResolver, Resolver } from 'type-graphql';
-import { ThirdPartyRedirectUrlResultsType } from '../models/results/third-party-redirect-url-results.type';
 import { AuthQueryType, AuthRootResolver } from './auth-root.resolver';
+import { Resolver } from '@nestjs/graphql';
 
 @Resolver(AuthQueryType)
 export class AuthQueryResolver extends AuthRootResolver {
@@ -8,7 +7,7 @@ export class AuthQueryResolver extends AuthRootResolver {
         super();
     }
 
-    // @FieldResolver(() => ThirdPartyRedirectUrlResultsType)
+    // @ResolveField(() => ThirdPartyRedirectUrlResultsType)
     // async getThirdPartyRedirectUrls() {
     //     return await this.authService.getThirdPartyRedirectUrls();
     // }
