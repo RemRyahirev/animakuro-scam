@@ -13,23 +13,16 @@ import { Mailer } from '../../../mailer/mailer';
 import { generateHash } from '../../../common/utils/uills';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { ExecutionContext, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { GraphQLExecutionContext } from "@nestjs/graphql";
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
-    private readonly sessionService: SessionService = new SessionService();
-    private readonly mailer = new Mailer();
-
     constructor(
         private prisma: PrismaService,
         private userService: UserService,
-        private configService: ConfigService
-    ) {
-        // const test = this.configService.get<string>('DATABASE_URL');
-        // console.log(test)
-    }
+        private mailer: Mailer,
+        private sessionService: SessionService,
+    ) {}
 
     async logout(ctx: Context) {
         // TODO rewrite logout logic

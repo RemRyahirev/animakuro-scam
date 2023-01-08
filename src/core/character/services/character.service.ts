@@ -1,8 +1,7 @@
-import { Database } from '../../../loaders';
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
 import { UpdateCharacterInputType } from '../models/inputs/update-character-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService } from '../../../common/services';
+import { PaginationService, PrismaService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
@@ -11,11 +10,14 @@ import { CreateCharacterResultsType } from '../models/results/create-character-r
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CharacterService {
-    private readonly prisma = new Database().logic;
-    private readonly paginationService: PaginationService =
-        new PaginationService('character');
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService,
+    ) {}
 
     async getCharacter(id: string): Promise<GetCharacterResultsType> {
         const character = await this.prisma.character.findUnique({
@@ -27,10 +29,10 @@ export class CharacterService {
                     include: {
                         genres: true,
                         characters: true,
-                        authors: true
-                    }
-                }
-            }
+                        authors: true,
+                    },
+                },
+            },
         });
         if (!character) {
             return {
@@ -60,7 +62,7 @@ export class CharacterService {
                 }
             }
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('character', args);
         return {
             success: true,
             errors: [],
@@ -83,16 +85,20 @@ export class CharacterService {
                 }
             }
         });
-        const pagination = await this.paginationService.getPagination(args, {
-            nested_field: 'animes',
-            search_property: 'id',
-            search_value: id
-        });
+        const pagination = await this.paginationService.getPagination(
+            "character",
+            args,
+            {
+                nested_field: "animes",
+                search_property: "id",
+                search_value: id
+            }
+        );
         return {
             success: true,
             errors: [],
             characterList: characterList as any,
-            pagination,
+            pagination
         };
     }
 

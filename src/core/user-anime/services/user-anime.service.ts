@@ -1,8 +1,7 @@
-import { Database } from '../../../loaders';
 import { CreateUserAnimeInputType } from '../models/inputs/create-user-anime-input.type';
 import { UpdateUserAnimeInputType } from '../models/inputs/update-user-anime-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService } from '../../../common/services';
+import { PaginationService, PrismaService } from "../../../common/services";
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserAnimeResultsType } from '../models/results/get-user-anime-results.type';
 import { GetListUserAnimeResultsType } from '../models/results/get-list-user-anime-results.type';
@@ -10,11 +9,14 @@ import { CreateUserAnimeResultsType } from '../models/results/create-user-anime-
 import { UpdateUserAnimeResultsType } from '../models/results/update-user-anime-results.type';
 import { DeleteUserAnimeResultsType } from '../models/results/delete-user-anime-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserAnimeService {
-    private readonly prisma = new Database().logic;
-    private readonly paginationService: PaginationService =
-        new PaginationService('userAnime');
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService,
+    ) {}
 
     async getUserAnime(id: string): Promise<GetUserAnimeResultsType> {
         const userAnime = await this.prisma.userAnime.findUnique({
@@ -38,7 +40,7 @@ export class UserAnimeService {
         const userAnimeList = await this.prisma.userAnime.findMany({
             ...transformPaginationUtil(args),
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('userAnime', args);
         return {
             success: true,
             errors: [],

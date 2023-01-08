@@ -1,6 +1,5 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { CreateAuthorResultsType } from '../models/results/create-author-results.type';
-import { AuthorService } from '../services/author.service';
 import { UpdateAuthorResultsType } from '../models/results/update-author-results.type';
 import { DeleteAuthorResultsType } from '../models/results/delete-author-results.type';
 import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';
@@ -35,8 +34,6 @@ export class AuthorQueryType {
 
 @Resolver()
 export class AuthorRootResolver {
-    protected readonly authorService: AuthorService = new AuthorService();
-
     @Mutation(() => AuthorMutationType, { description: 'Author mutations' })
     authorMutations() {
         return {};

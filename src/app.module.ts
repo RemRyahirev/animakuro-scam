@@ -8,6 +8,9 @@ import { join } from 'path';
 import { CommonModule } from './common/common.module';
 import { UserModule } from './core/user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { AnimeModule } from './core/anime/anime.module';
+import { AuthorModule } from './core/author/author.module';
+import { CharacterModule } from "./core/character/character.module";
 
 @Global()
 @Module({
@@ -15,9 +18,6 @@ import { ConfigModule } from '@nestjs/config';
         ConfigModule.forRoot({
             isGlobal: true,
         }),
-        CommonModule,
-        AuthModule,
-        UserModule,
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', 'public'),
         }),
@@ -29,6 +29,12 @@ import { ConfigModule } from '@nestjs/config';
             ttl: 60,
             limit: 10,
         }),
+        CommonModule,
+        AuthModule,
+        UserModule,
+        AnimeModule,
+        AuthorModule,
+        CharacterModule,
     ],
     controllers: [],
     providers: [],

@@ -1,10 +1,9 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
 import { GetStudioResultsType } from '../models/results/get-studio-results.type';
 import { GetListStudioResultsType } from '../models/results/get-list-studio-results.type';
 import { UpdateStudioResultsType } from '../models/results/update-studio-results.type';
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
-import { StudioService } from '../services/studio.service';
 
 @ObjectType()
 export class StudioMutationType {
@@ -29,8 +28,6 @@ export class StudioQueryType {
 
 @Resolver()
 export class StudioRootResolver {
-    protected readonly studioService: StudioService = new StudioService();
-
     @Mutation(() => StudioMutationType, { description: 'Studio mutations' })
     studioMutations() {
         return {};

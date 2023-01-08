@@ -1,8 +1,7 @@
-import { Database } from '../../../loaders';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
 import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
-import { PaginationService } from '../../../common/services';
+import { PaginationService, PrismaService } from "../../../common/services";
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
@@ -10,12 +9,14 @@ import { CreateGenreResultsType } from '../models/results/create-genre-results.t
 import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class GenreService {
-    private readonly prisma = new Database().logic;
-    protected readonly paginationService: PaginationService =
-        new PaginationService('genre');
-
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService,
+    ) {}
     async getGenre(id: string): Promise<GetGenreResultsType> {
         const genre = await this.prisma.genre.findUnique({
             where: {
@@ -41,7 +42,7 @@ export class GenreService {
         const genreList = await this.prisma.genre.findMany({
             ...transformPaginationUtil(args),
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('genre', args);
         return {
             success: true,
             errors: [],

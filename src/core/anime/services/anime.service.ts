@@ -1,8 +1,7 @@
-import { Database } from '../../../loaders';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService } from '../../../common/services';
+import { PaginationService, PrismaService } from '../../../common/services';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
@@ -12,11 +11,14 @@ import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.t
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AnimeService {
-    private readonly prisma = new Database().logic;
-    private readonly paginationService: PaginationService =
-        new PaginationService('anime');
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService,
+    ) {}
 
     async getAnime(id: string): Promise<GetAnimeResultsType> {
         const anime = await this.prisma.anime.findUnique({
@@ -47,15 +49,15 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
-            },
-        });
-        const pagination = await this.paginationService.getPagination(args);
+           },
+       });
+        const pagination = await this.paginationService.getPagination('anime', args);
         return {
             success: true,
             errors: [],
             animeList: animeList as any,
             pagination,
-        };
+       };
     }
 
     async getRelatedAnimeListByAnimeId(
@@ -67,21 +69,25 @@ export class AnimeService {
             where: {
                 related_animes: {
                     some: {
-                        id,
-                    },
-                },
-            } as any,
+                        id
+                    }
+                }
+            } as any
         });
-        const pagination = await this.paginationService.getPagination(args, {
-            nested_field: 'animes',
-            search_property: 'id',
-            search_value: id
-        });
+        const pagination = await this.paginationService.getPagination(
+            "anime",
+            args,
+            {
+                nested_field: "animes",
+                search_property: "id",
+                search_value: id
+            }
+        );
         return {
             success: true,
             errors: [],
             related_animes: relatedAnimeList as any,
-            pagination,
+            pagination
         };
     }
 

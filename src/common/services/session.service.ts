@@ -2,10 +2,12 @@ import {
     CreateSiteAuthSessionInput,
     UpdateSiteAuthSessionInput,
 } from '../../core/auth/models/inputs/site-auth-session.schema';
-import { Database } from '../../loaders';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
 
+@Injectable()
 export class SessionService {
-    private readonly prisma = new Database().logic;
+    constructor(private prisma: PrismaService) {}
 
     public async createSiteAuthSession({
         user_id,

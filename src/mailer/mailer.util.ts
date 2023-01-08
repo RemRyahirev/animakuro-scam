@@ -1,13 +1,14 @@
-import { Singleton } from '../common/decorators';
-import { Config } from '../loaders';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
-@Singleton
+@Injectable()
 export class MailerUtil {
-    private readonly config = new Config().logic;
     private readonly domain: string;
 
-    constructor() {
-        this.domain = this.config.get(
+    constructor(
+        private configService: ConfigService
+    ) {
+        this.domain = this.configService.get<string>(
             'FRONT_DOMAIN',
             'https://animakuro.domain',
         );

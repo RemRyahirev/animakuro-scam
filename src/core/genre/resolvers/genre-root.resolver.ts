@@ -1,9 +1,8 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
-import { GenreService } from '../services/genre.service';
 import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
 
 @ObjectType()
@@ -29,8 +28,6 @@ export class GenreQueryType {
 
 @Resolver()
 export class GenreRootResolver {
-    protected readonly genreService: GenreService = new GenreService();
-
     @Mutation(() => GenreMutationType, { description: 'Genre mutations' })
     genreMutations() {
         return {};

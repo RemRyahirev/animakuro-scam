@@ -1,4 +1,4 @@
-import { ThirdPartyAuth } from '../enums/user-third-party.enum';
+import { ThirdPartyAuth } from "../enums";
 
 export interface IJwtInputPayload {
     uid: string;

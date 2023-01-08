@@ -1,8 +1,7 @@
-import { Database } from '../../../loaders';
 import { CreateUserProfileInputType } from '../models/inputs/create-user-profile-input.type';
 import { UpdateUserProfileInputType } from '../models/inputs/update-user-profile-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService } from '../../../common/services';
+import { PaginationService, PrismaService } from "../../../common/services";
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
@@ -10,11 +9,14 @@ import { CreateUserProfileResultsType } from '../models/results/create-user-prof
 import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserProfileService {
-    private readonly prisma = new Database().logic;
-    private readonly paginationService: PaginationService =
-        new PaginationService('userProfile');
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService,
+    ) {}
 
     async getUserProfile(id: string): Promise<GetUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.findUnique({
@@ -38,7 +40,7 @@ export class UserProfileService {
         const userProfileList = await this.prisma.userProfile.findMany({
             ...transformPaginationUtil(args),
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('userProfile', args);
         return {
             success: true,
             errors: [],

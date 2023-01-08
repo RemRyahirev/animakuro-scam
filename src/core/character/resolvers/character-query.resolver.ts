@@ -1,4 +1,4 @@
-import { Arg, Args, FieldResolver, Resolver } from 'type-graphql';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import {
     CharacterQueryType,
     CharacterRootResolver,
@@ -7,31 +7,32 @@ import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
 import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
+import { CharacterService } from '../services/character.service';
 
 @Resolver(CharacterQueryType)
 export class CharacterQueryResolver extends CharacterRootResolver {
-    constructor() {
+    constructor(private characterService: CharacterService) {
         super();
     }
 
-    @FieldResolver(() => GetCharacterResultsType)
+    @ResolveField(() => GetCharacterResultsType)
     async getCharacter(
-        @Arg('id') id: string,
+        @Args("id") id: string
     ): Promise<GetCharacterResultsType> {
         return await this.characterService.getCharacter(id);
     }
 
-    @FieldResolver(() => GetListCharacterResultsType)
+    @ResolveField(() => GetListCharacterResultsType)
     async getCharacterList(
         @Args() args: PaginationInputType,
     ): Promise<GetListCharacterResultsType> {
         return await this.characterService.getCharacterList(args);
     }
 
-    @FieldResolver(() => GetListCharacterByAnimeIdResultsType)
+    @ResolveField(() => GetListCharacterByAnimeIdResultsType)
     async getCharacterListByAnimeId(
-        @Arg('id') id: string,
-        @Args() args: PaginationInputType,
+        @Args("id") id: string,
+        @Args() args: PaginationInputType
     ): Promise<GetListCharacterResultsType> {
         return await this.characterService.getCharacterListByAnimeId(id, args);
     }

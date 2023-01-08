@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { PrismaService } from './services';
+import { PaginationService, PrismaService, SessionService } from './services';
 import {
     AccountLimitConstraint,
     ComparePasswordConstraint,
@@ -10,6 +10,8 @@ import {
 @Global()
 @Module({
     providers: [
+        SessionService,
+        PaginationService,
         PrismaService,
         EntityExistsConstraint,
         ComparePasswordConstraint,
@@ -17,6 +19,8 @@ import {
         UniqueConstraint,
     ],
     exports: [
+        SessionService,
+        PaginationService,
         PrismaService,
         EntityExistsConstraint,
         ComparePasswordConstraint,

@@ -13,10 +13,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
-    private readonly paginationService: PaginationService =
-        new PaginationService('user');
-
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService
+    ) {}
 
     async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
         const { userJwtPayload } = ctx;
@@ -96,7 +96,7 @@ export class UserService {
 
     async getUserListInfo(args: PaginationInputType) {
         const userList = await this.getUserList(args);
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('user', args);
         return {
             success: true,
             errors: [],
@@ -115,7 +115,7 @@ export class UserService {
 
     async getUsersByEmail(email: string, args: PaginationInputType) {
         const userList = await this.getUserListByEmail(email, args);
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('user', args);
         return {
             success: true,
             userList: userList as any,
@@ -225,7 +225,7 @@ export class UserService {
         });
         if (!user)
             throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
-        const validateAll = new ValidateAll(user as any, args, true);
+        const validateAll = new ValidateAll(this.prisma, user as any, args, true);
         const result = await validateAll.run();
         Object.assign(user, result);
         return await this.prisma.user.update({

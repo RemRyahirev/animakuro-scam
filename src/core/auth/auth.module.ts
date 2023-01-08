@@ -5,9 +5,11 @@ import { AuthMutationResolver } from './resolvers/auth-mutation.resolver';
 import { AuthQueryResolver } from './resolvers/auth-query.resolver';
 import { AuthService } from './services/auth.service';
 import { UserModule } from '../user/user.module';
+import { MailerModule } from '../../mailer/mailer.module';
 
 @Module({
     imports: [
+        MailerModule,
         UserModule,
         PassportModule,
         // JwtModule.register({

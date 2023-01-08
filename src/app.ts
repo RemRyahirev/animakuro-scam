@@ -1,4 +1,3 @@
-import { Config } from './loaders';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MyLogger } from './common/config/logger';
@@ -8,20 +7,32 @@ import {
     ValidationExceptionInterceptor,
 } from './common/interceptors';
 import { PrismaService } from './common/services';
-import { GraphQLSchemaBuilderModule, GraphQLSchemaFactory } from "@nestjs/graphql";
-import { printSchema } from "graphql";
-import { AuthRootResolver } from "./core/auth/resolvers/auth-root.resolver";
-import { UserRootResolver } from "./core/user/resolvers/user-root.resolver";
-import { AuthQueryResolver } from "./core/auth/resolvers/auth-query.resolver";
-import { AuthMutationResolver } from "./core/auth/resolvers/auth-mutation.resolver";
-import { UserMutationResolver } from "./core/user/resolvers/user-mutation.resolver";
-import { UserQueryResolver } from "./core/user/resolvers/user-query.resolver";
-import fs from "fs";
-import path from "path";
-import session from "express-session";
-import { MicroserviceOptions, Transport } from "@nestjs/microservices";
-import { useContainer } from "@nestjs/class-validator";
-import { CommonModule } from "./common/common.module";
+import {
+    GraphQLSchemaBuilderModule,
+    GraphQLSchemaFactory,
+} from '@nestjs/graphql';
+import { printSchema } from 'graphql';
+import { AuthRootResolver } from './core/auth/resolvers/auth-root.resolver';
+import { UserRootResolver } from './core/user/resolvers/user-root.resolver';
+import { AuthQueryResolver } from './core/auth/resolvers/auth-query.resolver';
+import { AuthMutationResolver } from './core/auth/resolvers/auth-mutation.resolver';
+import { UserMutationResolver } from './core/user/resolvers/user-mutation.resolver';
+import { UserQueryResolver } from './core/user/resolvers/user-query.resolver';
+import fs from 'fs';
+import path from 'path';
+import session from 'express-session';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { useContainer } from '@nestjs/class-validator';
+import { CommonModule } from './common/common.module';
+import { AnimeRootResolver } from "./core/anime/resolvers/anime-root.resolver";
+import { AnimeQueryResolver } from "./core/anime/resolvers/anime-query.resolver";
+import { AnimeMutationResolver } from "./core/anime/resolvers/anime-mutation.resolver";
+import { CharacterRootResolver } from "./core/character/resolvers/character-root.resolver";
+import { CharacterQueryResolver } from "./core/character/resolvers/character-query.resolver";
+import { CharacterMutationResolver } from "./core/character/resolvers/character-mutation.resolver";
+import { AuthorRootResolver } from "./core/author/resolvers/author-root.resolver";
+import { AuthorQueryResolver } from "./core/author/resolvers/author-query.resolver";
+import { AuthorMutationResolver } from "./core/author/resolvers/author-mutation.resolver";
 
 async function bootstrap(): Promise<void> {
     try {
@@ -36,14 +47,17 @@ async function bootstrap(): Promise<void> {
                 port: 6379,
             },
         });
-        app.use(session({
-            secret: 'test-secret',
-            resave: false,
-            saveUninitialized: true,
-            cookie: {
-                secure: true
-            }
-        }))
+        app.use(
+            session({
+                secret: 'test-secret',
+                resave: false,
+                saveUninitialized: true,
+                cookie: {
+                    secure: true,
+                },
+            }),
+        );
+
         async function generateSchema() {
             const app = await NestFactory.create(GraphQLSchemaBuilderModule);
             await app.init();
@@ -55,39 +69,51 @@ async function bootstrap(): Promise<void> {
                 UserRootResolver,
                 UserQueryResolver,
                 UserMutationResolver,
+                AnimeRootResolver,
+                AnimeQueryResolver,
+                AnimeMutationResolver,
+                AuthorRootResolver,
+                AuthorQueryResolver,
+                AuthorMutationResolver,
+                CharacterRootResolver,
+                CharacterQueryResolver,
+                CharacterMutationResolver,
             ]);
             fs.writeFile(
                 path.join(__dirname + '/schema.gql'),
                 printSchema(schema),
                 {},
                 (err: NodeJS.ErrnoException | null) => {
-                    Logger.log(
-                        `🚀 GraphQL schema generated`,
-                    );
+                    Logger.log(`🚀 GraphQL schema generated`);
                     if (err) console.log(err);
                 },
             );
         }
-        await generateSchema()
+
+        await generateSchema();
         const globalPrefix = 'graphql';
         const prismaService = app.get(PrismaService);
         await prismaService.enableShutdownHooks(app);
         useContainer(app.select(CommonModule), {
             fallback: true,
-            fallbackOnErrors: true
+            fallbackOnErrors: true,
         });
         app.setGlobalPrefix(globalPrefix);
         app.useGlobalInterceptors(new PrismaExceptionInterceptor());
         app.useGlobalInterceptors(new ValidationExceptionInterceptor());
         app.useGlobalPipes(new ValidationPipe());
-        const config = new Config().logic;
-        const port = config.get('PORT', 8080);
+        const port = 8080;
         await app.listen(port);
         Logger.log(
             `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
         );
     } catch (error) {
-        Logger.error(`❌ Error starting server, ${error}`, "", "Bootstrap", false);
+        Logger.error(
+            `❌ Error starting server, ${error}`,
+            '',
+            'Bootstrap',
+            false,
+        );
         process.exit();
     }
 }

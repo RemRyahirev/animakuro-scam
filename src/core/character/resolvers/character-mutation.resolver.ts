@@ -1,4 +1,4 @@
-import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
+import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
 import {
     CharacterMutationType,
@@ -9,33 +9,34 @@ import { ICustomContext } from '../../../common/models/interfaces';
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
 import { UpdateCharacterInputType } from '../models/inputs/update-character-input.type';
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
+import { CharacterService } from '../services/character.service';
 
 @Resolver(CharacterMutationType)
 export class CharacterMutationResolver extends CharacterRootResolver {
-    constructor() {
+    constructor(private characterService: CharacterService) {
         super();
     }
 
-    @FieldResolver(() => CreateCharacterResultsType)
+    @ResolveField(() => CreateCharacterResultsType)
     async createCharacter(
         @Args() args: CreateCharacterInputType,
-        @Ctx() ctx: ICustomContext,
+        @Context() ctx: ICustomContext,
     ): Promise<CreateCharacterResultsType> {
         return await this.characterService.createCharacter(args, ctx);
     }
 
-    @FieldResolver(() => UpdateCharacterResultsType)
+    @ResolveField(() => UpdateCharacterResultsType)
     async updateCharacter(
         @Args() args: UpdateCharacterInputType,
-        @Ctx() ctx: ICustomContext,
+        @Context() ctx: ICustomContext,
     ): Promise<UpdateCharacterResultsType> {
         return await this.characterService.updateCharacter(args, ctx);
     }
 
-    @FieldResolver(() => DeleteCharacterResultsType)
+    @ResolveField(() => DeleteCharacterResultsType)
     async deleteCharacter(
-        @Arg('id') id: string,
-        @Ctx() ctx: ICustomContext,
+        @Args('id') id: string,
+        @Context() ctx: ICustomContext,
     ): Promise<DeleteCharacterResultsType> {
         return await this.characterService.deleteCharacter(id, ctx);
     }

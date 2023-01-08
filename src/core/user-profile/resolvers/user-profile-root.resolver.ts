@@ -1,6 +1,5 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { CreateUserProfileResultsType } from '../models/results/create-user-profile-results.type';
-import { UserProfileService } from '../services/user-profile.service'; //!!! заполнить файл, коммент - удалить!
 import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
@@ -29,8 +28,6 @@ export class UserProfileQueryType {
 
 @Resolver()
 export class UserProfileRootResolver {
-    protected readonly userProfileService: UserProfileService = new UserProfileService();
-
     @Mutation(() => UserProfileMutationType, { description: 'User Profile mutations' })
     userProfileMutations() {
         return {};

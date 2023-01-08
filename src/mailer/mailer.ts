@@ -1,24 +1,48 @@
 import * as nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
-import { Singleton } from '../common/decorators';
 import { MailPurpose } from '../common/models/enums';
-import { Config } from '../loaders';
 import SMTPTransport, { Options } from 'nodemailer/lib/smtp-transport';
 import * as handlebars from 'handlebars';
+import { ConfigService } from '@nestjs/config';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 
-@Singleton
-export class Mailer {
-    private readonly config = new Config().logic;
-    private readonly nodemailer: nodemailer.Transporter;
+@Injectable()
+export class Mailer implements OnModuleInit {
+    private nodemailer: nodemailer.Transporter;
 
-    constructor() {
-        this.nodemailer = nodemailer.createTransport(
-            this.config.mailConfig as SMTPTransport.Options,
-            {
-                from: this.config.mailFrom,
+    constructor(private configService: ConfigService) {}
+
+    onModuleInit(): void {
+        const port = this.configService.get<number>('MAILER_PORT', 587);
+        this.nodemailer = nodemailer.createTransport(<SMTPTransport.Options>{
+            host: this.configService.get<string>('MAILER_HOST', 'smtp.mail.ru'),
+            port,
+            secure: port === 465,
+            auth: {
+                user: this.configService.get<string>(
+                    'MAILER_EMAIL',
+                    'some@mail.ru',
+                ),
+                pass: this.configService.get<string>(
+                    'MAILER_PASSWORD',
+                    'password',
+                ),
             },
-        );
+            tls: {
+                rejectUnauthorized: false,
+            },
+            from: {
+                name: this.configService.get<string>(
+                    'MAILER_SENDER_NAME',
+                    'somename',
+                ),
+                address: this.configService.get<string>(
+                    'MAILER_EMAIL',
+                    'somename@mail.ru',
+                ),
+            },
+        });
     }
 
     public async sendMail(
@@ -26,6 +50,7 @@ export class Mailer {
         purpose: MailPurpose,
         variables?: ReadonlyMap<string, string> | {},
     ): Promise<void> {
+        console.log(this.nodemailer.options)
         return this.nodemailer.sendMail(
             {
                 to: options.to,

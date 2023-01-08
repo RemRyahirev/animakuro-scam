@@ -1,22 +1,23 @@
 import { PaginationInputType } from '../models/inputs';
-import { Database } from '../../loaders';
 import { PaginationResultsType } from '../models/results';
 import { PrismaClient } from '@prisma/client';
 import { INestedPagination } from '../models/interfaces';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
 
+@Injectable()
 export class PaginationService {
-    protected readonly prisma = new Database().logic;
-    private readonly entityName: keyof PrismaClient;
+    private entityName: keyof PrismaClient;
     private totalCount: number = 0;
 
-    constructor(entityName: string) {
-        this.entityName = entityName as keyof PrismaClient;
-    }
+    constructor(protected prisma: PrismaService) {}
 
     public async getPagination<
+        N extends keyof PrismaClient,
         A extends PaginationInputType,
         C extends INestedPagination | undefined,
-    >(args: A, condition?: C): Promise<PaginationResultsType> {
+    >(entityName: N, args: A, condition?: C): Promise<PaginationResultsType> {
+        this.entityName = entityName;
         if (this.checkEntityExistence) {
             await this.calculateTotalCount(condition);
             return {

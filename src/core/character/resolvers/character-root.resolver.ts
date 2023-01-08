@@ -1,6 +1,5 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { CreateCharacterResultsType } from '../models/results/create-character-results.type';
-import { CharacterService } from '../services/character.service';
 import { UpdateCharacterResultsType } from '../models/results/update-character-results.type';
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
@@ -45,9 +44,6 @@ export class CharacterQueryType {
 
 @Resolver()
 export class CharacterRootResolver {
-    protected readonly characterService: CharacterService =
-        new CharacterService();
-
     @Mutation(() => CharacterMutationType, {
         description: 'Character mutations',
     })

@@ -1,6 +1,5 @@
-import { Database } from '../../../loaders';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService } from '../../../common/services';
+import { PaginationService, PrismaService } from "../../../common/services";
 import { ICustomContext } from '../../../common/models/interfaces';
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
 import { GetStudioResultsType } from '../models/results/get-studio-results.type';
@@ -12,11 +11,14 @@ import { CreateStudioResultsType } from '../models/results/create-studio-results
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Studio } from '../models/studio.model';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class StudioService {
-    private readonly prisma = new Database().logic;
-    protected readonly paginationService: PaginationService =
-        new PaginationService('studio');
+    constructor(
+        private prisma: PrismaService,
+        private paginationService: PaginationService,
+    ) {}
 
     async getStudio(id: string): Promise<GetStudioResultsType> {
         const studio = await this.prisma.studio.findUnique({
@@ -61,7 +63,7 @@ export class StudioService {
                 },
             },
         });
-        const pagination = await this.paginationService.getPagination(args);
+        const pagination = await this.paginationService.getPagination('studio', args);
         return {
             success: true,
             errors: [],

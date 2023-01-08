@@ -1,4 +1,4 @@
-import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
+import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
@@ -6,33 +6,34 @@ import { ICustomContext } from '../../../common/models/interfaces';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
+import { AnimeService } from '../services/anime.service';
 
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
-    constructor() {
+    constructor(private animeService: AnimeService) {
         super();
     }
 
-    @FieldResolver(() => CreateAnimeResultsType)
+    @ResolveField(() => CreateAnimeResultsType)
     async createAnime(
         @Args() args: CreateAnimeInputType,
-        @Ctx() ctx: ICustomContext,
+        @Context() ctx: ICustomContext,
     ): Promise<CreateAnimeResultsType> {
         return await this.animeService.createAnime(args, ctx);
     }
 
-    @FieldResolver(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType)
     async updateAnime(
         @Args() args: UpdateAnimeInputType,
-        @Ctx() ctx: ICustomContext,
+        @Context() ctx: ICustomContext,
     ): Promise<UpdateAnimeResultsType> {
         return await this.animeService.updateAnime(args, ctx);
     }
 
-    @FieldResolver(() => DeleteAnimeResultsType)
+    @ResolveField(() => DeleteAnimeResultsType)
     async deleteAnime(
-        @Arg('id') id: string,
-        @Ctx() ctx: ICustomContext,
+        @Args('id') id: string,
+        @Context() ctx: ICustomContext,
     ): Promise<DeleteAnimeResultsType> {
         return await this.animeService.deleteAnime(id, ctx);
     }

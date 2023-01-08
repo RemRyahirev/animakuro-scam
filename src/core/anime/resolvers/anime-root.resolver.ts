@@ -1,6 +1,5 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from 'type-graphql';
+import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
-import { AnimeService } from '../services/anime.service';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
@@ -35,8 +34,6 @@ export class AnimeQueryType {
 
 @Resolver()
 export class AnimeRootResolver {
-    protected readonly animeService: AnimeService = new AnimeService();
-
     @Mutation(() => AnimeMutationType, { description: 'Anime mutations' })
     animeMutations() {
         return {};
