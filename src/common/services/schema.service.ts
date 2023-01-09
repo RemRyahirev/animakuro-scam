@@ -22,6 +22,12 @@ import { CharacterMutationResolver } from '../../core/character/resolvers/charac
 import fs from 'fs';
 import path from 'path';
 import { printSchema } from 'graphql';
+import { GenreRootResolver } from '../../core/genre/resolvers/genre-root.resolver';
+import { GenreQueryResolver } from '../../core/genre/resolvers/genre-query.resolver';
+import { GenreMutationResolver } from '../../core/genre/resolvers/genre-mutation.resolver';
+import { StudioRootResolver } from "../../core/studio/resolvers/studio-root.resolver";
+import { StudioQueryResolver } from "../../core/studio/resolvers/studio-query.resolver";
+import { StudioMutationResolver } from "../../core/studio/resolvers/studio-mutation.resolver";
 
 @Injectable()
 export class SchemaService {
@@ -45,9 +51,15 @@ export class SchemaService {
             CharacterRootResolver,
             CharacterQueryResolver,
             CharacterMutationResolver,
+            GenreRootResolver,
+            GenreQueryResolver,
+            GenreMutationResolver,
+            StudioRootResolver,
+            StudioQueryResolver,
+            StudioMutationResolver,
         ]);
         fs.writeFile(
-            path.join(__dirname + '/schema.gql'),
+            path.resolve(__dirname + '../../../schema.gql'),
             printSchema(schema),
             {},
             (err: NodeJS.ErrnoException | null) => {

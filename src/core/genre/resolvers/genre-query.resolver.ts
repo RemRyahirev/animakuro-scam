@@ -1,21 +1,22 @@
-import { Arg, Args, FieldResolver, Resolver } from 'type-graphql';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { GenreQueryType, GenreRootResolver } from './genre-root.resolver';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
+import { GenreService } from '../services/genre.service';
 
 @Resolver(GenreQueryType)
 export class GenreQueryResolver extends GenreRootResolver {
-    constructor() {
+    constructor(private genreService: GenreService) {
         super();
     }
 
-    @FieldResolver(() => GetGenreResultsType)
-    async getGenre(@Arg('id') id: string): Promise<GetGenreResultsType> {
+    @ResolveField(() => GetGenreResultsType)
+    async getGenre(@Args('id') id: string): Promise<GetGenreResultsType> {
         return await this.genreService.getGenre(id);
     }
 
-    @FieldResolver(() => GetListGenreResultsType)
+    @ResolveField(() => GetListGenreResultsType)
     async getGenreList(
         @Args() args: PaginationInputType,
     ): Promise<GetListGenreResultsType> {

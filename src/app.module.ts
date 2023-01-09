@@ -10,7 +10,9 @@ import { UserModule } from './core/user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AnimeModule } from './core/anime/anime.module';
 import { AuthorModule } from './core/author/author.module';
-import { CharacterModule } from "./core/character/character.module";
+import { CharacterModule } from './core/character/character.module';
+import { GenreModule } from './core/genre/genre.module';
+import { StudioModule } from "./core/studio/studio.module";
 
 @Global()
 @Module({
@@ -27,7 +29,7 @@ import { CharacterModule } from "./core/character/character.module";
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
-            limit: 10,
+            limit: 0,
         }),
         CommonModule,
         AuthModule,
@@ -35,6 +37,8 @@ import { CharacterModule } from "./core/character/character.module";
         AnimeModule,
         AuthorModule,
         CharacterModule,
+        GenreModule,
+        StudioModule,
     ],
     controllers: [],
     providers: [],

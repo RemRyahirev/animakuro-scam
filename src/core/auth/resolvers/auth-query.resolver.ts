@@ -1,9 +1,10 @@
 import { AuthQueryType, AuthRootResolver } from './auth-root.resolver';
 import { Resolver } from '@nestjs/graphql';
+import { AuthService } from '../services/auth.service';
 
 @Resolver(AuthQueryType)
 export class AuthQueryResolver extends AuthRootResolver {
-    constructor() {
+    constructor(private authService: AuthService) {
         super();
     }
 
