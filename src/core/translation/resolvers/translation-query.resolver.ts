@@ -1,4 +1,4 @@
-import { Arg, Args, FieldResolver, Resolver } from 'type-graphql';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationInputType } from '../../../common/models/inputs';
 import {
     TranslationQueryType,
@@ -6,21 +6,22 @@ import {
 } from './translation-root.resolver';
 import { GetListTranslationResultsType } from '../models/results/get-list-translation-results.type';
 import { GetTranslationResultsType } from '../models/results/get-translation-results.type';
+import { TranslationService } from '../services/translation.service';
 
 @Resolver(TranslationQueryType)
 export class TranslationQueryResolver extends TranslationRootResolver {
-    constructor() {
+    constructor(private translationService: TranslationService) {
         super();
     }
 
-    @FieldResolver(() => GetTranslationResultsType)
+    @ResolveField(() => GetTranslationResultsType)
     async getTranslation(
-        @Arg('id') id: string,
+        @Args('id') id: string,
     ): Promise<GetTranslationResultsType> {
         return await this.translationService.getTranslation(id);
     }
 
-    @FieldResolver(() => GetListTranslationResultsType)
+    @ResolveField(() => GetListTranslationResultsType)
     async getTranslationList(
         @Args() args: PaginationInputType,
     ): Promise<GetListTranslationResultsType> {

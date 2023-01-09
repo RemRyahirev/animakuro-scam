@@ -33,6 +33,7 @@ export class AuthService {
         args: LoginInputType,
         context: Context,
     ): Promise<LoginResultsType> {
+        //TODO made setup mail notification
         const user = (await this.userService.findUserByUsername(
             args.username,
         )) as NonNullable<User>;

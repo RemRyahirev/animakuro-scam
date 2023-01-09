@@ -25,9 +25,18 @@ import { printSchema } from 'graphql';
 import { GenreRootResolver } from '../../core/genre/resolvers/genre-root.resolver';
 import { GenreQueryResolver } from '../../core/genre/resolvers/genre-query.resolver';
 import { GenreMutationResolver } from '../../core/genre/resolvers/genre-mutation.resolver';
-import { StudioRootResolver } from "../../core/studio/resolvers/studio-root.resolver";
-import { StudioQueryResolver } from "../../core/studio/resolvers/studio-query.resolver";
-import { StudioMutationResolver } from "../../core/studio/resolvers/studio-mutation.resolver";
+import { StudioRootResolver } from '../../core/studio/resolvers/studio-root.resolver';
+import { StudioQueryResolver } from '../../core/studio/resolvers/studio-query.resolver';
+import { StudioMutationResolver } from '../../core/studio/resolvers/studio-mutation.resolver';
+import { TranslationRootResolver } from '../../core/translation/resolvers/translation-root.resolver';
+import { TranslationQueryResolver } from '../../core/translation/resolvers/translation-query.resolver';
+import { TranslationMutationResolver } from '../../core/translation/resolvers/translation-mutation.resolver';
+import { UserAnimeRootResolver } from '../../core/user-anime/resolvers/user-anime-root.resolver';
+import { UserAnimeQueryResolver } from '../../core/user-anime/resolvers/user-anime-query.resolver';
+import { UserAnimeMutationResolver } from '../../core/user-anime/resolvers/user-anime-mutation.resolver';
+import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
+import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
+import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
 
 @Injectable()
 export class SchemaService {
@@ -57,6 +66,15 @@ export class SchemaService {
             StudioRootResolver,
             StudioQueryResolver,
             StudioMutationResolver,
+            TranslationRootResolver,
+            TranslationQueryResolver,
+            TranslationMutationResolver,
+            UserAnimeRootResolver,
+            UserAnimeQueryResolver,
+            UserAnimeMutationResolver,
+            UserProfileRootResolver,
+            UserProfileQueryResolver,
+            UserProfileMutationResolver,
         ]);
         fs.writeFile(
             path.resolve(__dirname + '../../../schema.gql'),

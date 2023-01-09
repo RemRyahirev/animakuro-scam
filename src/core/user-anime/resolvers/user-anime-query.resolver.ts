@@ -1,21 +1,27 @@
-import { Arg, Args, FieldResolver, Resolver } from 'type-graphql';
-import { UserAnimeQueryType, UserAnimeRootResolver } from './user-anime-root.resolver';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+    UserAnimeQueryType,
+    UserAnimeRootResolver,
+} from './user-anime-root.resolver';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListUserAnimeResultsType } from '../models/results/get-list-user-anime-results.type';
 import { GetUserAnimeResultsType } from '../models/results/get-user-anime-results.type';
+import { UserAnimeService } from '../services/user-anime.service';
 
 @Resolver(UserAnimeQueryType)
 export class UserAnimeQueryResolver extends UserAnimeRootResolver {
-    constructor() {
+    constructor(private userAnimeService: UserAnimeService) {
         super();
     }
 
-    @FieldResolver(() => GetUserAnimeResultsType)
-    async getUserAnime(@Arg('id') id: string): Promise<GetUserAnimeResultsType> {
+    @ResolveField(() => GetUserAnimeResultsType)
+    async getUserAnime(
+        @Args('id') id: string,
+    ): Promise<GetUserAnimeResultsType> {
         return await this.userAnimeService.getUserAnime(id);
     }
 
-    @FieldResolver(() => GetListUserAnimeResultsType)
+    @ResolveField(() => GetListUserAnimeResultsType)
     async getUserAnimeList(
         @Args() args: PaginationInputType,
     ): Promise<GetListUserAnimeResultsType> {

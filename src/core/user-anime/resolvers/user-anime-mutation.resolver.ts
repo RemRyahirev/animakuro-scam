@@ -1,38 +1,42 @@
-import { Arg, Args, Ctx, FieldResolver, Resolver } from 'type-graphql';
+import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateUserAnimeInputType } from '../models/inputs/create-user-anime-input.type';
-import { UserAnimeMutationType, UserAnimeRootResolver } from './user-anime-root.resolver';
+import {
+    UserAnimeMutationType,
+    UserAnimeRootResolver,
+} from './user-anime-root.resolver';
 import { CreateUserAnimeResultsType } from '../models/results/create-user-anime-results.type';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { UpdateUserAnimeResultsType } from '../models/results/update-user-anime-results.type';
 import { UpdateUserAnimeInputType } from '../models/inputs/update-user-anime-input.type';
 import { DeleteUserAnimeResultsType } from '../models/results/delete-user-anime-results.type';
+import { UserAnimeService } from '../services/user-anime.service';
 
 @Resolver(UserAnimeMutationType)
 export class UserAnimeMutationResolver extends UserAnimeRootResolver {
-    constructor() {
+    constructor(private userAnimeService: UserAnimeService) {
         super();
     }
 
-    @FieldResolver(() => CreateUserAnimeResultsType)
+    @ResolveField(() => CreateUserAnimeResultsType)
     async createUserAnime(
         @Args() args: CreateUserAnimeInputType,
-        @Ctx() ctx: ICustomContext,
+        @Context() ctx: ICustomContext
     ): Promise<CreateUserAnimeResultsType> {
         return await this.userAnimeService.createUserAnime(args, ctx);
     }
 
-    @FieldResolver(() => UpdateUserAnimeResultsType)
+    @ResolveField(() => UpdateUserAnimeResultsType)
     async updateUserAnime(
         @Args() args: UpdateUserAnimeInputType,
-        @Ctx() ctx: ICustomContext,
+        @Context() ctx: ICustomContext
     ): Promise<UpdateUserAnimeResultsType> {
         return await this.userAnimeService.updateUserAnime(args, ctx);
     }
 
-    @FieldResolver(() => DeleteUserAnimeResultsType)
+    @ResolveField(() => DeleteUserAnimeResultsType)
     async deleteUserAnime(
-        @Arg('id') id: string,
-        @Ctx() ctx: ICustomContext,
+        @Args("id") id: string,
+        @Context() ctx: ICustomContext
     ): Promise<DeleteUserAnimeResultsType> {
         return await this.userAnimeService.deleteUserAnime(id, ctx);
     }

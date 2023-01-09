@@ -1,6 +1,4 @@
-import {ArgsType, Field, Int} from "type-graphql";
-import {User} from "../../../user/models/user.model";
-import {UserAnime} from "../user-anime.model";
+import {ArgsType, Field, Int} from '@nestjs/graphql';
 import {WatchStatus} from "../../../../common/models/enums";
 import {IsBoolean, IsNumber, IsOptional, IsString, IsUUID} from "class-validator";
 
