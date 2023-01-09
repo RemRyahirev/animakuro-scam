@@ -1,22 +1,24 @@
 import { Checker } from '../checker';
-import { Database, Redis } from '../../../../loaders';
 import { randomUUID } from 'crypto';
 import { MailerOld } from '../../../../common/utils/mailer';
 import { User } from '../../models/user.model';
 import { RedisClientType } from 'redis';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../../../common/services";
 
+@Injectable()
 export class ValidateEmail extends Checker<
     User,
     string | undefined,
     string | undefined
 > {
     private _currentValue: string | undefined;
-    private readonly prisma = new Database().logic;
     private redis: RedisClientType | undefined;
     private readonly mailer = new MailerOld();
     private readonly _isProduction: boolean;
 
     constructor(
+        private prisma: PrismaService,
         inputValue: string | undefined,
         sourceValue: User,
         _isProduction = false,
@@ -52,8 +54,9 @@ export class ValidateEmail extends Checker<
         }
         this._currentValue = this._inputValue;
         if (this._isProduction) {
-            this.redis = new Redis().logic;
+            // this.redis = new Redis().logic;
             const code = randomUUID();
+            // @ts-ignore
             await this.redis.set(
                 `confirmation:change-email:${code}`,
                 JSON.stringify({

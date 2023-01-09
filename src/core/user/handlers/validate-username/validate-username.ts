@@ -1,5 +1,5 @@
 import { Checker } from '../checker';
-import { Database } from '../../../../loaders';
+import { PrismaService } from "../../../../common/services";
 
 export class ValidateUsername extends Checker<
     string | undefined,
@@ -7,9 +7,9 @@ export class ValidateUsername extends Checker<
     string | undefined
 > {
     private _currentValue: string | undefined;
-    private readonly prisma = new Database().logic;
 
     constructor(
+        private prisma: PrismaService,
         inputValue: string | undefined,
         sourceValue: string | undefined,
     ) {

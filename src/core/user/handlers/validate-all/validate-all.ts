@@ -12,6 +12,7 @@ import { ValidateUsername } from '../validate-username/validate-username';
 import { Checker } from '../checker';
 import { GqlHttpException } from '../../../../common/errors/errors';
 import { HttpStatus } from '../../../../common/models/enums';
+import { PrismaService } from "../../../../common/services";
 
 export class ValidateAll {
     private readonly _errorsList: Array<IErrorObject> = [];
@@ -24,12 +25,13 @@ export class ValidateAll {
     private readonly _username: ValidateUsername;
 
     constructor(
+        private prisma: PrismaService,
         user: User & { password: string | null },
         data: UpdateUserInputType,
         isProduction: boolean,
     ) {
         this._birthDay = new ValidateBirthday(data.birthday, user.birthday);
-        this._email = new ValidateEmail(data.email, user, isProduction);
+        // this._email = new ValidateEmail(data.email, user, isProduction);
         this._gender = new ValidateGender(
             { gender: data.gender, customGender: data.customGender },
             { gender: user.gender, customGender: user.customGender },
@@ -38,7 +40,7 @@ export class ValidateAll {
             { next: data.newPassword, current: data.password },
             user.password as string | undefined,
         );
-        this._username = new ValidateUsername(data.username, user.username);
+        this._username = new ValidateUsername(this.prisma, data.username, user.username);
         this._validateList.push(
             this._birthDay,
             this._email,
