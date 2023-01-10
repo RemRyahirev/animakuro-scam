@@ -50,7 +50,6 @@ export class Mailer implements OnModuleInit {
         purpose: MailPurpose,
         variables?: ReadonlyMap<string, string> | {},
     ): Promise<void> {
-        console.log(this.nodemailer.options)
         return this.nodemailer.sendMail(
             {
                 to: options.to,
@@ -75,7 +74,7 @@ export class Mailer implements OnModuleInit {
             fs.readFileSync(
                 path.resolve(
                     __dirname,
-                    `../../src/mailer/templates/${purpose}.handlebars`,
+                    `templates/${purpose}.handlebars`,
                 ),
                 'utf8',
             ),

@@ -7,6 +7,9 @@
           "esnext.asynciterable",
           "es2015.iterable"
         ],
+        "typeRoots": [
+            "node_modules/.pnpm/@types"
+        ],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "strictPropertyInitialization": false,
@@ -43,5 +46,5 @@
         "./src/**/**/*.ts",
         "./src/**/**/**/*.ts",
         "./src/**/**/**/**/*.ts"
-    ]
+    ],
 }

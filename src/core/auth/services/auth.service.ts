@@ -87,7 +87,7 @@ export class AuthService {
 
     async register(
         args: RegisterInputType,
-        ctx: Context,
+        context: Context,
     ): Promise<RegisterResultsType> {
         args.password = await hash(args.password);
         const user = await this.prisma.user.create({ data: args });
@@ -100,7 +100,7 @@ export class AuthService {
             MailPurpose.CONFIRM_REGISTRATION,
             {
                 username: args.username,
-                confirm_link: 'https://' + ctx.headers.host + '/' + hashGen,
+                confirm_link: 'https://' + context.req.headers.host + '/' + hashGen,
             },
         );
         return {

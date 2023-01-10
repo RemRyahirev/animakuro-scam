@@ -3,7 +3,6 @@ import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
-import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { PaginationService, PrismaService } from '../../../common/services';
 import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
@@ -216,9 +215,6 @@ export class UserService {
         });
         if (!user)
             throw new NotFoundException('User not found');
-        const validateAll = new ValidateAll(this.prisma, user as any, args, true);
-        const result = await validateAll.run();
-        Object.assign(user, result);
         return await this.prisma.user.update({
             where: { id: args.id },
             data: args as any,
