@@ -5,6 +5,8 @@ import { GetListUserResultsType } from '../models/results/get-list-user-results.
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { GetListUserByEmailResultsType } from '../models/results/get-list-user-by-email-results.type';
 import { UserService } from "../services/user.service";
+import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
+import { UseGuards } from "@nestjs/common";
 
 @Resolver(UserQueryType)
 export class UserQueryResolver extends UserRootResolver {
@@ -23,6 +25,7 @@ export class UserQueryResolver extends UserRootResolver {
     }
 
     @ResolveField(() => GetUserResultsType)
+    @UseGuards(JwtAuthGuard)
     async getUser(@Args('id') id: string): Promise<GetUserResultsType> {
         return await this.userService.getUser(id);
     }

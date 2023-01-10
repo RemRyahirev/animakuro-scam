@@ -24,6 +24,16 @@ export class AuthService {
         private sessionService: SessionService,
     ) {}
 
+    public async validateUser(args: LoginInputType): Promise<User | null> {
+        const user = await this.prisma.user.findUnique({
+            where: { username: args.username },
+        });
+        if (user && user.password === args.password) {
+            return user as any;
+        }
+        return null;
+    }
+
     async logout(ctx: Context) {
         // TODO rewrite logout logic
         return { success: true };

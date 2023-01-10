@@ -16,6 +16,7 @@ import { MailerModule } from './mailer/mailer.module';
         GraphQLModule.forRoot<ApolloDriverConfig>({
             driver: ApolloDriver,
             autoSchemaFile: true,
+            fieldResolverEnhancers: ['guards', 'interceptors'],
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
