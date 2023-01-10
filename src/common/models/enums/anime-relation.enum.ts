@@ -9,5 +9,5 @@ export enum AnimeRelation {
 }
 
 registerEnumType(AnimeRelation, {
-    name: 'AnimeConnection',
+    name: 'AnimeRelation',
 });

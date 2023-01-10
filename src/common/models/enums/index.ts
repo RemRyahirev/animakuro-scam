@@ -16,3 +16,5 @@ export * from './profile-countries.enum';
 export * from './year-season.enum';
 export * from './anime-type.enum';
 export * from './auth-type.enum';
+export * from './anime-relation.enum';
+export * from './anime-approval.enum';
