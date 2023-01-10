@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { CoreModule } from './core/core.module';
+import { MailerModule } from './mailer/mailer.module';
 
 @Global()
 @Module({
@@ -22,6 +23,7 @@ import { CoreModule } from './core/core.module';
         }),
         CommonModule,
         CoreModule,
+        MailerModule,
     ],
     controllers: [],
     providers: [],

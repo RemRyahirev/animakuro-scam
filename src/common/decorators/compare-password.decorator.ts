@@ -11,8 +11,7 @@ import { PrismaService } from '../services';
 
 @ValidatorConstraint({ async: true })
 export class ComparePasswordConstraint implements ValidatorConstraintInterface {
-    constructor(private prisma: PrismaService) {
-    }
+    constructor(private prisma: PrismaService) {}
 
     async validate(value: any, args: ValidationArguments) {
         const inputArgs = args.object as LoginInputType;

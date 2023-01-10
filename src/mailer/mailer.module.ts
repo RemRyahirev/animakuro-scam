@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { Mailer } from './mailer';
 import { MailerUtil } from './mailer.util';
 
+@Global()
 @Module({
     providers: [Mailer, MailerUtil],
-    exports: [Mailer]
+    exports: [Mailer],
 })
 export class MailerModule {}

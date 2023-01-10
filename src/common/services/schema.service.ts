@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import fs from 'fs';
+import path from 'path';
 import {
     GraphQLSchemaBuilderModule,
     GraphQLSchemaFactory,
@@ -19,8 +21,6 @@ import { AuthorMutationResolver } from '../../core/author/resolvers/author-mutat
 import { CharacterRootResolver } from '../../core/character/resolvers/character-root.resolver';
 import { CharacterQueryResolver } from '../../core/character/resolvers/character-query.resolver';
 import { CharacterMutationResolver } from '../../core/character/resolvers/character-mutation.resolver';
-import fs from 'fs';
-import path from 'path';
 import { printSchema } from 'graphql';
 import { GenreRootResolver } from '../../core/genre/resolvers/genre-root.resolver';
 import { GenreQueryResolver } from '../../core/genre/resolvers/genre-query.resolver';
@@ -77,7 +77,7 @@ export class SchemaService {
             UserProfileMutationResolver,
         ]);
         fs.writeFile(
-            path.resolve(__dirname + '../../../schema.gql'),
+            path.resolve(__dirname + '../../../../schema.gql'),
             printSchema(schema),
             {},
             (err: NodeJS.ErrnoException | null) => {
