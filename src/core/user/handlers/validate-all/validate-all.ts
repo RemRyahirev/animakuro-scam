@@ -10,9 +10,8 @@ import { ValidateGender } from '../validate-gender/validate-gender';
 import { ValidatePassword } from '../validate-password/validate-password';
 import { ValidateUsername } from '../validate-username/validate-username';
 import { Checker } from '../checker';
-import { GqlHttpException } from '../../../../common/errors/errors';
-import { HttpStatus } from '../../../../common/models/enums';
 import { PrismaService } from "../../../../common/services";
+import { BadRequestException } from "@nestjs/common";
 
 export class ValidateAll {
     private readonly _errorsList: Array<IErrorObject> = [];
@@ -75,10 +74,8 @@ export class ValidateAll {
         await this.validateAll();
         if (this._errorsList.length > 0) {
             console.log(this._errorsList);
-            throw new GqlHttpException(
-                this._errorsList,
-                HttpStatus.BAD_REQUEST,
-                'validationErrors',
+            throw new BadRequestException(
+                this._errorsList
             );
         }
         this._setObj();

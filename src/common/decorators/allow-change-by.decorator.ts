@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import { GqlHttpException } from 'common/errors/errors';
-import { HttpStatus } from '../models/enums';
+import { MethodNotAllowedException } from "@nestjs/common";
 
 export const METADATA_KEY = 'allow-change-by';
 
@@ -52,9 +51,8 @@ export function AllowChangeBy(
                 return;
             }
 
-            throw new GqlHttpException(
+            throw new MethodNotAllowedException(
                 `User ${uid} is not allowed to change ${propertyName} field`,
-                HttpStatus.FORBIDDEN,
             );
         };
 

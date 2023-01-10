@@ -1,15 +1,14 @@
 import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { HttpStatus, ThirdPartyAuth } from '../../../common/models/enums';
+import { ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
-import { GqlHttpException } from '../../../common/errors/errors';
 import { ValidateAll } from '../handlers/validate-all/validate-all';
 import { PaginationService, PrismaService } from '../../../common/services';
 import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 
 @Injectable()
 export class UserService {
@@ -21,51 +20,43 @@ export class UserService {
     async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
         const { userJwtPayload } = ctx;
         if (!userJwtPayload) {
-            throw new GqlHttpException(
-                'not authorized',
-                HttpStatus.BAD_REQUEST,
-            );
+            throw new UnauthorizedException('not authorized');
         }
         if (!args.username)
-            throw new GqlHttpException(
+            throw new BadRequestException(
                 'username is empty',
-                HttpStatus.BAD_REQUEST,
             );
 
         if (!args.password)
-            throw new GqlHttpException(
+            throw new BadRequestException(
                 'password is empty',
-                HttpStatus.BAD_REQUEST,
+
             );
 
         const checkUsername = await this.findUserByUsername(args.username);
 
         if (checkUsername) {
-            throw new GqlHttpException(
+            throw new BadRequestException(
                 'Username already used',
-                HttpStatus.BAD_REQUEST,
             );
         }
 
         const savedUser = await this.findUserById(userJwtPayload.uid);
 
         if (!savedUser)
-            throw new GqlHttpException(
+            throw new BadRequestException(
                 'There are no saved user by this email',
-                HttpStatus.NOT_FOUND,
             );
         if (!savedUser.email)
-            throw new GqlHttpException(
+            throw new BadRequestException(
                 'email is empty',
-                HttpStatus.BAD_REQUEST,
             );
 
         const checkUsersCount = await this.getUserEmailCount(savedUser.email);
 
         if (checkUsersCount >= 5) {
-            throw new GqlHttpException(
+            throw new BadRequestException(
                 'Too Many accounts',
-                HttpStatus.BAD_REQUEST,
             );
         }
 
@@ -224,7 +215,7 @@ export class UserService {
             where: { id: args.id },
         });
         if (!user)
-            throw new GqlHttpException('User not found', HttpStatus.NOT_FOUND);
+            throw new NotFoundException('User not found');
         const validateAll = new ValidateAll(this.prisma, user as any, args, true);
         const result = await validateAll.run();
         Object.assign(user, result);

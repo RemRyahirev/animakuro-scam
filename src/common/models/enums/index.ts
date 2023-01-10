@@ -2,7 +2,6 @@ export * from './gender.enum';
 export * from './character-type.enum';
 export * from './character-role.enum';
 export * from './film-rating.enum';
-export * from './http-status.enum';
 export * from './login-type.enum';
 export * from './media-format.enum';
 export * from './media-source.enum';

@@ -2,15 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MyLogger } from './common/config/logger';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import {
-    PrismaExceptionInterceptor,
-    ValidationExceptionInterceptor,
-} from './common/interceptors';
 import { PrismaService, SchemaService } from './common/services';
 import session from 'express-session';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { useContainer } from '@nestjs/class-validator';
 import { CommonModule } from './common/common.module';
+import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
+import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
 
 async function bootstrap(): Promise<void> {
     try {
@@ -46,9 +44,18 @@ async function bootstrap(): Promise<void> {
             fallbackOnErrors: true,
         });
         app.setGlobalPrefix(globalPrefix);
-        app.useGlobalInterceptors(new PrismaExceptionInterceptor());
-        app.useGlobalInterceptors(new ValidationExceptionInterceptor());
-        app.useGlobalPipes(new ValidationPipe());
+        app.useGlobalFilters(new PrismaClientExceptionFilter());
+        app.useGlobalFilters(new ValidationExceptionFilter());
+        app.useGlobalPipes(
+            new ValidationPipe({
+                whitelist: true,
+                transform: true,
+                forbidNonWhitelisted: true,
+                transformOptions: {
+                    enableImplicitConversion: true,
+                }
+            }),
+        );
         const port = 8080;
         await app.listen(port);
         Logger.log(
