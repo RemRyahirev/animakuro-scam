@@ -40,13 +40,15 @@ export class AuthorService {
         args: PaginationInputType,
     ): Promise<GetListAuthorResultsType> {
         const authorList = await this.prisma.author.findMany({
-            ...transformPaginationUtil(args),        });
+            ...transformPaginationUtil(args),
+        });
         const pagination = await this.paginationService.getPagination('author', args);
         return {
             success: true,
             errors: [],
             authorList,
-            pagination,        };
+            pagination,
+        };
     }
 
     async getAuthorListByAnimeId(

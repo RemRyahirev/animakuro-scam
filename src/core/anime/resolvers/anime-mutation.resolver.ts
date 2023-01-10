@@ -30,6 +30,38 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         return await this.animeService.updateAnime(args, ctx);
     }
 
+    @ResolveField(() => UpdateAnimeResultsType)
+    async addRelatedAnime(
+        @Args() args: UpdateAnimeInputType,
+        @Context() ctx: ICustomContext,
+    ): Promise<UpdateAnimeResultsType> {
+        return await this.animeService.addRelatedAnime(args, ctx);
+    }
+
+    @ResolveField(() => UpdateAnimeResultsType)
+    async deleteRelatedAnime(
+        @Args() args: UpdateAnimeInputType,
+        @Context() ctx: ICustomContext,
+    ): Promise<UpdateAnimeResultsType> {
+        return await this.animeService.deleteRelatedAnime(args, ctx);
+    }
+
+    @ResolveField(() => UpdateAnimeResultsType)
+    async addSimilarAnime(
+        @Args() args: UpdateAnimeInputType,
+        @Context() ctx: ICustomContext,
+    ): Promise<UpdateAnimeResultsType> {
+        return await this.animeService.addSimilarAnime(args, ctx);
+    }
+
+    @ResolveField(() => UpdateAnimeResultsType)
+    async deleteSimilarAnime(
+        @Args() args: UpdateAnimeInputType,
+        @Context() ctx: ICustomContext,
+    ): Promise<UpdateAnimeResultsType> {
+        return await this.animeService.deleteSimilarAnime(args, ctx);
+    }
+
     @ResolveField(() => DeleteAnimeResultsType)
     async deleteAnime(
         @Args('id') id: string,

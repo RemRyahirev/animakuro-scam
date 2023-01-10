@@ -3,6 +3,7 @@ import { AnimeQueryType, AnimeRootResolver } from './anime-root.resolver';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
+import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { AnimeService } from '../services/anime.service';
 
@@ -30,5 +31,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         @Args() args: PaginationInputType,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
         return await this.animeService.getRelatedAnimeListByAnimeId(id, args);
+    }
+
+    @ResolveField(() => GetListSimilarAnimeByAnimeIdResultsType)
+    async getSimilarAnimeListByAnimeId(
+        @Args('id') id: string,
+        @Args() args: PaginationInputType,
+    ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
+        return await this.animeService.getSimilarAnimeListByAnimeId(id, args);
     }
 }

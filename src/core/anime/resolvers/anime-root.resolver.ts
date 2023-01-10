@@ -30,6 +30,11 @@ export class AnimeQueryType {
         description: 'Get Related anime list by anime ID',
     })
     getRelatedAnimeListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
+
+    @Field(() => GetListRelatedAnimeByAnimeIdResultsType, {
+        description: 'Get Similar anime list by anime ID',
+    })
+    getSimilarAnimeListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
 }
 
 @Resolver()

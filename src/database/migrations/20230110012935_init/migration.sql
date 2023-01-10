@@ -2,10 +2,16 @@
 CREATE TYPE "FriendshipStatus" AS ENUM ('AWAITING', 'REQUESTED', 'CONFIRMED');
 
 -- CreateEnum
+CREATE TYPE "AnimeRelation" AS ENUM ('DIRECT', 'CHRONOLOGY', 'FRANCHISE', 'NULL');
+
+-- CreateEnum
 CREATE TYPE "WatchStatus" AS ENUM ('WATCHING', 'PLANNED', 'COMPLETED', 'DROPPED');
 
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('UNSPECIFIED', 'MALE', 'FEMALE', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "AnimeApproval" AS ENUM ('PENDING', 'APPROVED');
 
 -- CreateEnum
 CREATE TYPE "FilmRating" AS ENUM ('G', 'PG', 'PG_13', 'R', 'R_17', 'NC_17', 'NC_21');
@@ -138,6 +144,24 @@ CREATE TABLE "anime" (
     "release_status" "ReleaseStatus" NOT NULL DEFAULT 'COMPLETED',
 
     CONSTRAINT "anime_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "relating_anime" (
+    "child_anime_id" UUID NOT NULL,
+    "parent_anime_id" UUID NOT NULL,
+    "status" "AnimeRelation" NOT NULL DEFAULT 'NULL',
+
+    CONSTRAINT "relating_anime_pkey" PRIMARY KEY ("child_anime_id","parent_anime_id")
+);
+
+-- CreateTable
+CREATE TABLE "similar_anime" (
+    "child_anime_id" UUID NOT NULL,
+    "parent_anime_id" UUID NOT NULL,
+    "status" "AnimeApproval" NOT NULL DEFAULT 'PENDING',
+
+    CONSTRAINT "similar_anime_pkey" PRIMARY KEY ("child_anime_id","parent_anime_id")
 );
 
 -- CreateTable
@@ -277,6 +301,18 @@ ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "relating_anime" ADD CONSTRAINT "relating_anime_child_anime_id_fkey" FOREIGN KEY ("child_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "relating_anime" ADD CONSTRAINT "relating_anime_parent_anime_id_fkey" FOREIGN KEY ("parent_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_child_anime_id_fkey" FOREIGN KEY ("child_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_parent_anime_id_fkey" FOREIGN KEY ("parent_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
