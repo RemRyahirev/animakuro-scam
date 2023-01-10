@@ -3,7 +3,7 @@ import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { UserService } from '../../user/services/user.service';
 import { MailPurpose } from '../../../common/models/enums';
-import { hash } from '../../../common/utils/password.util';
+import { compare, hash } from "../../../common/utils/password.util";
 import { LoginInputType } from '../models/inputs/login-input.type';
 import JwtTokenService from './jwt-token.service';
 import { User } from '../../user/models/user.model';
@@ -28,7 +28,7 @@ export class AuthService {
         const user = await this.prisma.user.findUnique({
             where: { username: args.username },
         });
-        if (user && user.password === args.password) {
+        if (user && await compare(args.password, user.password || '')) {
             return user as any;
         }
         return null;
