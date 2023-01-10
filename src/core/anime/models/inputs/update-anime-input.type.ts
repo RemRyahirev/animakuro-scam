@@ -18,8 +18,8 @@ import {
     MediaSource,
     ReleaseStatus,
     YearSeason,
+    AnimeRelation,
 } from '../../../../common/models/enums';
-import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -45,7 +45,7 @@ export class UpdateAnimeInputType {
 
     @IsString()
     @Length(1, 2)
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     country_of_origin: string;
 
     @IsOptional()
@@ -192,23 +192,35 @@ export class UpdateAnimeInputType {
     @IsOptional()
     @Field(() => [ID], {
         nullable: true,
-        description: 'Add to the list of related animes',
+        description: 'Add to the list of relating animes',
     })
-    related_animes_add: string[];
+    relating_animes_add: string[];
 
     @IsOptional()
     @Field(() => [ID], {
         nullable: true,
-        description: 'Remove from the list of related animes',
+        description: 'Remove from the list of relating animes',
     })
-    related_animes_remove: string[];
+    relating_animes_remove: string[];
 
     @IsOptional()
-    @IsString()
-    @Length(1, 20)
-    @Field(() => AnimeRelation, {
+    @Field(() => [AnimeRelation], {
         nullable: true,
         defaultValue: AnimeRelation.NULL,
     })
-    related_status: AnimeRelation;
+    related_status: AnimeRelation[];
+
+    @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Add to the list of similar animes',
+    })
+    similar_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Remove from the list of similar animes',
+    })
+    similar_animes_remove: string[];
 }

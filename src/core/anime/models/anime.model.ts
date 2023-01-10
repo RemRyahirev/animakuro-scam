@@ -10,8 +10,9 @@ import {
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
 import { Character } from '../../character/models/character.model';
-import { AnimeRelation } from '../../../common/models/enums/anime-relation.enum';
 import { Studio } from '../../studio/models/studio.model';
+import { RelatingAnime } from '../../relating-anime/models/relating-anime.model';
+import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 
 @ObjectType()
 export class Anime {
@@ -25,7 +26,9 @@ export class Anime {
     })
     title: string;
 
-    @Field(() => Float)
+    @Field(() => Float, {
+        description: 'Popularity rating of the media',
+    })
     score: number;
 
     @Field(() => Int, {
@@ -84,7 +87,7 @@ export class Anime {
 
     @Field(() => FilmRating, {
         defaultValue: FilmRating.G,
-        description: 'Popularity rating of the media',
+        description: 'Content rating of the media',
     })
     rating: string;
 
@@ -144,17 +147,25 @@ export class Anime {
     })
     authors: Author[];
 
-    @Field(() => [Anime], {
-        description: 'List of the related media',
+    @Field(() => [RelatingAnime], {
+        description: 'List of the animes relating to this media',
     })
-    related_animes: [Anime];
+    relating_animes: [RelatingAnime];
 
-    @Field(() => AnimeRelation, {
-        nullable: true,
-        defaultValue: null,
-        description: 'Media relation type',
+    @Field(() => [RelatingAnime], {
+        description: 'List of the animes related by this media',
     })
-    related_status: AnimeRelation;
+    related_by_animes: [RelatingAnime];
+
+    @Field(() => [SimilarAnime], {
+        description: 'List of the animes similar to this media',
+    })
+    similar_animes: [SimilarAnime];
+
+    @Field(() => [SimilarAnime], {
+        description: 'List of the animes similar by this media',
+    })
+    similar_by_animes: [SimilarAnime];
 
     @Field(() => [Studio], {
         description: 'The companies who produced the media',

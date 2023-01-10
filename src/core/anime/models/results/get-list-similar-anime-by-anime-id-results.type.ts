@@ -3,15 +3,15 @@ import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
-import { RelatingAnime } from '../../../relating-anime/models/relating-anime.model';
+import { SimilarAnime } from '../../../similar-anime/models/similar-anime.model';
 
 @ObjectType()
-export class GetListRelatedAnimeByAnimeIdResultsType extends BaseResultsType {
-    @Field(() => [RelatingAnime], {
+export class GetListSimilarAnimeByAnimeIdResultsType extends BaseResultsType {
+    @Field(() => [SimilarAnime], {
         nullable: true,
-        description: 'Related anime list',
+        description: 'Similar anime list',
     })
-    anime_list: RelatingAnime[];
+    anime_list: SimilarAnime[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

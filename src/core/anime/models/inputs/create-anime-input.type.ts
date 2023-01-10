@@ -18,8 +18,8 @@ import {
     MediaSource,
     ReleaseStatus,
     YearSeason,
+    AnimeRelation,
 } from '../../../../common/models/enums';
-import { AnimeRelation } from '../../../../common/models/enums/anime-relation.enum';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -52,7 +52,7 @@ export class CreateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String], { description: "Array of genre id's to add" })
-    genresToAdd: string[];
+    genres_add: string[];
 
     @IsString()
     @Field(() => MediaFormat, { defaultValue: MediaFormat.OTHER })
@@ -65,7 +65,7 @@ export class CreateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { description: "Array of studio id's to add" })
-    studiosToAdd: string[];
+    studios_Add: string[];
 
     @IsInt()
     @Field(() => Int)
@@ -125,20 +125,24 @@ export class CreateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { description: "Array of character id's to add" })
-    charactersToAdd: string[];
+    characters_add: string[];
 
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { description: "Array of author id's to add" })
-    authorsToAdd: string[];
+    authors_add: string[];
 
     @IsOptional()
-    @Field(() => [ID], { description: 'Add to the list of related animes' })
-    related_animes_add: string[];
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Add to the list of relating animes',
+    })
+    relating_animes_add: string[];
 
     @IsOptional()
-    @IsString()
-    @Length(1, 20)
-    @Field(() => AnimeRelation, { nullable: true, defaultValue: null })
-    related_status: AnimeRelation;
+    @Field(() => [AnimeRelation], {
+        nullable: true,
+        defaultValue: AnimeRelation.NULL,
+    })
+    related_status: [AnimeRelation];
 }
