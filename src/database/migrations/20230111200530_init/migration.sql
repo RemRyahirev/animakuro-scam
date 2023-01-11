@@ -167,7 +167,17 @@ CREATE TABLE "similar_anime" (
 -- CreateTable
 CREATE TABLE "author" (
     "id" UUID NOT NULL,
-    "author_name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
+    "primary_occupations" TEXT[],
+    "age" INTEGER NOT NULL,
+    "date_of_birth" VARCHAR(30) NOT NULL,
+    "date_of_death" VARCHAR(30) NOT NULL,
+    "synonyms" TEXT[],
+    "years_active" TEXT[],
+    "home_town" VARCHAR(30) NOT NULL,
+    "blood_type" VARCHAR(30) NOT NULL,
+    "language" VARCHAR(30) NOT NULL,
+    "gender" VARCHAR(30) NOT NULL,
     "bucket_id" UUID NOT NULL,
     "bio" TEXT NOT NULL,
 
@@ -178,7 +188,12 @@ CREATE TABLE "author" (
 CREATE TABLE "character" (
     "id" UUID NOT NULL,
     "bucket_id" UUID NOT NULL,
-    "character_name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
+    "gender" VARCHAR(30) NOT NULL,
+    "blood_type" VARCHAR(30) NOT NULL,
+    "date_of_birth" VARCHAR(30) NOT NULL,
+    "age" TEXT NOT NULL,
+    "synonyms" TEXT[],
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
     "description" TEXT NOT NULL,
