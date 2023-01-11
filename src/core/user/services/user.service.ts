@@ -42,8 +42,11 @@ export class UserService {
         };
     }
 
-    async getUsersByEmail(email: string, args: PaginationInputType) {
-        const userList = await this.getUserListByEmail(email, args);
+    async getUsersByEmail(email: string, args: PaginationInputType): Promise<GetListUserResultsType> {
+        const userList = await this.prisma.user.findMany({
+            where: { email },
+            ...transformPaginationUtil(args),
+        });
         const pagination = await this.paginationService.getPagination('user', args);
         return {
             success: true,
@@ -81,13 +84,6 @@ export class UserService {
                 third_party_auth: true,
                 site_auth_sessions: true,
             },
-        });
-    }
-
-    async getUserListByEmail(email: string, args: PaginationInputType) {
-        return await this.prisma.user.findMany({
-            where: { email },
-            ...transformPaginationUtil(args),
         });
     }
 
