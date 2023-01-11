@@ -11,7 +11,7 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
-import { AnimeApproval } from '../../../common/models/enums';
+import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
@@ -52,15 +52,18 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
-           },
-       });
-        const pagination = await this.paginationService.getPagination('anime', args);
+            },
+        });
+        const pagination = await this.paginationService.getPagination(
+            'anime',
+            args,
+        );
         return {
             success: true,
             errors: [],
             animeList: animeList as any,
             pagination,
-       };
+        };
     }
 
     async getRelatedAnimeListByAnimeId(
@@ -75,11 +78,15 @@ export class AnimeService {
                 child_anime: true,
             } as any,
         });
-        const pagination = await this.paginationService.getPagination('relatingAnime', args, {
-            nested_field: 'animes',
-            search_property: 'id',
-            search_value: id
-        });
+        const pagination = await this.paginationService.getPagination(
+            'relatingAnime',
+            args,
+            {
+                nested_field: 'animes',
+                search_property: 'id',
+                search_value: id,
+            },
+        );
         return {
             success: true,
             errors: [],
@@ -106,8 +113,8 @@ export class AnimeService {
             {
                 nested_field: 'animes',
                 search_property: 'id',
-                search_value: id
-            }
+                search_value: id,
+            },
         );
         return {
             success: true,
@@ -170,11 +177,10 @@ export class AnimeService {
     }
 
     async addRelatedAnime(
-        args: UpdateAnimeInputType,
-        ctx: ICustomContext,
+        id: string,
+        relating_animes_add: string[],
+        related_status: AnimeRelation[],
     ): Promise<UpdateAnimeResultsType> {
-        const { id, relating_animes_add, related_status } = args;
-
         for (let i = 0; i < relating_animes_add.length; i++) {
             await this.prisma.relatingAnime.create({
                 data: {
@@ -186,7 +192,7 @@ export class AnimeService {
         }
 
         const anime = await this.prisma.anime.findUnique({
-            where: { id: args.id },
+            where: { id },
             include: {
                 related_by_animes: true,
             } as any,
@@ -200,11 +206,9 @@ export class AnimeService {
     }
 
     async deleteRelatedAnime(
-        args: UpdateAnimeInputType,
-        ctx: ICustomContext,
+        id: string,
+        relating_animes_remove: string[],
     ): Promise<UpdateAnimeResultsType> {
-        const { id, relating_animes_remove } = args;
-
         for (const relating of relating_animes_remove) {
             await this.prisma.relatingAnime.delete({
                 where: {
@@ -228,11 +232,9 @@ export class AnimeService {
     }
 
     async addSimilarAnime(
-        args: UpdateAnimeInputType,
-        ctx: ICustomContext,
+        id: string,
+        similar_animes_add: string[],
     ): Promise<UpdateAnimeResultsType> {
-        const { id, similar_animes_add } = args;
-
         for (let i = 0; i < similar_animes_add.length; i++) {
             await this.prisma.similarAnime.create({
                 data: {
@@ -244,7 +246,7 @@ export class AnimeService {
         }
 
         const anime = await this.prisma.anime.findUnique({
-            where: { id: args.id },
+            where: { id },
             include: {
                 similar_by_animes: true,
             } as any,
@@ -260,9 +262,7 @@ export class AnimeService {
     async deleteSimilarAnime(
         id: string,
         similar_animes_remove: string[],
-        ctx: ICustomContext,
     ): Promise<UpdateAnimeResultsType> {
-
         for (const similar of similar_animes_remove) {
             await this.prisma.similarAnime.delete({
                 where: {

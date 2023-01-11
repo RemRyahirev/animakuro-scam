@@ -137,23 +137,38 @@ model SimilarAnime {
 }
 
 model Author {
-  id          String  @id @default(uuid()) @db.Uuid
-  author_name String  @db.VarChar(50)
-  bucket_id   String  @db.Uuid
-  bio         String  @db.Text
-  animes      Anime[]
+  id                  String   @id @default(uuid()) @db.Uuid
+  name                String   @db.VarChar(50)
+  primary_occupations String[]
+  age                 Int
+  date_of_birth       String   @db.VarChar(30)
+  date_of_death       String   @db.VarChar(30)
+  synonyms            String[]
+  years_active        String[]
+  home_town           String   @db.VarChar(30)
+  blood_type          String   @db.VarChar(30)
+  language            String   @db.VarChar(30)
+  gender              String   @db.VarChar(30)
+  bucket_id           String   @db.Uuid
+  bio                 String   @db.Text
+  animes              Anime[]
 
   @@map("author")
 }
 
 model Character {
-  id             String        @id @default(uuid()) @db.Uuid
-  bucket_id      String        @db.Uuid
-  character_name String        @db.VarChar(50)
-  importance     CharacterType @default(PROTAGONIST)
-  role           CharacterRole @default(MAIN)
-  description    String        @db.Text
-  animes         Anime[]
+  id            String        @id @default(uuid()) @db.Uuid
+  bucket_id     String        @db.Uuid
+  name          String        @db.VarChar(50)
+  gender        String        @db.VarChar(30)
+  blood_type    String        @db.VarChar(30)
+  date_of_birth String        @db.VarChar(30)
+  age           String
+  synonyms      String[]
+  importance    CharacterType @default(PROTAGONIST)
+  role          CharacterRole @default(MAIN)
+  description   String        @db.Text
+  animes        Anime[]
 
   @@map("character")
 }

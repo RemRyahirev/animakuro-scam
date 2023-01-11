@@ -7,6 +7,7 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { AnimeService } from '../services/anime.service';
+import { AnimeRelation } from '../../../common/models/enums/anime-relation.enum';
 
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
@@ -32,38 +33,49 @@ export class AnimeMutationResolver extends AnimeRootResolver {
 
     @ResolveField(() => UpdateAnimeResultsType)
     async addRelatedAnime(
-        @Args() args: UpdateAnimeInputType,
-        @Context() ctx: ICustomContext,
+        @Args('id') id: string,
+        @Args({ name: 'relating_animes_add', type: () => [String] })
+        relating_animes_add: string[],
+        @Args({ name: 'related_status', type: () => [AnimeRelation] })
+        related_status: AnimeRelation[],
     ): Promise<UpdateAnimeResultsType> {
-        return await this.animeService.addRelatedAnime(args, ctx);
+        return await this.animeService.addRelatedAnime(
+            id,
+            relating_animes_add,
+            related_status,
+        );
     }
 
     @ResolveField(() => UpdateAnimeResultsType)
     async deleteRelatedAnime(
-        @Args() args: UpdateAnimeInputType,
-        @Context() ctx: ICustomContext,
+        @Args('id') id: string,
+        @Args({ name: 'relating_animes_remove', type: () => [String] })
+        relating_animes_remove: string[],
     ): Promise<UpdateAnimeResultsType> {
-        return await this.animeService.deleteRelatedAnime(args, ctx);
+        return await this.animeService.deleteRelatedAnime(
+            id,
+            relating_animes_remove,
+        );
     }
 
     @ResolveField(() => UpdateAnimeResultsType)
     async addSimilarAnime(
-        @Args() args: UpdateAnimeInputType,
-        @Context() ctx: ICustomContext,
+        @Args('id') id: string,
+        @Args({ name: 'similar_animes_add', type: () => [String] })
+        similar_animes_add: string[],
     ): Promise<UpdateAnimeResultsType> {
-        return await this.animeService.addSimilarAnime(args, ctx);
+        return await this.animeService.addSimilarAnime(id, similar_animes_add);
     }
 
     @ResolveField(() => UpdateAnimeResultsType)
     async deleteSimilarAnime(
         @Args('id') id: string,
-        @Args('similar_animes_remove') similar_animes_remove: string[],
-        @Context() ctx: ICustomContext,
+        @Args({ name: 'similar_animes_remove', type: () => [String] })
+        similar_animes_remove: string[],
     ): Promise<UpdateAnimeResultsType> {
         return await this.animeService.deleteSimilarAnime(
             id,
             similar_animes_remove,
-            ctx,
         );
     }
 
