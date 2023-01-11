@@ -258,10 +258,10 @@ export class AnimeService {
     }
 
     async deleteSimilarAnime(
-        args: UpdateAnimeInputType,
+        id: string,
+        similar_animes_remove: string[],
         ctx: ICustomContext,
     ): Promise<UpdateAnimeResultsType> {
-        const { id, similar_animes_remove } = args;
 
         for (const similar of similar_animes_remove) {
             await this.prisma.similarAnime.delete({

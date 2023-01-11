@@ -1,4 +1,4 @@
-import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
 import {
     FilmRating,
     MediaFormat,
@@ -147,24 +147,16 @@ export class Anime {
     })
     authors: Author[];
 
-    @Field(() => [RelatingAnime], {
-        description: 'List of the animes relating to this media',
-    })
+    @HideField()
     relating_animes: [RelatingAnime];
 
-    @Field(() => [RelatingAnime], {
-        description: 'List of the animes related by this media',
-    })
+    @HideField()
     related_by_animes: [RelatingAnime];
 
-    @Field(() => [SimilarAnime], {
-        description: 'List of the animes similar to this media',
-    })
+    @HideField()
     similar_animes: [SimilarAnime];
 
-    @Field(() => [SimilarAnime], {
-        description: 'List of the animes similar by this media',
-    })
+    @HideField()
     similar_by_animes: [SimilarAnime];
 
     @Field(() => [Studio], {
