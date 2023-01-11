@@ -10,6 +10,7 @@ import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.f
 import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
 import { SchemaService } from './common/services/schema.service';
 import { PrismaService } from './common/services/prisma.service';
+import { ConfigService } from "@nestjs/config";
 
 async function bootstrap(): Promise<void> {
     try {
@@ -36,6 +37,7 @@ async function bootstrap(): Promise<void> {
         );
 
         const globalPrefix = 'graphql';
+        const configService = app.get(ConfigService);
         const schemaService = app.get(SchemaService);
         await schemaService.generateSchema();
         const prismaService = app.get(PrismaService);
@@ -57,7 +59,7 @@ async function bootstrap(): Promise<void> {
                 }
             }),
         );
-        const port = 8080;
+        const port = configService.get('APP_PORT', 8080);
         await app.listen(port);
         Logger.log(
             `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
