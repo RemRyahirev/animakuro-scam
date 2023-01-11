@@ -10,7 +10,7 @@ import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.f
 import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
 import { SchemaService } from './common/services/schema.service';
 import { PrismaService } from './common/services/prisma.service';
-import { ConfigService } from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap(): Promise<void> {
     try {
@@ -39,8 +39,8 @@ async function bootstrap(): Promise<void> {
         const globalPrefix = 'graphql';
         const configService = app.get(ConfigService);
         const schemaService = app.get(SchemaService);
-        await schemaService.generateSchema();
         const prismaService = app.get(PrismaService);
+        await schemaService.generateSchema();
         await prismaService.enableShutdownHooks(app);
         useContainer(app.select(CommonModule), {
             fallback: true,
