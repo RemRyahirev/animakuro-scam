@@ -3,17 +3,24 @@ import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
-import { PaginationService, PrismaService } from '../../../common/services';
-import { hash } from '../../../common/utils/password.util';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException
+} from "@nestjs/common";
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PasswordService } from '../../../common/services/password.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 
 @Injectable()
 export class UserService {
     constructor(
         private prisma: PrismaService,
-        private paginationService: PaginationService
+        private paginationService: PaginationService,
+        private passwordService: PasswordService,
     ) {}
 
     async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
@@ -59,7 +66,7 @@ export class UserService {
             );
         }
 
-        const hashedPassword = await hash(args.password);
+        const hashedPassword = await this.passwordService.encrypt(args.password);
         try {
             const user = await this.createUser({
                 ...args,

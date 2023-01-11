@@ -1,7 +1,8 @@
 import { CreateUserProfileInputType } from '../models/inputs/create-user-profile-input.type';
 import { UpdateUserProfileInputType } from '../models/inputs/update-user-profile-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService, PrismaService } from "../../../common/services";
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';

@@ -1,7 +1,8 @@
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
 import { UpdateCharacterInputType } from '../models/inputs/update-character-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService, PrismaService } from '../../../common/services';
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';

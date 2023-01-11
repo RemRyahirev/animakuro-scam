@@ -3,17 +3,17 @@ import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { UserService } from '../../user/services/user.service';
 import { MailPurpose } from '../../../common/models/enums';
-import { compare, hash } from "../../../common/utils/password.util";
 import { LoginInputType } from '../models/inputs/login-input.type';
 import JwtTokenService from './jwt-token.service';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
-import { PrismaService, SessionService } from '../../../common/services';
+import { SessionService } from '../../../common/services/session.service';
+import { PasswordService } from '../../../common/services/password.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
-import { generateHash } from '../../../common/utils/uills';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class AuthService {
@@ -22,13 +22,14 @@ export class AuthService {
         private userService: UserService,
         private mailer: Mailer,
         private sessionService: SessionService,
+        private passwordService: PasswordService,
     ) {}
 
     public async validateUser(args: LoginInputType): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
             where: { username: args.username },
         });
-        if (user && await compare(args.password, user.password || '')) {
+        if (user && await this.passwordService.compare(args.password, user.password || '')) {
             return user as any;
         }
         return null;
@@ -99,9 +100,9 @@ export class AuthService {
         args: RegisterInputType,
         context: Context,
     ): Promise<RegisterResultsType> {
-        args.password = await hash(args.password);
+        args.password = await this.passwordService.encrypt(args.password);
         const user = await this.prisma.user.create({ data: args });
-        const hashGen = generateHash();
+        const hashGen = this.passwordService.generate();
         await this.mailer.sendMail(
             {
                 to: args.email,

@@ -1,7 +1,8 @@
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService, PrismaService } from '../../../common/services';
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';

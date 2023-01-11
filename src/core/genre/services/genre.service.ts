@@ -1,7 +1,8 @@
 import { PaginationInputType } from '../../../common/models/inputs';
 import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
 import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
-import { PaginationService, PrismaService } from "../../../common/services";
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';

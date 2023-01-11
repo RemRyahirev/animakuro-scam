@@ -1,7 +1,8 @@
 import { CreateUserAnimeInputType } from '../models/inputs/create-user-anime-input.type';
 import { UpdateUserAnimeInputType } from '../models/inputs/update-user-anime-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService, PrismaService } from "../../../common/services";
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserAnimeResultsType } from '../models/results/get-user-anime-results.type';
 import { GetListUserAnimeResultsType } from '../models/results/get-list-user-anime-results.type';

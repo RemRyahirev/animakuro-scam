@@ -1,7 +1,8 @@
 import { CreateAuthorInputType } from '../models/inputs/create-author-input.type';
 import { UpdateAuthorInputType } from '../models/inputs/update-author-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService, PrismaService } from '../../../common/services';
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetAuthorResultsType } from '../models/results/get-author-results.type';
 import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';

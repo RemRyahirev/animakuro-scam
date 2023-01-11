@@ -1,5 +1,6 @@
 import { PaginationInputType } from '../../../common/models/inputs';
-import { PaginationService, PrismaService } from "../../../common/services";
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
 import { GetStudioResultsType } from '../models/results/get-studio-results.type';

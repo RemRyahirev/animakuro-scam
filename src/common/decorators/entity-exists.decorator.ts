@@ -6,7 +6,7 @@ import {
     ValidatorConstraintInterface,
 } from '@nestjs/class-validator';
 import { LoginInputType } from '../../core/auth/models/inputs/login-input.type';
-import { PrismaService } from '../services';
+import { PrismaService } from '../services/prisma.service';
 
 @ValidatorConstraint({ async: true })
 export class EntityExistsConstraint implements ValidatorConstraintInterface {

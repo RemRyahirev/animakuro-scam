@@ -6,12 +6,15 @@ import {
     ValidatorConstraintInterface,
 } from '@nestjs/class-validator';
 import { LoginInputType } from '../../core/auth/models/inputs/login-input.type';
-import { compare } from '../utils/password.util';
-import { PrismaService } from '../services';
+import { PasswordService } from '../services/password.service';
+import { PrismaService } from '../services/prisma.service';
 
 @ValidatorConstraint({ async: true })
 export class ComparePasswordConstraint implements ValidatorConstraintInterface {
-    constructor(private prisma: PrismaService) {}
+    constructor(
+        private prisma: PrismaService,
+        private passwordService: PasswordService,
+    ) {}
 
     async validate(value: any, args: ValidationArguments) {
         const inputArgs = args.object as LoginInputType;
@@ -22,7 +25,7 @@ export class ComparePasswordConstraint implements ValidatorConstraintInterface {
                 },
             })
             .then((val) => val?.password);
-        return await compare(value, password || '');
+        return await this.passwordService.compare(value, password || '');
     }
 }
 

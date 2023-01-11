@@ -5,7 +5,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from '@nestjs/class-validator';
-import { PrismaService } from '../services';
+import { PrismaService } from '../services/prisma.service';
 
 @ValidatorConstraint({ async: true })
 export class AccountLimitConstraint implements ValidatorConstraintInterface {

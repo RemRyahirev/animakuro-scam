@@ -2,13 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MyLogger } from './common/config/logger';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { PrismaService, SchemaService } from './common/services';
 import session from 'express-session';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { useContainer } from '@nestjs/class-validator';
 import { CommonModule } from './common/common.module';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
 import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
+import { SchemaService } from './common/services/schema.service';
+import { PrismaService } from './common/services/prisma.service';
 
 async function bootstrap(): Promise<void> {
     try {

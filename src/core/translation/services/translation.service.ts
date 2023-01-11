@@ -1,7 +1,8 @@
 import { PaginationInputType } from '../../../common/models/inputs';
 import { CreateTranslationInputType } from '../models/inputs/create-translation-input.type';
 import { UpdateTranslationInputType } from '../models/inputs/update-translation-input.type';
-import { PaginationService, PrismaService } from "../../../common/services";
+import { PaginationService } from '../../../common/services/pagination.service';
+import { PrismaService } from '../../../common/services/prisma.service';
 import { ICustomContext } from '../../../common/models/interfaces';
 import { GetTranslationResultsType } from '../models/results/get-translation-results.type';
 import { GetListTranslationResultsType } from '../models/results/get-list-translation-results.type';
