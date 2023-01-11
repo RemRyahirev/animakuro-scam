@@ -3,97 +3,29 @@ import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import {
-    BadRequestException,
-    Injectable,
-    NotFoundException,
-    UnauthorizedException
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PaginationService } from '../../../common/services/pagination.service';
-import { PasswordService } from '../../../common/services/password.service';
 import { PrismaService } from '../../../common/services/prisma.service';
+import { CreateUserResultsType } from '../models/results/create-user-results.type';
+import { UpdateUserResultsType } from '../models/results/update-user-results.type';
+import { GetListUserResultsType } from "../models/results/get-list-user-results.type";
 
 @Injectable()
 export class UserService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-        private passwordService: PasswordService,
     ) {}
 
-    async createUserInfo(args: CreateUserInputType, ctx: ICustomContext) {
-        const { userJwtPayload } = ctx;
-        if (!userJwtPayload) {
-            throw new UnauthorizedException('not authorized');
-        }
-        if (!args.username)
-            throw new BadRequestException(
-                'username is empty',
-            );
-
-        if (!args.password)
-            throw new BadRequestException(
-                'password is empty',
-
-            );
-
-        const checkUsername = await this.findUserByUsername(args.username);
-
-        if (checkUsername) {
-            throw new BadRequestException(
-                'Username already used',
-            );
-        }
-
-        const savedUser = await this.findUserById(userJwtPayload.uid);
-
-        if (!savedUser)
-            throw new BadRequestException(
-                'There are no saved user by this email',
-            );
-        if (!savedUser.email)
-            throw new BadRequestException(
-                'email is empty',
-            );
-
-        const checkUsersCount = await this.getUserEmailCount(savedUser.email);
-
-        if (checkUsersCount >= 5) {
-            throw new BadRequestException(
-                'Too Many accounts',
-            );
-        }
-
-        const hashedPassword = await this.passwordService.encrypt(args.password);
-        try {
-            const user = await this.createUser({
-                ...args,
-                username: args.username,
-                email: savedUser.email,
-                password: hashedPassword,
-            });
-            return {
-                success: true,
-                user: user as any,
-            };
-        } catch (e) {
-            return { success: true, user: null as any };
-        }
-    }
-
-    async updateUserInfo(args: UpdateUserInputType) {
-        const user = await this.updateUser(args);
-        return {
-            success: true,
-            user: user as any,
-        };
-    }
-
-    async getUserListInfo(args: PaginationInputType) {
-        const userList = await this.getUserList(args);
-        const pagination = await this.paginationService.getPagination('user', args);
+    async getUserList(args: PaginationInputType): Promise<GetListUserResultsType> {
+        const userList = await this.prisma.user.findMany({
+            ...transformPaginationUtil(args),
+        });
+        const pagination = await this.paginationService.getPagination(
+            'user',
+            args,
+        );
         return {
             success: true,
             errors: [],
@@ -116,8 +48,7 @@ export class UserService {
         return {
             success: true,
             userList: userList as any,
-            pagination,
-        };
+            pagination,        };
     }
 
     async createUserWithThirdParty(
@@ -150,12 +81,6 @@ export class UserService {
                 third_party_auth: true,
                 site_auth_sessions: true,
             },
-        });
-    }
-
-    async getUserList(args: PaginationInputType) {
-        return await this.prisma.user.findMany({
-            ...transformPaginationUtil(args),
         });
     }
 
@@ -202,29 +127,28 @@ export class UserService {
         });
     }
 
-    async getUserEmailCount(email: string) {
-        return await this.prisma.user.count({
-            where: {
-                email,
-            },
+    async createUser(
+        args: CreateUserInputType
+    ): Promise<CreateUserResultsType> {
+        const user = await this.prisma.user.create({
+            data: args as any
         });
+        return {
+            success: true,
+            user: user as any
+        };
     }
 
-    async createUser(args: CreateUserInputType) {
-        return await this.prisma.user.create({
-            data: args as any,
-        });
-    }
-
-    async updateUser(args: UpdateUserInputType) {
-        const user = await this.prisma.user.findUnique({
+    async updateUser(
+        args: UpdateUserInputType
+    ): Promise<UpdateUserResultsType> {
+        const user = await this.prisma.user.update({
             where: { id: args.id },
+            data: args as any
         });
-        if (!user)
-            throw new NotFoundException('User not found');
-        return await this.prisma.user.update({
-            where: { id: args.id },
-            data: args as any,
-        });
+        return {
+            success: true,
+            user: user as any
+        };
     }
 }

@@ -34,6 +34,6 @@ export class UserQueryResolver extends UserRootResolver {
     async getUserList(
         @Args() args: PaginationInputType,
     ): Promise<GetListUserResultsType> {
-        return await this.userService.getUserListInfo(args);
+        return await this.userService.getUserList(args);
     }
 }
