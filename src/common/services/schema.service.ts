@@ -40,7 +40,7 @@ import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/u
 
 @Injectable()
 export class SchemaService {
-    public async generateSchema() {
+    public async generateSchema(): Promise<void> {
         const app = await NestFactory.create(GraphQLSchemaBuilderModule);
         await app.init();
         const gqlSchemaFactory = app.get(GraphQLSchemaFactory);

@@ -18,43 +18,43 @@ export class TokenService implements OnModuleInit {
                 ),
                 signOptions: {
                     expiresIn: this.configService.get<number>(
-                       "ACCESS_TOKEN_SECRET_EXP_IN",
+                       'ACCESS_TOKEN_SECRET_EXP_IN',
                         3600,
                     ),
                 },
             },
             refreshToken: {
                 privateKey: this.configService.get<string>(
-                    "REFRESH_TOKEN_SECRET",
-                    "default-value"
+                    'REFRESH_TOKEN_SECRET',
+                    'default-value'
                 ),
                 signOptions: {
                     expiresIn: this.configService.get<number>(
-                        "REFRESH_TOKEN_SECRET_EXP_IN",
+                        'REFRESH_TOKEN_SECRET_EXP_IN',
                         60
                     ),
                 },
             },
             emailToken: {
                 privateKey: this.configService.get<string>(
-                    "EMAIL_TOKEN_SECRET",
-                    "default-value"
+                    'EMAIL_TOKEN_SECRET',
+                    'default-value'
                 ),
                 signOptions: {
                     expiresIn: this.configService.get<number>(
-                        "EMAIL_TOKEN_SECRET_EXP_IN",
+                        'EMAIL_TOKEN_SECRET_EXP_IN',
                         6000
                     ),
                 },
             },
             resetPassToken: {
                 privateKey: this.configService.get<string>(
-                    "RESET_PASS_TOKEN_SECRET",
-                    "default-value"
+                    'RESET_PASS_TOKEN_SECRET',
+                    'default-value'
                 ),
                 signOptions: {
                     expiresIn: this.configService.get<number>(
-                        "RESET_PASS_TOKEN_SECRET_EXP_IN",
+                        'RESET_PASS_TOKEN_SECRET_EXP_IN',
                         7000
                     ),
                 },
