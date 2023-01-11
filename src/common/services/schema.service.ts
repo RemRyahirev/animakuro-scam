@@ -37,6 +37,8 @@ import { UserAnimeMutationResolver } from '../../core/user-anime/resolvers/user-
 import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
 import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
 import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
+import { SearchRootResolver } from "../../core/search/resolvers/search-root.resolver";
+import { SearchQueryResolver } from "../../core/search/resolvers/search-query.resolver";
 
 @Injectable()
 export class SchemaService {
@@ -75,6 +77,8 @@ export class SchemaService {
             UserProfileRootResolver,
             UserProfileQueryResolver,
             UserProfileMutationResolver,
+            SearchRootResolver,
+            SearchQueryResolver,
         ]);
         fs.writeFile(
             path.resolve(__dirname + '../../../../schema.gql'),
