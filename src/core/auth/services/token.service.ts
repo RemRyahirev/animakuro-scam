@@ -75,16 +75,16 @@ export class TokenService implements OnModuleInit {
     }
 
     public async updateToken(userId: string, sessionId: string): Promise<any> {
-        const accessToken = await this.generateToken(
+        const access_token = await this.generateToken(
             userId,
             sessionId,
             TokenType.ACCESS_TOKEN,
         );
-        const refreshToken = await this.generateToken(
+        const refresh_token = await this.generateToken(
             userId,
             sessionId,
             TokenType.REFRESH_TOKEN,
         );
-        return { accessToken, refreshToken };
+        return { access_token, refresh_token };
     }
 }
