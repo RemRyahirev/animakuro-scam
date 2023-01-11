@@ -17,9 +17,11 @@ import { TokenService } from './services/token.service';
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET'),
+                secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
                 signOptions: {
-                    expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
+                    expiresIn: configService.get<string>(
+                        'ACCESS_TOKEN_SECRET_EXP_IN',
+                    ),
                 },
             }),
             inject: [ConfigService],
