@@ -10,7 +10,7 @@ import {
     Injectable,
     NotFoundException,
     UnauthorizedException
-} from "@nestjs/common";
+} from '@nestjs/common';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PasswordService } from '../../../common/services/password.service';
 import { PrismaService } from '../../../common/services/prisma.service';
