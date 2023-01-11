@@ -51,7 +51,8 @@ export class UserService {
         return {
             success: true,
             userList: userList as any,
-            pagination,        };
+            pagination,
+        };
     }
 
     async createUserWithThirdParty(
