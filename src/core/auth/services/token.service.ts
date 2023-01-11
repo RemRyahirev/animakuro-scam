@@ -74,9 +74,9 @@ export class TokenService implements OnModuleInit {
             },
             this.tokenConfig[tokenType].privateKey,
             {
-                issuer: this.configService.get<string>('JWT_ISSUER'),
+                issuer: this.configService.get<string>('JWT_ISSUER', 'auth'),
                 subject: AuthType.JWT,
-                audience: this.configService.get<string>('JWT_AUDIENCE'),
+                audience: this.configService.get<string>('JWT_AUDIENCE', 'content'),
                 algorithm: 'HS256',
                 expiresIn: this.tokenConfig[tokenType].signOptions.expiresIn,
             },
