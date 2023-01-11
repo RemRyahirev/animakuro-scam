@@ -2,9 +2,10 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginInputType } from '../../core/auth/models/inputs/login-input.type';
+import { AuthType } from '../models/enums';
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard('local') {
+export class GqlAuthGuard extends AuthGuard(AuthType.LOCAL) {
     getRequest(context: ExecutionContext) {
         const ctx: GqlExecutionContext = GqlExecutionContext.create(
             <ExecutionContext>context,

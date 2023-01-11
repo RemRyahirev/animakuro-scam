@@ -2,9 +2,8 @@ import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { UserService } from '../../user/services/user.service';
-import { MailPurpose } from '../../../common/models/enums';
+import { MailPurpose, TokenType } from '../../../common/models/enums';
 import { LoginInputType } from '../models/inputs/login-input.type';
-import JwtTokenService from './jwt-token.service';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
 import { SessionService } from '../../../common/services/session.service';
@@ -13,7 +12,8 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
@@ -23,13 +23,20 @@ export class AuthService {
         private mailer: Mailer,
         private sessionService: SessionService,
         private passwordService: PasswordService,
+        private tokenService: TokenService,
     ) {}
 
     public async validateUser(args: LoginInputType): Promise<User | null> {
         const user = await this.prisma.user.findUnique({
             where: { username: args.username },
         });
-        if (user && await this.passwordService.compare(args.password, user.password || '')) {
+        if (
+            user &&
+            (await this.passwordService.compare(
+                args.password,
+                user.password || '',
+            ))
+        ) {
             return user as any;
         }
         return null;
@@ -44,7 +51,7 @@ export class AuthService {
         args: LoginInputType,
         context: Context,
     ): Promise<LoginResultsType> {
-        //TODO made setup mail notification
+        // TODO made setup mail notification
         const user = (await this.userService.findUserByUsername(
             args.username,
         )) as NonNullable<User>;
@@ -54,10 +61,11 @@ export class AuthService {
             active: true,
             user_id: user.id,
         });
-        const access_token = JwtTokenService.makeAccessToken({
-            uid: user.id,
-            sessionId: session.id,
-        });
+        const access_token = await this.tokenService.generateToken(
+            user.id,
+            session.id,
+            TokenType.ACCESS_TOKEN,
+        );
         const userIp = requestIp.getClientIp(context.req) || 1;
         const geoLookUp = geoip.lookup(userIp);
         await this.mailer.sendMail(
@@ -88,7 +96,6 @@ export class AuthService {
                 timezone: geoLookUp?.timezone,
             },
         );
-        // JwtTokenService.setCookieAccessToken(ctx, accessToken);
         return {
             success: true,
             access_token,
@@ -102,7 +109,11 @@ export class AuthService {
     ): Promise<RegisterResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
         const user = await this.prisma.user.create({ data: args });
-        const hashGen = this.passwordService.generate();
+        const hash = this.tokenService.generateToken(
+            user.id,
+            null,
+            TokenType.EMAIL_TOKEN,
+        );
         await this.mailer.sendMail(
             {
                 to: args.email,
@@ -111,7 +122,8 @@ export class AuthService {
             MailPurpose.CONFIRM_REGISTRATION,
             {
                 username: args.username,
-                confirm_link: 'https://' + context.req.headers.host + '/' + hashGen,
+                confirm_link:
+                    'https://' + context.req.headers.host + '/' + hash,
             },
         );
         return {

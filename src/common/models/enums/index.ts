@@ -18,3 +18,4 @@ export * from './anime-type.enum';
 export * from './auth-type.enum';
 export * from './anime-relation.enum';
 export * from './anime-approval.enum';
+export * from './token-type.enum';

@@ -8,6 +8,7 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy, LocalStrategy } from './strategies';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TokenService } from './services/token.service';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ],
     providers: [
         AuthService,
+        TokenService,
         AuthRootResolver,
         AuthQueryResolver,
         AuthMutationResolver,
