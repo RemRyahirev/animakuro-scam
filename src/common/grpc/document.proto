@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package document;
+
+service DocumentService {
+    rpc SearchDocument (SearchDocument) returns (SearchResponse) {}
+    rpc FindOneDocument (DocumentById) returns (Document) {}
+    rpc CreateDocument (CreateDocument) returns (Document) {}
+    rpc UpdateDocument (UpdateDocument) returns (Document) {}
+    rpc DeleteDocument (DocumentById) returns (Null) {}
+}
+
+message Null {}
+
+
+message SearchDocument {
+    string index = 1;
+    string search = 2;
+}
+
+message DocumentById {
+    string index = 1;
+    string id = 2;
+}
+
+message CreateDocument {
+    string index = 1;
+    string id = 2;
+    Document document = 3;
+}
+
+message UpdateDocument {
+    string index = 1;
+    string id = 2;
+    Document document = 3;
+}
+
+message Document {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+}
+
+message SearchResults {
+    string id = 1;
+    string score = 2;
+}
+
+message SearchResponse {
+    repeated SearchResults results = 1;
+}
