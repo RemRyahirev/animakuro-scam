@@ -6,7 +6,7 @@ import { AuthQueryResolver } from './resolvers/auth-query.resolver';
 import { AuthService } from './services/auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './strategies';
+import { GoogleStrategy, JwtStrategy } from './strategies';
 import { TokenService } from './services/token.service';
 import { JwtConfigService } from './services/jwt-config.service';
 
@@ -26,6 +26,7 @@ import { JwtConfigService } from './services/jwt-config.service';
         AuthQueryResolver,
         AuthMutationResolver,
         JwtStrategy,
+        GoogleStrategy,
     ],
     exports: [AuthService],
 })

@@ -1,43 +1,37 @@
-import axios from 'axios';
-import { IAccount } from '../../../common/models/interfaces';
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy, VerifyCallback } from 'passport-google-oauth20';
+import { AuthType } from '../../../common/models/enums';
 
-export class GoogleStrategy {
-    client_id: string;
-    client_secret: string;
-    redirect_uri: string;
+Injectable();
 
+export class GoogleStrategy extends PassportStrategy(
+    Strategy,
+    AuthType.GOOGLE,
+) {
     constructor() {
-        this.client_id = process.env.FACEBOOK_CLIENT_ID || '';
-        this.client_secret = process.env.FACEBOOK_CLIENT_SECRET || '';
-        this.redirect_uri = process.env.FACEBOOK_REDIRECT_URI || '';
+        super({
+            clientID: 'test_id',
+            clientSecret: 'test_secret',
+            callbackURL: 'http://localhost:3000/google/redirect',
+            scope: ['email', 'profile'],
+        });
     }
 
-    async getAccountData(code: string): Promise<IAccount> {
-        const {
-            data: { access_token },
-        } = await axios(`https://graph.facebook.com/v15.0/oauth/access_token`, {
-            method: 'POST',
-            params: {
-                redirect_uri: this.redirect_uri,
-                client_id: this.client_id,
-                client_secret: this.client_secret,
-                code,
-            },
-        });
-
-        const { data } = await axios({
-            url: 'https://graph.facebook.com/me',
-            method: 'get',
-            params: {
-                fields: ['id', 'email', 'first_name', 'last_name'].join(','),
-                access_token,
-            },
-        });
-
-        return data;
+    async validate(
+        accessToken: string,
+        refreshToken: string,
+        profile: any,
+        done: VerifyCallback,
+    ): Promise<any> {
+        const { name, emails, photos } = profile;
+        const user = {
+            email: emails[0].value,
+            firstName: name.givenName,
+            lastName: name.familyName,
+            picture: photos[0].value,
+            accessToken,
+        };
+        done(null, user);
     }
-
-    getRedirectUrl = () => {
-        return `https://www.facebook.com/v15.0/dialog/oauth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}`;
-    };
 }
