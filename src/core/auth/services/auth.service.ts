@@ -26,27 +26,6 @@ export class AuthService {
         private tokenService: TokenService,
     ) {}
 
-    public async validateUser(args: LoginInputType): Promise<User | null> {
-        const user = await this.prisma.user.findUnique({
-            where: { username: args.username },
-        });
-        if (
-            user &&
-            (await this.passwordService.compare(
-                args.password,
-                user.password || '',
-            ))
-        ) {
-            return user as any;
-        }
-        return null;
-    }
-
-    async logout(ctx: Context) {
-        // TODO rewrite logout logic
-        return { success: true };
-    }
-
     async login(
         args: LoginInputType,
         context: Context,
@@ -54,7 +33,7 @@ export class AuthService {
         // TODO made setup mail notification
         const user = (await this.userService.findUserByUsername(
             args.username,
-        )) as NonNullable<User>;
+        )) as unknown as NonNullable<User>;
         const session = await this.sessionService.createSiteAuthSession({
             agent: context.req.headers['user-agent'] || '',
             ip: context.req.socket.remoteAddress || '', // TODO: recheck
@@ -114,6 +93,11 @@ export class AuthService {
             null,
             TokenType.EMAIL_TOKEN,
         );
+        const access_token = await this.tokenService.generateToken(
+            user.id,
+            null,
+            TokenType.ACCESS_TOKEN,
+        );
         await this.mailer.sendMail(
             {
                 to: args.email,
@@ -128,7 +112,13 @@ export class AuthService {
         );
         return {
             success: true,
+            access_token,
             user: user as any,
         };
+    }
+
+    async logout(ctx: Context) {
+        // TODO rewrite logout logic
+        return { success: true };
     }
 }

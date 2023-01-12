@@ -8,3 +8,4 @@ export * from './password-input.interface';
 export * from './upload.interface';
 export * from './user-output.interface';
 export * from './nested-pagination.interface';
+export * from './custom-jwt-payload.interface';

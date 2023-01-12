@@ -6,35 +6,26 @@ import { AuthQueryResolver } from './resolvers/auth-query.resolver';
 import { AuthService } from './services/auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy, LocalStrategy } from './strategies';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './strategies';
 import { TokenService } from './services/token.service';
+import { JwtConfigService } from './services/jwt-config.service';
 
 @Module({
     imports: [
         UserModule,
         PassportModule,
         JwtModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
-                signOptions: {
-                    expiresIn: configService.get<string>(
-                        'ACCESS_TOKEN_SECRET_EXP_IN',
-                    ),
-                },
-            }),
-            inject: [ConfigService],
+            useClass: JwtConfigService,
         }),
     ],
     providers: [
         AuthService,
+        JwtConfigService,
         TokenService,
         AuthRootResolver,
         AuthQueryResolver,
         AuthMutationResolver,
         JwtStrategy,
-        LocalStrategy,
     ],
     exports: [AuthService],
 })

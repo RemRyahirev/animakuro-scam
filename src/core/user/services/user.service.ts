@@ -4,7 +4,7 @@ import { PaginationInputType } from '../../../common/models/inputs';
 import { ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';

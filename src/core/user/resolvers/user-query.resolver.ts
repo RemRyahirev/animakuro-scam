@@ -1,4 +1,4 @@
-import { Args, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Context, ResolveField, Resolver } from "@nestjs/graphql";
 import { UserQueryType, UserRootResolver } from './user-root.resolver';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListUserResultsType } from '../models/results/get-list-user-results.type';
@@ -17,6 +17,7 @@ export class UserQueryResolver extends UserRootResolver {
     }
 
     @ResolveField(() => GetListUserByEmailResultsType)
+    @UseGuards(JwtAuthGuard)
     async getUsersByEmail(
         @Args('email') email: string,
         @Args() args: PaginationInputType,
@@ -26,11 +27,12 @@ export class UserQueryResolver extends UserRootResolver {
 
     @ResolveField(() => GetUserResultsType)
     @UseGuards(JwtAuthGuard)
-    async getUser(@Args('id') id: string): Promise<GetUserResultsType> {
-        return await this.userService.getUser(id);
+    async getUser(@Context() context: any): Promise<GetUserResultsType> {
+        return await this.userService.getUser(context.req.user.uuid);
     }
 
     @ResolveField(() => GetListUserResultsType)
+    @UseGuards(JwtAuthGuard)
     async getUserList(
         @Args() args: PaginationInputType,
     ): Promise<GetListUserResultsType> {

@@ -4,6 +4,8 @@ import { UpdateUserProfileResultsType } from '../models/results/update-user-prof
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
+import { UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
 
 @ObjectType()
 export class UserProfileMutationType {
@@ -29,11 +31,13 @@ export class UserProfileQueryType {
 @Resolver()
 export class UserProfileRootResolver {
     @Mutation(() => UserProfileMutationType, { description: 'User Profile mutations' })
+    @UseGuards(JwtAuthGuard)
     userProfileMutations() {
         return {};
     }
 
     @Query(() => UserProfileQueryType, { description: 'User Profile queries' })
+    @UseGuards(JwtAuthGuard)
     userProfileQueries() {
         return {};
     }

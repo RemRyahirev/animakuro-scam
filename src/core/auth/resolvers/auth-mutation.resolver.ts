@@ -7,8 +7,7 @@ import { LoginResultsType } from '../models/results/login-results.type';
 import { LogoutResultsType } from '../models/results/logout-results.type';
 import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
-import { ExecutionContext, UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../../../common/guards/gql-auth.guard';
+import { ExecutionContext } from '@nestjs/common';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
@@ -33,7 +32,6 @@ export class AuthMutationResolver extends AuthRootResolver {
     // }
 
     @ResolveField(() => LoginResultsType)
-    @UseGuards(GqlAuthGuard)
     async login(
         @Args() args: LoginInputType,
         @Context() context: ExecutionContext,
