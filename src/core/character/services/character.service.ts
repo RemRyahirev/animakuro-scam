@@ -58,12 +58,15 @@ export class CharacterService {
                     include: {
                         genres: true,
                         characters: true,
-                        authors: true
-                    }
-                }
-            }
+                        authors: true,
+                    },
+                },
+            },
         });
-        const pagination = await this.paginationService.getPagination('character', args);
+        const pagination = await this.paginationService.getPagination(
+            'character',
+            args,
+        );
         return {
             success: true,
             errors: [],
@@ -81,25 +84,25 @@ export class CharacterService {
             where: {
                 animes: {
                     some: {
-                        id
-                    }
-                }
-            }
+                        id,
+                    },
+                },
+            },
         });
         const pagination = await this.paginationService.getPagination(
-            "character",
+            'character',
             args,
             {
-                nested_field: "animes",
-                search_property: "id",
-                search_value: id
-            }
+                nested_field: 'animes',
+                search_property: 'id',
+                search_value: id,
+            },
         );
         return {
             success: true,
             errors: [],
             characterList: characterList as any,
-            pagination
+            pagination,
         };
     }
 
@@ -114,10 +117,10 @@ export class CharacterService {
                     include: {
                         genres: true,
                         characters: true,
-                        authors: true
-                    }
-                }
-            }
+                        authors: true,
+                    },
+                },
+            },
         });
         return {
             success: true,
@@ -137,10 +140,10 @@ export class CharacterService {
                     include: {
                         genres: true,
                         characters: true,
-                        authors: true
-                    }
-                }
-            }
+                        authors: true,
+                    },
+                },
+            },
         });
         return {
             success: true,
@@ -159,10 +162,10 @@ export class CharacterService {
                     include: {
                         genres: true,
                         characters: true,
-                        authors: true
-                    }
-                }
-            }
+                        authors: true,
+                    },
+                },
+            },
         });
         return {
             success: true,

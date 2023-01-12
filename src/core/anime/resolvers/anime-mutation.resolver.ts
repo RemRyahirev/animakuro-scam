@@ -7,7 +7,7 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { AnimeService } from '../services/anime.service';
-import { AnimeRelation } from '../../../common/models/enums/anime-relation.enum';
+import { AnimeRelation } from '../../../common/models/enums';
 
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
@@ -40,6 +40,19 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         related_status: AnimeRelation[],
     ): Promise<UpdateAnimeResultsType> {
         return await this.animeService.addRelatedAnime(
+            id,
+            relating_animes_add,
+            related_status,
+        );
+    }
+
+    @ResolveField(() => UpdateAnimeResultsType)
+    async updateRelatedAnime(
+        @Args('id') id: string,
+        @Args({ name: 'relating_animes_add', type: () => [String] }) relating_animes_add: string[],
+        @Args({ name: 'related_status', type: () => [AnimeRelation] }) related_status: AnimeRelation[],
+    ): Promise<UpdateAnimeResultsType> {
+        return await this.animeService.updateRelatedAnime(
             id,
             relating_animes_add,
             related_status,

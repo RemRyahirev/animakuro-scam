@@ -1,5 +1,5 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { IsEnum, IsString, Length } from '@nestjs/class-validator';
+import { IsArray, IsEnum, IsString, Length } from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 
 @ArgsType()
@@ -40,4 +40,8 @@ export class CreateCharacterInputType {
     @IsString()
     @Field(() => String)
     description: string;
+
+    @IsArray()
+    @Field(() => [String])
+    synonyms: string[];
 }

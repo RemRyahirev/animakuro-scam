@@ -66,6 +66,7 @@ export class Character {
 
     @Field(() => String, {
         description: 'Brief description of the character',
+        nullable: true,
     })
     description: string;
 

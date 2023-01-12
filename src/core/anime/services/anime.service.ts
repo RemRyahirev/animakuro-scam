@@ -205,6 +205,39 @@ export class AnimeService {
         };
     }
 
+    async updateRelatedAnime(
+        id: string,
+        relating_animes_add: string[],
+        related_status: AnimeRelation[],
+    ): Promise<UpdateAnimeResultsType> {
+        for (let i = 0; i < relating_animes_add.length; i++) {
+            await this.prisma.relatingAnime.update({
+                where: {
+                    child_anime_id_parent_anime_id: {
+                        parent_anime_id: id,
+                        child_anime_id: relating_animes_add[i],
+                    },
+                },
+                data: {
+                    status: related_status[i],
+                },
+            });
+        }
+
+        const anime = await this.prisma.anime.findUnique({
+            where: { id },
+            include: {
+                relating_animes: true,
+            },
+        });
+
+        return {
+            success: true,
+            errors: [],
+            anime: anime as any,
+        };
+    }
+
     async deleteRelatedAnime(
         id: string,
         relating_animes_remove: string[],

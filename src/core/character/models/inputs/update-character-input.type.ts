@@ -1,5 +1,12 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { IsEnum, IsOptional, IsString, IsUUID, Length } from '@nestjs/class-validator';
+import {
+    IsArray,
+    IsEnum,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Length,
+} from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 
 @ArgsType()
@@ -17,7 +24,7 @@ export class UpdateCharacterInputType {
     @IsString()
     @Length(1, 50)
     @Field(() => String, { nullable: true })
-    character_name?: string;
+    name?: string;
 
     @IsOptional()
     @IsEnum(CharacterType)
@@ -29,11 +36,34 @@ export class UpdateCharacterInputType {
 
     @IsOptional()
     @IsEnum(CharacterRole)
-    @Field(() => CharacterRole, { nullable: true, defaultValue: CharacterRole.MAIN })
+    @Field(() => CharacterRole, {
+        nullable: true,
+        defaultValue: CharacterRole.MAIN,
+    })
     role?: CharacterRole;
 
     @IsOptional()
     @IsString()
     @Field(() => String, { nullable: true })
     description?: string;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    date_of_birth?: string;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    gender?: string;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    blood_type?: string;
+
+    @IsOptional()
+    @IsArray()
+    @Field(() => [String], { nullable: true })
+    synonyms?: string[];
 }

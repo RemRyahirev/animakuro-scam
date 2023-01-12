@@ -91,7 +91,10 @@ export class Anime {
     })
     rating: string;
 
-    @Field(() => String, { description: 'Brief description of the media' })
+    @Field(() => String, {
+        description: 'Brief description of the media',
+        nullable: true,
+    })
     description: string;
 
     @Field(() => String, { description: 'Link to the media preview' })

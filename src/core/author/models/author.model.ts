@@ -47,7 +47,8 @@ export class Author {
 
     @Field(() => [String], {
         nullable: true,
-        description: 'Years of active writing',
+        description:
+            '[startYear, endYear] (If the 2nd value is not present author is still active)',
     })
     years_active: string[];
 

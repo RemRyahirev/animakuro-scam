@@ -88,7 +88,7 @@ export class CreateAnimeInputType {
     rating: FilmRating;
 
     @IsString()
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     description: string;
 
     @IsUrl()

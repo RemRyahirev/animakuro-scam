@@ -1,6 +1,5 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
-import { IsString, Length } from '@nestjs/class-validator';
-import { IsInt } from 'class-validator';
+import { IsArray, IsInt, IsString, Length } from '@nestjs/class-validator';
 
 @ArgsType()
 export class CreateAuthorInputType {
@@ -44,4 +43,16 @@ export class CreateAuthorInputType {
     @IsInt()
     @Field(() => Int)
     age: number;
+
+    @IsArray()
+    @Field(() => [String])
+    primary_occupations: string[];
+
+    @IsArray()
+    @Field(() => [String])
+    years_active: string[];
+
+    @IsArray()
+    @Field(() => [String])
+    synonyms: string[];
 }
