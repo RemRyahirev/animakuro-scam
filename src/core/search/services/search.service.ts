@@ -1,8 +1,8 @@
 import { GetListSearchAnimeResultsType } from '../models/results/get-list-search-anime-results.type';
 import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
 import { Prisma } from '@prisma/client';
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Client, ClientGrpc } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
+import { ClientGrpc } from '@nestjs/microservices';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { DocumentService, grpcClientConfig } from '../../../common/grpc';
@@ -12,10 +12,8 @@ export class SearchService implements OnModuleInit {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
+        @Inject('DOCUMENT_PACKAGE') private client: ClientGrpc
     ) {}
-
-    @Client(grpcClientConfig)
-    private client: ClientGrpc;
     private documentService: DocumentService; // Names need to be changed
 
     onModuleInit() {
