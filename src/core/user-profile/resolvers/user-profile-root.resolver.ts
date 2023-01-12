@@ -4,8 +4,8 @@ import { UpdateUserProfileResultsType } from '../models/results/update-user-prof
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
-import { UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../common/guards';
 
 @ObjectType()
 export class UserProfileMutationType {
