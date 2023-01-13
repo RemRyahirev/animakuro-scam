@@ -56,12 +56,14 @@ model ThirdPartyAuth {
 model Studio {
   id           String   @id @default(uuid()) @db.Uuid
   created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @default(now()) @map("updated_at")
   studio_name  String   @db.VarChar(64)
   rating       Float    @db.Real
   thumbnail    String   @db.Text
   anime_count  Float    @default(0) @db.Real
   anime_starts Float    @db.Real
   anime_ends   Float    @db.Real
+  is_animation_studio Boolean @default(true)
   anime        Anime[]
 
   @@map("studio")
@@ -102,6 +104,8 @@ model Anime {
   preview_link       String          @db.Text
   status_description String          @db.VarChar(30)
   release_status     ReleaseStatus   @default(COMPLETED)
+  created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @default(now()) @map("updated_at")
   studios            Studio[]
   characters         Character[]
   authors            Author[]
@@ -151,6 +155,8 @@ model Author {
   gender              String   @db.VarChar(30)
   bucket_id           String   @db.Uuid
   bio                 String   @db.Text
+  created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @default(now()) @map("updated_at")
   animes              Anime[]
 
   @@map("author")
@@ -168,6 +174,8 @@ model Character {
   importance    CharacterType @default(PROTAGONIST)
   role          CharacterRole @default(MAIN)
   description   String        @db.Text
+  created_at   DateTime @default(now()) @map("created_at")
+  updated_at   DateTime @default(now()) @map("updated_at")
   animes        Anime[]
 
   @@map("character")
@@ -175,7 +183,7 @@ model Character {
 
 model Genre {
   id         String  @id @default(uuid()) @db.Uuid
-  genre_name String  @db.VarChar(50)
+  name String  @db.VarChar(50)
   animes     Anime[]
 
   @@map("genre")

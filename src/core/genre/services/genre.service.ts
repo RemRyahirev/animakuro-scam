@@ -43,7 +43,10 @@ export class GenreService {
         const genreList = await this.prisma.genre.findMany({
             ...transformPaginationUtil(args),
         });
-        const pagination = await this.paginationService.getPagination('genre', args);
+        const pagination = await this.paginationService.getPagination(
+            'genre',
+            args,
+        );
         return {
             success: true,
             errors: [],

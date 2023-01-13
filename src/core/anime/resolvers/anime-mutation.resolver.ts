@@ -7,7 +7,7 @@ import { UpdateAnimeResultsType } from '../models/results/update-anime-results.t
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { AnimeService } from '../services/anime.service';
-import { AnimeRelation } from '../../../common/models/enums';
+import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
 
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
@@ -49,8 +49,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @ResolveField(() => UpdateAnimeResultsType)
     async updateRelatedAnime(
         @Args('id') id: string,
-        @Args({ name: 'relating_animes_add', type: () => [String] }) relating_animes_add: string[],
-        @Args({ name: 'related_status', type: () => [AnimeRelation] }) related_status: AnimeRelation[],
+        @Args({ name: 'relating_animes_add', type: () => [String] })
+        relating_animes_add: string[],
+        @Args({ name: 'related_status', type: () => [AnimeRelation] })
+        related_status: AnimeRelation[],
     ): Promise<UpdateAnimeResultsType> {
         return await this.animeService.updateRelatedAnime(
             id,
@@ -78,6 +80,21 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         similar_animes_add: string[],
     ): Promise<UpdateAnimeResultsType> {
         return await this.animeService.addSimilarAnime(id, similar_animes_add);
+    }
+
+    @ResolveField(() => UpdateAnimeResultsType)
+    async updateSimilarAnime(
+        @Args('id') id: string,
+        @Args({ name: 'similar_animes_add', type: () => [String] })
+        similar_animes_add: string[],
+        @Args({ name: 'related_status', type: () => [AnimeApproval] })
+        status: AnimeApproval[],
+    ): Promise<UpdateAnimeResultsType> {
+        return await this.animeService.updateSimilarAnime(
+            id,
+            similar_animes_add,
+            status,
+        );
     }
 
     @ResolveField(() => UpdateAnimeResultsType)
