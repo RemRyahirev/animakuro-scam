@@ -4,6 +4,7 @@ import { SearchRootResolver } from './resolvers/search-root.resolver';
 import { SearchQueryResolver } from './resolvers/search-query.resolver';
 import { ClientsModule } from '@nestjs/microservices';
 import { grpcClientConfig } from '../../common/grpc';
+import { SearchGrpcService } from "./services/search.grpc.service";
 
 @Module({
     imports: [
@@ -12,9 +13,9 @@ import { grpcClientConfig } from '../../common/grpc';
                 name: 'DOCUMENT_PACKAGE',
                 ...grpcClientConfig,
             },
-        ]),
+        ])
     ],
-    providers: [SearchService, SearchRootResolver, SearchQueryResolver],
+    providers: [SearchService, SearchRootResolver, SearchQueryResolver, SearchGrpcService],
     exports: [],
 })
 export class SearchModule {}

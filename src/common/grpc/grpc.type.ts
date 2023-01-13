@@ -8,7 +8,7 @@ export interface DocumentService {
     deleteDocument(documentById: DocumentById): Observable<any>;
 }
 
-interface Document {
+export interface Document {
     id: string;
     title?: string;
     description?: string;
@@ -18,17 +18,17 @@ interface Document {
     character_name?: string;
 }
 
-interface SearchDocument {
+export interface SearchDocument {
     index: string;
     search: string;
 }
 
-interface DocumentById {
+export interface DocumentById {
     index: string
     id: string
 }
 
-interface CreateDocument {
+export interface CreateDocument {
     index: string
     id: string
     document: Document

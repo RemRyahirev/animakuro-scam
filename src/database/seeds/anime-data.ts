@@ -49,7 +49,8 @@ export const animeData = async () => {
             description: 'аниме про лагман',
             preview_link: 'https://google.com',
             status_description: 'в 2006-2007гг',
-            release_status: ReleaseStatus.COMPLETED,
+            release_status: ReleaseStatus.ANNOUNCEMENT,
+            date_start: new Date('2004-10-19 10:23:54'),
             characters: {
                 connect: [
                     {
@@ -102,7 +103,9 @@ export const animeData = async () => {
             description: 'про малыша в доспехах',
             preview_link: 'https://yandex.com',
             status_description: 'в 1999-2001 гг',
-            release_status: ReleaseStatus.COMPLETED,
+            release_status: ReleaseStatus.ANNOUNCEMENT,
+            date_start: new Date('2004-10-19 10:23:54'),
+            date_end: new Date('2004-10-19 10:23:54'),
             characters: {
                 connect: [
                     {

@@ -1,42 +1,32 @@
 import { GetListSearchAnimeResultsType } from '../models/results/get-list-search-anime-results.type';
 import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { PaginationService } from '../../../common/services/pagination.service';
-import { DocumentService } from '../../../common/grpc';
-import { lastValueFrom } from 'rxjs';
-import { ElasticResults } from '../models/results/elastic-response.type';
-import { createPrismaOptions } from '../utils/create-prisma-options';
+import { createSearchPrismaOptions } from '../utils/create-search-prisma-options';
+import { SearchGrpcService } from './search.grpc.service';
 
 @Injectable()
-export class SearchService implements OnModuleInit {
+export class SearchService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-        @Inject('DOCUMENT_PACKAGE') private client: ClientGrpc,
+        private searchGrpcService: SearchGrpcService,
     ) {}
-    private documentService: DocumentService; // Names need to be changed
-
-    onModuleInit() {
-        this.documentService =
-            this.client.getService<DocumentService>('DocumentService');
-    }
 
     async getSearchAnimeList(
         args: SearchAnimeInputType,
     ): Promise<GetListSearchAnimeResultsType> {
-        const { search, ...filterOptions } = args;
-        const elasticResults = (await lastValueFrom(
-            this.documentService.searchDocument({
-                search: args.search || '',
-                index: 'anime',
-            }),
-        )) as ElasticResults;
+        const { search, sortField, sortOrder, ...filterOptions } = args;
+        const sort = { sortField, sortOrder };
+        const elasticResults = await this.searchGrpcService.searchDocument(
+            args.search || '',
+        );
 
-        const prismaOptions = createPrismaOptions(
+        const prismaOptions = createSearchPrismaOptions(
             elasticResults.results.map((r) => r.id),
             filterOptions,
+            sort,
         );
 
         const animeList = await this.prisma.anime.findMany(prismaOptions);

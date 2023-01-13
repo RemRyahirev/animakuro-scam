@@ -10,6 +10,8 @@ import {
     YearSeason,
 } from '../../../../common/models/enums';
 import { IsBoolean, IsInt } from '@nestjs/class-validator';
+import { SortOrder } from "../../../../common/models/enums/sort-order.enum";
+import { SearchSortField } from "../enums/search-sort-field.enum";
 
 @ArgsType()
 export class SearchAnimeInputType {
@@ -81,4 +83,14 @@ export class SearchAnimeInputType {
     @IsString()
     @Field(() => String, { nullable: true })
     genres?: string;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => SearchSortField, { nullable: true })
+    sortField?: SearchSortField
+
+    @IsOptional()
+    @IsString()
+    @Field(() => SortOrder, { nullable: true })
+    sortOrder?: SortOrder
 }
