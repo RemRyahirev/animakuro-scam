@@ -1,7 +1,6 @@
 import { IsOptional, IsString, Length } from 'class-validator';
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import {
-    AnimeRelation,
     AnimeType,
     FilmRating,
     MediaFormat,
@@ -9,7 +8,7 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
-import { IsBoolean, IsInt } from '@nestjs/class-validator';
+import { IsArray, IsBoolean, IsInt } from "@nestjs/class-validator";
 import { SortOrder } from "../../../../common/models/enums/sort-order.enum";
 import { SearchSortField } from "../enums/search-sort-field.enum";
 
@@ -73,16 +72,9 @@ export class SearchAnimeInputType {
     year?: number;
 
     @IsOptional()
-    @IsString()
-    @Field(() => [AnimeRelation], {
-        nullable: true,
-    })
-    related_status?: AnimeRelation[];
-
-    @IsOptional()
-    @IsString()
-    @Field(() => String, { nullable: true })
-    genres?: string;
+    @IsArray()
+    @Field(() => [String], { nullable: true })
+    genres?: string[];
 
     @IsOptional()
     @IsString()

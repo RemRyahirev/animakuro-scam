@@ -6,15 +6,23 @@ import { SearchSortInput } from '../models/inputs/search-sort-input';
 
 export function createSearchPrismaOptions(
     elasticResults: string[],
-    filterOptions: Omit<SearchAnimeInputType, 'search' | 'genres'>,
+    options: Omit<SearchAnimeInputType, 'search'>,
     sort: SearchSortInput,
 ): Prisma.AnimeFindManyArgs {
+    const { genres, ...filterOptions } = { ...options };
     const prismaOptions: Prisma.AnimeFindManyArgs = {
         where: {
             id: {
                 in: elasticResults,
             },
             ...filterOptions,
+            genres: {
+                some: {
+                    genre_name: {
+                        in: genres
+                    }
+                }
+            }
         },
         select: {
             id: true,
