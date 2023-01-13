@@ -5,7 +5,6 @@ import { AuthType } from '../../../common/models/enums';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
 Injectable();
-
 export class GoogleStrategy extends PassportStrategy(
     Strategy,
     AuthType.GOOGLE,
