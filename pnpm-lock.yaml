@@ -40,6 +40,9 @@ specifiers:
   '@types/node': ^18.11.18
   '@types/nodemailer': ^6.4.7
   '@types/nodemailer-express-handlebars': ^4.0.2
+  '@types/passport-apple': ^1.1.1
+  '@types/passport-discord': ^0.1.6
+  '@types/passport-facebook': ^2.1.11
   '@types/passport-google-oauth20': ^2.0.11
   '@types/passport-jwt': ^3.0.7
   '@types/passport-local': ^1.0.34
@@ -180,6 +183,9 @@ devDependencies:
   '@types/node': 18.11.18
   '@types/nodemailer': 6.4.7
   '@types/nodemailer-express-handlebars': 4.0.2
+  '@types/passport-apple': 1.1.1
+  '@types/passport-discord': 0.1.6
+  '@types/passport-facebook': 2.1.11
   '@types/passport-google-oauth20': 2.0.11
   '@types/passport-jwt': 3.0.8
   '@types/passport-local': 1.0.35
@@ -3396,6 +3402,29 @@ packages:
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
+    dev: true
+
+  /@types/passport-apple/1.1.1:
+    resolution: {integrity: sha512-JpNC+yqkErqs9Vh/sDafoAWW5tJI9g7c7JwL+qYIhlB9A9rK6PFkl0S326DQLSm32vZFH4C0eF7aKCO3gXdp+Q==}
+    dependencies:
+      '@types/express': 4.17.15
+      '@types/passport': 1.0.11
+      '@types/passport-oauth2': 1.4.11
+    dev: true
+
+  /@types/passport-discord/0.1.6:
+    resolution: {integrity: sha512-fB9JMzNDzx9ToIsd5fGYpYrwGmqhPhebyFFb3eFL3u5dY1R8K42pszAXSeCXTZxbf1WZpLsydTUNbciqmDkqCg==}
+    dependencies:
+      '@types/express': 4.17.15
+      '@types/passport': 1.0.11
+      '@types/passport-oauth2': 1.4.11
+    dev: true
+
+  /@types/passport-facebook/2.1.11:
+    resolution: {integrity: sha512-YsZUZryJvHt2E/WdR22FlnCi9ckMwkGR+FwCcXq830rOvruhXJHJtKSXSD+Kn4phBsrEpqoP4xX6fFuEodk20A==}
+    dependencies:
+      '@types/express': 4.17.15
+      '@types/passport': 1.0.11
     dev: true
 
   /@types/passport-google-oauth20/2.0.11:

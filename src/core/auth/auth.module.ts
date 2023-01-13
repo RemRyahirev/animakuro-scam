@@ -6,27 +6,36 @@ import { AuthQueryResolver } from './resolvers/auth-query.resolver';
 import { AuthService } from './services/auth.service';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-import { GoogleStrategy, JwtStrategy } from './strategies';
 import { TokenService } from './services/token.service';
-import { JwtConfigService } from './services/jwt-config.service';
+import { StrategyConfigService } from './services/strategy-config.service';
+import {
+    AppleStrategy,
+    DiscordStrategy,
+    FacebookStrategy,
+    GoogleStrategy,
+    JwtStrategy,
+} from './strategies';
 
 @Module({
     imports: [
         UserModule,
         PassportModule,
         JwtModule.registerAsync({
-            useClass: JwtConfigService,
+            useClass: StrategyConfigService,
         }),
     ],
     providers: [
         AuthService,
-        JwtConfigService,
+        StrategyConfigService,
         TokenService,
         AuthRootResolver,
         AuthQueryResolver,
         AuthMutationResolver,
-        JwtStrategy,
+        AppleStrategy,
+        DiscordStrategy,
+        FacebookStrategy,
         GoogleStrategy,
+        JwtStrategy,
     ],
     exports: [AuthService],
 })

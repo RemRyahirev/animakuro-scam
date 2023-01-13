@@ -1,43 +1,42 @@
-import axios from 'axios';
-import { IAccount } from '../../../common/models/interfaces';
+import { PassportStrategy } from '@nestjs/passport';
+import { AuthType } from '../../../common/models/enums';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Profile, Strategy } from 'passport-apple';
+import { StrategyConfigService } from '../services/strategy-config.service';
 
-export class AppleStrategy {
-    client_id: string;
-    client_secret: string;
-    redirect_uri: string;
-
-    constructor() {
-        this.client_id = process.env.FACEBOOK_CLIENT_ID || '';
-        this.client_secret = process.env.FACEBOOK_CLIENT_SECRET || '';
-        this.redirect_uri = process.env.FACEBOOK_REDIRECT_URI || '';
+@Injectable()
+export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
+    constructor(
+        @Inject(forwardRef(() => StrategyConfigService))
+        private strategyConfigService: StrategyConfigService,
+    ) {
+        super({
+            clientID: strategyConfigService.config.APPLE.clientID,
+            clientSecret: strategyConfigService.config.APPLE.clientSecret,
+            callbackURL: strategyConfigService.config.APPLE.callbackURL,
+            scope: 'email',
+            profileFields: ['emails', 'name'],
+        });
     }
 
-    async getAccountData(code: string): Promise<IAccount> {
-        const {
-            data: { access_token },
-        } = await axios(`https://graph.facebook.com/v15.0/oauth/access_token`, {
-            method: 'POST',
-            params: {
-                redirect_uri: this.redirect_uri,
-                client_id: this.client_id,
-                client_secret: this.client_secret,
-                code,
-            },
-        });
+    async validate(
+        accessToken: string,
+        refreshToken: string,
+        profile: Profile,
+        done: (err: any, user: any, info?: any) => void,
+    ): Promise<any> {
+        const { name, emails } = profile;
+        const user = {
+            // @ts-ignore
+            email: emails[0].value,
+            firstName: name?.givenName,
+            lastName: name?.familyName,
+        };
+        const payload = {
+            user,
+            accessToken,
+        };
 
-        const { data } = await axios({
-            url: 'https://graph.facebook.com/me',
-            method: 'get',
-            params: {
-                fields: ['id', 'email', 'first_name', 'last_name'].join(','),
-                access_token,
-            },
-        });
-
-        return data;
+        done(null, payload);
     }
-
-    getRedirectUrl = () => {
-        return `https://www.facebook.com/v15.0/dialog/oauth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}`;
-    };
 }
