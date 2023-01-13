@@ -14,8 +14,8 @@ export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
             clientID: strategyConfigService.config.APPLE.clientID,
             clientSecret: strategyConfigService.config.APPLE.clientSecret,
             callbackURL: strategyConfigService.config.APPLE.callbackURL,
-            scope: 'email',
-            profileFields: ['emails', 'name'],
+            scope: ['email', 'name'],
+            profileFields: ['email', 'name'],
         });
     }
 
@@ -25,18 +25,16 @@ export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
         profile: Profile,
         done: (err: any, user: any, info?: any) => void,
     ): Promise<any> {
-        const { name, emails } = profile;
-        const user = {
-            // @ts-ignore
-            email: emails[0].value,
-            firstName: name?.givenName,
-            lastName: name?.familyName,
+        const { id, name, email } = profile;
+        const account = {
+            uuid: id,
+            email: email || null,
+            username: name?.givenName,
         };
         const payload = {
-            user,
+            account,
             accessToken,
         };
-
         done(null, payload);
     }
 }

@@ -32,7 +32,7 @@ export class FacebookStrategy extends PassportStrategy(
         const account = {
             uuid: id,
             email: emails ? emails[0].value : null,
-            username: name?.familyName,
+            username: name?.givenName,
         };
         const payload = {
             account,
