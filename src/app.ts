@@ -53,10 +53,6 @@ async function bootstrap(): Promise<void> {
             new ValidationPipe({
                 whitelist: true,
                 transform: true,
-                forbidNonWhitelisted: true,
-                transformOptions: {
-                    enableImplicitConversion: true,
-                }
             }),
         );
         const port = configService.get('APP_PORT', 8080);
