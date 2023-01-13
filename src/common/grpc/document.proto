@@ -12,6 +12,16 @@ service DocumentService {
 
 message Null {}
 
+message Document {
+    string id = 1;
+    optional string title = 2;
+    optional string description = 3;
+    optional string author_name = 4;
+    optional string studio_name = 5;
+    optional string bio = 6;
+    optional string character_name = 7;
+    repeated string synonyms = 8;
+}
 
 message SearchDocument {
     string index = 1;
@@ -35,15 +45,9 @@ message UpdateDocument {
     Document document = 3;
 }
 
-message Document {
-    string id = 1;
-    string title = 2;
-    string description = 3;
-}
-
 message SearchResults {
     string id = 1;
-    string score = 2;
+    float matchScore = 2;
 }
 
 message SearchResponse {

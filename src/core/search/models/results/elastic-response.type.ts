@@ -4,5 +4,5 @@ export type ElasticResults = {
 
 interface ElasticResultsItem {
     id: string;
-    score: string;
+    matchScore: string;
 }

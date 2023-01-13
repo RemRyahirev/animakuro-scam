@@ -10,7 +10,7 @@ export function createPrismaOptions(
             id: {
                 in: elasticResults,
             },
-            format: 'MOVIE' // here should be filterOptions
+            ...filterOptions
         },
         select: {
             id: true,

@@ -1,13 +1,12 @@
 import { GetListSearchAnimeResultsType } from '../models/results/get-list-search-anime-results.type';
 import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
-import { Prisma } from '@prisma/client';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { DocumentService } from '../../../common/grpc';
 import { lastValueFrom } from 'rxjs';
-import { ElasticResults } from '../models/inputs/elastic-response.type';
+import { ElasticResults } from '../models/results/elastic-response.type';
 import { createPrismaOptions } from '../utils/create-prisma-options';
 
 @Injectable()
@@ -27,8 +26,6 @@ export class SearchService implements OnModuleInit {
     async getSearchAnimeList(
         args: SearchAnimeInputType,
     ): Promise<GetListSearchAnimeResultsType> {
-        // So far without filter, sorting and pagination
-
         const { search, ...filterOptions } = args;
         const elasticResults = (await lastValueFrom(
             this.documentService.searchDocument({

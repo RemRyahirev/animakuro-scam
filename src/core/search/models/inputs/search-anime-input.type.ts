@@ -1,5 +1,5 @@
 import { IsOptional, IsString, Length } from 'class-validator';
-import { ArgsType, Field, Float, InputType, Int } from '@nestjs/graphql';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
 import {
     AnimeRelation,
     AnimeType,
@@ -9,7 +9,7 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
-import { IsBoolean, IsDecimal, IsInt } from '@nestjs/class-validator';
+import { IsBoolean, IsInt } from '@nestjs/class-validator';
 
 @ArgsType()
 export class SearchAnimeInputType {
@@ -28,44 +28,41 @@ export class SearchAnimeInputType {
     @IsString()
     @Field(() => MediaFormat, {
         nullable: true,
-        defaultValue: MediaFormat.OTHER,
     })
-    format?: string;
+    format?: MediaFormat;
 
     @IsOptional()
     @IsString()
     @Field(() => MediaSource, {
         nullable: true,
-        defaultValue: MediaSource.OTHER,
     })
-    source?: string;
+    source?: MediaSource;
 
     @IsOptional()
     @IsString()
-    @Field(() => FilmRating, { nullable: true, defaultValue: FilmRating.G })
+    @Field(() => FilmRating, { nullable: true })
     rating?: FilmRating;
 
     @IsOptional()
     @IsBoolean()
-    @Field(() => Boolean, { nullable: true, defaultValue: true })
+    @Field(() => Boolean, { nullable: true })
     is_licensed?: boolean;
 
     @IsOptional()
     @IsString()
     @Field(() => ReleaseStatus, {
         nullable: true,
-        defaultValue: ReleaseStatus.COMPLETED,
     })
     release_status?: ReleaseStatus;
 
     @IsOptional()
     @IsString()
-    @Field(() => AnimeType, { nullable: true, defaultValue: AnimeType.ANIME })
+    @Field(() => AnimeType, { nullable: true })
     type?: AnimeType;
 
     @IsOptional()
     @IsString()
-    @Field(() => YearSeason, { nullable: true, defaultValue: YearSeason.FALL })
+    @Field(() => YearSeason, { nullable: true })
     season?: YearSeason;
 
     @IsOptional()
@@ -77,14 +74,8 @@ export class SearchAnimeInputType {
     @IsString()
     @Field(() => [AnimeRelation], {
         nullable: true,
-        defaultValue: AnimeRelation.NULL,
     })
     related_status?: AnimeRelation[];
-
-    @IsOptional()
-    @IsDecimal()
-    @Field(() => Float, { nullable: true })
-    score?: number;
 
     @IsOptional()
     @IsString()
