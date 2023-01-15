@@ -9,48 +9,48 @@ datasource db {
 }
 
 model User {
-  id                  String            @id @default(uuid()) @db.Uuid
-  username            String            @unique @db.VarChar(64)
-  email               String?           @db.VarChar(320)
-  is_email_confired   Boolean           @default(false)
-  password            String            @map("password")
-  secret2fa           String?           @db.VarChar(20)
-  birthday            DateTime?         @db.Date
-  gender              Gender            @default(UNSPECIFIED)
-  created_at          DateTime          @default(now()) @map("created_at") @db.Date
-  deleted             Boolean           @default(false)
-  third_party_auth    ThirdPartyAuth?   @relation(fields: [third_party_auth_id], references: [id])
-  third_party_auth_id String?           @map("third_party_auth_id")
-  user_profile        UserProfile? //o-2-o relation. Field name changed 28/12 from user_profile
-  site_auth_sessions  SiteAuthSession[]
+  id                String        @id @default(uuid()) @db.Uuid
+  username          String        @unique @db.VarChar(64)
+  email             String?       @db.VarChar(320)
+  is_email_confired Boolean       @default(false)
+  password          String        @map("password")
+  avatar            String?       @db.Text
+  birthday          DateTime?     @db.Date
+  gender            Gender        @default(UNSPECIFIED)
+  created_at        DateTime      @default(now()) @map("created_at") @db.Date
+  deleted           Boolean       @default(false)
+  auth              Auth[]
+  user_profile      UserProfile?
+  auth_sessions     AuthSession[]
 
   @@map("users")
 }
 
-model SiteAuthSession {
+model Auth {
+  id           String   @id @default(uuid())
+  type         AuthType
+  uuid         String   @db.VarChar(64)
+  access_token String   @db.VarChar(320)
+  username     String   @unique @db.VarChar(64)
+  email        String?  @db.VarChar(320)
+  avatar       String?  @db.Text
+  updated_at   DateTime @default(now()) @map("updated_at")
+  created_at   DateTime @default(now()) @map("created_at")
+  user         User?    @relation(fields: [user_id], references: [id])
+  user_id      String?  @db.Uuid
+
+  @@map("auth")
+}
+
+model AuthSession {
   id      String  @id @default(uuid())
   agent   String  @db.Text
   ip      String  @db.VarChar(64)
-  user_id String  @map("user_id") @db.Uuid
-  user    User    @relation(fields: [user_id], references: [id])
   active  Boolean @default(true)
+  user    User    @relation(fields: [user_id], references: [id])
+  user_id String  @db.Uuid
 
-  @@map("site_auth_session")
-}
-
-model ThirdPartyAuth {
-  id         String         @id @default(uuid())
-  uid        String         @db.VarChar(64)
-  email      String?        @db.VarChar(320)
-  first_name String?        @map("first_name") @db.VarChar(64)
-  last_name  String?        @map("last_name") @db.VarChar(64)
-  avatar     String?        @db.Text
-  type       ThirdPartyType
-  user       User[]
-  deleted    Boolean        @default(false)
-  created_at DateTime       @default(now()) @map("created_at")
-
-  @@map("third_party_auth")
+  @@map("auth_session")
 }
 
 model Studio {
@@ -343,7 +343,8 @@ enum CharacterRole {
   BACKGROUND // Background role
 }
 
-enum ThirdPartyType {
+enum AuthType {
+  JWT
   DISCORD
   GOOGLE
   APPLE

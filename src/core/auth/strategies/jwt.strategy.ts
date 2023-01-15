@@ -1,28 +1,44 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { ICustomJwtPayload } from '../../../common/models/interfaces';
 import { AuthType } from '../../../common/models/enums';
 import { StrategyConfigService } from '../services/strategy-config.service';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, AuthType.JWT) {
     constructor(
+        private userService: UserService,
         @Inject(forwardRef(() => StrategyConfigService))
-        private strategyConfigService: StrategyConfigService,
+        private strategyConfigService: StrategyConfigService
     ) {
         super({
-            jwtFromRequest: ExtractJwt.fromHeader('access_token'),
+            jwtFromRequest: ExtractJwt.fromHeader("access_token"),
             ignoreExpiration: true,
             secretOrKey:
-                strategyConfigService.config.JWT.accessToken.privateKey,
+            strategyConfigService.config.JWT.accessToken.privateKey
         });
     }
 
-    async validate(payload: ICustomJwtPayload): Promise<ICustomJwtPayload> {
-        return {
-            uuid: payload.uuid,
-            sessionId: payload.sessionId,
+    async validate(
+        jwtPayload: ICustomJwtPayload,
+        done: VerifiedCallback
+    ): Promise<void> {
+        const account = await this.userService.findOneById(jwtPayload.uuid);
+        if (!account) {
+            return done(new UnauthorizedException(), undefined);
+        }
+        const payload = {
+            account,
+            jwtPayload
         };
+        done(null, payload);
+        return done(null, account);
     }
 }

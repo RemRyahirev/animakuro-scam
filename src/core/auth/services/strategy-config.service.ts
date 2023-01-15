@@ -69,7 +69,11 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'apple-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'APPLE_REDIRECT_URI',
+                    'OAUTH_REDIRECT_URI',
+                    'apple-test-redirect-uri',
+                ),
+                redirectURL: this.configService.get(
+                    'APPLE_ENDPOINT',
                     'apple-test-redirect-uri',
                 ),
             },
@@ -83,7 +87,11 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'facebook-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'FACEBOOK_REDIRECT_URI',
+                    'OAUTH_REDIRECT_URI',
+                    'facebook-test-redirect-uri',
+                ),
+                redirectURL: this.configService.get(
+                    'FACEBOOK_ENDPOINT',
                     'facebook-test-redirect-uri',
                 ),
             },
@@ -97,8 +105,12 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'google-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'GOOGLE_REDIRECT_URI',
+                    'OAUTH_REDIRECT_URI',
                     'google-test-client-uri',
+                ),
+                redirectURL: this.configService.get(
+                    'GOOGLE_ENDPOINT',
+                    'google-test-redirect-uri',
                 ),
             },
             DISCORD: {
@@ -111,8 +123,12 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'discord-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'DISCORD_REDIRECT_URI',
+                    'OAUTH_REDIRECT_PATH',
                     'discord-test-client-uri',
+                ),
+                redirectURL: this.configService.get(
+                    'DISCORD_ENDPOINT',
+                    'discord-test-redirect-uri',
                 ),
             },
         };

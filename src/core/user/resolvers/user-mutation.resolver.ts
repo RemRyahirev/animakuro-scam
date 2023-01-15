@@ -7,7 +7,7 @@ import { UpdateUserResultsType } from '../models/results/update-user-results.typ
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
 import { UserService } from '../services/user.service';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../common/guards';
 
 @Resolver(UserMutationType)
 export class UserMutationResolver extends UserRootResolver {
@@ -15,8 +15,8 @@ export class UserMutationResolver extends UserRootResolver {
         super();
     }
 
-    @ValidateSchemas()
     @ResolveField(() => UpdateUserResultsType)
+    @ValidateSchemas()
     @UseGuards(JwtAuthGuard)
     async updateUser(
         @Args() args: UpdateUserInputType,

@@ -2,7 +2,7 @@ import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { UserService } from '../../user/services/user.service';
-import { MailPurpose, TokenType } from '../../../common/models/enums';
+import { AuthType, MailPurpose, TokenType } from "../../../common/models/enums";
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
@@ -12,8 +12,9 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import { TokenService } from './token.service';
+import { StrategyConfigService } from "./strategy-config.service";
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ export class AuthService {
         private sessionService: SessionService,
         private passwordService: PasswordService,
         private tokenService: TokenService,
+        private strategyConfigService: StrategyConfigService,
     ) {}
 
     async login(
@@ -82,6 +84,12 @@ export class AuthService {
         };
     }
 
+    async loginSocial(profile: any, access_token: string, auth_type: AuthType) {
+        console.log(profile);
+        console.log(access_token);
+        console.log(auth_type);
+    }
+
     async register(
         args: RegisterInputType,
         context: Context,
@@ -98,6 +106,18 @@ export class AuthService {
             null,
             TokenType.ACCESS_TOKEN,
         );
+        await this.prisma.auth.create({
+            data: {
+                // @ts-ignore
+                type: AuthType.JWT.toUpperCase(),
+                access_token,
+                uuid: '',
+                email: user.email,
+                username: user.username,
+                avatar: user?.avatar,
+                user_id: user?.id,
+            },
+        })
         await this.mailer.sendMail(
             {
                 to: args.email,
@@ -113,6 +133,43 @@ export class AuthService {
         return {
             success: true,
             access_token,
+            user: user as any,
+        };
+    }
+
+    async registerSocial(
+        profile: any,
+        auth_type: AuthType,
+    ): Promise<RegisterResultsType> {
+        const result = await this.userService.createUser({
+            username: profile.account.username,
+            email: profile.account.email,
+            password: '',
+            avatar: profile.account.avatar,
+        });
+        await this.prisma.auth.create({
+            data: {
+                // @ts-ignore
+                type: auth_type.toUpperCase(),
+                access_token: profile.access_token,
+                uuid: profile.account.uuid,
+                email: profile.account.email,
+                username: profile.account.username,
+                avatar: profile.account.avatar,
+                user_id: result.user?.id,
+            },
+        })
+        const user = await this.prisma.user.findFirst({
+                where: {
+                    id: result.user?.id
+                },
+                include: {
+                    auth: true
+                }
+            }
+        )
+        return {
+            success: true,
             user: user as any,
         };
     }

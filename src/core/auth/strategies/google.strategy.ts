@@ -1,13 +1,13 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Profile, Strategy, VerifyCallback } from "passport-google-oauth20";
+import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
 import { AuthType } from '../../../common/models/enums';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
 Injectable();
 export class GoogleStrategy extends PassportStrategy(
     Strategy,
-    AuthType.GOOGLE,
+    AuthType.GOOGLE
 ) {
     constructor(
         @Inject(forwardRef(() => StrategyConfigService))
@@ -18,25 +18,30 @@ export class GoogleStrategy extends PassportStrategy(
             clientSecret: strategyConfigService.config.GOOGLE.clientSecret,
             callbackURL: strategyConfigService.config.GOOGLE.callbackURL,
             scope: ['email', 'profile'],
+            passReqToCallback: true
         });
     }
 
     async validate(
-        accessToken: string,
-        refreshToken: string,
+        access_token: string,
+        refresh_token: string,
         profile: Profile,
-        done: VerifyCallback,
-    ): Promise<any> {
-        const { id, name, emails } = profile;
+        done: VerifyCallback
+    ): Promise<void> {
+        const { id, name, emails, photos } = profile;
         const account = {
             uuid: id,
             email: emails ? emails[0].value : null,
             username: name?.givenName,
+            avatar: photos?.length ? photos[0].value : null,
         };
         const payload = {
             account,
-            accessToken,
+            access_token
         };
+        if (!account) {
+            return done(new UnauthorizedException(), undefined);
+        }
         done(null, payload);
     }
 }

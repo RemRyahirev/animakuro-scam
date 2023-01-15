@@ -38,7 +38,7 @@ CREATE TYPE "CharacterType" AS ENUM ('PROTAGONIST', 'ANTAGONIST', 'SIDEKICK', 'O
 CREATE TYPE "CharacterRole" AS ENUM ('MAIN', 'SUPPORTING', 'BACKGROUND');
 
 -- CreateEnum
-CREATE TYPE "ThirdPartyType" AS ENUM ('DISCORD', 'GOOGLE', 'APPLE', 'FACEBOOK');
+CREATE TYPE "AuthType" AS ENUM ('JWT', 'DISCORD', 'GOOGLE', 'APPLE', 'FACEBOOK');
 
 -- CreateEnum
 CREATE TYPE "ModeratorRoles" AS ENUM ('ADMIN', 'MODERATOR', 'CONTENT_FILLER', 'OTHER_STAFF', 'VIEWER');
@@ -59,40 +59,40 @@ CREATE TABLE "users" (
     "email" VARCHAR(320),
     "is_email_confired" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT NOT NULL,
-    "secret2fa" VARCHAR(20),
+    "avatar" TEXT,
     "birthday" DATE,
     "gender" "Gender" NOT NULL DEFAULT 'UNSPECIFIED',
     "created_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted" BOOLEAN NOT NULL DEFAULT false,
-    "third_party_auth_id" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "site_auth_session" (
+CREATE TABLE "auth" (
     "id" TEXT NOT NULL,
-    "agent" TEXT NOT NULL,
-    "ip" VARCHAR(64) NOT NULL,
-    "user_id" UUID NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "type" "AuthType" NOT NULL,
+    "uuid" VARCHAR(64) NOT NULL,
+    "access_token" VARCHAR(320) NOT NULL,
+    "username" VARCHAR(64) NOT NULL,
+    "email" VARCHAR(320),
+    "avatar" TEXT,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "user_id" UUID,
 
-    CONSTRAINT "site_auth_session_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "third_party_auth" (
+CREATE TABLE "auth_session" (
     "id" TEXT NOT NULL,
-    "uid" VARCHAR(64) NOT NULL,
-    "email" VARCHAR(320),
-    "first_name" VARCHAR(64),
-    "last_name" VARCHAR(64),
-    "avatar" TEXT,
-    "type" "ThirdPartyType" NOT NULL,
-    "deleted" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "agent" TEXT NOT NULL,
+    "ip" VARCHAR(64) NOT NULL,
+    "active" BOOLEAN NOT NULL DEFAULT true,
+    "user_id" UUID NOT NULL,
 
-    CONSTRAINT "third_party_auth_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -279,6 +279,9 @@ CREATE TABLE "_AnimeToAuthor" (
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "auth_username_key" ON "auth"("username");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("friend_one", "friend_two");
 
 -- CreateIndex
@@ -312,10 +315,10 @@ CREATE UNIQUE INDEX "_AnimeToAuthor_AB_unique" ON "_AnimeToAuthor"("A", "B");
 CREATE INDEX "_AnimeToAuthor_B_index" ON "_AnimeToAuthor"("B");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY ("third_party_auth_id") REFERENCES "third_party_auth"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "auth" ADD CONSTRAINT "auth_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "auth_session" ADD CONSTRAINT "auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "relating_anime" ADD CONSTRAINT "relating_anime_child_anime_id_fkey" FOREIGN KEY ("child_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;

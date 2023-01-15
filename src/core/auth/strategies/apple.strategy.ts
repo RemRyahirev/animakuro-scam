@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthType } from '../../../common/models/enums';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Profile, Strategy } from 'passport-apple';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
@@ -20,11 +20,11 @@ export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
     }
 
     async validate(
-        accessToken: string,
-        refreshToken: string,
+        access_token: string,
+        refresh_token: string,
         profile: Profile,
         done: (err: any, user: any, info?: any) => void,
-    ): Promise<any> {
+    ): Promise<void> {
         const { id, name, email } = profile;
         const account = {
             uuid: id,
@@ -33,8 +33,11 @@ export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
         };
         const payload = {
             account,
-            accessToken,
+            access_token,
         };
+        if (!account) {
+            return done(new UnauthorizedException(), undefined);
+        }
         done(null, payload);
     }
 }

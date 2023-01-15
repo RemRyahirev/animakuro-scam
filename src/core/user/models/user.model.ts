@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Gender } from '../../../common/models/enums';
-import { UserThirdParty } from './user-third-party.model';
+import { Auth } from '../../auth/models/auth.model';
 
 @ObjectType()
 export class User {
@@ -39,8 +39,8 @@ export class User {
     gender = Gender.UNSPECIFIED;
 
     @Field(() => String, { nullable: true })
-    customGender: string | null;
+    customGender: string;
 
-    @Field(() => UserThirdParty, { nullable: true })
-    thirdPartyAuth: UserThirdParty;
+    @Field(() => Auth)
+    auth: Auth;
 }

@@ -25,7 +25,11 @@ export class CreateUserInputType {
 
     @IsOptional()
     @Field({ nullable: true })
-    gender?: Gender;
+    avatar?: Gender;
+
+    @IsOptional()
+    @Field({ nullable: true })
+    gender?: string;
 
     @IsOptional()
     @Field({ nullable: true })

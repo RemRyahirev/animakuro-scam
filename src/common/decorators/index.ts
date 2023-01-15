@@ -5,3 +5,4 @@ export * from './unique.decorator';
 export * from './account-limit.decorator';
 export * from './compare-password.decorator';
 export * from './entity-exists.decorator';
+export * from './social-profile.decorator';

@@ -13,7 +13,7 @@ export class SessionService {
         user_id,
         ...rest
     }: CreateSiteAuthSessionInput) {
-        return await this.prisma.siteAuthSession.create({
+        return await this.prisma.authSession.create({
             data: {
                 user_id: user_id || '0',
                 ...rest,
@@ -25,7 +25,7 @@ export class SessionService {
         id: string,
         siteAuthSessionInput: UpdateSiteAuthSessionInput,
     ) {
-        return await this.prisma.siteAuthSession.update({
+        return await this.prisma.authSession.update({
             where: {
                 id,
             },

@@ -8,6 +8,8 @@ import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { TokenService } from './services/token.service';
 import { StrategyConfigService } from './services/strategy-config.service';
+import { HttpModule } from '@nestjs/axios';
+import { AuthController } from './controllers/auth.controller';
 import {
     AppleStrategy,
     DiscordStrategy,
@@ -18,6 +20,7 @@ import {
 
 @Module({
     imports: [
+        HttpModule,
         UserModule,
         PassportModule,
         JwtModule.registerAsync({
@@ -38,5 +41,6 @@ import {
         JwtStrategy,
     ],
     exports: [AuthService],
+    controllers: [AuthController]
 })
 export class AuthModule {}
