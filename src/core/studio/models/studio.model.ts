@@ -11,7 +11,7 @@ export class Studio {
     @Field(() => String, {
         description: 'Name of the studio',
     })
-    studio_name: string;
+    name: string;
 
     @Field(() => Float, {
         description: 'Rating of the studio',

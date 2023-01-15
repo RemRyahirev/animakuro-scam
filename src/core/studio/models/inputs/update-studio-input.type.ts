@@ -19,7 +19,7 @@ export class UpdateStudioInputType {
     @IsString()
     @Length(1, 64)
     @Field(() => String, { nullable: true })
-    studio_name?: string;
+    name?: string;
 
     @IsOptional()
     @IsNumber()

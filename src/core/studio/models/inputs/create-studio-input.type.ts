@@ -14,7 +14,7 @@ export class CreateStudioInputType {
     @IsString()
     @Length(1, 64)
     @Field(() => String)
-    studio_name: string;
+    name: string;
 
     @IsNumber()
     @Field(() => Float)
