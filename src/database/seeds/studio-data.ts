@@ -7,7 +7,7 @@ export const studioData = async () => {
         {
             id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
             created_at: new Date(Date.now()),
-            studio_name: 'Anime International',
+            name: 'Anime International',
             rating: 3.2,
             thumbnail: 'https://foo.bar.jpg',
             anime_count: 2,
@@ -17,7 +17,7 @@ export const studioData = async () => {
         {
             id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
             created_at: new Date(Date.now()),
-            studio_name: 'Anime China',
+            name: 'Anime China',
             rating: 5.4,
             thumbnail: 'https://foo.else.jpg',
             anime_count: 1,

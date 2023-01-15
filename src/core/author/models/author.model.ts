@@ -86,4 +86,10 @@ export class Author {
         description: 'Short biography of the author',
     })
     bio: string;
+
+    @Field(() => Date, { description: 'When the author data was created' })
+    created_at: Date;
+
+    @Field(() => Date, { description: 'When the author data was last updated' })
+    updated_at: Date;
 }

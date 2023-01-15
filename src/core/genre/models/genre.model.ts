@@ -10,5 +10,5 @@ export class Genre {
     @Field(() => String, {
         description: 'Name of the genre',
     })
-    genre_name: string;
+    name: string;
 }

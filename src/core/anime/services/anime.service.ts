@@ -292,6 +292,39 @@ export class AnimeService {
         };
     }
 
+    async updateSimilarAnime(
+        id: string,
+        similar_animes_add: string[],
+        status: AnimeApproval[],
+    ): Promise<UpdateAnimeResultsType> {
+        for (let i = 0; i < similar_animes_add.length; i++) {
+            await this.prisma.similarAnime.update({
+                where: {
+                    child_anime_id_parent_anime_id: {
+                        parent_anime_id: id,
+                        child_anime_id: similar_animes_add[i],
+                    },
+                },
+                data: {
+                    status: status[i],
+                },
+            });
+        }
+
+        const anime = await this.prisma.anime.findUnique({
+            where: { id },
+            include: {
+                relating_animes: true,
+            },
+        });
+
+        return {
+            success: true,
+            errors: [],
+            anime: anime as any,
+        };
+    }
+
     async deleteSimilarAnime(
         id: string,
         similar_animes_remove: string[],

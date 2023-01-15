@@ -75,11 +75,13 @@ export class Anime {
     seasons_count: number;
 
     @Field(() => Int, {
-        description: 'Number of episodes',
+        description: 'The amount of episodes the anime has when complete',
     })
     episodes: number;
 
-    @Field(() => Int, { description: 'Duration in seconds' })
+    @Field(() => Int, {
+        description: 'The general length of each anime episode in minutes',
+    })
     duration: number;
 
     @Field(() => Date, { description: 'Date format "4 apr. 03:30"' })
@@ -166,4 +168,10 @@ export class Anime {
         description: 'The companies who produced the media',
     })
     studios: Studio[];
+
+    @Field(() => Date, { description: 'When the anime data was created' })
+    created_at: Date;
+
+    @Field(() => Date, { description: 'When the anime data was last updated' })
+    updated_at: Date;
 }
