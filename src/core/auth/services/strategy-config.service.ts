@@ -95,8 +95,8 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'facebook-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'OAUTH_REDIRECT_URI',
-                    'facebook-test-redirect-uri',
+                    'FACEBOOK_CALLBACK_URL',
+                    'facebook-test-callback-url',
                 ),
                 redirectURL: this.configService.get(
                     'FACEBOOK_ENDPOINT',
@@ -131,8 +131,8 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'discord-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'OAUTH_REDIRECT_PATH',
-                    'discord-test-client-uri',
+                    'DISCORD_CALLBACK_URL',
+                    'discord-test-callback-url',
                 ),
                 redirectURL: this.configService.get(
                     'DISCORD_ENDPOINT',
