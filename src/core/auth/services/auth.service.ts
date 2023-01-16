@@ -14,7 +14,7 @@ import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
 import { Injectable } from "@nestjs/common";
 import { TokenService } from './token.service';
-import { StrategyConfigService } from "./strategy-config.service";
+import { Profile } from "passport";
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,6 @@ export class AuthService {
         private sessionService: SessionService,
         private passwordService: PasswordService,
         private tokenService: TokenService,
-        private strategyConfigService: StrategyConfigService,
     ) {}
 
     async login(
@@ -84,10 +83,31 @@ export class AuthService {
         };
     }
 
-    async loginSocial(profile: any, access_token: string, auth_type: AuthType) {
-        console.log(profile);
-        console.log(access_token);
-        console.log(auth_type);
+    async loginSocial(access_token: string, auth_type: AuthType): Promise<LoginResultsType> {
+        const auth = await this.prisma.auth.findFirst({
+            where: {
+                access_token,
+            },
+        })
+        // TODO move validation in decorator
+        if (!auth){
+            return {
+                success: false,
+                errors: [{
+                    property: 'access_token',
+                    value: access_token,
+                    reason: 'No user matched by this token'
+                }],
+                access_token: undefined,
+                user: null,
+            }
+        }
+        const user = await this.userService.findOneById(auth!.user_id as string)
+        return {
+            success: true,
+            access_token: access_token,
+            user: user as any
+        }
     }
 
     async register(
@@ -147,16 +167,21 @@ export class AuthService {
             password: '',
             avatar: profile.account.avatar,
         });
+        const access_token = await this.tokenService.generateToken(
+            profile.account.uuid,
+            null,
+            TokenType.ACCESS_TOKEN,
+        );
         await this.prisma.auth.create({
             data: {
                 // @ts-ignore
                 type: auth_type.toUpperCase(),
-                access_token: profile.access_token,
+                access_token,
                 uuid: profile.account.uuid,
                 email: profile.account.email,
                 username: profile.account.username,
                 avatar: profile.account.avatar,
-                user_id: result.user?.id,
+                user_id: result.user!.id
             },
         })
         const user = await this.prisma.user.findFirst({
@@ -170,6 +195,7 @@ export class AuthService {
         )
         return {
             success: true,
+            access_token,
             user: user as any,
         };
     }

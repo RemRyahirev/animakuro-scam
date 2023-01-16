@@ -41,6 +41,6 @@ export class User {
     @Field(() => String, { nullable: true })
     customGender: string;
 
-    @Field(() => Auth)
-    auth: Auth;
+    @Field(() => [Auth])
+    auth: Auth[];
 }

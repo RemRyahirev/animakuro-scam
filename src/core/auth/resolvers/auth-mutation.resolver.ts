@@ -47,13 +47,9 @@ export class AuthMutationResolver extends AuthRootResolver {
     // @UseGuards(SocialAuthGuard)
     @ResolveField(() => LoginResultsType)
     async loginSocial(
-        @SocialProfile() profile: any,
         @Args() args: LoginSocialInputType,
     ) {
-        console.log(profile);
-        console.log(args);
         return await this.authService.loginSocial(
-            profile,
             args.access_token,
             args.auth_type,
         );
@@ -65,15 +61,10 @@ export class AuthMutationResolver extends AuthRootResolver {
         @SocialProfile() profile: Profile,
         @Args('code') code: string,
         @Args('auth_type') auth_type: AuthType,
-        @Context() context: any,
     ) {
-        console.log(profile);
-        console.log(code);
-        console.log(auth_type);
         return await this.authService.registerSocial(
-            // profile,
             code,
-            context,
+            auth_type,
         );
     }
 }

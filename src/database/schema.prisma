@@ -36,8 +36,8 @@ model Auth {
   avatar       String?  @db.Text
   updated_at   DateTime @default(now()) @map("updated_at")
   created_at   DateTime @default(now()) @map("created_at")
-  user         User?    @relation(fields: [user_id], references: [id])
-  user_id      String?  @db.Uuid
+  user         User     @relation(fields: [user_id], references: [id])
+  user_id      String   @db.Uuid
 
   @@map("auth")
 }
