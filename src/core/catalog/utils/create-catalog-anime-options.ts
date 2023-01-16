@@ -4,6 +4,7 @@ import { CatalogSortField } from '../models/enums/catalog-sort-field.enum';
 import { ReleaseStatus } from '../../../common/models/enums';
 import { CatalogAnimeSort } from '../models/interfaces/catalog-anime-sort';
 import { PaginationInputType } from "../../../common/models/inputs";
+import { transformPaginationUtil } from "../../../common/utils/transform-pagination.util";
 
 export function createCatalogAnimeOptions(
     elasticResults: string[],
@@ -13,6 +14,7 @@ export function createCatalogAnimeOptions(
 ): Prisma.AnimeFindManyArgs {
     const { genres, date_start, date_end, ...filterOptions } = { ...options };
     const prismaOptions: Prisma.AnimeFindManyArgs = {
+        ...transformPaginationUtil(pagination),
         where: {
             id: {
                 in: elasticResults,

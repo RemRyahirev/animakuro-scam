@@ -14,8 +14,8 @@ export class CatalogQueryResolver extends CatalogRootResolver {
     @ResolveField(() => GetListCatalogAnimeResultsType)
     async getCatalogAnimeList(
         @Args() args: CatalogAnimeInputType,
-        @Args() pagination: PaginationInputType
+        @Args() pages: PaginationInputType
     ): Promise<GetListCatalogAnimeResultsType> {
-        return await this.catalogService.getCatalogAnimeList(args, pagination);
+        return await this.catalogService.getCatalogAnimeList(args, pages);
     }
 }

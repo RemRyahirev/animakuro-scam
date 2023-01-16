@@ -17,7 +17,7 @@ export class CatalogService {
 
     async getCatalogAnimeList(
         args: CatalogAnimeInputType,
-        pagination: PaginationInputType
+        pages: PaginationInputType
     ): Promise<GetListCatalogAnimeResultsType> {
         const { search, sortField, sortOrder, ...filterOptions } = args;
         const sort = { sortField, sortOrder };
@@ -29,15 +29,18 @@ export class CatalogService {
             elasticResults.results.map((r) => r.id),
             filterOptions,
             sort,
-            pagination
+            pages
         );
 
         const animeList = await this.prisma.anime.findMany(prismaOptions);
+
+        const pagination = await this.paginationService.getPagination('anime', pages);
 
         return {
             success: true,
             errors: [],
             animeList: animeList as any,
+            pagination
         };
     }
 }

@@ -1,4 +1,4 @@
-import { BaseResultsType } from '../../../../common/models/results';
+import { BaseResultsType, PaginationResultsType } from "../../../../common/models/results";
 import { Field, ObjectType } from '@nestjs/graphql';
 import { CatalogAnime } from "../catalog-anime.model";
 
@@ -9,4 +9,5 @@ export class GetListCatalogAnimeResultsType extends BaseResultsType {
         description: 'Catalog Anime list',
     })
     animeList: CatalogAnime[];
+    pagination: PaginationResultsType;
 }
