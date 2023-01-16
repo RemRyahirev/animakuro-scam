@@ -1,21 +1,13 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 import { AnimeApproval } from '../../../common/models/enums';
 import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class SimilarAnime {
-    @Field(() => Anime, {
-        nullable: true,
-        defaultValue: null,
-        description: 'Parent anime',
-    })
+    @HideField()
     parent_anime: Anime;
 
-    @Field(() => ID, {
-        nullable: true,
-        defaultValue: null,
-        description: 'Parent anime ID',
-    })
+    @HideField()
     parent_anime_id: string;
 
     @Field(() => Anime, {
@@ -23,13 +15,9 @@ export class SimilarAnime {
         defaultValue: null,
         description: 'Child anime',
     })
-    child_anime: Anime;
+    anime: Anime;
 
-    @Field(() => ID, {
-        nullable: true,
-        defaultValue: null,
-        description: 'Child anime ID',
-    })
+    @HideField()
     child_anime_id: string;
 
     @Field(() => AnimeApproval, {

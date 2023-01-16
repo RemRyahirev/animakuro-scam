@@ -1,38 +1,37 @@
-import { ThirdPartyRedirectUrlResultsType } from '../models/results/third-party-redirect-url-results.type';
+import { OauthRedirectUrlResultsType } from '../models/results/oauth-redirect-url-results.type';
 import { LoginResultsType } from '../models/results/login-results.type';
 import { RegisterResultsType } from '../models/results/register-results.type';
 import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { LogoutResultsType } from '../models/results/logout-results.type';
 
 @ObjectType()
 export class AuthMutationType {
     @Field(() => RegisterResultsType, {
-        description: 'Register user, needs confirmation',
+        description: 'Register user by credentials',
     })
     register: RegisterResultsType;
 
-    // @Field(() => ConfirmRegistrationResultsType, {
-    //     description: 'Confirm registration',
-    // })
-    // confirmRegistration: ConfirmRegistrationResultsType;
-    //
-    @Field(() => LoginResultsType, { description: 'User login' })
+    @Field(() => RegisterResultsType, {
+        description: 'Register user by OAuth',
+    })
+    registerSocial: RegisterResultsType;
+
+    @Field(() => LoginResultsType, { description: 'User login by credentials' })
     login: LoginResultsType;
 
-    // @Field(() => LogoutResultsType, { description: 'User logout' })
-    // logout: LogoutResultsType;
-    //
-    // @Field(() => LoginOrRegisterThirdPartyResultsType, {
-    //     description: 'Login or register 3rd party',
-    // })
-    // loginOrRegisterThirdParty: LoginOrRegisterThirdPartyResultsType;
+    @Field(() => LoginResultsType, { description: 'User login by OAuth' })
+    loginSocial: LoginResultsType;
+
+    @Field(() => LogoutResultsType, { description: 'User logout' })
+    logout: LogoutResultsType;
 }
 
 @ObjectType()
 export class AuthQueryType {
-    @Field(() => ThirdPartyRedirectUrlResultsType, {
-        description: 'Get 3rd party urls',
+    @Field(() => OauthRedirectUrlResultsType, {
+        description: 'Get OAuth redirect url',
     })
-    getThirdPartyRedirectUrls: ThirdPartyRedirectUrlResultsType;
+    oauthRedirectUrl: OauthRedirectUrlResultsType;
 }
 
 @Resolver()

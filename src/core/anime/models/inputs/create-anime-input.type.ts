@@ -80,7 +80,9 @@ export class CreateAnimeInputType {
     duration: number;
 
     @IsDate()
-    @Field(() => Date)
+    @Field(() => Date, {
+        nullable: true,
+    })
     next_episode: Date;
 
     @IsString()
@@ -88,7 +90,7 @@ export class CreateAnimeInputType {
     rating: FilmRating;
 
     @IsString()
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     description: string;
 
     @IsUrl()
@@ -138,6 +140,13 @@ export class CreateAnimeInputType {
         description: 'Add to the list of relating animes',
     })
     relating_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Add to the list of similar animes',
+    })
+    similar_animes_add: string[];
 
     @IsOptional()
     @Field(() => [AnimeRelation], {

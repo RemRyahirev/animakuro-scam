@@ -11,7 +11,7 @@ export class Studio {
     @Field(() => String, {
         description: 'Name of the studio',
     })
-    studio_name: string;
+    name: string;
 
     @Field(() => Float, {
         description: 'Rating of the studio',
@@ -37,6 +37,16 @@ export class Studio {
     @Field(() => Int)
     anime_ends: number;
 
-    @Field(() => Date)
-    createdAt: Date;
+    @Field(() => Boolean, {
+        description:
+            'If the studio is an animation studio or a different kind of company',
+        defaultValue: true,
+    })
+    is_animation_studio: boolean;
+
+    @Field(() => Date, { description: 'When the studio data was created' })
+    created_at: Date;
+
+    @Field(() => Date, { description: 'When the studio data was last updated' })
+    updated_at: Date;
 }

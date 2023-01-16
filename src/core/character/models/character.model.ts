@@ -13,9 +13,44 @@ export class Character {
     bucket_id: string;
 
     @Field(() => String, {
-        description: 'Name of the character',
+        description: 'The names of the character',
     })
-    character_name: string;
+    name: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+        description: `The character's gender. Usually Male, Female, or Non-binary.`,
+    })
+    gender: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+
+        description: `The character's birth date`,
+    })
+    date_of_birth: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: `The character's age`,
+    })
+    age: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+
+        description: `The character's blood type`,
+    })
+    blood_type: string;
+
+    @Field(() => [String], {
+        nullable: true,
+        description: 'Alternative names of the character',
+    })
+    synonyms: string[];
 
     @Field(() => CharacterType, {
         defaultValue: CharacterType.PROTAGONIST,
@@ -29,7 +64,10 @@ export class Character {
     })
     role: string;
 
-    @Field(() => String, { description: 'Brief description of the character' })
+    @Field(() => String, {
+        description: 'Brief description of the character',
+        nullable: true,
+    })
     description: string;
 
     @Field(() => [Anime], {

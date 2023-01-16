@@ -1,11 +1,11 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import {
+    AnimeType,
     FilmRating,
     MediaFormat,
     MediaSource,
     ReleaseStatus,
     YearSeason,
-    AnimeType,
 } from '../../../common/models/enums';
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
@@ -75,14 +75,19 @@ export class Anime {
     seasons_count: number;
 
     @Field(() => Int, {
-        description: 'Number of episodes',
+        description: 'The amount of episodes the anime has when complete',
     })
     episodes: number;
 
-    @Field(() => Int, { description: 'Duration in seconds' })
+    @Field(() => Int, {
+        description: 'The general length of each anime episode in minutes',
+    })
     duration: number;
 
-    @Field(() => Date, { description: 'Date format "4 apr. 03:30"' })
+    @Field(() => Date, {
+        nullable: true,
+        description: 'Date format "4 apr. 03:30"',
+    })
     next_episode: Date;
 
     @Field(() => FilmRating, {
@@ -91,7 +96,10 @@ export class Anime {
     })
     rating: string;
 
-    @Field(() => String, { description: 'Brief description of the media' })
+    @Field(() => String, {
+        description: 'Brief description of the media',
+        nullable: true,
+    })
     description: string;
 
     @Field(() => String, { description: 'Link to the media preview' })
@@ -139,36 +147,34 @@ export class Anime {
     })
     season: YearSeason;
 
-    @Field(() => [Character], { description: 'The characters in the media' })
+    @Field(() => [Character], { description:"The characters in the media" })
     characters: Character[];
 
     @Field(() => [Author], {
-        description: 'List of the authors of the media',
+        description:"List of the authors of the media",
     })
     authors: Author[];
 
-    @Field(() => [RelatingAnime], {
-        description: 'List of the animes relating to this media',
-    })
-    relating_animes: [RelatingAnime];
+    @Field(() => [RelatingAnime], { description: "List of relating animes" })
+    relating_animes: RelatingAnime[];
 
-    @Field(() => [RelatingAnime], {
-        description: 'List of the animes related by this media',
-    })
-    related_by_animes: [RelatingAnime];
+    @Field(() => [RelatingAnime], { description: "List of related by animes" })
+    related_by_animes: RelatingAnime[];
 
-    @Field(() => [SimilarAnime], {
-        description: 'List of the animes similar to this media',
-    })
-    similar_animes: [SimilarAnime];
+    @Field(() => [SimilarAnime], { description: "List of similar animes" })
+    similar_animes: SimilarAnime[];
 
-    @Field(() => [SimilarAnime], {
-        description: 'List of the animes similar by this media',
-    })
-    similar_by_animes: [SimilarAnime];
+    @Field(() => [SimilarAnime], { description: "List of similar by animes" })
+    similar_by_animes: SimilarAnime[];
 
     @Field(() => [Studio], {
-        description: 'The companies who produced the media',
+        description: "The companies who produced the media",
     })
     studios: Studio[];
+
+    @Field(() => Date, { description: 'When the anime data was created' })
+    created_at: Date;
+
+    @Field(() => Date, { description: 'When the anime data was last updated' })
+    updated_at: Date;
 }

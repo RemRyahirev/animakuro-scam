@@ -2,7 +2,7 @@ import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { AnimeApproval } from '../../../../common/models/enums';
 
 @ArgsType()
-export class CreateSimilarAnimeAnimeInputType {
+export class CreateSimilarAnimeInputType {
     @Field(() => ID, {
         nullable: true,
         description: 'ID of related parent anime',

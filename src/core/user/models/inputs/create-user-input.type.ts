@@ -18,11 +18,6 @@ export class CreateUserInputType {
     @Length(1, 255)
     password: string;
 
-    // @IsOptional()
-    // @Field({ nullable: true })
-    // @Length(1, 20)
-    // secret2fa?: string
-
     @IsOptional()
     @IsDate()
     @Field({ nullable: true })
@@ -30,7 +25,11 @@ export class CreateUserInputType {
 
     @IsOptional()
     @Field({ nullable: true })
-    gender?: Gender;
+    avatar?: Gender;
+
+    @IsOptional()
+    @Field({ nullable: true })
+    gender?: string;
 
     @IsOptional()
     @Field({ nullable: true })

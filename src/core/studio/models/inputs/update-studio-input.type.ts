@@ -1,6 +1,7 @@
 import { ArgsType, Field, Float, ID } from '@nestjs/graphql';
 import {
     IsArray,
+    IsBoolean,
     IsNumber,
     IsOptional,
     IsString,
@@ -18,7 +19,7 @@ export class UpdateStudioInputType {
     @IsString()
     @Length(1, 64)
     @Field(() => String, { nullable: true })
-    studio_name?: string;
+    name?: string;
 
     @IsOptional()
     @IsNumber()
@@ -40,4 +41,8 @@ export class UpdateStudioInputType {
     @IsArray()
     @Field(() => [String], { nullable: true })
     animeToRemove?: string[];
+
+    @IsBoolean()
+    @Field(() => Boolean, { defaultValue: true })
+    is_animation_studio: boolean;
 }

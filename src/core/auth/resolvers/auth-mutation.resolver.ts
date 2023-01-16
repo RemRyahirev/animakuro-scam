@@ -1,4 +1,4 @@
-import { ValidateSchemas } from 'common/decorators';
+import { SocialProfile, ValidateSchemas } from 'common/decorators';
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';
@@ -7,12 +7,16 @@ import { LoginResultsType } from '../models/results/login-results.type';
 import { LogoutResultsType } from '../models/results/logout-results.type';
 import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
-import { ExecutionContext, UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../../../common/guards/gql-auth.guard';
+import { ExecutionContext } from '@nestjs/common';
+import { AuthType } from '../../../common/models/enums';
+import { Profile } from 'passport';
+import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
-    constructor(protected authService: AuthService) {
+    constructor(
+        protected authService: AuthService,
+    ) {
         super();
     }
 
@@ -25,15 +29,7 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.register(args, context);
     }
 
-    // @ResolveField(() => ConfirmRegistrationResultsType)
-    // async confirmRegistration(
-    //     @Arg('code') code: string,
-    // ): Promise<ConfirmRegistrationResultsType> {
-    //     return await this.authService.confirmRegistrationInfo(code);
-    // }
-
     @ResolveField(() => LoginResultsType)
-    @UseGuards(GqlAuthGuard)
     async login(
         @Args() args: LoginInputType,
         @Context() context: ExecutionContext,
@@ -48,16 +44,27 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.logout(context);
     }
 
-    // @ResolveField(() => LoginOrRegisterThirdPartyResultsType)
-    // async loginOrRegisterThirdParty(
-    //     @Arg('code', () => String) code: string,
-    //     @Args() args: ThirdPartyAuthInputType,
-    //     @Ctx() ctx: ICustomContext,
-    // ): Promise<LoginOrRegisterThirdPartyResultsType> {
-    //     return await this.authService.loginOrRegisterThirdPartyInfo(
-    //         code,
-    //         args,
-    //         ctx,
-    //     );
-    // }
+    // @UseGuards(SocialAuthGuard)
+    @ResolveField(() => LoginResultsType)
+    async loginSocial(
+        @Args() args: LoginSocialInputType,
+    ) {
+        return await this.authService.loginSocial(
+            args.access_token,
+            args.auth_type,
+        );
+    }
+
+    // @UseGuards(SocialAuthGuard)
+    @ResolveField(() => RegisterResultsType)
+    async registerSocial(
+        @SocialProfile() profile: Profile,
+        @Args('code') code: string,
+        @Args('auth_type') auth_type: AuthType,
+    ) {
+        return await this.authService.registerSocial(
+            code,
+            auth_type,
+        );
+    }
 }

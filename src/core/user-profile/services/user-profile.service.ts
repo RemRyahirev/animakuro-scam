@@ -3,7 +3,6 @@ import { UpdateUserProfileInputType } from '../models/inputs/update-user-profile
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
 import { CreateUserProfileResultsType } from '../models/results/create-user-profile-results.type';
@@ -52,7 +51,6 @@ export class UserProfileService {
 
     async createUserProfile(
         args: CreateUserProfileInputType,
-        ctx: ICustomContext,
     ): Promise<CreateUserProfileResultsType> {
         const { user_id, ...other } = args;
         const userProfile = await this.prisma.userProfile.create({
@@ -79,7 +77,6 @@ export class UserProfileService {
 
     async updateUserProfile(
         args: UpdateUserProfileInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
@@ -94,7 +91,6 @@ export class UserProfileService {
 
     async deleteUserProfile(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.delete({
             where: { id },

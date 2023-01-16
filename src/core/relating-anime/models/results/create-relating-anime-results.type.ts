@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ObjectType } from '@nestjs/graphql';
 import { BaseResultsType } from '../../../../common/models/results';
 import { RelatingAnime } from '../relating-anime.model';
 
@@ -8,5 +8,5 @@ export class CreateRelatingAnimeResultsType extends BaseResultsType {
         nullable: true,
         description: 'RelatingAnime',
     })
-    genre: RelatingAnime | null;
+    relating_anime: RelatingAnime | null;
 }

@@ -5,7 +5,7 @@ import { AuthType } from '../models/enums';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard(AuthType.JWT) {
-    getRequest(context: ExecutionContext) {
+    getRequest(context: ExecutionContext): Request {
         const ctx = GqlExecutionContext.create(context);
         return ctx.getContext().req;
     }

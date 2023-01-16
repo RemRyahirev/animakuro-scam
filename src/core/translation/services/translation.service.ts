@@ -3,7 +3,6 @@ import { CreateTranslationInputType } from '../models/inputs/create-translation-
 import { UpdateTranslationInputType } from '../models/inputs/update-translation-input.type';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetTranslationResultsType } from '../models/results/get-translation-results.type';
 import { GetListTranslationResultsType } from '../models/results/get-list-translation-results.type';
 import { CreateTranslationResultsType } from '../models/results/create-translation-results.type';
@@ -55,7 +54,6 @@ export class TranslationService {
 
     async createTranslation(
         args: CreateTranslationInputType,
-        ctx: ICustomContext,
     ): Promise<CreateTranslationResultsType> {
         const translation = await this.prisma.translation.create({
             data: args,
@@ -68,7 +66,6 @@ export class TranslationService {
 
     async updateTranslation(
         args: UpdateTranslationInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateTranslationResultsType> {
         const translation = await this.prisma.translation.update({
             where: { id: args.id },
@@ -82,7 +79,6 @@ export class TranslationService {
 
     async deleteTranslation(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteTranslationResultsType> {
         const translation = await this.prisma.translation.delete({
             where: { id },

@@ -1,15 +1,15 @@
-import { ThirdPartyAuthInputType } from '../../auth/models/inputs/third-party-input.type';
+import { Injectable } from "@nestjs/common";
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
-import { ThirdPartyAuth } from '../../../common/models/enums';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import { Injectable } from '@nestjs/common';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
 import { UpdateUserResultsType } from '../models/results/update-user-results.type';
 import { GetListUserResultsType } from "../models/results/get-list-user-results.type";
+import { User } from "../models/user.model";
+import { GetUserResultsType } from "../models/results/get-user-results.type";
 
 @Injectable()
 export class UserService {
@@ -18,9 +18,14 @@ export class UserService {
         private paginationService: PaginationService,
     ) {}
 
-    async getUserList(args: PaginationInputType): Promise<GetListUserResultsType> {
+    async getUserList(
+        args: PaginationInputType,
+    ): Promise<GetListUserResultsType> {
         const userList = await this.prisma.user.findMany({
             ...transformPaginationUtil(args),
+            include: {
+                auth: true
+            }
         });
         const pagination = await this.paginationService.getPagination(
             'user',
@@ -34,69 +39,48 @@ export class UserService {
         };
     }
 
-    async getUser(id: string) {
-        const user = await this.prisma.user.findUnique({ where: { id } });
+    async getUser(user: User): Promise<GetUserResultsType> {
         return {
             success: true,
-            user: user as any,
+            user,
         };
     }
 
-    async getUsersByEmail(email: string, args: PaginationInputType): Promise<GetListUserResultsType> {
+    async getUsersByEmail(
+        email: string,
+        args: PaginationInputType,
+    ): Promise<GetListUserResultsType> {
         const userList = await this.prisma.user.findMany({
             where: { email },
             ...transformPaginationUtil(args),
+            include: {
+                auth: true
+            }
         });
-        const pagination = await this.paginationService.getPagination('user', args);
+        const pagination = await this.paginationService.getPagination(
+            'user',
+            args,
+        );
         return {
             success: true,
             userList: userList as any,
-            pagination,        };
+            pagination,
+        };
     }
 
-    async createUserWithThirdParty(
-        userUsername: string,
-        thirdPartyInput: ThirdPartyAuthInputType,
-    ) {
-        return await this.prisma.user.create({
-            data: {
-                username: userUsername,
-                thirdPartyAuth: {
-                    create: thirdPartyInput,
-                },
-            } as any,
-            include: {
-                third_party_auth: true,
-                site_auth_sessions: true,
-            },
-        });
-    }
-
-    async findUserByThirdPartyAuth(uid: string, type: ThirdPartyAuth) {
-        return await this.prisma.user.findFirst({
-            where: {
-                third_party_auth: {
-                    uid,
-                    type,
-                },
-            },
-            include: {
-                third_party_auth: true,
-                site_auth_sessions: true,
-            },
-        });
-    }
-
-    async findUserById(id: string) {
+    async findOneById(id: string) {
         return await this.prisma.user.findUnique({
             where: {
                 id,
             },
+            include: {
+                auth: true
+            }
         });
     }
 
     async findUserSession(sessionId: string, uid: string) {
-        return await this.prisma.siteAuthSession.findFirst({
+        return await this.prisma.authSession.findFirst({
             where: {
                 id: sessionId,
                 user_id: uid,
@@ -120,31 +104,40 @@ export class UserService {
             where: {
                 username,
             },
+            include: {
+                auth: true
+            }
         });
     }
 
     async createUser(
-        args: CreateUserInputType
+        args: CreateUserInputType,
     ): Promise<CreateUserResultsType> {
         const user = await this.prisma.user.create({
-            data: args as any
+            data: args as any,
+            include: {
+                auth: true
+            }
         });
         return {
             success: true,
-            user: user as any
+            user: user as any,
         };
     }
 
     async updateUser(
-        args: UpdateUserInputType
+        args: UpdateUserInputType,
     ): Promise<UpdateUserResultsType> {
         const user = await this.prisma.user.update({
             where: { id: args.id },
-            data: args as any
+            data: args as any,
+            include: {
+                auth: true
+            }
         });
         return {
             success: true,
-            user: user as any
+            user: user as any,
         };
     }
 }

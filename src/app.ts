@@ -46,17 +46,24 @@ async function bootstrap(): Promise<void> {
             fallback: true,
             fallbackOnErrors: true,
         });
-        app.setGlobalPrefix(globalPrefix);
+        app.setGlobalPrefix(globalPrefix, {
+            exclude: [
+                'oauth/google',
+                'oauth/google/redirect',
+                'oauth/apple',
+                'oauth/apple/redirect',
+                'oauth/facebook',
+                'oauth/facebook/redirect',
+                'oauth/apple',
+                'oauth/apple/redirect'
+            ]
+        });
         app.useGlobalFilters(new PrismaClientExceptionFilter());
         app.useGlobalFilters(new ValidationExceptionFilter());
         app.useGlobalPipes(
             new ValidationPipe({
                 whitelist: true,
                 transform: true,
-                forbidNonWhitelisted: true,
-                transformOptions: {
-                    enableImplicitConversion: true,
-                }
             }),
         );
         const port = configService.get('APP_PORT', 8080);

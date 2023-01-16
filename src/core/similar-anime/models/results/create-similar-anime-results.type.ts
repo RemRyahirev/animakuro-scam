@@ -8,5 +8,5 @@ export class CreateSimilarAnimeResultsType extends BaseResultsType {
         nullable: true,
         description: 'SimilarAnime',
     })
-    genre: SimilarAnime | null;
+    similar_anime: SimilarAnime | null;
 }

@@ -1,6 +1,7 @@
 import { ArgsType, Field, Float } from '@nestjs/graphql';
 import {
     IsArray,
+    IsBoolean,
     IsNumber,
     IsString,
     IsUrl,
@@ -13,7 +14,7 @@ export class CreateStudioInputType {
     @IsString()
     @Length(1, 64)
     @Field(() => String)
-    studio_name: string;
+    name: string;
 
     @IsNumber()
     @Field(() => Float)
@@ -27,4 +28,8 @@ export class CreateStudioInputType {
     @IsArray()
     @Field(() => [String])
     animeToAdd: string[];
+
+    @IsBoolean()
+    @Field(() => Boolean, { defaultValue: true })
+    is_animation_studio: boolean;
 }

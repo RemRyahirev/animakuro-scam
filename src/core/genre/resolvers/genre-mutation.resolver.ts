@@ -1,5 +1,4 @@
-import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
-import { ICustomContext } from '../../../common/models/interfaces';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { GenreMutationType, GenreRootResolver } from './genre-root.resolver';
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
@@ -17,24 +16,21 @@ export class GenreMutationResolver extends GenreRootResolver {
     @ResolveField(() => CreateGenreResultsType)
     async createGenre(
         @Args() args: CreateGenreInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<CreateGenreResultsType> {
-        return await this.genreService.createGenre(args, ctx);
+        return await this.genreService.createGenre(args);
     }
 
     @ResolveField(() => UpdateGenreResultsType)
     async updateGenre(
         @Args() args: UpdateGenreInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<UpdateGenreResultsType> {
-        return await this.genreService.updateGenre(args, ctx);
+        return await this.genreService.updateGenre(args);
     }
 
     @ResolveField(() => DeleteGenreResultsType)
     async deleteGenre(
         @Args('id') id: string,
-        @Context() ctx: ICustomContext,
     ): Promise<DeleteGenreResultsType> {
-        return await this.genreService.deleteGenre(id, ctx);
+        return await this.genreService.deleteGenre(id);
     }
 }

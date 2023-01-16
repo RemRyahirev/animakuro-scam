@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Author {
@@ -8,9 +8,76 @@ export class Author {
     id?: string;
 
     @Field(() => String, {
-        description: 'Name of the author of the media',
+        description: 'The names of the author',
     })
-    author_name: string;
+    name: string;
+
+    @Field(() => [String], {
+        nullable: true,
+        description: `The person's primary occupations`,
+    })
+    primary_occupations: string[];
+
+    @Field(() => Int, {
+        nullable: true,
+        defaultValue: null,
+        description: `The person's age in years`,
+    })
+    age: number;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+        description: `The author's birth date`,
+    })
+    date_of_birth: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+        description: `The author's death date`,
+    })
+    date_of_death: string;
+
+    @Field(() => [String], {
+        nullable: true,
+        description: 'Alternative names of the author',
+    })
+    synonyms: string[];
+
+    @Field(() => [String], {
+        nullable: true,
+        description:
+            '[startYear, endYear] (If the 2nd value is not present author is still active)',
+    })
+    years_active: string[];
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'The author birthplace or hometown',
+    })
+    home_town: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+        description: `The author's blood type`,
+    })
+    blood_type: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+        description: `The primary language of the author`,
+    })
+    language: string;
+
+    @Field(() => String, {
+        nullable: true,
+        defaultValue: null,
+        description: `The author's gender. Usually Male, Female, or Non-binary.`,
+    })
+    gender: string;
 
     @Field(() => String)
     bucket_id: string;
@@ -19,4 +86,10 @@ export class Author {
         description: 'Short biography of the author',
     })
     bio: string;
+
+    @Field(() => Date, { description: 'When the author data was created' })
+    created_at: Date;
+
+    @Field(() => Date, { description: 'When the author data was last updated' })
+    updated_at: Date;
 }

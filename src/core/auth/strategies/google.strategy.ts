@@ -1,43 +1,46 @@
-import axios from 'axios';
-import { IAccount } from '../../../common/models/interfaces';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
+import { AuthType } from '../../../common/models/enums';
+import { StrategyConfigService } from '../services/strategy-config.service';
 
-export class GoogleStrategy {
-    client_id: string;
-    client_secret: string;
-    redirect_uri: string;
-
-    constructor() {
-        this.client_id = process.env.FACEBOOK_CLIENT_ID || '';
-        this.client_secret = process.env.FACEBOOK_CLIENT_SECRET || '';
-        this.redirect_uri = process.env.FACEBOOK_REDIRECT_URI || '';
+Injectable();
+export class GoogleStrategy extends PassportStrategy(
+    Strategy,
+    AuthType.GOOGLE
+) {
+    constructor(
+        @Inject(forwardRef(() => StrategyConfigService))
+        private strategyConfigService: StrategyConfigService,
+    ) {
+        super({
+            clientID: strategyConfigService.config.GOOGLE.clientID,
+            clientSecret: strategyConfigService.config.GOOGLE.clientSecret,
+            callbackURL: strategyConfigService.config.GOOGLE.callbackURL,
+            scope: ['email', 'profile'],
+        });
     }
 
-    async getAccountData(code: string): Promise<IAccount> {
-        const {
-            data: { access_token },
-        } = await axios(`https://graph.facebook.com/v15.0/oauth/access_token`, {
-            method: 'POST',
-            params: {
-                redirect_uri: this.redirect_uri,
-                client_id: this.client_id,
-                client_secret: this.client_secret,
-                code,
-            },
-        });
-
-        const { data } = await axios({
-            url: 'https://graph.facebook.com/me',
-            method: 'get',
-            params: {
-                fields: ['id', 'email', 'first_name', 'last_name'].join(','),
-                access_token,
-            },
-        });
-
-        return data;
+    async validate(
+        access_token: string,
+        refresh_token: string,
+        profile: Profile,
+        done: VerifyCallback
+    ): Promise<void> {
+        const { id, name, emails, photos } = profile;
+        const account = {
+            uuid: id,
+            email: emails ? emails[0].value : null,
+            username: name?.givenName,
+            avatar: photos?.length ? photos[0].value : null,
+        };
+        const payload = {
+            account,
+            access_token
+        };
+        if (!account) {
+            return done(new UnauthorizedException(), undefined);
+        }
+        done(null, payload);
     }
-
-    getRedirectUrl = () => {
-        return `https://www.facebook.com/v15.0/dialog/oauth?client_id=${this.client_id}&redirect_uri=${this.redirect_uri}`;
-    };
 }

@@ -1,23 +1,28 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { ThirdPartyAuth } from "../../../../common/models/enums";
+import { AuthType } from '../../../../common/models/enums';
+import { IsOptional } from "@nestjs/class-validator";
 
 @ArgsType()
-export class ThirdPartyAuthInputType {
+export class AuthInputType {
     @Field(() => String, { description: 'Third party account id' })
-    uid: string;
+    uuid: string | undefined;
 
-    @Field(() => ThirdPartyAuth)
-    type: ThirdPartyAuth;
+    @Field(() => AuthType)
+    type: AuthType;
 
+    @IsOptional()
     @Field({ nullable: true })
     firstName?: string;
 
+    @IsOptional()
     @Field({ nullable: true })
     lastName?: string;
 
+    @IsOptional()
     @Field({ nullable: true })
     email?: string;
 
+    @IsOptional()
     @Field({ nullable: true })
     avatar?: string;
 }

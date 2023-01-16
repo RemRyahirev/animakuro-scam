@@ -6,7 +6,6 @@ export * from './login-type.enum';
 export * from './media-format.enum';
 export * from './media-source.enum';
 export * from './release-status.enum';
-export * from './user-third-party.enum';
 export * from './mail-purpose.enum';
 export * from './moderator-roles.enum';
 export * from './subscribe-tier.enum';

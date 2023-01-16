@@ -5,6 +5,7 @@ import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.t
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
+import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 
 @ObjectType()
 export class AnimeMutationType {
@@ -31,10 +32,10 @@ export class AnimeQueryType {
     })
     getRelatedAnimeListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
 
-    @Field(() => GetListRelatedAnimeByAnimeIdResultsType, {
+    @Field(() => GetListSimilarAnimeByAnimeIdResultsType, {
         description: 'Get Similar anime list by anime ID',
     })
-    getSimilarAnimeListByAnimeId: GetListRelatedAnimeByAnimeIdResultsType;
+    getSimilarAnimeListByAnimeId: GetListSimilarAnimeByAnimeIdResultsType;
 }
 
 @Resolver()

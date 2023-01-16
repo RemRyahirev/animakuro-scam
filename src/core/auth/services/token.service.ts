@@ -1,75 +1,41 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthType, TokenType } from '../../../common/models/enums';
-import { sign } from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
+import { ICustomJwtPayload } from '../../../common/models/interfaces';
+import { StrategyConfigService } from './strategy-config.service';
 
 @Injectable()
-export class TokenService implements OnModuleInit {
-    private tokenConfig: any;
-
-    constructor(private configService: ConfigService) {}
-
-    onModuleInit(): void {
-        this.tokenConfig = {
-            accessToken: {
-                privateKey: this.configService.get<string>(
-                    'ACCESS_TOKEN_SECRET',
-                ),
-                signOptions: {
-                    expiresIn: this.configService.get<number>(
-                        'ACCESS_TOKEN_SECRET_EXP_IN',
-                    ),
-                },
-            },
-            refreshToken: {
-                privateKey: this.configService.get<string>(
-                    'REFRESH_TOKEN_SECRET',
-                ),
-                signOptions: {
-                    expiresIn: this.configService.get<number>(
-                        'REFRESH_TOKEN_SECRET_EXP_IN',
-                    ),
-                },
-            },
-            emailToken: {
-                privateKey:
-                    this.configService.get<string>('EMAIL_TOKEN_SECRET'),
-                signOptions: {
-                    expiresIn: this.configService.get<number>(
-                        'EMAIL_TOKEN_SECRET_EXP_IN',
-                    ),
-                },
-            },
-            resetPassToken: {
-                privateKey: this.configService.get<string>(
-                    'RESET_PASS_TOKEN_SECRET',
-                ),
-                signOptions: {
-                    expiresIn: this.configService.get<number>(
-                        'RESET_PASS_TOKEN_SECRET_EXP_IN',
-                    ),
-                },
-            },
-        };
-    }
+export class TokenService {
+    constructor(
+        private strategyConfigService: StrategyConfigService,
+        private configService: ConfigService,
+        private jwtService: JwtService,
+    ) {}
 
     public async generateToken(
         userId: string,
         sessionId: string | null,
         tokenType: TokenType,
     ): Promise<string> {
-        return sign(
-            {
+        return this.jwtService.sign(
+            <ICustomJwtPayload>{
                 uuid: userId,
                 sessionId: sessionId,
             },
-            this.tokenConfig[tokenType].privateKey,
             {
-                issuer: this.configService.get<string>('JWT_ISSUER'),
+                privateKey:
+                    this.strategyConfigService.config.JWT[tokenType].privateKey,
+                issuer: this.configService.get<string>('JWT_ISSUER', 'auth'),
                 subject: AuthType.JWT,
-                audience: this.configService.get<string>('JWT_AUDIENCE'),
+                audience: this.configService.get<string>(
+                    'JWT_AUDIENCE',
+                    'content',
+                ),
                 algorithm: 'HS256',
-                expiresIn: this.tokenConfig[tokenType].signOptions.expiresIn,
+                expiresIn:
+                this.strategyConfigService.config.JWT[tokenType].signOptions
+                        .expiresIn,
             },
         );
     }

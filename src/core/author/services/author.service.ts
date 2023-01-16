@@ -3,7 +3,6 @@ import { UpdateAuthorInputType } from '../models/inputs/update-author-input.type
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetAuthorResultsType } from '../models/results/get-author-results.type';
 import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';
 import { GetListAuthorByAnimeIdResultsType } from '../models/results/get-list-author-by-anime-id-results.type';
@@ -85,7 +84,6 @@ export class AuthorService {
 
     async createAuthor(
         args: CreateAuthorInputType,
-        ctx: ICustomContext,
     ): Promise<CreateAuthorResultsType> {
         const author = await this.prisma.author.create({
             data: args,
@@ -98,7 +96,6 @@ export class AuthorService {
 
     async updateAuthor(
         args: UpdateAuthorInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateAuthorResultsType> {
         const author = await this.prisma.author.update({
             where: { id: args.id },
@@ -112,7 +109,6 @@ export class AuthorService {
 
     async deleteAuthor(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteAuthorResultsType> {
         const author = await this.prisma.author.delete({
             where: { id },

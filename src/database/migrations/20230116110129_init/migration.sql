@@ -38,7 +38,7 @@ CREATE TYPE "CharacterType" AS ENUM ('PROTAGONIST', 'ANTAGONIST', 'SIDEKICK', 'O
 CREATE TYPE "CharacterRole" AS ENUM ('MAIN', 'SUPPORTING', 'BACKGROUND');
 
 -- CreateEnum
-CREATE TYPE "ThirdPartyType" AS ENUM ('DISCORD', 'GOOGLE', 'APPLE', 'FACEBOOK');
+CREATE TYPE "AuthType" AS ENUM ('JWT', 'DISCORD', 'GOOGLE', 'APPLE', 'FACEBOOK');
 
 -- CreateEnum
 CREATE TYPE "ModeratorRoles" AS ENUM ('ADMIN', 'MODERATOR', 'CONTENT_FILLER', 'OTHER_STAFF', 'VIEWER');
@@ -59,52 +59,54 @@ CREATE TABLE "users" (
     "email" VARCHAR(320),
     "is_email_confired" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT NOT NULL,
-    "secret2fa" VARCHAR(20),
+    "avatar" TEXT,
     "birthday" DATE,
     "gender" "Gender" NOT NULL DEFAULT 'UNSPECIFIED',
     "created_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted" BOOLEAN NOT NULL DEFAULT false,
-    "third_party_auth_id" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "site_auth_session" (
+CREATE TABLE "auth" (
     "id" TEXT NOT NULL,
-    "agent" TEXT NOT NULL,
-    "ip" VARCHAR(64) NOT NULL,
+    "type" "AuthType" NOT NULL,
+    "uuid" VARCHAR(64) NOT NULL,
+    "access_token" VARCHAR(320) NOT NULL,
+    "username" VARCHAR(64) NOT NULL,
+    "email" VARCHAR(320),
+    "avatar" TEXT,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "user_id" UUID NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
 
-    CONSTRAINT "site_auth_session_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "third_party_auth" (
+CREATE TABLE "auth_session" (
     "id" TEXT NOT NULL,
-    "uid" VARCHAR(64) NOT NULL,
-    "email" VARCHAR(320),
-    "first_name" VARCHAR(64),
-    "last_name" VARCHAR(64),
-    "avatar" TEXT,
-    "type" "ThirdPartyType" NOT NULL,
-    "deleted" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "agent" TEXT NOT NULL,
+    "ip" VARCHAR(64) NOT NULL,
+    "active" BOOLEAN NOT NULL DEFAULT true,
+    "user_id" UUID NOT NULL,
 
-    CONSTRAINT "third_party_auth_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "auth_session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "studio" (
     "id" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "studio_name" VARCHAR(64) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "name" VARCHAR(64) NOT NULL,
     "rating" REAL NOT NULL,
     "thumbnail" TEXT NOT NULL,
     "anime_count" REAL NOT NULL DEFAULT 0,
     "anime_starts" REAL NOT NULL,
     "anime_ends" REAL NOT NULL,
+    "is_animation_studio" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "studio_pkey" PRIMARY KEY ("id")
 );
@@ -136,12 +138,14 @@ CREATE TABLE "anime" (
     "seasons_count" SMALLINT NOT NULL,
     "episodes" SMALLINT NOT NULL,
     "duration" INTEGER NOT NULL,
-    "next_episode" TIME NOT NULL,
+    "next_episode" TIMESTAMP(3) NOT NULL,
     "rating" "FilmRating" NOT NULL DEFAULT 'G',
     "description" TEXT NOT NULL,
     "preview_link" TEXT NOT NULL,
     "status_description" VARCHAR(30) NOT NULL,
     "release_status" "ReleaseStatus" NOT NULL DEFAULT 'COMPLETED',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "anime_pkey" PRIMARY KEY ("id")
 );
@@ -165,11 +169,34 @@ CREATE TABLE "similar_anime" (
 );
 
 -- CreateTable
+CREATE TABLE "airing-schedule" (
+    "id" UUID NOT NULL,
+    "airing_at" TIMESTAMP(3) NOT NULL,
+    "time_until_airing" INTEGER NOT NULL,
+    "episode" SMALLINT NOT NULL,
+    "anime_id" UUID NOT NULL,
+
+    CONSTRAINT "airing-schedule_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "author" (
     "id" UUID NOT NULL,
-    "author_name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
+    "primary_occupations" TEXT[],
+    "age" INTEGER NOT NULL,
+    "date_of_birth" VARCHAR(30) NOT NULL,
+    "date_of_death" VARCHAR(30) NOT NULL,
+    "synonyms" TEXT[],
+    "years_active" TEXT[],
+    "home_town" VARCHAR(30) NOT NULL,
+    "blood_type" VARCHAR(30) NOT NULL,
+    "language" VARCHAR(30) NOT NULL,
+    "gender" VARCHAR(30) NOT NULL,
     "bucket_id" UUID NOT NULL,
     "bio" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "author_pkey" PRIMARY KEY ("id")
 );
@@ -178,10 +205,17 @@ CREATE TABLE "author" (
 CREATE TABLE "character" (
     "id" UUID NOT NULL,
     "bucket_id" UUID NOT NULL,
-    "character_name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
+    "gender" VARCHAR(30) NOT NULL,
+    "blood_type" VARCHAR(30) NOT NULL,
+    "date_of_birth" VARCHAR(30) NOT NULL,
+    "age" TEXT NOT NULL,
+    "synonyms" TEXT[],
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
     "description" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "character_pkey" PRIMARY KEY ("id")
 );
@@ -189,7 +223,7 @@ CREATE TABLE "character" (
 -- CreateTable
 CREATE TABLE "genre" (
     "id" UUID NOT NULL,
-    "genre_name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
 
     CONSTRAINT "genre_pkey" PRIMARY KEY ("id")
 );
@@ -264,6 +298,9 @@ CREATE TABLE "_AnimeToAuthor" (
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "auth_username_key" ON "auth"("username");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("friend_one", "friend_two");
 
 -- CreateIndex
@@ -297,10 +334,10 @@ CREATE UNIQUE INDEX "_AnimeToAuthor_AB_unique" ON "_AnimeToAuthor"("A", "B");
 CREATE INDEX "_AnimeToAuthor_B_index" ON "_AnimeToAuthor"("B");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_third_party_auth_id_fkey" FOREIGN KEY ("third_party_auth_id") REFERENCES "third_party_auth"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "auth" ADD CONSTRAINT "auth_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "site_auth_session" ADD CONSTRAINT "site_auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "auth_session" ADD CONSTRAINT "auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "relating_anime" ADD CONSTRAINT "relating_anime_child_anime_id_fkey" FOREIGN KEY ("child_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -313,6 +350,9 @@ ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_child_anime_id_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_parent_anime_id_fkey" FOREIGN KEY ("parent_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "airing-schedule" ADD CONSTRAINT "airing-schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

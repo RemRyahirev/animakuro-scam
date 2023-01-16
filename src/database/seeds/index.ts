@@ -9,10 +9,12 @@ import { animeData } from './anime-data';
 import { deepEqual } from '../../common/utils/deep-equal';
 import { userProfileData } from './user-profile-data';
 import { userAnimeData } from './user-anime-data';
+import { Logger } from '@nestjs/common';
 
 const prisma = new PrismaClient();
 
 async function seedAll() {
+    Logger.log('⬇️️ Start seeding...');
     await userData().then((array) => createEntities(array, 'user'));
     await authorData().then((array) => createEntities(array, 'author'));
     await genreData().then((array) => createEntities(array, 'genre'));
@@ -31,15 +33,15 @@ async function createEntities<T extends Array<any>, K extends keyof PrismaClient
     entityArray: T,
     entityName: K,
 ): Promise<void> {
-    console.log(`Start seeding ${entityName}s...`);
+    Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
         if (!entity.id){
-            console.log(`Entity id ${entityName} not defined, will be create random`);
+            Logger.log(`ℹ️ Entity id ${entityName} not defined, will be create random`);
             // @ts-ignore
             const createdEntity = await prisma[entityName].create({
                 data: entity as any,
             });
-            console.log(`Created ${entityName} with id: ${createdEntity.id}`);
+            Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
             continue;
         }
         // @ts-ignore
@@ -50,8 +52,8 @@ async function createEntities<T extends Array<any>, K extends keyof PrismaClient
         });
 
         if (deepEqual(existenceEntity, entity)) {
-            console.log(
-                `Update ${entityName} with id: ${existenceEntity.id} skipped`,
+            Logger.log(
+                `🔧 Update ${entityName} with id: ${existenceEntity.id} skipped`,
             );
             continue;
         }
@@ -63,28 +65,28 @@ async function createEntities<T extends Array<any>, K extends keyof PrismaClient
                 },
                 data: entity as any,
             });
-            console.log(`Updated ${entityName} with id: ${updatedEntity.id}`);
+            Logger.log(`🔧 Updated ${entityName} with id: ${updatedEntity.id}`);
         }
         if (!existenceEntity) {
             // @ts-ignore
             const createdEntity = await prisma[entityName].create({
                 data: entity as any,
             });
-            console.log(`Created ${entityName} with id: ${createdEntity.id}`);
+            Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
         }
     }
-    console.log(`Seeding ${entityName}s finished...`);
+    Logger.log(`✅️ Seeding ${entityName}s finished...`);
 }
 
 async function createDependencies<T extends Array<any>, K extends keyof PrismaClient>(
     dependenciesArray: T,
     entityName: K,
 ){
-    console.log(`Start create dependencies in ${entityName}s...`);
+    Logger.log(`➡️ Start create dependencies in ${entityName}s...`);
     for (const dependency of dependenciesArray) {
         if (!dependency.id) {
-            console.log(
-                `Entity id in dependency ${entityName}Dependencies not provided. Create dependency skipped`,
+            Logger.log(
+                `ℹ️ Entity id in dependency ${entityName}Dependencies not provided. Create dependency skipped`,
             );
             continue;
         }
@@ -104,16 +106,16 @@ async function createDependencies<T extends Array<any>, K extends keyof PrismaCl
                     ...dependency,
                 },
             });
-            console.log(
-                `Updated dependency in ${entityName}s with id: ${dependency.id}`,
+            Logger.log(
+                `🔧 Updated dependency in ${entityName}s with id: ${dependency.id}`,
             );
         }
     }
-    console.log(`Create dependencies in ${entityName}s finished...`);
+    Logger.log(`✅️ Create dependencies in ${entityName}s finished...`);
 }
 seedAll()
-    .catch(console.error)
+    .catch(e => Logger.error(`❌ Seeding database failed, ${e}`, "", "Seed", false))
     .finally(async () => {
         await prisma.$disconnect();
-        console.log('Seeding database finished...');
+        Logger.log('✅️ Seeding database finished...');
     });

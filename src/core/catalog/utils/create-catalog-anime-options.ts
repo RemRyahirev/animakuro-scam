@@ -20,13 +20,6 @@ export function createCatalogAnimeOptions(
                 in: elasticResults,
             },
             ...filterOptions,
-            genres: {
-                some: {
-                    genre_name: {
-                        in: genres,
-                    },
-                },
-            },
             date_start: {
                 gte: date_start
             },

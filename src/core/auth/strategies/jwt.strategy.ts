@@ -1,20 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { JwtPayload } from 'jsonwebtoken';
-import { ConfigService } from '@nestjs/config';
+import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
+import { ICustomJwtPayload } from '../../../common/models/interfaces';
+import { AuthType } from '../../../common/models/enums';
+import { StrategyConfigService } from '../services/strategy-config.service';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private configService: ConfigService) {
+export class JwtStrategy extends PassportStrategy(Strategy, AuthType.JWT) {
+    constructor(
+        private userService: UserService,
+        @Inject(forwardRef(() => StrategyConfigService))
+        private strategyConfigService: StrategyConfigService
+    ) {
         super({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            ignoreExpiration: false,
-            secretOrKey: configService.get<string>('ACCESS_TOKEN_SECRET'),
+            jwtFromRequest: ExtractJwt.fromHeader("access_token"),
+            ignoreExpiration: true,
+            secretOrKey:
+            strategyConfigService.config.JWT.accessToken.privateKey
         });
     }
 
-    async validate(payload: JwtPayload) {
-        return { userId: payload.sub, username: payload.username };
+    async validate(
+        jwtPayload: ICustomJwtPayload,
+        done: VerifiedCallback
+    ): Promise<void> {
+        const account = await this.userService.findOneById(jwtPayload.uuid);
+        if (!account) {
+            return done(new UnauthorizedException(), undefined);
+        }
+        const payload = {
+            account,
+            jwtPayload
+        };
+        done(null, payload);
+        return done(null, account);
     }
 }
