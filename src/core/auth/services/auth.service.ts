@@ -6,7 +6,6 @@ import { AuthType, MailPurpose, TokenType } from "../../../common/models/enums";
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
-import { SessionService } from '../../../common/services/session.service';
 import { PasswordService } from '../../../common/services/password.service';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
@@ -14,6 +13,7 @@ import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
 import { Injectable } from "@nestjs/common";
 import { TokenService } from './token.service';
+import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 
 @Injectable()
 export class AuthService {
@@ -21,9 +21,9 @@ export class AuthService {
         private prisma: PrismaService,
         private userService: UserService,
         private mailer: Mailer,
-        private sessionService: SessionService,
         private passwordService: PasswordService,
         private tokenService: TokenService,
+        private authSessionService: AuthSessionService,
     ) {}
 
     async login(
@@ -34,7 +34,7 @@ export class AuthService {
         const user = (await this.userService.findUserByUsername(
             args.username,
         )) as unknown as NonNullable<User>;
-        const session = await this.sessionService.createSiteAuthSession({
+        const session = await this.authSessionService.createAuthSession({
             agent: context.req.headers['user-agent'] || '',
             ip: context.req.socket.remoteAddress || '', // TODO: recheck
             active: true,
@@ -42,7 +42,7 @@ export class AuthService {
         });
         const access_token = await this.tokenService.generateToken(
             user.id,
-            session.id,
+            session.auth_session!.id ?? null,
             TokenType.ACCESS_TOKEN,
         );
         const userIp = requestIp.getClientIp(context.req) || 1;

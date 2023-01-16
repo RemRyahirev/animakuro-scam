@@ -17,11 +17,13 @@ import {
     GoogleStrategy,
     JwtStrategy,
 } from './strategies';
+import { AuthSessionModule } from '../auth-session/auth-session.module';
 
 @Module({
     imports: [
         HttpModule,
         UserModule,
+        AuthSessionModule,
         PassportModule,
         JwtModule.registerAsync({
             useClass: StrategyConfigService,

@@ -1,5 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { SessionService } from './services/session.service';
 import { SchemaService } from './services/schema.service';
 import { PaginationService } from './services/pagination.service';
 import { PasswordService } from './services/password.service';
@@ -14,7 +13,6 @@ import {
 @Global()
 @Module({
     providers: [
-        SessionService,
         PaginationService,
         PasswordService,
         PrismaService,
@@ -25,7 +23,6 @@ import {
         UniqueConstraint,
     ],
     exports: [
-        SessionService,
         PaginationService,
         PasswordService,
         PrismaService,

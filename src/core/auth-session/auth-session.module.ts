@@ -12,6 +12,6 @@ import { AuthSessionRootResolver } from './resolvers/auth-session-root.resolver'
         AuthSessionQueryResolver,
         AuthSessionMutationResolver,
     ],
-    exports: [],
+    exports: [AuthSessionService],
 })
 export class AuthSessionModule {}
