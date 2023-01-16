@@ -17,7 +17,7 @@ export class CatalogGrpcService implements OnModuleInit {
 
     async searchDocument(search: string) {
         return (await lastValueFrom(
-            this.documentService.searchDocument({ search, index: 'anime' }),
+            this.documentService.searchDocument({ search, index: 'backend-anime' }),
         )) as ElasticResults;
     }
 }
