@@ -77,16 +77,6 @@ export class CatalogAnimeInputType {
     genres?: string[];
 
     @IsOptional()
-    @IsString()
-    @Field(() => CatalogSortField, { nullable: true })
-    sortField?: CatalogSortField
-
-    @IsOptional()
-    @IsString()
-    @Field(() => SortOrder, { nullable: true })
-    sortOrder?: SortOrder
-
-    @IsOptional()
     @IsDate()
     @Field(() => Date, { nullable: true })
     date_start?: Date;
@@ -95,4 +85,14 @@ export class CatalogAnimeInputType {
     @IsDate()
     @Field(() => Date, { nullable: true })
     date_end?: Date;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => CatalogSortField, { nullable: true })
+    sortField?: CatalogSortField
+
+    @IsOptional()
+    @IsString()
+    @Field(() => SortOrder, { nullable: true })
+    sortOrder?: SortOrder
 }

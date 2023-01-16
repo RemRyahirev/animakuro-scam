@@ -3,11 +3,13 @@ import { Prisma } from '@prisma/client';
 import { CatalogSortField } from '../models/enums/catalog-sort-field.enum';
 import { ReleaseStatus } from '../../../common/models/enums';
 import { CatalogAnimeSort } from '../models/interfaces/catalog-anime-sort';
+import { PaginationInputType } from "../../../common/models/inputs";
 
 export function createCatalogAnimeOptions(
     elasticResults: string[],
-    options: Omit<CatalogAnimeInputType, 'search'>,
+    options: Omit<CatalogAnimeInputType, 'search' | 'sortField' | 'sortOrder'>,
     sort: CatalogAnimeSort,
+    pagination: PaginationInputType
 ): Prisma.AnimeFindManyArgs {
     const { genres, date_start, date_end, ...filterOptions } = { ...options };
     const prismaOptions: Prisma.AnimeFindManyArgs = {

@@ -3,6 +3,7 @@ import { GetListCatalogAnimeResultsType } from '../models/results/get-list-catal
 import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
 import { CatalogService } from '../services/catalog.service';
 import { Resolver, ResolveField, Args } from '@nestjs/graphql';
+import { PaginationInputType } from "../../../common/models/inputs";
 
 @Resolver(CatalogQueryType)
 export class CatalogQueryResolver extends CatalogRootResolver {
@@ -13,7 +14,8 @@ export class CatalogQueryResolver extends CatalogRootResolver {
     @ResolveField(() => GetListCatalogAnimeResultsType)
     async getCatalogAnimeList(
         @Args() args: CatalogAnimeInputType,
+        @Args() pagination: PaginationInputType
     ): Promise<GetListCatalogAnimeResultsType> {
-        return await this.catalogService.getCatalogAnimeList(args);
+        return await this.catalogService.getCatalogAnimeList(args, pagination);
     }
 }
