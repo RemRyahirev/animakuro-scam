@@ -1,11 +1,11 @@
-import { Field, Float, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import {
+    AnimeType,
     FilmRating,
     MediaFormat,
     MediaSource,
     ReleaseStatus,
     YearSeason,
-    AnimeType,
 } from '../../../common/models/enums';
 import { Genre } from '../../genre/models/genre.model';
 import { Author } from '../../author/models/author.model';
@@ -144,28 +144,28 @@ export class Anime {
     })
     season: YearSeason;
 
-    @Field(() => [Character], { description: 'The characters in the media' })
+    @Field(() => [Character], { description:"The characters in the media" })
     characters: Character[];
 
     @Field(() => [Author], {
-        description: 'List of the authors of the media',
+        description:"List of the authors of the media",
     })
     authors: Author[];
 
-    @HideField()
-    relating_animes: [RelatingAnime];
+    @Field(() => [RelatingAnime], { description: "List of relating animes" })
+    relating_animes: RelatingAnime[];
 
-    @HideField()
-    related_by_animes: [RelatingAnime];
+    @Field(() => [RelatingAnime], { description: "List of related by animes" })
+    related_by_animes: RelatingAnime[];
 
-    @HideField()
-    similar_animes: [SimilarAnime];
+    @Field(() => [SimilarAnime], { description: "List of similar animes" })
+    similar_animes: SimilarAnime[];
 
-    @HideField()
-    similar_by_animes: [SimilarAnime];
+    @Field(() => [SimilarAnime], { description: "List of similar by animes" })
+    similar_by_animes: SimilarAnime[];
 
     @Field(() => [Studio], {
-        description: 'The companies who produced the media',
+        description: "The companies who produced the media",
     })
     studios: Studio[];
 

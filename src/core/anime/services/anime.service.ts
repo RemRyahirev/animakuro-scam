@@ -32,6 +32,8 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                relating_animes: true,
+                similar_animes: true,
             },
         });
         return {
@@ -51,6 +53,8 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                relating_animes: true,
+                similar_animes: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -139,6 +143,8 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                relating_animes: true,
+                similar_animes: true,
             } as any,
         });
         return {
@@ -164,6 +170,8 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                relating_animes: true,
+                similar_animes: true,
             } as any,
         });
         return {
@@ -311,7 +319,7 @@ export class AnimeService {
         const anime = await this.prisma.anime.findUnique({
             where: { id },
             include: {
-                relating_animes: true,
+                similar_animes: true,
             },
         });
 
@@ -358,6 +366,8 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
+                relating_animes: true,
+                similar_animes: true,
             },
         });
         return {
