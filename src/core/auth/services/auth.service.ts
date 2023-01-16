@@ -173,8 +173,7 @@ export class AuthService {
         );
         await this.prisma.auth.create({
             data: {
-                // @ts-ignore
-                type: auth_type.toUpperCase(),
+                type: auth_type.toUpperCase() as keyof typeof AuthType,
                 access_token,
                 uuid: profile.account.uuid,
                 email: profile.account.email,

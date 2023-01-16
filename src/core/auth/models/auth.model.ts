@@ -1,10 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { AuthType } from '../../../common/models/enums';
 
 @ObjectType()
 export class Auth {
-    @Field(() => AuthType)
-    type: AuthType;
+    @Field(() => String)
+    type: string;
 
     @Field(() => String)
     uuid: string;
