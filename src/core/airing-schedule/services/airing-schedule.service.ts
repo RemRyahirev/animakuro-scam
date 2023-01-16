@@ -1,7 +1,6 @@
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetAiringScheduleResultsType } from '../models/results/get-airing-schedule-results.type';
 import { GetListAiringScheduleResultsType } from '../models/results/get-list-airing-schedule-results.type';
 import { CreateAiringScheduleResultsType } from '../models/results/create-airing-schedule-results.type';
@@ -59,7 +58,6 @@ export class AiringScheduleService {
     async createAiringSchedule(
         scheduled_animes_add: string[],
         episodes: number[],
-        ctx: ICustomContext,
     ): Promise<CreateAiringScheduleResultsType> {
         for (let i = 0; i < scheduled_animes_add.length; i++) {
             const anime = await this.prisma.anime.findUnique({
@@ -138,7 +136,6 @@ export class AiringScheduleService {
 
     async deleteAiringSchedule(
         scheduled_animes_remove: string[],
-        ctx: ICustomContext,
     ): Promise<DeleteAiringScheduleResultsType> {
         await this.prisma.airingSchedule.deleteMany({
             where: {

@@ -1,5 +1,4 @@
 import { Args, Context, Int, ResolveField, Resolver } from '@nestjs/graphql';
-import { ICustomContext } from '../../../common/models/interfaces';
 import {
     AiringScheduleMutationType,
     AiringScheduleRootResolver,
@@ -22,12 +21,10 @@ export class AiringScheduleMutationResolver extends AiringScheduleRootResolver {
         @Args({ name: 'scheduled_animes_add', type: () => [String] })
         scheduled_animes_add: string[],
         @Args({ name: 'episodes', type: () => [Int] }) episodes: number[],
-        @Context() ctx: ICustomContext,
     ): Promise<CreateAiringScheduleResultsType> {
         return await this.airingScheduleService.createAiringSchedule(
             scheduled_animes_add,
             episodes,
-            ctx,
         );
     }
 
@@ -43,11 +40,9 @@ export class AiringScheduleMutationResolver extends AiringScheduleRootResolver {
     async deleteAiringSchedule(
         @Args({ name: 'scheduled_animes_remove', type: () => [String] })
         scheduled_animes_remove: string[],
-        @Context() ctx: ICustomContext,
     ): Promise<DeleteAiringScheduleResultsType> {
         return await this.airingScheduleService.deleteAiringSchedule(
             scheduled_animes_remove,
-            ctx,
         );
     }
 }
