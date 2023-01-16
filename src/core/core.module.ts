@@ -10,33 +10,36 @@ import { TranslationModule } from './translation/translation.module';
 import { UserAnimeModule } from './user-anime/user-anime.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
 import { AiringScheduleModule } from './airing-schedule/airing-schedule.module';
+import { AuthSessionModule } from './auth-session/auth-session.module';
 
 @Module({
     imports: [
         AuthModule,
-        UserModule,
+        AuthSessionModule,
+        AiringScheduleModule,
         AnimeModule,
         AuthorModule,
         CharacterModule,
         GenreModule,
         StudioModule,
         TranslationModule,
+        UserModule,
         UserAnimeModule,
         UserProfileModule,
-        AiringScheduleModule,
     ],
     exports: [
         AuthModule,
-        UserModule,
+        AuthSessionModule,
+        AiringScheduleModule,
         AnimeModule,
         AuthorModule,
         CharacterModule,
         GenreModule,
         StudioModule,
         TranslationModule,
+        UserModule,
         UserAnimeModule,
         UserProfileModule,
-        AiringScheduleModule,
     ],
 })
 export class CoreModule {}

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import fs from 'fs';
 import path from 'path';
+import { printSchema } from 'graphql';
 import {
     GraphQLSchemaBuilderModule,
     GraphQLSchemaFactory,
@@ -21,7 +22,6 @@ import { AuthorMutationResolver } from '../../core/author/resolvers/author-mutat
 import { CharacterRootResolver } from '../../core/character/resolvers/character-root.resolver';
 import { CharacterQueryResolver } from '../../core/character/resolvers/character-query.resolver';
 import { CharacterMutationResolver } from '../../core/character/resolvers/character-mutation.resolver';
-import { printSchema } from 'graphql';
 import { GenreRootResolver } from '../../core/genre/resolvers/genre-root.resolver';
 import { GenreQueryResolver } from '../../core/genre/resolvers/genre-query.resolver';
 import { GenreMutationResolver } from '../../core/genre/resolvers/genre-mutation.resolver';
@@ -37,9 +37,12 @@ import { UserAnimeMutationResolver } from '../../core/user-anime/resolvers/user-
 import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
 import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
 import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
-import { AiringScheduleRootResolver } from "../../core/airing-schedule/resolvers/airing-schedule-root.resolver";
-import { AiringScheduleQueryResolver } from "../../core/airing-schedule/resolvers/airing-schedule-query.resolver";
-import { AiringScheduleMutationResolver } from "../../core/airing-schedule/resolvers/airing-schedule-mutation.resolver";
+import { AiringScheduleRootResolver } from '../../core/airing-schedule/resolvers/airing-schedule-root.resolver';
+import { AiringScheduleQueryResolver } from '../../core/airing-schedule/resolvers/airing-schedule-query.resolver';
+import { AiringScheduleMutationResolver } from '../../core/airing-schedule/resolvers/airing-schedule-mutation.resolver';
+import { AuthSessionRootResolver } from '../../core/auth-session/resolvers/auth-session-root.resolver';
+import { AuthSessionQueryResolver } from '../../core/auth-session/resolvers/auth-session-query.resolver';
+import { AuthSessionMutationResolver } from '../../core/auth-session/resolvers/auth-session-mutation.resolver';
 
 @Injectable()
 export class SchemaService {
@@ -51,6 +54,9 @@ export class SchemaService {
             AuthRootResolver,
             AuthQueryResolver,
             AuthMutationResolver,
+            AuthSessionRootResolver,
+            AuthSessionQueryResolver,
+            AuthSessionMutationResolver,
             UserRootResolver,
             UserQueryResolver,
             UserMutationResolver,
