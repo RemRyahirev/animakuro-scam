@@ -9,7 +9,7 @@ import { StudioModule } from './studio/studio.module';
 import { TranslationModule } from './translation/translation.module';
 import { UserAnimeModule } from './user-anime/user-anime.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
-import { CatalogModule } from "./search/catalog.module";
+import { CatalogModule } from "./catalog/catalog.module";
 
 @Module({
     imports: [

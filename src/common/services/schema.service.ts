@@ -37,8 +37,8 @@ import { UserAnimeMutationResolver } from '../../core/user-anime/resolvers/user-
 import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
 import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
 import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
-import { CatalogRootResolver } from "../../core/search/resolvers/catalog-root.resolver";
-import { CatalogQueryResolver } from "../../core/search/resolvers/catalog-query.resolver";
+import { CatalogRootResolver } from "../../core/catalog/resolvers/catalog-root.resolver";
+import { CatalogQueryResolver } from "../../core/catalog/resolvers/catalog-query.resolver";
 
 @Injectable()
 export class SchemaService {
