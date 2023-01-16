@@ -18,6 +18,7 @@ import {
     JwtStrategy,
 } from './strategies';
 import { AuthSessionModule } from '../auth-session/auth-session.module';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
     imports: [
@@ -41,6 +42,7 @@ import { AuthSessionModule } from '../auth-session/auth-session.module';
         FacebookStrategy,
         GoogleStrategy,
         JwtStrategy,
+        LocalStrategy,
     ],
     exports: [AuthService],
     controllers: [AuthController]

@@ -2,7 +2,7 @@ import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { UserService } from '../../user/services/user.service';
-import { AuthType, MailPurpose, TokenType } from "../../../common/models/enums";
+import { AuthType, Gender, MailPurpose, TokenType } from "../../../common/models/enums";
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
@@ -11,7 +11,7 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 
@@ -72,41 +72,48 @@ export class AuthService {
                 country: geoLookUp?.country,
                 region: geoLookUp?.region,
                 city: geoLookUp?.city,
-                timezone: geoLookUp?.timezone,
+                timezone: geoLookUp?.timezone
             },
         );
         return {
             success: true,
             access_token,
-            user: user as User,
+            user,
         };
     }
 
-    async loginSocial(access_token: string, auth_type: AuthType): Promise<LoginResultsType> {
+    async loginSocial(
+        access_token: string,
+        auth_type: AuthType
+    ): Promise<LoginResultsType> {
         const auth = await this.prisma.auth.findFirst({
             where: {
-                access_token,
-            },
-        })
+                access_token
+            }
+        });
         // TODO move validation in decorator
-        if (!auth){
+        if (!auth) {
             return {
                 success: false,
-                errors: [{
-                    property: 'access_token',
-                    value: access_token,
-                    reason: 'No user matched by this token'
-                }],
+                errors: [
+                    {
+                        property: "access_token",
+                        value: access_token,
+                        reason: "No user matched by this token"
+                    }
+                ],
                 access_token: undefined,
-                user: null,
-            }
+                user: null
+            };
         }
-        const user = await this.userService.findOneById(auth!.user_id as string)
+        const user = await this.userService.findOneById(
+            auth!.user_id as string
+        );
         return {
             success: true,
             access_token: access_token,
-            user: user as any
-        }
+            user,
+        };
     }
 
     async register(
@@ -114,7 +121,12 @@ export class AuthService {
         context: Context,
     ): Promise<RegisterResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
-        const user = await this.prisma.user.create({ data: args });
+        const user = await this.prisma.user.create({
+            data: {
+                ...args,
+                gender: Gender.UNSPECIFIED
+            }
+        });
         const hash = this.tokenService.generateToken(
             user.id,
             null,
@@ -136,7 +148,7 @@ export class AuthService {
                 avatar: user?.avatar,
                 user_id: user?.id,
             },
-        })
+        });
         await this.mailer.sendMail(
             {
                 to: args.email,
@@ -165,6 +177,8 @@ export class AuthService {
             email: profile.account.email,
             password: '',
             avatar: profile.account.avatar,
+            is_email_confirmed: false,
+            gender: Gender.UNSPECIFIED
         });
         const access_token = await this.tokenService.generateToken(
             profile.account.uuid,
@@ -181,16 +195,15 @@ export class AuthService {
                 avatar: profile.account.avatar,
                 user_id: result.user!.id
             },
-        })
+        });
         const user = await this.prisma.user.findFirst({
-                where: {
-                    id: result.user?.id
-                },
-                include: {
-                    auth: true
-                }
-            }
-        )
+            where: {
+                id: result.user?.id,
+            },
+            include: {
+                auth: true
+            },
+        });
         return {
             success: true,
             access_token,
@@ -198,8 +211,27 @@ export class AuthService {
         };
     }
 
-    async logout(ctx: Context) {
-        // TODO rewrite logout logic
+    async logout(session: Record<string, any>, access_token: string) {
+        // TODO made cleanup database and store after user logout
+        const auth = await this.prisma.auth.findFirst({
+            where: {
+                access_token
+            },
+        });
+        const authorizedUserId = auth?.user_id;
+        const authorizedSession = await this.prisma.authSession.findFirst({
+            where: {
+                user_id: authorizedUserId
+            },
+        });
+        await this.prisma.authSession.update({
+            where: {
+                id: authorizedSession!.id,
+            },
+            data: {
+                active: false
+            },
+        });
         return { success: true };
     }
 }

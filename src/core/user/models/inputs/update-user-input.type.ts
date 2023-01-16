@@ -9,6 +9,7 @@ import {
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { Gender } from '../../../../common/models/enums';
 import { IUpload } from '../../../../common/models/interfaces';
+import { IsDate, IsEnum } from "@nestjs/class-validator";
 
 @ArgsType()
 export class UpdateUserInputType {
@@ -29,7 +30,7 @@ export class UpdateUserInputType {
 
     @IsOptional()
     @Field(() => Boolean, { nullable: true })
-    isEmailConfirmed?: boolean;
+    is_email_confirmed?: boolean;
 
     @IsOptional()
     @IsString()
@@ -44,16 +45,14 @@ export class UpdateUserInputType {
     newPassword?: string;
 
     @IsOptional()
+    @IsDate()
     @Field(() => Date, { nullable: true })
     birthday?: Date;
 
     @IsOptional()
+    @IsEnum(Gender)
     @Field(() => Gender, { nullable: true })
     gender?: Gender;
-
-    @IsOptional()
-    @Field(() => String, { nullable: true })
-    customGender?: string;
 
     @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
