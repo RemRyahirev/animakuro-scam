@@ -138,7 +138,7 @@ CREATE TABLE "anime" (
     "seasons_count" SMALLINT NOT NULL,
     "episodes" SMALLINT NOT NULL,
     "duration" INTEGER NOT NULL,
-    "next_episode" TIME NOT NULL,
+    "next_episode" TIMESTAMP(3) NOT NULL,
     "rating" "FilmRating" NOT NULL DEFAULT 'G',
     "description" TEXT NOT NULL,
     "preview_link" TEXT NOT NULL,
@@ -166,6 +166,17 @@ CREATE TABLE "similar_anime" (
     "status" "AnimeApproval" NOT NULL DEFAULT 'PENDING',
 
     CONSTRAINT "similar_anime_pkey" PRIMARY KEY ("child_anime_id","parent_anime_id")
+);
+
+-- CreateTable
+CREATE TABLE "airing-schedule" (
+    "id" UUID NOT NULL,
+    "airing_at" TIMESTAMP(3) NOT NULL,
+    "time_until_airing" INTEGER NOT NULL,
+    "episode" SMALLINT NOT NULL,
+    "anime_id" UUID NOT NULL,
+
+    CONSTRAINT "airing-schedule_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -339,6 +350,9 @@ ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_child_anime_id_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_parent_anime_id_fkey" FOREIGN KEY ("parent_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "airing-schedule" ADD CONSTRAINT "airing-schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

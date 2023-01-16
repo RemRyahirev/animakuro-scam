@@ -80,7 +80,9 @@ export class CreateAnimeInputType {
     duration: number;
 
     @IsDate()
-    @Field(() => Date)
+    @Field(() => Date, {
+        nullable: true,
+    })
     next_episode: Date;
 
     @IsString()

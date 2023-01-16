@@ -80,40 +80,41 @@ model Friendship {
 }
 
 model Anime {
-  id                 String          @id @default(uuid()) @db.Uuid
-  title              String          @db.VarChar(100)
-  score              Float           @db.Real
-  year               Int             @db.SmallInt
-  date_start         DateTime?       @db.Date
-  date_end           DateTime?       @db.Date
-  country_of_origin  String          @db.VarChar(2)
-  genres             Genre[]
-  format             MediaFormat     @default(OTHER)
-  source             MediaSource     @default(OTHER)
-  season             YearSeason      @default(FALL)
-  type               AnimeType       @default(ANIME)
-  hashtags           String[]
-  synonyms           String[]
-  is_licensed        Boolean
-  seasons_count      Int             @db.SmallInt
-  episodes           Int             @db.SmallInt
-  duration           Int             @db.Integer
-  next_episode       DateTime        @db.Time
-  rating             FilmRating      @default(G)
-  description        String          @db.Text
-  preview_link       String          @db.Text
-  status_description String          @db.VarChar(30)
-  release_status     ReleaseStatus   @default(COMPLETED)
-  created_at         DateTime        @default(now()) @map("created_at")
-  updated_at         DateTime        @default(now()) @map("updated_at")
-  studios            Studio[]
-  characters         Character[]
-  authors            Author[]
-  relating_animes    RelatingAnime[] @relation("relating")
-  related_by_animes  RelatingAnime[] @relation("related")
-  similar_animes     SimilarAnime[]  @relation("similar")
-  similar_by_animes  SimilarAnime[]  @relation("similar_by")
-  user_anime         UserAnime[]
+  id                  String           @id @default(uuid()) @db.Uuid
+  title               String           @db.VarChar(100)
+  score               Float            @db.Real
+  year                Int              @db.SmallInt
+  date_start          DateTime?        @db.Date
+  date_end            DateTime?        @db.Date
+  country_of_origin   String           @db.VarChar(2)
+  genres              Genre[]
+  format              MediaFormat      @default(OTHER)
+  source              MediaSource      @default(OTHER)
+  season              YearSeason       @default(FALL)
+  type                AnimeType        @default(ANIME)
+  hashtags            String[]
+  synonyms            String[]
+  is_licensed         Boolean
+  seasons_count       Int              @db.SmallInt
+  episodes            Int              @db.SmallInt
+  duration            Int              @db.Integer
+  next_episode        DateTime
+  rating              FilmRating       @default(G)
+  description         String           @db.Text
+  preview_link        String           @db.Text
+  status_description  String           @db.VarChar(30)
+  release_status      ReleaseStatus    @default(COMPLETED)
+  created_at          DateTime         @default(now()) @map("created_at")
+  updated_at          DateTime         @default(now()) @map("updated_at")
+  studios             Studio[]
+  characters          Character[]
+  authors             Author[]
+  relating_animes     RelatingAnime[]  @relation("relating")
+  related_by_animes   RelatingAnime[]  @relation("related")
+  similar_animes      SimilarAnime[]   @relation("similar")
+  similar_by_animes   SimilarAnime[]   @relation("similar_by")
+  user_anime          UserAnime[]
+  next_airing_episode AiringSchedule[]
 
   @@map("anime")
 }
@@ -138,6 +139,17 @@ model SimilarAnime {
 
   @@id([child_anime_id, parent_anime_id])
   @@map("similar_anime")
+}
+
+model AiringSchedule {
+  id                String   @id @default(uuid()) @db.Uuid
+  airing_at         DateTime
+  time_until_airing Int      @db.Integer
+  episode           Int      @db.SmallInt
+  anime_id          String   @db.Uuid
+  anime             Anime    @relation(fields: [anime_id], references: [id])
+
+  @@map("airing-schedule")
 }
 
 model Author {
