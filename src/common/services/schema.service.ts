@@ -37,6 +37,9 @@ import { UserAnimeMutationResolver } from '../../core/user-anime/resolvers/user-
 import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
 import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
 import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
+import { AiringScheduleRootResolver } from "../../core/airing-schedule/resolvers/airing-schedule-root.resolver";
+import { AiringScheduleQueryResolver } from "../../core/airing-schedule/resolvers/airing-schedule-query.resolver";
+import { AiringScheduleMutationResolver } from "../../core/airing-schedule/resolvers/airing-schedule-mutation.resolver";
 
 @Injectable()
 export class SchemaService {
@@ -75,6 +78,9 @@ export class SchemaService {
             UserProfileRootResolver,
             UserProfileQueryResolver,
             UserProfileMutationResolver,
+            AiringScheduleRootResolver,
+            AiringScheduleQueryResolver,
+            AiringScheduleMutationResolver,
         ]);
         fs.writeFile(
             path.resolve(__dirname + '../../../../schema.gql'),
