@@ -15,7 +15,7 @@ export class SimilarAnime {
         defaultValue: null,
         description: 'Child anime',
     })
-    anime: Anime;
+    child_anime: Anime;
 
     @HideField()
     child_anime_id: string;

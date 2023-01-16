@@ -10,6 +10,9 @@ import { deepEqual } from '../../common/utils/deep-equal';
 import { userProfileData } from './user-profile-data';
 import { userAnimeData } from './user-anime-data';
 import { Logger } from '@nestjs/common';
+import { relatingAnimeData } from './relating-anime';
+import { similarAnimeData } from './similar-anime';
+import { airingScheduleData } from './airing-schedule';
 
 const prisma = new PrismaClient();
 
@@ -24,19 +27,34 @@ async function seedAll() {
     );
     await studioData().then((array) => createEntities(array, 'studio'));
     await animeData().then((array) => createEntities(array, 'anime'));
-    await studioDependencies().then((array) => createDependencies(array, 'studio'));
-    await userProfileData().then((array) => createEntities(array, 'userProfile'));
+    await studioDependencies().then((array) =>
+        createDependencies(array, 'studio'),
+    );
+    await userProfileData().then((array) =>
+        createEntities(array, 'userProfile'),
+    );
     await userAnimeData().then((array) => createEntities(array, 'userAnime'));
+    await relatingAnimeData().then((array) =>
+        createEntities(array, 'relatingAnime'),
+    );
+    await similarAnimeData().then((array) =>
+        createEntities(array, 'similarAnime'),
+    );
+    await airingScheduleData().then((array) =>
+        createEntities(array, 'airingSchedule'),
+    );
 }
 
-async function createEntities<T extends Array<any>, K extends keyof PrismaClient>(
-    entityArray: T,
-    entityName: K,
-): Promise<void> {
+async function createEntities<
+    T extends Array<any>,
+    K extends keyof PrismaClient,
+>(entityArray: T, entityName: K): Promise<void> {
     Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
-        if (!entity.id){
-            Logger.log(`ℹ️ Entity id ${entityName} not defined, will be create random`);
+        if (!entity.id) {
+            Logger.log(
+                `ℹ️ Entity id ${entityName} not defined, will be create random`,
+            );
             // @ts-ignore
             const createdEntity = await prisma[entityName].create({
                 data: entity as any,
@@ -78,10 +96,10 @@ async function createEntities<T extends Array<any>, K extends keyof PrismaClient
     Logger.log(`✅️ Seeding ${entityName}s finished...`);
 }
 
-async function createDependencies<T extends Array<any>, K extends keyof PrismaClient>(
-    dependenciesArray: T,
-    entityName: K,
-){
+async function createDependencies<
+    T extends Array<any>,
+    K extends keyof PrismaClient,
+>(dependenciesArray: T, entityName: K) {
     Logger.log(`➡️ Start create dependencies in ${entityName}s...`);
     for (const dependency of dependenciesArray) {
         if (!dependency.id) {
@@ -114,7 +132,9 @@ async function createDependencies<T extends Array<any>, K extends keyof PrismaCl
     Logger.log(`✅️ Create dependencies in ${entityName}s finished...`);
 }
 seedAll()
-    .catch(e => Logger.error(`❌ Seeding database failed, ${e}`, "", "Seed", false))
+    .catch((e) =>
+        Logger.error(`❌ Seeding database failed, ${e}`, '', 'Seed', false),
+    )
     .finally(async () => {
         await prisma.$disconnect();
         Logger.log('✅️ Seeding database finished...');
