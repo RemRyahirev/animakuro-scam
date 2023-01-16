@@ -1,5 +1,4 @@
-import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
-import { ICustomContext } from '../../../common/models/interfaces';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import {
     TranslationMutationType,
     TranslationRootResolver,
@@ -20,24 +19,21 @@ export class TranslationMutationResolver extends TranslationRootResolver {
     @ResolveField(() => CreateTranslationResultsType)
     async createTranslation(
         @Args() args: CreateTranslationInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<CreateTranslationResultsType> {
-        return await this.translationService.createTranslation(args, ctx);
+        return await this.translationService.createTranslation(args);
     }
 
     @ResolveField(() => UpdateTranslationResultsType)
     async updateTranslation(
         @Args() args: UpdateTranslationInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<UpdateTranslationResultsType> {
-        return await this.translationService.updateTranslation(args, ctx);
+        return await this.translationService.updateTranslation(args);
     }
 
     @ResolveField(() => DeleteTranslationResultsType)
     async deleteTranslation(
         @Args('id') id: string,
-        @Context() ctx: ICustomContext,
     ): Promise<DeleteTranslationResultsType> {
-        return await this.translationService.deleteTranslation(id, ctx);
+        return await this.translationService.deleteTranslation(id);
     }
 }

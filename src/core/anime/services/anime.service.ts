@@ -3,7 +3,6 @@ import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
@@ -126,7 +125,6 @@ export class AnimeService {
 
     async createAnime(
         args: CreateAnimeInputType,
-        ctx: ICustomContext,
     ): Promise<CreateAnimeResultsType> {
         const anime = await this.prisma.anime.create({
             data: {
@@ -151,7 +149,6 @@ export class AnimeService {
 
     async updateAnime(
         args: UpdateAnimeInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateAnimeResultsType> {
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
@@ -353,7 +350,6 @@ export class AnimeService {
 
     async deleteAnime(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteAnimeResultsType> {
         const anime = await this.prisma.anime.delete({
             where: { id },

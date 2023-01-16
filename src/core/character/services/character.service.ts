@@ -3,7 +3,6 @@ import { UpdateCharacterInputType } from '../models/inputs/update-character-inpu
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
 import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
@@ -108,7 +107,6 @@ export class CharacterService {
 
     async createCharacter(
         args: CreateCharacterInputType,
-        ctx: ICustomContext,
     ): Promise<CreateCharacterResultsType> {
         const character = await this.prisma.character.create({
             data: args,
@@ -130,7 +128,6 @@ export class CharacterService {
 
     async updateCharacter(
         args: UpdateCharacterInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateCharacterResultsType> {
         const character = await this.prisma.character.update({
             where: { id: args.id },
@@ -153,7 +150,6 @@ export class CharacterService {
 
     async deleteCharacter(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteCharacterResultsType> {
         const character = await this.prisma.character.delete({
             where: { id },

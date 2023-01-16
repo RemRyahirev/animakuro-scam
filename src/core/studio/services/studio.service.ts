@@ -1,7 +1,6 @@
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
 import { GetStudioResultsType } from '../models/results/get-studio-results.type';
 import { GetListStudioResultsType } from '../models/results/get-list-studio-results.type';
@@ -75,7 +74,6 @@ export class StudioService {
 
     async createStudio(
         args: CreateStudioInputType,
-        ctx: ICustomContext,
     ): Promise<CreateStudioResultsType> {
         const studio = await this.prisma.studio.create({
             data: {
@@ -101,7 +99,6 @@ export class StudioService {
 
     async updateStudio(
         args: UpdateStudioInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateStudioResultsType> {
         const studio = await this.prisma.studio.update({
             where: { id: args.id },
@@ -134,7 +131,6 @@ export class StudioService {
 
     async deleteStudio(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteStudioResultsType> {
         const studio = await this.prisma.studio.delete({
             where: { id },

@@ -3,7 +3,6 @@ import { UpdateUserAnimeInputType } from '../models/inputs/update-user-anime-inp
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetUserAnimeResultsType } from '../models/results/get-user-anime-results.type';
 import { GetListUserAnimeResultsType } from '../models/results/get-list-user-anime-results.type';
 import { CreateUserAnimeResultsType } from '../models/results/create-user-anime-results.type';
@@ -52,7 +51,6 @@ export class UserAnimeService {
 
     async createUserAnime(
         args: CreateUserAnimeInputType,
-        ctx: ICustomContext,
     ): Promise<CreateUserAnimeResultsType> {
         const {userProfileId, animeId, ...other} = args;
         const userAnime = await this.prisma.userAnime.create({
@@ -85,7 +83,6 @@ export class UserAnimeService {
 
     async updateUserAnime(
         args: UpdateUserAnimeInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateUserAnimeResultsType> {
         const userAnime = await this.prisma.userAnime.update({
             where: { id: args.id },
@@ -100,7 +97,6 @@ export class UserAnimeService {
 
     async deleteUserAnime(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteUserAnimeResultsType> {
         const userAnime = await this.prisma.userAnime.delete({
             where: { id }

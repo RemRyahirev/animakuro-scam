@@ -3,7 +3,6 @@ import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
 import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
@@ -57,7 +56,6 @@ export class GenreService {
 
     async createGenre(
         args: CreateGenreInputType,
-        ctx: ICustomContext,
     ): Promise<CreateGenreResultsType> {
         const genre = await this.prisma.genre.create({
             data: args,
@@ -70,7 +68,6 @@ export class GenreService {
 
     async updateGenre(
         args: UpdateGenreInputType,
-        ctx: ICustomContext,
     ): Promise<UpdateGenreResultsType> {
         const genre = await this.prisma.genre.update({
             where: { id: args.id },
@@ -84,7 +81,6 @@ export class GenreService {
 
     async deleteGenre(
         id: string,
-        ctx: ICustomContext,
     ): Promise<DeleteGenreResultsType> {
         const genre = await this.prisma.genre.delete({
             where: { id },

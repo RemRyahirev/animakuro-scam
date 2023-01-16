@@ -1,5 +1,4 @@
-import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
-import { ICustomContext } from '../../../common/models/interfaces';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
 import { StudioMutationType, StudioRootResolver } from './studio-root.resolver';
 import { UpdateStudioInputType } from '../models/inputs/update-studio-input.type';
@@ -17,24 +16,21 @@ export class StudioMutationResolver extends StudioRootResolver {
     @ResolveField(() => CreateStudioResultsType)
     async createStudio(
         @Args() args: CreateStudioInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<CreateStudioResultsType> {
-        return await this.studioService.createStudio(args, ctx);
+        return await this.studioService.createStudio(args);
     }
 
     @ResolveField(() => UpdateStudioResultsType)
     async updateStudio(
         @Args() args: UpdateStudioInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<UpdateStudioResultsType> {
-        return await this.studioService.updateStudio(args, ctx);
+        return await this.studioService.updateStudio(args);
     }
 
     @ResolveField(() => DeleteStudioResultsType)
     async deleteStudio(
         @Args('id') id: string,
-        @Context() ctx: ICustomContext,
     ): Promise<DeleteStudioResultsType> {
-        return await this.studioService.deleteStudio(id, ctx);
+        return await this.studioService.deleteStudio(id);
     }
 }

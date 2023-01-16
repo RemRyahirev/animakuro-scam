@@ -2,7 +2,6 @@ import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
-import { ICustomContext } from '../../../common/models/interfaces';
 import { UpdateAnimeResultsType } from '../models/results/update-anime-results.type';
 import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
@@ -18,17 +17,15 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @ResolveField(() => CreateAnimeResultsType)
     async createAnime(
         @Args() args: CreateAnimeInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<CreateAnimeResultsType> {
-        return await this.animeService.createAnime(args, ctx);
+        return await this.animeService.createAnime(args);
     }
 
     @ResolveField(() => UpdateAnimeResultsType)
     async updateAnime(
         @Args() args: UpdateAnimeInputType,
-        @Context() ctx: ICustomContext,
     ): Promise<UpdateAnimeResultsType> {
-        return await this.animeService.updateAnime(args, ctx);
+        return await this.animeService.updateAnime(args);
     }
 
     @ResolveField(() => UpdateAnimeResultsType)
@@ -112,8 +109,7 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @ResolveField(() => DeleteAnimeResultsType)
     async deleteAnime(
         @Args('id') id: string,
-        @Context() ctx: ICustomContext,
     ): Promise<DeleteAnimeResultsType> {
-        return await this.animeService.deleteAnime(id, ctx);
+        return await this.animeService.deleteAnime(id);
     }
 }
