@@ -1,12 +1,12 @@
 import { BaseResultsType } from '../../../../common/models/results';
-import { SearchAnime } from '../search.model';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { CatalogAnime } from "../catalog-anime.model";
 
 @ObjectType()
 export class GetListSearchAnimeResultsType extends BaseResultsType {
-    @Field(() => [SearchAnime], {
+    @Field(() => [CatalogAnime], {
         nullable: true,
         description: 'Search Anime list',
     })
-    animeList: SearchAnime[];
+    animeList: CatalogAnime[];
 }

@@ -2,12 +2,12 @@ import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
 import { Prisma } from '@prisma/client';
 import { SearchSortField } from '../models/enums/search-sort-field.enum';
 import { ReleaseStatus } from '../../../common/models/enums';
-import { SearchSortInput } from '../models/inputs/search-sort-input';
+import { CatalogAnimeSort } from "../models/interfaces/catalog-anime-sort";
 
 export function createSearchPrismaOptions(
     elasticResults: string[],
     options: Omit<SearchAnimeInputType, 'search'>,
-    sort: SearchSortInput,
+    sort: CatalogAnimeSort,
 ): Prisma.AnimeFindManyArgs {
     const { genres, ...filterOptions } = { ...options };
     const prismaOptions: Prisma.AnimeFindManyArgs = {

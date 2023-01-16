@@ -2,7 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { DocumentService } from '../../../common/grpc';
 import { lastValueFrom } from 'rxjs';
-import { ElasticResults } from '../models/results/elastic-response.type';
+import { ElasticResults } from '../models/interfaces/elastic-response.type';
 
 @Injectable()
 export class SearchGrpcService implements OnModuleInit {
