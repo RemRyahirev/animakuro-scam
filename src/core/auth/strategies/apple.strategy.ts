@@ -12,8 +12,10 @@ export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
     ) {
         super({
             clientID: strategyConfigService.config.APPLE.clientID,
-            clientSecret: strategyConfigService.config.APPLE.clientSecret,
+            teamID: strategyConfigService.config.APPLE.teamID,
+            keyID: strategyConfigService.config.APPLE.keyID,
             callbackURL: strategyConfigService.config.APPLE.callbackURL,
+            privateKeyLocation: strategyConfigService.config.APPLE.privateKeyLocation,
             scope: ['email', 'name'],
             profileFields: ['email', 'name'],
         });

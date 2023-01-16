@@ -8,5 +8,5 @@ export class CreateRelatingAnimeResultsType extends BaseResultsType {
         nullable: true,
         description: 'RelatingAnime',
     })
-    genre: RelatingAnime | null;
+    relating_anime: RelatingAnime | null;
 }

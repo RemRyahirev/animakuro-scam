@@ -14,7 +14,6 @@ import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
 import { Injectable } from "@nestjs/common";
 import { TokenService } from './token.service';
-import { Profile } from "passport";
 
 @Injectable()
 export class AuthService {

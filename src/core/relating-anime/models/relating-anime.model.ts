@@ -15,7 +15,7 @@ export class RelatingAnime {
         defaultValue: null,
         description: 'Child anime',
     })
-    child_anime: Anime;
+    anime: Anime;
 
     @HideField()
     child_anime_id: string;

@@ -64,13 +64,21 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'APPLE_CLIENT_ID',
                     'apple-test-client-id',
                 ),
-                clientSecret: this.configService.get(
-                    'APPLE_CLIENT_SECRET',
-                    'apple-test-client-secret',
+                teamID: this.configService.get(
+                    'APPLE_TEAM_ID',
+                    'apple-test-team-id',
+                ),
+                keyID: this.configService.get(
+                    'APPLE_KEY_ID',
+                    'apple-test-key-id',
                 ),
                 callbackURL: this.configService.get(
-                    'OAUTH_REDIRECT_URI',
-                    'apple-test-redirect-uri',
+                    'APPLE_CALLBACK_URL',
+                    'apple-test-callback-url',
+                ),
+                privateKeyLocation: this.configService.get(
+                    'APPLE_PRIVATE_KEY_LOCATION',
+                    'apple-test-private-key-location',
                 ),
                 redirectURL: this.configService.get(
                     'APPLE_ENDPOINT',
@@ -105,8 +113,8 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     'google-test-client-secret',
                 ),
                 callbackURL: this.configService.get(
-                    'OAUTH_REDIRECT_URI',
-                    'google-test-client-uri',
+                    'GOOGLE_CALLBACK_URL',
+                    'google-test-callback-url',
                 ),
                 redirectURL: this.configService.get(
                     'GOOGLE_ENDPOINT',

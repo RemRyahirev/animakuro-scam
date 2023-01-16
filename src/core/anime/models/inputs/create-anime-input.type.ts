@@ -140,6 +140,13 @@ export class CreateAnimeInputType {
     relating_animes_add: string[];
 
     @IsOptional()
+    @Field(() => [ID], {
+        nullable: true,
+        description: 'Add to the list of similar animes',
+    })
+    similar_animes_add: string[];
+
+    @IsOptional()
     @Field(() => [AnimeRelation], {
         nullable: true,
         defaultValue: AnimeRelation.NULL,
