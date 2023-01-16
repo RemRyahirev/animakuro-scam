@@ -9,6 +9,7 @@ import { StudioModule } from './studio/studio.module';
 import { TranslationModule } from './translation/translation.module';
 import { UserAnimeModule } from './user-anime/user-anime.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
+import { AiringScheduleModule } from './airing-schedule/airing-schedule.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { UserProfileModule } from './user-profile/user-profile.module';
         TranslationModule,
         UserAnimeModule,
         UserProfileModule,
+        AiringScheduleModule,
     ],
     exports: [
         AuthModule,
@@ -34,6 +36,7 @@ import { UserProfileModule } from './user-profile/user-profile.module';
         TranslationModule,
         UserAnimeModule,
         UserProfileModule,
+        AiringScheduleModule,
     ],
 })
 export class CoreModule {}

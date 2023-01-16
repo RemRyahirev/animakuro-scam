@@ -1,7 +1,7 @@
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 
 @ArgsType()
-export class CreateSimilarAnimeAnimeInputType {
+export class UpdateAiringScheduleInputType {
     @Field(() => ID, {
         nullable: true,
         description: 'ID of anime',

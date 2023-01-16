@@ -98,7 +98,7 @@ model Anime {
   seasons_count       Int              @db.SmallInt
   episodes            Int              @db.SmallInt
   duration            Int              @db.Integer
-  next_episode        DateTime         @db.Time
+  next_episode        DateTime
   rating              FilmRating       @default(G)
   description         String           @db.Text
   preview_link        String           @db.Text
@@ -143,7 +143,7 @@ model SimilarAnime {
 
 model AiringSchedule {
   id                String   @id @default(uuid()) @db.Uuid
-  airing_at         DateTime @db.Time
+  airing_at         DateTime 
   time_until_airing Int      @db.Integer
   episode           Int      @db.SmallInt
   anime_id          String   @db.Uuid

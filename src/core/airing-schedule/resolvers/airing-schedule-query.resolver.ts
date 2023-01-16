@@ -1,28 +1,35 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { PaginationInputType } from '../../../common/models/inputs';
 import {
-    GenreQueryType,
-    GenreRootResolver,
+    AiringScheduleQueryType,
+    AiringScheduleRootResolver,
 } from './airing-schedule-root.resolver';
-import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
-import { GetGenreResultsType } from '../models/results/get-genre-results.type';
-import { GenreService } from '../services/genre.service';
+import { GetListAiringScheduleResultsType } from '../models/results/get-list-airing-schedule-results.type';
+import { GetAiringScheduleResultsType } from '../models/results/get-airing-schedule-results.type';
+import { AiringScheduleService } from '../services/airing-schedule.service';
 
-@Resolver(GenreQueryType)
-export class GenreQueryResolver extends GenreRootResolver {
-    constructor(private genreService: GenreService) {
+@Resolver(AiringScheduleQueryType)
+export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
+    constructor(private airingScheduleService: AiringScheduleService) {
         super();
     }
 
-    @ResolveField(() => GetGenreResultsType)
-    async getGenre(@Args('id') id: string): Promise<GetGenreResultsType> {
-        return await this.genreService.getGenre(id);
+    @ResolveField(() => GetAiringScheduleResultsType)
+    async getGenre(
+        @Args('id') id: string,
+    ): Promise<GetAiringScheduleResultsType> {
+        return await this.airingScheduleService.getAiringSchedule(id);
     }
 
-    @ResolveField(() => GetListGenreResultsType)
+    @ResolveField(() => GetListAiringScheduleResultsType)
     async getGenreList(
+        @Args({ name: 'scheduled_animes_remove', type: () => [String] })
+        scheduled_animes_remove: string[],
         @Args() args: PaginationInputType,
-    ): Promise<GetListGenreResultsType> {
-        return await this.genreService.getGenreList(args);
+    ): Promise<GetListAiringScheduleResultsType> {
+        return await this.airingScheduleService.getAiringScheduleList(
+            scheduled_animes_remove,
+            args,
+        );
     }
 }

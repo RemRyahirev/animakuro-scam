@@ -1,5 +1,5 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { Anime } from '../anime/models/anime.model';
+import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class AiringSchedule {

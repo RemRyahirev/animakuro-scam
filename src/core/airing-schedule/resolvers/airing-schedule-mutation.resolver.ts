@@ -1,43 +1,53 @@
-import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Context, Int, ResolveField, Resolver } from '@nestjs/graphql';
 import { ICustomContext } from '../../../common/models/interfaces';
 import {
-    GenreMutationType,
-    GenreRootResolver,
+    AiringScheduleMutationType,
+    AiringScheduleRootResolver,
 } from './airing-schedule-root.resolver';
-import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
-import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
-import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
-import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
-import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
-import { GenreService } from '../services/genre.service';
+import { DeleteAiringScheduleResultsType } from '../models/results/delete-airing-schedule-results.type';
+import { CreateAiringScheduleResultsType } from '../models/results/create-airing-schedule-results.type';
+import { CreateAiringScheduleInputType } from '../models/inputs/create-airing-schedule-input.type';
+import { UpdateAiringScheduleResultsType } from '../models/results/update-airing-schedule-results.type';
+import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-schedule-input.type';
+import { AiringScheduleService } from '../services/airing-schedule.service';
 
-@Resolver(GenreMutationType)
-export class GenreMutationResolver extends GenreRootResolver {
-    constructor(private genreService: GenreService) {
+@Resolver(AiringScheduleMutationType)
+export class AiringScheduleMutationResolver extends AiringScheduleRootResolver {
+    constructor(private airingScheduleService: AiringScheduleService) {
         super();
     }
 
-    @ResolveField(() => CreateGenreResultsType)
-    async createGenre(
-        @Args() args: CreateGenreInputType,
+    @ResolveField(() => CreateAiringScheduleResultsType)
+    async createAiringSchedule(
+        @Args({ name: 'scheduled_animes_add', type: () => [String] })
+        scheduled_animes_add: string[],
+        @Args({ name: 'episodes', type: () => [Int] }) episodes: number[],
         @Context() ctx: ICustomContext,
-    ): Promise<CreateGenreResultsType> {
-        return await this.genreService.createGenre(args, ctx);
+    ): Promise<CreateAiringScheduleResultsType> {
+        return await this.airingScheduleService.createAiringSchedule(
+            scheduled_animes_add,
+            episodes,
+            ctx,
+        );
     }
 
-    @ResolveField(() => UpdateGenreResultsType)
-    async updateGenre(
-        @Args() args: UpdateGenreInputType,
-        @Context() ctx: ICustomContext,
-    ): Promise<UpdateGenreResultsType> {
-        return await this.genreService.updateGenre(args, ctx);
-    }
+    // @ResolveField(() => UpdateAiringScheduleResultsType)
+    // async updateAiringSchedule(
+    //     @Args() args: UpdateAiringScheduleInputType,
+    //     @Context() ctx: ICustomContext,
+    // ): Promise<UpdateAiringScheduleResultsType> {
+    //     return await this.airingScheduleService.updateAiringSchedule(args, ctx);
+    // }
 
-    @ResolveField(() => DeleteGenreResultsType)
-    async deleteGenre(
-        @Args('id') id: string,
+    @ResolveField(() => DeleteAiringScheduleResultsType)
+    async deleteAiringSchedule(
+        @Args({ name: 'scheduled_animes_remove', type: () => [String] })
+        scheduled_animes_remove: string[],
         @Context() ctx: ICustomContext,
-    ): Promise<DeleteGenreResultsType> {
-        return await this.genreService.deleteGenre(id, ctx);
+    ): Promise<DeleteAiringScheduleResultsType> {
+        return await this.airingScheduleService.deleteAiringSchedule(
+            scheduled_animes_remove,
+            ctx,
+        );
     }
 }

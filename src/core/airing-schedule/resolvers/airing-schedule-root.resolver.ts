@@ -1,40 +1,54 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
-import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
-import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
-import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
-import { GetGenreResultsType } from '../models/results/get-genre-results.type';
-import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
+import { CreateAiringScheduleResultsType } from '../models/results/create-airing-schedule-results.type';
+import { UpdateAiringScheduleResultsType } from '../models/results/update-airing-schedule-results.type';
+import { DeleteAiringScheduleResultsType } from '../models/results/delete-airing-schedule-results.type';
+import { GetListAiringScheduleResultsType } from '../models/results/get-list-airing-schedule-results.type';
+import { GetAiringScheduleResultsType } from '../models/results/get-airing-schedule-results.type';
 
 @ObjectType()
 export class AiringScheduleMutationType {
-    @Field(() => CreateAiringScheduleResultsType, { description: 'Create AiringSchedule' })
-    createGenre: CreateAiringScheduleResultsType;
+    @Field(() => CreateAiringScheduleResultsType, {
+        description: 'Create Airing Schedule',
+    })
+    createAiringSchedule: CreateAiringScheduleResultsType;
 
-    @Field(() => UpdateAiringScheduleResultsType, { description: 'Update AiringSchedule' })
-    updateGenre: UpdateAiringScheduleResultsType;
+    @Field(() => UpdateAiringScheduleResultsType, {
+        description: 'Update Airing Schedule',
+    })
+    updateAiringSchedule: UpdateAiringScheduleResultsType;
 
-    @Field(() => DeleteAiringScheduleResultsType, { description: 'Delete AiringSchedule' })
-    deleteGenre: DeleteAiringScheduleResultsType;
+    @Field(() => DeleteAiringScheduleResultsType, {
+        description: 'Delete Airing Schedule',
+    })
+    deleteAiringSchedule: DeleteAiringScheduleResultsType;
 }
 
 @ObjectType()
-export class GenreQueryType {
-    @Field(() => GetGenreResultsType, { description: 'Get genre by ID' })
-    getGenre: GetGenreResultsType;
+export class AiringScheduleQueryType {
+    @Field(() => GetAiringScheduleResultsType, {
+        description: 'Get Airing Schedule by ID',
+    })
+    getAiringSchedule: GetAiringScheduleResultsType;
 
-    @Field(() => GetListGenreResultsType, { description: 'Get genre list' })
-    getGenreList: GetListGenreResultsType;
+    @Field(() => GetListAiringScheduleResultsType, {
+        description: 'Get Airing Schedule  list',
+    })
+    getAiringScheduleList: GetListAiringScheduleResultsType;
 }
 
 @Resolver()
-export class GenreRootResolver {
-    @Mutation(() => GenreMutationType, { description: 'Genre mutations' })
-    genreMutations() {
+export class AiringScheduleRootResolver {
+    @Mutation(() => AiringScheduleMutationType, {
+        description: 'Airing Schedule mutations',
+    })
+    airingScheduleMutations() {
         return {};
     }
 
-    @Query(() => GenreQueryType, { description: 'Genre queries' })
-    genreQueries() {
+    @Query(() => AiringScheduleQueryType, {
+        description: 'Airing Schedule queries',
+    })
+    airingScheduleQueries() {
         return {};
     }
 }

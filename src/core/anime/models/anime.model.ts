@@ -84,7 +84,10 @@ export class Anime {
     })
     duration: number;
 
-    @Field(() => Date, { description: 'Date format "4 apr. 03:30"' })
+    @Field(() => Date, {
+        nullable: true,
+        description: 'Date format "4 apr. 03:30"',
+    })
     next_episode: Date;
 
     @Field(() => FilmRating, {
