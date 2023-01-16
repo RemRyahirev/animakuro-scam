@@ -99,12 +99,14 @@ CREATE TABLE "auth_session" (
 CREATE TABLE "studio" (
     "id" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "studio_name" VARCHAR(64) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "name" VARCHAR(64) NOT NULL,
     "rating" REAL NOT NULL,
     "thumbnail" TEXT NOT NULL,
     "anime_count" REAL NOT NULL DEFAULT 0,
     "anime_starts" REAL NOT NULL,
     "anime_ends" REAL NOT NULL,
+    "is_animation_studio" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "studio_pkey" PRIMARY KEY ("id")
 );
@@ -142,6 +144,8 @@ CREATE TABLE "anime" (
     "preview_link" TEXT NOT NULL,
     "status_description" VARCHAR(30) NOT NULL,
     "release_status" "ReleaseStatus" NOT NULL DEFAULT 'COMPLETED',
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "anime_pkey" PRIMARY KEY ("id")
 );
@@ -180,6 +184,8 @@ CREATE TABLE "author" (
     "gender" VARCHAR(30) NOT NULL,
     "bucket_id" UUID NOT NULL,
     "bio" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "author_pkey" PRIMARY KEY ("id")
 );
@@ -197,6 +203,8 @@ CREATE TABLE "character" (
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
     "description" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "character_pkey" PRIMARY KEY ("id")
 );
@@ -204,7 +212,7 @@ CREATE TABLE "character" (
 -- CreateTable
 CREATE TABLE "genre" (
     "id" UUID NOT NULL,
-    "genre_name" VARCHAR(50) NOT NULL,
+    "name" VARCHAR(50) NOT NULL,
 
     CONSTRAINT "genre_pkey" PRIMARY KEY ("id")
 );
