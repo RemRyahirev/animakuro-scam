@@ -1,12 +1,12 @@
-import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
+import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
 import { Prisma } from '@prisma/client';
-import { SearchSortField } from '../models/enums/search-sort-field.enum';
+import { CatalogSortField } from '../models/enums/catalog-sort-field.enum';
 import { ReleaseStatus } from '../../../common/models/enums';
 import { CatalogAnimeSort } from "../models/interfaces/catalog-anime-sort";
 
-export function createSearchPrismaOptions(
+export function createCatalogAnimeOptions(
     elasticResults: string[],
-    options: Omit<SearchAnimeInputType, 'search'>,
+    options: Omit<CatalogAnimeInputType, 'search'>,
     sort: CatalogAnimeSort,
 ): Prisma.AnimeFindManyArgs {
     const { genres, ...filterOptions } = { ...options };
@@ -34,7 +34,7 @@ export function createSearchPrismaOptions(
         },
     };
 
-    if (sort.sortField === SearchSortField.RELEASE_DATE) {
+    if (sort.sortField === CatalogSortField.RELEASE_DATE) {
         prismaOptions.where = {
             ...prismaOptions.where,
             release_status: ReleaseStatus.ANNOUNCEMENT,

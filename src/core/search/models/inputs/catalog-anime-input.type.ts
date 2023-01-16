@@ -10,10 +10,10 @@ import {
 } from '../../../../common/models/enums';
 import { IsArray, IsBoolean, IsInt } from "@nestjs/class-validator";
 import { SortOrder } from "../../../../common/models/enums/sort-order.enum";
-import { SearchSortField } from "../enums/search-sort-field.enum";
+import { CatalogSortField } from "../enums/catalog-sort-field.enum";
 
 @ArgsType()
-export class SearchAnimeInputType {
+export class CatalogAnimeInputType {
     @IsOptional()
     @IsString()
     @Length(1, 100)
@@ -78,8 +78,8 @@ export class SearchAnimeInputType {
 
     @IsOptional()
     @IsString()
-    @Field(() => SearchSortField, { nullable: true })
-    sortField?: SearchSortField
+    @Field(() => CatalogSortField, { nullable: true })
+    sortField?: CatalogSortField
 
     @IsOptional()
     @IsString()

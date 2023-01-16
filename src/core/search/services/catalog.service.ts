@@ -1,29 +1,29 @@
-import { GetListSearchAnimeResultsType } from '../models/results/get-list-search-anime-results.type';
-import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
+import { GetListCatalogAnimeResultsType } from '../models/results/get-list-catalog-anime-results.type';
+import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { PaginationService } from '../../../common/services/pagination.service';
-import { createSearchPrismaOptions } from '../utils/create-search-prisma-options';
-import { SearchGrpcService } from './search.grpc.service';
+import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
+import { CatalogGrpcService } from './catalog.grpc.service';
 
 @Injectable()
-export class SearchService {
+export class CatalogService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-        private searchGrpcService: SearchGrpcService,
+        private catalogGrpcService: CatalogGrpcService,
     ) {}
 
-    async getSearchAnimeList(
-        args: SearchAnimeInputType,
-    ): Promise<GetListSearchAnimeResultsType> {
+    async getCatalogAnimeList(
+        args: CatalogAnimeInputType,
+    ): Promise<GetListCatalogAnimeResultsType> {
         const { search, sortField, sortOrder, ...filterOptions } = args;
         const sort = { sortField, sortOrder };
-        const elasticResults = await this.searchGrpcService.searchDocument(
+        const elasticResults = await this.catalogGrpcService.searchDocument(
             args.search || '',
         );
 
-        const prismaOptions = createSearchPrismaOptions(
+        const prismaOptions = createCatalogAnimeOptions(
             elasticResults.results.map((r) => r.id),
             filterOptions,
             sort,

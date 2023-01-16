@@ -9,7 +9,7 @@ import { StudioModule } from './studio/studio.module';
 import { TranslationModule } from './translation/translation.module';
 import { UserAnimeModule } from './user-anime/user-anime.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
-import { SearchModule } from "./search/search.module";
+import { CatalogModule } from "./search/catalog.module";
 
 @Module({
     imports: [
@@ -23,7 +23,7 @@ import { SearchModule } from "./search/search.module";
         TranslationModule,
         UserAnimeModule,
         UserProfileModule,
-        SearchModule,
+        CatalogModule,
     ],
     exports: [
         AuthModule,
@@ -36,7 +36,7 @@ import { SearchModule } from "./search/search.module";
         TranslationModule,
         UserAnimeModule,
         UserProfileModule,
-        SearchModule,
+        CatalogModule,
     ],
 })
 export class CoreModule {}

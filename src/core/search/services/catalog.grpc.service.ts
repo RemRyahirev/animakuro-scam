@@ -5,7 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
 
 @Injectable()
-export class SearchGrpcService implements OnModuleInit {
+export class CatalogGrpcService implements OnModuleInit {
     constructor(@Inject('DOCUMENT_PACKAGE') private client: ClientGrpc) {}
 
     private documentService: DocumentService;

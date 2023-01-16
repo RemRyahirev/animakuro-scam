@@ -1,19 +1,19 @@
-import { SearchQueryType, SearchRootResolver } from './search-root.resolver';
-import { GetListSearchAnimeResultsType } from '../models/results/get-list-search-anime-results.type';
-import { SearchAnimeInputType } from '../models/inputs/search-anime-input.type';
-import { SearchService } from '../services/search.service';
+import { CatalogQueryType, CatalogRootResolver } from "./catalog-root.resolver";
+import { GetListCatalogAnimeResultsType } from '../models/results/get-list-catalog-anime-results.type';
+import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
+import { CatalogService } from '../services/catalog.service';
 import { Resolver, ResolveField, Args } from '@nestjs/graphql';
 
-@Resolver(SearchQueryType)
-export class SearchQueryResolver extends SearchRootResolver {
-    constructor(private searchService: SearchService) {
+@Resolver(CatalogQueryType)
+export class CatalogQueryResolver extends CatalogRootResolver {
+    constructor(private catalogService: CatalogService) {
         super();
     }
 
-    @ResolveField(() => GetListSearchAnimeResultsType)
-    async getSearchAnimeList(
-        @Args() args: SearchAnimeInputType,
-    ): Promise<GetListSearchAnimeResultsType> {
-        return await this.searchService.getSearchAnimeList(args);
+    @ResolveField(() => GetListCatalogAnimeResultsType)
+    async getCatalogAnimeList(
+        @Args() args: CatalogAnimeInputType,
+    ): Promise<GetListCatalogAnimeResultsType> {
+        return await this.catalogService.getCatalogAnimeList(args);
     }
 }

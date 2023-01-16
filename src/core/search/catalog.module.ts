@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { SearchService } from './services/search.service';
-import { SearchRootResolver } from './resolvers/search-root.resolver';
-import { SearchQueryResolver } from './resolvers/search-query.resolver';
+import { CatalogService } from './services/catalog.service';
+import { CatalogRootResolver } from './resolvers/catalog-root.resolver';
+import { CatalogQueryResolver } from './resolvers/catalog-query.resolver';
 import { ClientsModule } from '@nestjs/microservices';
 import { grpcClientConfig } from '../../common/grpc';
-import { SearchGrpcService } from "./services/search.grpc.service";
+import { CatalogGrpcService } from "./services/catalog.grpc.service";
 
 @Module({
     imports: [
@@ -15,7 +15,7 @@ import { SearchGrpcService } from "./services/search.grpc.service";
             },
         ])
     ],
-    providers: [SearchService, SearchRootResolver, SearchQueryResolver, SearchGrpcService],
+    providers: [CatalogService, CatalogRootResolver, CatalogQueryResolver, CatalogGrpcService],
     exports: [],
 })
-export class SearchModule {}
+export class CatalogModule {}
