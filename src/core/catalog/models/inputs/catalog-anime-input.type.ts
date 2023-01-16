@@ -8,7 +8,7 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
-import { IsArray, IsBoolean, IsInt } from "@nestjs/class-validator";
+import { IsArray, IsBoolean, IsDate, IsInt } from "@nestjs/class-validator";
 import { SortOrder } from "../../../../common/models/enums/sort-order.enum";
 import { CatalogSortField } from "../enums/catalog-sort-field.enum";
 
@@ -85,4 +85,14 @@ export class CatalogAnimeInputType {
     @IsString()
     @Field(() => SortOrder, { nullable: true })
     sortOrder?: SortOrder
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    date_start?: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, { nullable: true })
+    date_end?: Date;
 }

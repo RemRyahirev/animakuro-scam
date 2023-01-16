@@ -2,14 +2,14 @@ import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type
 import { Prisma } from '@prisma/client';
 import { CatalogSortField } from '../models/enums/catalog-sort-field.enum';
 import { ReleaseStatus } from '../../../common/models/enums';
-import { CatalogAnimeSort } from "../models/interfaces/catalog-anime-sort";
+import { CatalogAnimeSort } from '../models/interfaces/catalog-anime-sort';
 
 export function createCatalogAnimeOptions(
     elasticResults: string[],
     options: Omit<CatalogAnimeInputType, 'search'>,
     sort: CatalogAnimeSort,
 ): Prisma.AnimeFindManyArgs {
-    const { genres, ...filterOptions } = { ...options };
+    const { genres, date_start, date_end, ...filterOptions } = { ...options };
     const prismaOptions: Prisma.AnimeFindManyArgs = {
         where: {
             id: {
@@ -19,9 +19,15 @@ export function createCatalogAnimeOptions(
             genres: {
                 some: {
                     genre_name: {
-                        in: genres
-                    }
-                }
+                        in: genres,
+                    },
+                },
+            },
+            date_start: {
+                gte: date_start
+            },
+            date_end: {
+                lte: date_end
             }
         },
         select: {
