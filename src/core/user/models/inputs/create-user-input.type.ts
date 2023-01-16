@@ -24,11 +24,11 @@ export class CreateUserInputType {
 
     @IsOptional()
     @IsDate()
-    @Field({ nullable: true })
+    @Field(() => Date, { nullable: true })
     birthday?: Date | null;
 
     @IsOptional()
-    @Field({ nullable: true })
+    @Field(() => String, { nullable: true })
     avatar?: string | null;
 
     @IsEnum(Gender)

@@ -122,10 +122,7 @@ export class AuthService {
     ): Promise<RegisterResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
         const user = await this.prisma.user.create({
-            data: {
-                ...args,
-                gender: Gender.UNSPECIFIED
-            }
+            data: args as any
         });
         const hash = this.tokenService.generateToken(
             user.id,
