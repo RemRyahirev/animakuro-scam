@@ -155,9 +155,7 @@ export class Anime {
     })
     authors: Author[];
 
-    @Field(() => [RelatingAnime], {
-        description: 'List of relating animes',
-    })
+    @HideField()
     relating_animes: RelatingAnime[];
 
     @Field(() => [RelatingAnime], {
@@ -165,10 +163,7 @@ export class Anime {
     })
     related_by_animes: RelatingAnime[];
 
-    @Field(() => [SimilarAnime], {
-        description: 'List of similar animes',
-        nullable: true,
-    })
+    @HideField()
     similar_animes: SimilarAnime[];
 
     @Field(() => [SimilarAnime], {
