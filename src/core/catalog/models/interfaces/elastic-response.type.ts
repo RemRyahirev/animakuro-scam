@@ -1,8 +1,9 @@
 export type ElasticResults = {
     results: ElasticResultsItem[];
+    done: boolean
 };
 
-interface ElasticResultsItem {
+type ElasticResultsItem = {
     id: string;
     matchScore: string;
 }

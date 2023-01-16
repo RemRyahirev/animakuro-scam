@@ -5,7 +5,8 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
 import { CatalogGrpcService } from './catalog.grpc.service';
-import { PaginationInputType } from "../../../common/models/inputs";
+import { PaginationInputType } from '../../../common/models/inputs';
+import { ElasticResults } from '../models/interfaces/elastic-response.type';
 
 @Injectable()
 export class CatalogService {
@@ -17,30 +18,47 @@ export class CatalogService {
 
     async getCatalogAnimeList(
         args: CatalogAnimeInputType,
-        pages: PaginationInputType
+        pages: PaginationInputType,
     ): Promise<GetListCatalogAnimeResultsType> {
         const { search, sortField, sortOrder, ...filterOptions } = args;
         const sort = { sortField, sortOrder };
-        const elasticResults = await this.catalogGrpcService.searchDocument(
-            args.search || '',
-        );
+
+        let elasticResults: ElasticResults = {
+            results: [],
+            done: false,
+        };
+
+        if (search && search.length >= 3) {
+            const { results } = await this.catalogGrpcService.searchDocument(
+                search,
+            );
+
+            console.log('request is done');
+            elasticResults = {
+                results,
+                done: true,
+            };
+        }
 
         const prismaOptions = createCatalogAnimeOptions(
-            elasticResults.results.map((r) => r.id),
+            elasticResults,
             filterOptions,
             sort,
-            pages
+            pages,
         );
 
         const animeList = await this.prisma.anime.findMany(prismaOptions);
 
-        const pagination = await this.paginationService.getPagination('anime', pages);
+        const pagination = await this.paginationService.getPagination(
+            'anime',
+            pages,
+        );
 
         return {
             success: true,
             errors: [],
             animeList: animeList as any,
-            pagination
+            pagination,
         };
     }
 }
