@@ -3,6 +3,7 @@ import 'reflect-metadata';
 
 export enum CatalogAnimeSortField {
     TITLE = 'title',
+    SCORE = 'score',
     RELEASE_DATE = 'release_date',
     YEAR = 'year',
     COUNTRY_OF_ORIGIN = 'country_of_origin',
