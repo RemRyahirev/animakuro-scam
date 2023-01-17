@@ -33,6 +33,14 @@ export function createCatalogAnimeOptions(
                 lte: date_end,
             },
         },
+        include: {
+            genres: true,
+            authors: true,
+            characters: true,
+            studios: true,
+            relating_animes: true,
+            similar_animes: true,
+        },
     };
 
     if (sort.sort_field === CatalogAnimeSortField.RELEASE_DATE) {
