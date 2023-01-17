@@ -1,4 +1,4 @@
-import { ArgsType, Field, Int } from '@nestjs/graphql';
+import { ArgsType, Field, Int, ID } from '@nestjs/graphql';
 import {
     AnimeType,
     FilmRating,
@@ -13,8 +13,8 @@ import {
     IsDate,
     IsInt,
     IsOptional,
-    IsString,
-} from '@nestjs/class-validator';
+    IsString, IsUUID
+} from "@nestjs/class-validator";
 import { CatalogBasicInputType } from './catalog-basic-input.type';
 import { CatalogAnimeSortField } from "../enums/catalog-anime-sort-field.enum";
 
@@ -77,8 +77,9 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     year?: number;
 
     @IsOptional()
+    @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [String], { nullable: true })
+    @Field(() => [ID], { nullable: true })
     genres?: string[];
 
     @IsOptional()

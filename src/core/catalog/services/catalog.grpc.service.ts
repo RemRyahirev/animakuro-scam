@@ -28,7 +28,7 @@ export class CatalogGrpcService implements OnModuleInit {
             );
 
             elasticResults = {
-                results,
+                results: results ? results : [],
                 done: true,
             };
         }

@@ -21,7 +21,7 @@ export function createCatalogAnimeOptions(
             ...filterOptions,
             genres: {
                 some: {
-                    name: {
+                    id: {
                         in: genres,
                     },
                 },
@@ -32,14 +32,6 @@ export function createCatalogAnimeOptions(
             date_end: {
                 lte: date_end,
             },
-        },
-        select: {
-            id: true,
-            title: true,
-            year: true,
-            format: true,
-            episodes: true,
-            preview_link: true,
         },
     };
 
