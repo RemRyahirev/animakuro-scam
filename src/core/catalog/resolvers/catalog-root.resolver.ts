@@ -1,12 +1,18 @@
-import { GetListCatalogAnimeResultsType } from '../models/results/get-list-catalog-anime-results.type';
+import { GetCatalogAnimeResultsType } from '../models/results/get-catalog-anime-results.type';
 import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { GetCatalogAuthorResultsType } from "../models/results/get-catalog-author-results.type";
 
 @ObjectType()
 export class CatalogQueryType {
-    @Field(() => GetListCatalogAnimeResultsType, {
+    @Field(() => GetCatalogAnimeResultsType, {
         description: 'Search for anime',
     })
-    getCatalogAnimeList: GetListCatalogAnimeResultsType;
+    getCatalogAnimeList: GetCatalogAnimeResultsType;
+
+    @Field(() => GetCatalogAuthorResultsType, {
+        description: 'Search for authors',
+    })
+    getCatalogAuthorList: GetCatalogAuthorResultsType;
 }
 
 @Resolver()

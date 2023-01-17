@@ -1,4 +1,3 @@
-import { IsOptional, IsString, Length } from 'class-validator';
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import {
     AnimeType,
@@ -8,17 +7,23 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
-import { IsArray, IsBoolean, IsDate, IsInt } from "@nestjs/class-validator";
-import { SortOrder } from "../../../../common/models/enums/sort-order.enum";
-import { CatalogSortField } from "../enums/catalog-sort-field.enum";
+import {
+    IsArray,
+    IsBoolean,
+    IsDate,
+    IsInt,
+    IsOptional,
+    IsString,
+} from '@nestjs/class-validator';
+import { CatalogBasicInputType } from './catalog-basic-input.type';
+import { CatalogAnimeSortField } from "../enums/catalog-anime-sort-field.enum";
 
 @ArgsType()
-export class CatalogAnimeInputType {
+export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsString()
-    @Length(1, 100)
-    @Field(() => String, { nullable: true })
-    search?: string;
+    @Field(() => CatalogAnimeSortField, { nullable: true })
+    sortField?: CatalogAnimeSortField
 
     @IsOptional()
     @IsString()
@@ -85,14 +90,4 @@ export class CatalogAnimeInputType {
     @IsDate()
     @Field(() => Date, { nullable: true })
     date_end?: Date;
-
-    @IsOptional()
-    @IsString()
-    @Field(() => CatalogSortField, { nullable: true })
-    sortField?: CatalogSortField
-
-    @IsOptional()
-    @IsString()
-    @Field(() => SortOrder, { nullable: true })
-    sortOrder?: SortOrder
 }

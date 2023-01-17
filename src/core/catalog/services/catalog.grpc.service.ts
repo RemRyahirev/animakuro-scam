@@ -3,6 +3,7 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { DocumentService } from '../../../common/grpc';
 import { lastValueFrom } from 'rxjs';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
+import { CatalogIndices } from '../models/enums/catalog-indices.enum';
 
 @Injectable()
 export class CatalogGrpcService implements OnModuleInit {
@@ -15,9 +16,23 @@ export class CatalogGrpcService implements OnModuleInit {
             this.client.getService<DocumentService>('DocumentService');
     }
 
-    async searchDocument(search: string) {
-        return (await lastValueFrom(
-            this.documentService.searchDocument({ search, index: 'backend-anime' }),
-        )) as ElasticResults;
+    async searchDocument(search: string | undefined, index: CatalogIndices) {
+        let elasticResults: ElasticResults = {
+            results: [],
+            done: false,
+        };
+
+        if (search && search.length >= 3) {
+            const { results } = await lastValueFrom(
+                this.documentService.searchDocument({ search, index }),
+            );
+
+            elasticResults = {
+                results,
+                done: true,
+            };
+        }
+
+        return elasticResults;
     }
 }

@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 import 'reflect-metadata';
 
-export enum CatalogSortField {
+export enum CatalogAnimeSortField {
     TITLE = 'title',
     RELEASE_DATE = 'release_date',
 }
 
-registerEnumType(CatalogSortField, {
+registerEnumType(CatalogAnimeSortField, {
     name: 'CatalogSortField',
 });
