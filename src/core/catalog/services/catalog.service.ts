@@ -7,9 +7,9 @@ import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options
 import { CatalogGrpcService } from './catalog.grpc.service';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { CatalogIndices } from '../models/enums/catalog-indices.enum';
-import { GetCatalogAuthorResultsType } from "../models/results/get-catalog-author-results.type";
-import { createCatalogAuthorOptions } from "../utils/create-catalog-author-options";
-import { CatalogAuthorInputType } from "../models/inputs/catalog-author-input-type";
+import { GetCatalogAuthorResultsType } from '../models/results/get-catalog-author-results.type';
+import { createCatalogAuthorOptions } from '../utils/create-catalog-author-options';
+import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input-type';
 
 @Injectable()
 export class CatalogService {

@@ -23,7 +23,7 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsString()
     @Field(() => CatalogAnimeSortField, { nullable: true })
-    sortField?: CatalogAnimeSortField
+    sort_field?: CatalogAnimeSortField
 
     @IsOptional()
     @IsString()

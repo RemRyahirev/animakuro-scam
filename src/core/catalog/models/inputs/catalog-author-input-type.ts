@@ -8,7 +8,7 @@ export class CatalogAuthorInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsString()
     @Field(() => CatalogAuthorSortField, { nullable: true })
-    sortField?: CatalogAuthorSortField
+    sort_field?: CatalogAuthorSortField
 
     @IsOptional()
     @IsInt()

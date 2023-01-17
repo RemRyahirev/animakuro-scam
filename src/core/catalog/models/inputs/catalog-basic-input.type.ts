@@ -6,12 +6,12 @@ import { SortOrder } from "../../../../common/models/enums/sort-order.enum";
 export class CatalogBasicInputType {
     @IsOptional()
     @IsString()
-    @Length(1, 100)
+    @Length(0, 100)
     @Field(() => String, { nullable: true })
     search?: string;
 
     @IsOptional()
     @IsString()
     @Field(() => SortOrder, { nullable: true })
-    sortOrder?: SortOrder
+    sort_order?: SortOrder
 }
