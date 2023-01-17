@@ -12,5 +12,10 @@ export class GetCatalogAnimeResultsType extends BaseResultsType {
         description: 'Catalog Anime list',
     })
     animeList: Anime[];
+
+    @Field(() => PaginationResultsType, {
+        nullable: false,
+        description: 'Pagination data',
+    })
     pagination: PaginationResultsType;
 }

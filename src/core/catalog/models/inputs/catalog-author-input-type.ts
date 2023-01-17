@@ -1,23 +1,26 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { CatalogBasicInputType } from './catalog-basic-input.type';
 import { IsInt, IsOptional, IsString, IsArray } from '@nestjs/class-validator';
-import { CatalogAuthorSortField } from "../enums/catalog-author-sort-field.enum";
+import { CatalogAuthorSortField } from '../enums/catalog-author-sort-field.enum';
 
 @ArgsType()
 export class CatalogAuthorInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsString()
-    @Field(() => CatalogAuthorSortField, { nullable: true })
-    sort_field?: CatalogAuthorSortField
+    @Field(() => CatalogAuthorSortField, {
+        nullable: true,
+        description: 'Field for sorting',
+    })
+    sort_field?: CatalogAuthorSortField;
 
     @IsOptional()
     @IsInt()
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, { nullable: true, description: 'Minimal Author\'s age' })
     min_age?: number;
 
     @IsOptional()
     @IsInt()
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, { nullable: true,  description: 'Maximum Author\'s age' })
     max_age?: number;
 
     @IsOptional()

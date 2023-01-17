@@ -13,17 +13,21 @@ import {
     IsDate,
     IsInt,
     IsOptional,
-    IsString, IsUUID
-} from "@nestjs/class-validator";
+    IsString,
+    IsUUID,
+} from '@nestjs/class-validator';
 import { CatalogBasicInputType } from './catalog-basic-input.type';
-import { CatalogAnimeSortField } from "../enums/catalog-anime-sort-field.enum";
+import { CatalogAnimeSortField } from '../enums/catalog-anime-sort-field.enum';
 
 @ArgsType()
 export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsString()
-    @Field(() => CatalogAnimeSortField, { nullable: true })
-    sort_field?: CatalogAnimeSortField
+    @Field(() => CatalogAnimeSortField, {
+        nullable: true,
+        description: 'Field for sorting',
+    })
+    sort_field?: CatalogAnimeSortField;
 
     @IsOptional()
     @IsString()
@@ -79,7 +83,7 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], { nullable: true })
+    @Field(() => [ID], { nullable: true, description: 'Genre ID string' })
     genres?: string[];
 
     @IsOptional()

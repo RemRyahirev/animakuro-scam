@@ -7,11 +7,11 @@ export class CatalogBasicInputType {
     @IsOptional()
     @IsString()
     @Length(0, 100)
-    @Field(() => String, { nullable: true })
+    @Field(() => String, { nullable: true, description: 'Search string' })
     search?: string;
 
     @IsOptional()
     @IsString()
-    @Field(() => SortOrder, { nullable: true })
+    @Field(() => SortOrder, { nullable: true, description: 'Sort order' })
     sort_order?: SortOrder
 }

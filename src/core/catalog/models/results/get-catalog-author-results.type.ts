@@ -9,5 +9,10 @@ export class GetCatalogAuthorResultsType extends BaseResultsType {
         description: 'Catalog Author list',
     })
     authorList: Author[];
+
+    @Field(() => PaginationResultsType, {
+        nullable: false,
+        description: 'Pagination data',
+    })
     pagination: PaginationResultsType;
 }
