@@ -93,46 +93,36 @@ export class AiringScheduleService {
         };
     }
 
-    // async updateAiringSchedule(
-    //     scheduled_animes_add: string[],
-    //     scheduled_animes: string[]
-    //     episodes: number[],
-    //     ctx: ICustomContext,
-    // ): Promise<UpdateAiringScheduleResultsType> {
-    //     for (let i = 0; i < scheduled_animes_add.length; i++) {
-    //         const anime = await this.prisma.anime.findUnique({
-    //             where: { id: scheduled_animes_add[i] },
-    //         });
-    //         const next_episode = anime?.next_episode || '';
+    async updateAiringSchedule(
+        id: string,
+        anime_id: string,
+        episode: number,
+        airing_at: Date,
+        time_until_airing: number,
+    ): Promise<UpdateAiringScheduleResultsType> {
+        await this.prisma.airingSchedule.update({
+            where: { id },
+            data: {
+                anime_id,
+                episode,
+                airing_at,
+                time_until_airing,
+            },
+        });
 
-    //         await this.prisma.airingSchedule.update({
-    //             where: {
+        const airing_schedule: any =
+            await this.prisma.airingSchedule.findUnique({
+                where: { id },
+                include: {
+                    anime: true,
+                },
+            });
 
-    //             }
-    //             data: {
-    //                 anime_id: scheduled_animes_add[i],
-    //                 episode: episodes[i],
-    //                 airing_at: next_episode,
-    //                 time_until_airing: Math.round(
-    //                     (+next_episode - +new Date()) / 1000,
-    //                 ),
-    //             },
-    //         });
-    //     }
-
-    //     const airing_schedule: any = await this.prisma.airingSchedule.findMany({
-    //         where: {
-    //             anime_id: { in: scheduled_animes_add },
-    //         },
-    //         include: {
-    //             anime: true,
-    //         },
-    //     });
-    //     return {
-    //         success: true,
-    //         genre,
-    //     };
-    // }
+        return {
+            success: true,
+            airing_schedule,
+        };
+    }
 
     async deleteAiringSchedule(
         scheduled_animes_remove: string[],

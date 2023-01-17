@@ -17,6 +17,15 @@ import { MailerModule } from './mailer/mailer.module';
             driver: ApolloDriver,
             autoSchemaFile: true,
             fieldResolverEnhancers: ['guards', 'interceptors'],
+            playground: {
+                settings: {
+                    "request.credentials": "include"
+                }
+            },
+            cors: {
+                credentials: true,
+                origin: true,
+            },
         }),
         ThrottlerModule.forRoot({
             ttl: 60,

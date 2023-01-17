@@ -32,8 +32,16 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
-                relating_animes: true,
-                similar_animes: true,
+                related_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
+                similar_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             },
         });
         return {
@@ -53,8 +61,16 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
-                relating_animes: true,
-                similar_animes: true,
+                related_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
+                similar_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -143,8 +159,16 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
-                relating_animes: true,
-                similar_animes: true,
+                related_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
+                similar_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             } as any,
         });
         return {
@@ -170,8 +194,16 @@ export class AnimeService {
                 authors: true,
                 characters: true,
                 studios: true,
-                relating_animes: true,
-                similar_animes: true,
+                related_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
+                similar_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             } as any,
         });
         return {
@@ -199,7 +231,11 @@ export class AnimeService {
         const anime = await this.prisma.anime.findUnique({
             where: { id },
             include: {
-                related_by_animes: true,
+                related_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             } as any,
         });
 
@@ -232,7 +268,11 @@ export class AnimeService {
         const anime = await this.prisma.anime.findUnique({
             where: { id },
             include: {
-                relating_animes: true,
+                related_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             },
         });
 
@@ -286,7 +326,11 @@ export class AnimeService {
         const anime = await this.prisma.anime.findUnique({
             where: { id },
             include: {
-                similar_by_animes: true,
+                similar_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             } as any,
         });
 
@@ -319,7 +363,11 @@ export class AnimeService {
         const anime = await this.prisma.anime.findUnique({
             where: { id },
             include: {
-                similar_animes: true,
+                similar_by_animes: {
+                    include: {
+                        child_anime: true,
+                    },
+                },
             },
         });
 
@@ -356,9 +404,7 @@ export class AnimeService {
         };
     }
 
-    async deleteAnime(
-        id: string,
-    ): Promise<DeleteAnimeResultsType> {
+    async deleteAnime(id: string): Promise<DeleteAnimeResultsType> {
         const anime = await this.prisma.anime.delete({
             where: { id },
             include: {

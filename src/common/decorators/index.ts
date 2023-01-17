@@ -6,3 +6,5 @@ export * from './account-limit.decorator';
 export * from './compare-password.decorator';
 export * from './entity-exists.decorator';
 export * from './social-profile.decorator';
+export * from './access-token.decorator';
+export * from './custom-session.decorator';

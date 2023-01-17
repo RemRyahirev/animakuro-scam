@@ -1,4 +1,9 @@
-import { SocialProfile, ValidateSchemas } from 'common/decorators';
+import {
+    AccessToken,
+    CustomSession,
+    SocialProfile,
+    ValidateSchemas,
+} from 'common/decorators';
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { AuthMutationType, AuthRootResolver } from './auth-root.resolver';
@@ -14,9 +19,7 @@ import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
-    constructor(
-        protected authService: AuthService,
-    ) {
+    constructor(protected authService: AuthService) {
         super();
     }
 
@@ -39,32 +42,26 @@ export class AuthMutationResolver extends AuthRootResolver {
 
     @ResolveField(() => LogoutResultsType)
     async logout(
-        @Context() context: ExecutionContext,
+        @CustomSession() session: Record<string, any>,
+        @AccessToken() access_token: string,
     ): Promise<LogoutResultsType> {
-        return await this.authService.logout(context);
+        return await this.authService.logout(session, access_token);
     }
 
-    // @UseGuards(SocialAuthGuard)
     @ResolveField(() => LoginResultsType)
-    async loginSocial(
-        @Args() args: LoginSocialInputType,
-    ) {
+    async loginSocial(@Args() args: LoginSocialInputType) {
         return await this.authService.loginSocial(
             args.access_token,
             args.auth_type,
         );
     }
 
-    // @UseGuards(SocialAuthGuard)
     @ResolveField(() => RegisterResultsType)
     async registerSocial(
         @SocialProfile() profile: Profile,
         @Args('code') code: string,
         @Args('auth_type') auth_type: AuthType,
     ) {
-        return await this.authService.registerSocial(
-            code,
-            auth_type,
-        );
+        return await this.authService.registerSocial(code, auth_type);
     }
 }

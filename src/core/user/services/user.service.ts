@@ -10,6 +10,7 @@ import { UpdateUserResultsType } from '../models/results/update-user-results.typ
 import { GetListUserResultsType } from "../models/results/get-list-user-results.type";
 import { User } from "../models/user.model";
 import { GetUserResultsType } from "../models/results/get-user-results.type";
+import { Gender } from "../../../common/models/enums";
 
 @Injectable()
 export class UserService {
@@ -24,8 +25,8 @@ export class UserService {
         const userList = await this.prisma.user.findMany({
             ...transformPaginationUtil(args),
             include: {
-                auth: true
-            }
+                auth: true,
+            },
         });
         const pagination = await this.paginationService.getPagination(
             'user',
@@ -54,8 +55,8 @@ export class UserService {
             where: { email },
             ...transformPaginationUtil(args),
             include: {
-                auth: true
-            }
+                auth: true,
+            },
         });
         const pagination = await this.paginationService.getPagination(
             'user',
@@ -68,22 +69,13 @@ export class UserService {
         };
     }
 
-    async findOneById(id: string) {
+    async findOneById(id: string): Promise<User | null> {
         return await this.prisma.user.findUnique({
             where: {
                 id,
             },
             include: {
-                auth: true
-            }
-        });
-    }
-
-    async findUserSession(sessionId: string, uid: string) {
-        return await this.prisma.authSession.findFirst({
-            where: {
-                id: sessionId,
-                user_id: uid,
+                auth: true,
             },
         });
     }
@@ -105,8 +97,8 @@ export class UserService {
                 username,
             },
             include: {
-                auth: true
-            }
+                auth: true,
+            },
         });
     }
 
@@ -116,12 +108,12 @@ export class UserService {
         const user = await this.prisma.user.create({
             data: args as any,
             include: {
-                auth: true
-            }
+                auth: true,
+            },
         });
         return {
             success: true,
-            user: user as any,
+            user,
         };
     }
 
@@ -132,12 +124,12 @@ export class UserService {
             where: { id: args.id },
             data: args as any,
             include: {
-                auth: true
-            }
+                auth: true,
+            },
         });
         return {
             success: true,
-            user: user as any,
+            user,
         };
     }
 }

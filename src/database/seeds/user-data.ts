@@ -7,6 +7,7 @@ export const userData = async () => [
         username: 'Alexander',
         password: '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         gender: Gender.MALE,
+        is_email_confirmed: true,
     },
     {
         id: '5b594675-a3c6-4e1b-acaa-2e612419b9e2',
@@ -14,6 +15,7 @@ export const userData = async () => [
         username: 'Anatolii',
         password: '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         gender: Gender.MALE,
+        is_email_confirmed: true,
     },
     {
         id: '71d46841-94f0-4310-88c3-662b7fd817ec',
@@ -21,6 +23,7 @@ export const userData = async () => [
         username: 'Evgenii',
         password: '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         gender: Gender.MALE,
+        is_email_confirmed: true,
     },
     {
         id: '03c6c54d-8597-43b8-a793-4fb36522cc61',
@@ -28,6 +31,7 @@ export const userData = async () => [
         username: 'Oleg',
         password: '$2b$10$UTBzDrug3h9HvegQbhg6UuEqg8Be8hj8JS2WD3AJl9cg7RdfWjfHi', // another-password
         gender: Gender.MALE,
+        is_email_confirmed: false
     },
     {
         id: '4c323fe8-d35a-4e84-9f75-92f20fcec028',
@@ -35,6 +39,7 @@ export const userData = async () => [
         username: 'Irina',
         password: '$2b$10$LfmYoVBbTMMaRfR4VZRUw.9UGRla.UDJ0icOkj4LrpUJomMFdzlXm', // some-password
         gender: Gender.FEMALE,
+        is_email_confirmed: false
     },
     {
         id: '2b2133d4-6973-4c15-88a6-8b8c19c96fab',
@@ -42,5 +47,6 @@ export const userData = async () => [
         username: 'Svetlana',
         password: '$2b$10$LfmYoVBbTMMaRfR4VZRUw.9UGRla.UDJ0icOkj4LrpUJomMFdzlXm', // some-password
         gender: Gender.FEMALE,
+        is_email_confirmed: false
     },
 ];

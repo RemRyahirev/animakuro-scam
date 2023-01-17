@@ -57,13 +57,13 @@ CREATE TABLE "users" (
     "id" UUID NOT NULL,
     "username" VARCHAR(64) NOT NULL,
     "email" VARCHAR(320),
-    "is_email_confired" BOOLEAN NOT NULL DEFAULT false,
+    "is_email_confirmed" BOOLEAN DEFAULT false,
     "password" TEXT NOT NULL,
     "avatar" TEXT,
     "birthday" DATE,
-    "gender" "Gender" NOT NULL DEFAULT 'UNSPECIFIED',
+    "gender" "Gender" NOT NULL,
     "created_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deleted" BOOLEAN NOT NULL DEFAULT false,
+    "deleted" BOOLEAN DEFAULT false,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
