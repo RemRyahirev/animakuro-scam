@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "assets": ["**/*.proto"],
+        "assets": ["**/*.proto", "**/*.handlebars"],
         "watchAssets": true
     },
   "collection": "@nestjs/schematics",
