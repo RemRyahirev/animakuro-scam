@@ -13,7 +13,12 @@ export class CatalogAuthorInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsInt()
     @Field(() => Int, { nullable: true })
-    age?: number;
+    min_age?: number;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, { nullable: true })
+    max_age?: number;
 
     @IsOptional()
     @IsString()

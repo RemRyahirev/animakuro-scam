@@ -7,5 +7,6 @@ export const grpcClientConfig: ClientOptions = {
         package: 'document',
         protoPath: join(__dirname, './document.proto'),
         url: process.env.GRPC_URL,
+        loader: { keepCase: true },
     },
 };

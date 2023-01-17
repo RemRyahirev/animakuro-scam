@@ -23,8 +23,8 @@ export class CatalogService {
         args: CatalogAnimeInputType,
         pages: PaginationInputType,
     ): Promise<GetCatalogAnimeResultsType> {
-        const { search, sortField, sortOrder, ...filterOptions } = args;
-        const sort = { sortField, sortOrder };
+        const { search, sort_field, sort_order, ...filterOptions } = args;
+        const sort = { sort_field, sort_order };
 
         const elasticResults = await this.catalogGrpcService.searchDocument(
             search,
@@ -57,8 +57,8 @@ export class CatalogService {
         args: CatalogAuthorInputType,
         pages: PaginationInputType,
     ): Promise<GetCatalogAuthorResultsType> {
-        const { search, sortField, sortOrder, ...filterOptions } = args;
-        const sort = { sortField, sortOrder };
+        const { search, sort_field, sort_order, ...filterOptions } = args;
+        const sort = { sort_field, sort_order };
 
         const elasticResults = await this.catalogGrpcService.searchDocument(
             search,

@@ -11,18 +11,22 @@ export function createCatalogAuthorOptions(
     sort: CatalogAuthorSort,
     pagination: PaginationInputType,
 ): Prisma.AuthorFindManyArgs {
-    const { ...filterOptions } = options
+    const { min_age, max_age, ...filterOptions } = options
 
     const prismaOptions: Prisma.AuthorFindManyArgs = {
         ...transformPaginationUtil(pagination),
         where: {
-            ...filterOptions
+            ...filterOptions,
+            age: {
+                gte: min_age,
+                lte: max_age
+            }
         }
     }
 
-    if (sort.sortField) {
+    if (sort.sort_field) {
         prismaOptions.orderBy = {
-            [sort.sortField]: sort.sortOrder,
+            [sort.sort_field]: sort.sort_order,
         };
     }
 

@@ -43,7 +43,7 @@ export function createCatalogAnimeOptions(
         },
     };
 
-    if (sort.sortField === CatalogAnimeSortField.RELEASE_DATE) {
+    if (sort.sort_field === CatalogAnimeSortField.RELEASE_DATE) {
         prismaOptions.where = {
             ...prismaOptions.where,
             release_status: ReleaseStatus.ANNOUNCEMENT,
@@ -53,11 +53,11 @@ export function createCatalogAnimeOptions(
             },
         };
         prismaOptions.orderBy = {
-            date_start: sort.sortOrder,
+            date_start: sort.sort_order,
         };
-    } else if (sort.sortField) {
+    } else if (sort.sort_field) {
         prismaOptions.orderBy = {
-            [sort.sortField]: sort.sortOrder,
+            [sort.sort_field]: sort.sort_order,
         };
     }
 
