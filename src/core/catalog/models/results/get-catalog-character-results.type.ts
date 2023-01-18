@@ -3,15 +3,15 @@ import {
     PaginationResultsType,
 } from '../../../../common/models/results';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Anime } from '../../../anime/models/anime.model';
+import { Character } from '../../../character/models/character.model';
 
 @ObjectType()
-export class GetCatalogAnimeResultsType extends BaseResultsType {
-    @Field(() => [Anime], {
+export class GetCatalogCharacterResultsType extends BaseResultsType {
+    @Field(() => [Character], {
         nullable: true,
-        description: 'Catalog Anime list',
+        description: 'Catalog Character list',
     })
-    anime_list: Anime[];
+    character_list: Character[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

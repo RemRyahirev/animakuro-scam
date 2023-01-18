@@ -4,7 +4,6 @@ import { credentials } from "@grpc/grpc-js";
 
 export const grpcClientConfig: ClientOptions = {
     transport: Transport.GRPC,
-    // @ts-ignore
     options: {
         package: 'document',
         protoPath: join(__dirname, './document.proto'),

@@ -31,13 +31,18 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
 
     @IsOptional()
     @IsString()
-    @Field(() => String, { nullable: true })
+    @Field(() => String, {
+        nullable: true,
+        description:
+            'Country where the media was created. (ISO 3166-1 alpha-2)',
+    })
     country_of_origin?: string;
 
     @IsOptional()
     @IsString()
     @Field(() => MediaFormat, {
         nullable: true,
+        description: 'The format the media was released in',
     })
     format?: MediaFormat;
 
@@ -45,39 +50,57 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsString()
     @Field(() => MediaSource, {
         nullable: true,
+        description: 'Source type the media was adapted from',
     })
     source?: MediaSource;
 
     @IsOptional()
     @IsString()
-    @Field(() => FilmRating, { nullable: true })
+    @Field(() => FilmRating, {
+        nullable: true,
+        description: 'Content rating of the media',
+    })
     rating?: FilmRating;
 
     @IsOptional()
     @IsBoolean()
-    @Field(() => Boolean, { nullable: true })
+    @Field(() => Boolean, {
+        nullable: true,
+        description:
+            'If the media is officially licensed or a self-published doujin release',
+    })
     is_licensed?: boolean;
 
     @IsOptional()
     @IsString()
     @Field(() => ReleaseStatus, {
         nullable: true,
+        description: 'The current releasing status of the media',
     })
     release_status?: ReleaseStatus;
 
     @IsOptional()
     @IsString()
-    @Field(() => AnimeType, { nullable: true })
+    @Field(() => AnimeType, {
+        nullable: true,
+        description: 'Original anime or manga-based type of the media',
+    })
     type?: AnimeType;
 
     @IsOptional()
     @IsString()
-    @Field(() => YearSeason, { nullable: true })
+    @Field(() => YearSeason, {
+        nullable: true,
+        description: 'The season the media was initially released in',
+    })
     season?: YearSeason;
 
     @IsOptional()
     @IsInt()
-    @Field(() => Int, { nullable: true })
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Year of production of the media',
+    })
     year?: number;
 
     @IsOptional()
@@ -88,11 +111,17 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
 
     @IsOptional()
     @IsDate()
-    @Field(() => Date, { nullable: true })
+    @Field(() => Date, {
+        nullable: true,
+        description: 'The first official release date of the media',
+    })
     date_start?: Date;
 
     @IsOptional()
     @IsDate()
-    @Field(() => Date, { nullable: true })
+    @Field(() => Date, {
+        nullable: true,
+        description: 'The last official release date of the media',
+    })
     date_end?: Date;
 }

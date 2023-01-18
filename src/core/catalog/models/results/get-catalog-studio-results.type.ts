@@ -1,17 +1,17 @@
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Anime } from '../../../anime/models/anime.model';
+import { Studio } from '../../../studio/models/studio.model';
 
 @ObjectType()
-export class GetCatalogAnimeResultsType extends BaseResultsType {
-    @Field(() => [Anime], {
+export class GetCatalogStudioResultsType extends BaseResultsType {
+    @Field(() => [Studio], {
         nullable: true,
-        description: 'Catalog Anime list',
+        description: 'Catalog Studio list',
     })
-    anime_list: Anime[];
+    studio_list: Studio[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

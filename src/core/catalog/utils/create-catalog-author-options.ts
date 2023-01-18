@@ -1,5 +1,5 @@
 import { ElasticResults } from "../models/interfaces/elastic-response.type";
-import { CatalogAuthorInputType } from "../models/inputs/catalog-author-input-type";
+import { CatalogAuthorInputType } from "../models/inputs/catalog-author-input.type";
 import { Prisma } from "@prisma/client";
 import { PaginationInputType } from "../../../common/models/inputs";
 import { CatalogAuthorSort } from "../models/interfaces/catalog-author-sort";

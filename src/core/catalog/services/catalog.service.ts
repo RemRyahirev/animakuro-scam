@@ -9,7 +9,12 @@ import { PaginationInputType } from '../../../common/models/inputs';
 import { CatalogIndices } from '../models/enums/catalog-indices.enum';
 import { GetCatalogAuthorResultsType } from '../models/results/get-catalog-author-results.type';
 import { createCatalogAuthorOptions } from '../utils/create-catalog-author-options';
-import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input-type';
+import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input.type';
+import { CatalogStudioInputType } from '../models/inputs/catalog-studio-input.type';
+import { GetCatalogStudioResultsType } from '../models/results/get-catalog-studio-results.type';
+import {createCatalogStudioOptions} from "../utils/create-catalog-studio-options";
+import {CatalogCharacterInputType} from "../models/inputs/catalog-character-input.type";
+import {createCatalogCharacterOptions} from "../utils/create-catalog-character-options";
 
 @Injectable()
 export class CatalogService {
@@ -38,8 +43,7 @@ export class CatalogService {
             pages,
         );
 
-        const animeList = await this.prisma.anime.findMany(prismaOptions);
-
+        const anime_list = await this.prisma.anime.findMany(prismaOptions);
         const pagination = await this.paginationService.getPagination(
             'anime',
             pages,
@@ -48,7 +52,7 @@ export class CatalogService {
         return {
             success: true,
             errors: [],
-            animeList: animeList as any,
+            anime_list: anime_list as any,
             pagination,
         };
     }
@@ -72,8 +76,7 @@ export class CatalogService {
             pages,
         );
 
-        const authorList = await this.prisma.author.findMany(prismaOptions);
-
+        const author_list = await this.prisma.author.findMany(prismaOptions);
         const pagination = await this.paginationService.getPagination(
             'author',
             pages,
@@ -82,8 +85,66 @@ export class CatalogService {
         return {
             success: true,
             errors: [],
-            authorList: authorList as any,
+            author_list: author_list as any,
             pagination,
         };
+    }
+
+    async getCatalogStudioList(
+        args: CatalogStudioInputType,
+        pages: PaginationInputType,
+    ): Promise<GetCatalogStudioResultsType> {
+        const { search, sort_field, sort_order, ...filterOptions } = args;
+        const sort = { sort_field, sort_order };
+
+        const elasticResults = await this.catalogGrpcService.searchDocument(
+            search,
+            CatalogIndices.STUDIO,
+        );
+
+        const prismaOptions = createCatalogStudioOptions(
+            elasticResults,
+            filterOptions,
+            sort,
+            pages,
+        );
+
+        const studio_list = await this.prisma.studio.findMany(prismaOptions)
+        const pagination = await this.paginationService.getPagination(
+            'studio',
+            pages,
+        );
+
+        return {
+            success: true,
+            errors: [],
+            studio_list: studio_list as any,
+            pagination,
+        }
+    }
+
+    async getCatalogCharacterList(
+        args: CatalogCharacterInputType,
+        pages: PaginationInputType
+    ) {
+        const { search, sort_field, sort_order, ...filterOptions } = args;
+        const sort = { sort_field, sort_order };
+
+        const elasticResults = await this.catalogGrpcService.searchDocument(
+            search,
+            CatalogIndices.CHARACTER,
+        );
+
+        const prismaOptions = createCatalogCharacterOptions(elasticResults, filterOptions, sort, pages)
+
+        const character_list = await this.prisma.character.findMany(prismaOptions)
+        const pagination = await this.paginationService.getPagination('character', pages)
+
+        return {
+            success: true,
+            errors: [],
+            character_list: character_list as any,
+            pagination
+        }
     }
 }
