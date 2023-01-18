@@ -9,7 +9,7 @@ import { ElasticResults } from '../models/interfaces/elastic-response.type';
 
 export function createCatalogAnimeOptions(
     elasticResults: ElasticResults,
-    options: Omit<CatalogAnimeInputType, 'search' | 'sortField' | 'sortOrder'>,
+    options: Omit<CatalogAnimeInputType, 'search' | 'sort_field' | 'sort_order'>,
     sort: CatalogAnimeSort,
     pagination: PaginationInputType,
 ): Prisma.AnimeFindManyArgs {

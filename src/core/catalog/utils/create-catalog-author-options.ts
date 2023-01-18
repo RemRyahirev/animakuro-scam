@@ -7,7 +7,7 @@ import { transformPaginationUtil } from "../../../common/utils/transform-paginat
 
 export function createCatalogAuthorOptions(
     elasticResults: ElasticResults,
-    options: Omit<CatalogAuthorInputType, 'search' | 'sortField' | 'sortOrder'>,
+    options: Omit<CatalogAuthorInputType, 'search' | 'sort_field' | 'sort_order'>,
     sort: CatalogAuthorSort,
     pagination: PaginationInputType,
 ): Prisma.AuthorFindManyArgs {

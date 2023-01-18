@@ -12,9 +12,10 @@ import { createCatalogAuthorOptions } from '../utils/create-catalog-author-optio
 import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input.type';
 import { CatalogStudioInputType } from '../models/inputs/catalog-studio-input.type';
 import { GetCatalogStudioResultsType } from '../models/results/get-catalog-studio-results.type';
-import {createCatalogStudioOptions} from "../utils/create-catalog-studio-options";
-import {CatalogCharacterInputType} from "../models/inputs/catalog-character-input.type";
-import {createCatalogCharacterOptions} from "../utils/create-catalog-character-options";
+import { createCatalogStudioOptions } from '../utils/create-catalog-studio-options';
+import { CatalogCharacterInputType } from '../models/inputs/catalog-character-input.type';
+import { createCatalogCharacterOptions } from '../utils/create-catalog-character-options';
+import { CatalogCharacterSearchTable } from '../models/enums/catalog-character-search-table.enum';
 
 @Injectable()
 export class CatalogService {
@@ -109,7 +110,7 @@ export class CatalogService {
             pages,
         );
 
-        const studio_list = await this.prisma.studio.findMany(prismaOptions)
+        const studio_list = await this.prisma.studio.findMany(prismaOptions);
         const pagination = await this.paginationService.getPagination(
             'studio',
             pages,
@@ -120,31 +121,52 @@ export class CatalogService {
             errors: [],
             studio_list: studio_list as any,
             pagination,
-        }
+        };
     }
 
     async getCatalogCharacterList(
         args: CatalogCharacterInputType,
-        pages: PaginationInputType
+        pages: PaginationInputType,
     ) {
-        const { search, sort_field, sort_order, ...filterOptions } = args;
+        const {
+            search,
+            sort_field,
+            sort_order,
+            search_table,
+            ...filterOptions
+        } = args;
         const sort = { sort_field, sort_order };
 
+        const elasticIndex =
+            search_table === CatalogCharacterSearchTable.CHARACTERS
+                ? CatalogIndices.CHARACTER
+                : CatalogIndices.ANIME;
         const elasticResults = await this.catalogGrpcService.searchDocument(
             search,
-            CatalogIndices.CHARACTER,
+            elasticIndex,
         );
 
-        const prismaOptions = createCatalogCharacterOptions(elasticResults, filterOptions, sort, pages)
+        const prismaOptions = createCatalogCharacterOptions(
+            elasticResults,
+            filterOptions,
+            sort,
+            pages,
+            search_table
+        );
 
-        const character_list = await this.prisma.character.findMany(prismaOptions)
-        const pagination = await this.paginationService.getPagination('character', pages)
+        const character_list = await this.prisma.character.findMany(
+            prismaOptions,
+        );
+        const pagination = await this.paginationService.getPagination(
+            'character',
+            pages,
+        );
 
         return {
             success: true,
             errors: [],
             character_list: character_list as any,
-            pagination
-        }
+            pagination,
+        };
     }
 }

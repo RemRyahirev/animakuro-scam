@@ -7,7 +7,7 @@ import { transformPaginationUtil } from '../../../common/utils/transform-paginat
 
 export function createCatalogStudioOptions(
     elasticResults: ElasticResults,
-    options: Omit<CatalogStudioInputType, 'search' | 'sortField' | 'sortOrder'>,
+    options: Omit<CatalogStudioInputType, 'search' | 'sort_field' | 'sort_order'>,
     sort: CatalogStudioSort,
     pagination: PaginationInputType,
 ) {
@@ -50,6 +50,15 @@ export function createCatalogStudioOptions(
     if (sort.sort_field) {
         prismaOptions.orderBy = {
             [sort.sort_field]: sort.sort_order,
+        };
+    }
+
+    if (elasticResults.done) {
+        prismaOptions.where = {
+            ...prismaOptions.where,
+            id: {
+                in: elasticResults.results.map((r) => r.id),
+            },
         };
     }
 
