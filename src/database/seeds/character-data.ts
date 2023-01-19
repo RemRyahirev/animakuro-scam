@@ -72,11 +72,10 @@ export const characterData = async () => [
         name: 'Гинтоки Саката',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Главный протагонист Гинтамы.
-            Основатель и лидер Ёрозуи, а также высококвалифицированный
-            самурай, сражавшийся в войне Джои в прошлом
-        `,
+        description:
+            'Главный протагонист Гинтамы. ' +
+            'Основатель и лидер Ёрозуи, а также высококвалифицированный ' +
+            'самурай, сражавшийся в войне Джои в прошлом',
         age: 27,
         date_of_birth: 'Oct 10',
         blood_type: '2',
@@ -89,10 +88,9 @@ export const characterData = async () => [
         name: 'Катару Кацура',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.SUPPORTING,
-        description: `
-            Спокойный, добрый, умный и образованный молодой человек,
-            лидер, друг Гинтоки.
-        `,
+        description:
+            'Спокойный, добрый, умный и образованный молодой человек, ' +
+            'лидер, друг Гинтоки.',
         age: 20,
         date_of_birth: 'Jun 26',
         blood_type: '3',
@@ -110,10 +108,9 @@ export const characterData = async () => [
         name: 'Рули Тамаки',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Очень яркая личность и очень социальная,
-            также очень дружелюбна ко всем кого встретит
-        `,
+        description:
+            'Очень яркая личность и очень социальная, ' +
+            'также очень дружелюбна ко всем кого встретит',
         age: 16,
         date_of_birth: 'May 20',
         blood_type: '1',
@@ -126,9 +123,8 @@ export const characterData = async () => [
         name: 'Мао Отоха',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Студентка высшей школы Сейрея, аватаром Мао является Хана на планете Айкацу!
-        `,
+        description:
+            'Студентка высшей школы Сейрея, аватаром Мао является Хана на планете Айкацу!',
         age: 17,
         date_of_birth: 'Apr 3',
         blood_type: '4',
@@ -141,11 +137,10 @@ export const characterData = async () => [
         name: 'Шигуре Сома',
         importance: CharacterType.OTHER,
         role: CharacterRole.SUPPORTING,
-        description: `
-            Кузен Юки, лучший друг Аямэ и фактический опекун Тору Хонды.
-            Очень заботливый, но в то же время вечно подшучивающий
-            над всеми окружающими.
-        `,
+        description:
+            'Кузен Юки, лучший друг Аямэ и фактический опекун Тору Хонды. ' +
+            'Очень заботливый, но в то же время вечно подшучивающий ' +
+            'над всеми окружающими.',
         age: 26,
         date_of_birth: '',
         blood_type: '3',
@@ -158,12 +153,11 @@ export const characterData = async () => [
         name: 'Кё Сома',
         importance: CharacterType.OTHER,
         role: CharacterRole.SUPPORTING,
-        description: `
-            Грубоватый в общении, но добрый парень.
-            Из-за способности превращаться в кота в семье
-            Сома к нему с детства питали некоторую неприязнь,
-            так как кот не является животным восточного календаря.
-        `,
+        description:
+            'Грубоватый в общении, но добрый парень. ' +
+            'Из-за способности превращаться в кота в семье ' +
+            'Сома к нему с детства питали некоторую неприязнь, ' +
+            'так как кот не является животным восточного календаря.',
         age: 17,
         date_of_birth: '',
         blood_type: '1',
@@ -194,13 +188,12 @@ export const characterData = async () => [
         name: 'Конан Эдогава',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Главный герой, детектив-старшеклассник. Джин,
-            член «Чёрной организации», заставил его принять
-            наркотик «APTX-4869», который должен был его убить,
-            но вместо этого тело Шиничи уменьшилось до шестилетнего
-            возраста.
-        `,
+        description:
+            'Главный герой, детектив-старшеклассник. Джин, ' +
+            'член «Чёрной организации», заставил его принять ' +
+            'наркотик «APTX-4869», который должен был его убить, ' +
+            'но вместо этого тело Шиничи уменьшилось до шестилетнего ' +
+            'возраста.',
         age: 7,
         date_of_birth: 'May 4',
         blood_type: '2',
@@ -213,9 +206,7 @@ export const characterData = async () => [
         name: 'Ичиго Куросаки',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Главный герой аниме и манги «Блич», созданный Тайто Кубо
-        `,
+        description: 'Главный герой аниме и манги «Блич», созданный Тайто Кубо',
         age: 25,
         date_of_birth: 'Jul 15',
         blood_type: '1',
@@ -228,11 +219,10 @@ export const characterData = async () => [
         name: 'Урю Исида',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Персонаж аниме и манги «Блич», созданный Тайто Кубо.
-            Одноклассник Ичиго Куросаки, называющий себя «последним
-            из квинси».
-        `,
+        description:
+            'Персонаж аниме и манги «Блич», созданный Тайто Кубо. ' +
+            'Одноклассник Ичиго Куросаки, называющий себя «последним ' +
+            'из квинси».',
         age: 21,
         date_of_birth: 'Nov 6',
         blood_type: '3',
@@ -245,9 +235,7 @@ export const characterData = async () => [
         name: 'Сюн Футами',
         importance: CharacterType.SIDEKICK,
         role: CharacterRole.BACKGROUND,
-        description: `
-            Персонаж аниме и манги «Играйте круто, ребята!».
-        `,
+        description: 'Персонаж аниме и манги «Играйте круто, ребята!».',
         age: 17,
         date_of_birth: 'Jul 7',
         blood_type: '3',
@@ -260,10 +248,9 @@ export const characterData = async () => [
         name: 'Хаятэ Итикура',
         importance: CharacterType.EXTRAS,
         role: CharacterRole.SUPPORTING,
-        description: `
-            Персонаж аниме и манги «Играйте круто, ребята!».
-            Студент первокурсник, любит гулять один.
-        `,
+        description:
+            'Персонаж аниме и манги «Играйте круто, ребята!». ' +
+            'Студент первокурсник, любит гулять один.',
         age: 20,
         date_of_birth: 'Apr 24',
         blood_type: '1',
@@ -276,11 +263,10 @@ export const characterData = async () => [
         name: 'Киллуа Золдик',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Один из главных персонажей манги и аниме Hunter Х Hunter.
-            Наследник знаменитого клана убийц Золдиков,
-            который хочет найти друзей, а не наследовать семейное дело.
-        `,
+        description:
+            'Один из главных персонажей манги и аниме Hunter Х Hunter. ' +
+            'Наследник знаменитого клана убийц Золдиков, ' +
+            'который хочет найти друзей, а не наследовать семейное дело.',
         age: 15,
         date_of_birth: 'Jul 7',
         blood_type: '1',
@@ -293,10 +279,9 @@ export const characterData = async () => [
         name: 'Гон Фрикс',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Один из главных персонажей манги и аниме Hunter Х Hunter.
-            Живёт со своей тётей Мито и бабушкой на Китовом острове.
-        `,
+        description:
+            'Один из главных персонажей манги и аниме Hunter Х Hunter. ' +
+            'Живёт со своей тётей Мито и бабушкой на Китовом острове.',
         age: 15,
         date_of_birth: 'May 5',
         blood_type: '2',
@@ -309,9 +294,8 @@ export const characterData = async () => [
         name: 'Рафал',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Один из главных персонажей манги и будущего аниме "О движении Земли'
-        `,
+        description:
+            'Один из главных персонажей манги и будущего аниме "О движении Земли"',
         age: 12,
         date_of_birth: '',
         blood_type: '3',
@@ -324,9 +308,8 @@ export const characterData = async () => [
         name: 'Баденай',
         importance: CharacterType.ANTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Один из главных антоганистов манги и будущего аниме "О движении Земли'
-        `,
+        description:
+            'Один из главных антагонистов манги и будущего аниме "О движении Земли"',
         age: 21,
         date_of_birth: '',
         blood_type: '1',
@@ -339,10 +322,9 @@ export const characterData = async () => [
         name: 'Михо Нишизуми',
         importance: CharacterType.EXTRAS,
         role: CharacterRole.SUPPORTING,
-        description: `
-            Дочь Шихо Нишизуми и младшая сестра Махо Нишизуми,
-            Михо второкурсница девичьей академии.
-        `,
+        description:
+            'Дочь Шихо Нишизуми и младшая сестра Махо Нишизуми, ' +
+            'Михо второкурсница девичьей академии.',
         age: 18,
         date_of_birth: 'Oct 23',
         blood_type: '1',
@@ -355,11 +337,10 @@ export const characterData = async () => [
         name: 'Саори Такэбэ',
         importance: CharacterType.CONFIDANTE,
         role: CharacterRole.SUPPORTING,
-        description: `
-            Девочка с немного вьющимися светло-рыжими волосами до лопаток
-            и светло-карими глазами. Ищет красивого парня,
-            но безуспешно.
-        `,
+        description:
+            'Девочка с немного вьющимися светло-рыжими волосами до лопаток ' +
+            'и светло-карими глазами. Ищет красивого парня, ' +
+            'но безуспешно.',
         age: 17,
         date_of_birth: 'Jun 22',
         blood_type: '4',
@@ -372,9 +353,7 @@ export const characterData = async () => [
         name: 'Блейд',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Главный герой будущего аниме "Класс для героев".
-        `,
+        description: 'Главный герой будущего аниме "Класс для героев".',
         age: 17,
         date_of_birth: '',
         blood_type: '2',
@@ -387,11 +366,10 @@ export const characterData = async () => [
         name: 'Арнест Флейминг',
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
-        description: `
-            Главный герой будущего аниме "Класс для героев".
-            Привлекательная, молодая девушка с красными глазами
-            и длинными волосами.
-        `,
+        description:
+            'Главный герой будущего аниме "Класс для героев". ' +
+            'Привлекательная, молодая девушка с красными глазами ' +
+            'и длинными волосами.',
         age: 18,
         date_of_birth: '',
         blood_type: '3',
