@@ -9,11 +9,14 @@ import { ElasticResults } from '../models/interfaces/elastic-response.type';
 
 export function createCatalogAnimeOptions(
     elasticResults: ElasticResults,
-    options: Omit<CatalogAnimeInputType, 'search' | 'sort_field' | 'sort_order'>,
+    options: Omit<
+        CatalogAnimeInputType,
+        'search' | 'sort_field' | 'sort_order'
+    >,
     sort: CatalogAnimeSort,
     pagination: PaginationInputType,
 ): Prisma.AnimeFindManyArgs {
-    const { genres, date_start, date_end, ...filterOptions } = options;
+    const { genres, studios, date_start, date_end, ...filterOptions } = options;
 
     const prismaOptions: Prisma.AnimeFindManyArgs = {
         ...transformPaginationUtil(pagination),
@@ -23,6 +26,13 @@ export function createCatalogAnimeOptions(
                 some: {
                     id: {
                         in: genres,
+                    },
+                },
+            },
+            studios: {
+                some: {
+                    id: {
+                        in: studios,
                     },
                 },
             },

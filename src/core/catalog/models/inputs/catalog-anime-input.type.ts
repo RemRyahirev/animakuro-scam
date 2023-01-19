@@ -106,7 +106,7 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], { nullable: true, description: 'Genre ID string' })
+    @Field(() => [ID], { nullable: true, description: 'Genre ID array' })
     genres?: string[];
 
     @IsOptional()
@@ -124,4 +124,10 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
         description: 'The last official release date of the media',
     })
     date_end?: Date;
+
+    @IsOptional()
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true, description: 'Studio ID array' })
+    studios?: string[];
 }
