@@ -1,6 +1,6 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { CatalogBasicInputType } from './catalog-basic-input.type';
-import { IsEnum, IsOptional, IsString } from '@nestjs/class-validator';
+import { IsEnum, IsInt, IsOptional, IsString } from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 import { CatalogCharacterSortField } from '../enums/catalog-character-sort-field.enum';
 import { CatalogCharacterSearchTable } from '../enums/catalog-character-search-table.enum';
@@ -16,11 +16,27 @@ export class CatalogCharacterInputType extends CatalogBasicInputType {
     sort_field?: CatalogCharacterSortField;
 
     @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        description: `Minimal Character's age`,
+    })
+    min_age?: number;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        description: `Maximum Character's age`,
+    })
+    max_age?: number;
+
+    @IsOptional()
     @IsEnum(CatalogCharacterSearchTable)
     @Field(() => CatalogCharacterSearchTable, {
         nullable: true,
         description: 'Which table to search',
-        defaultValue: CatalogCharacterSearchTable.CHARACTERS
+        defaultValue: CatalogCharacterSearchTable.CHARACTERS,
     })
     search_table?: CatalogCharacterSearchTable;
 

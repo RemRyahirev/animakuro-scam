@@ -15,7 +15,7 @@ export class CatalogAuthorInputType extends CatalogBasicInputType {
 
     @IsOptional()
     @IsInt()
-    @Field(() => Int, { nullable: true, description: `Minimal Author\'s age` })
+    @Field(() => Int, { nullable: true, description: `Minimal Author's age` })
     min_age?: number;
 
     @IsOptional()

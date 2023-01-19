@@ -1,4 +1,4 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { IsArray, IsEnum, IsString, Length } from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
 
@@ -30,8 +30,8 @@ export class CreateCharacterInputType {
     blood_type: string;
 
     @IsString()
-    @Field(() => String)
-    age: string;
+    @Field(() => Int)
+    age: number;
 
     @IsEnum(CharacterRole)
     @Field(() => CharacterRole, { defaultValue: CharacterRole.MAIN })

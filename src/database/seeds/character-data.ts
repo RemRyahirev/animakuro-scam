@@ -8,7 +8,7 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: 'какую-то роль он все-таки сыграл',
-        age: '35',
+        age: 35,
         date_of_birth: '1900',
         blood_type: '2',
         gender: 'male',
@@ -21,7 +21,7 @@ export const characterData = async () => [
         importance: CharacterType.ANTAGONIST,
         role: CharacterRole.BACKGROUND,
         description: 'главный антагонист хрен знает кого',
-        age: '35',
+        age: 35,
         date_of_birth: '1900',
         blood_type: '2',
         gender: 'male',
@@ -34,7 +34,7 @@ export const characterData = async () => [
         importance: CharacterType.ANTAGONIST,
         role: CharacterRole.SUPPORTING,
         description: 'кому то противостоит',
-        age: '35',
+        age: 35,
         date_of_birth: '1900',
         blood_type: '2',
         gender: 'male',
@@ -47,7 +47,7 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.BACKGROUND,
         description: 'главный антагонист КтоТоЕщеСан',
-        age: '35',
+        age: 35,
         date_of_birth: '1900',
         blood_type: '2',
         gender: 'male',
@@ -60,7 +60,7 @@ export const characterData = async () => [
         importance: CharacterType.ANTAGONIST,
         role: CharacterRole.MAIN,
         description: 'главный антагонист Первопроходца',
-        age: '35',
+        age: 35,
         date_of_birth: '1900',
         blood_type: '2',
         gender: 'male',
@@ -73,11 +73,11 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: `
-            Главный протагонист Гинтамы. 
-            Основатель и лидер Ёрозуи, а также высококвалифицированный 
+            Главный протагонист Гинтамы.
+            Основатель и лидер Ёрозуи, а также высококвалифицированный
             самурай, сражавшийся в войне Джои в прошлом
         `,
-        age: '27',
+        age: 27,
         date_of_birth: 'Oct 10',
         blood_type: '2',
         gender: 'male',
@@ -93,7 +93,7 @@ export const characterData = async () => [
             Спокойный, добрый, умный и образованный молодой человек,
             лидер, друг Гинтоки.
         `,
-        age: '20',
+        age: 20,
         date_of_birth: 'Jun 26',
         blood_type: '3',
         gender: 'male',
@@ -111,10 +111,10 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: `
-            Очень яркая личность и очень социальная, 
+            Очень яркая личность и очень социальная,
             также очень дружелюбна ко всем кого встретит
         `,
-        age: '16',
+        age: 16,
         date_of_birth: 'May 20',
         blood_type: '1',
         gender: 'female',
@@ -129,7 +129,7 @@ export const characterData = async () => [
         description: `
             Студентка высшей школы Сейрея, аватаром Мао является Хана на планете Айкацу!
         `,
-        age: '17',
+        age: 17,
         date_of_birth: 'Apr 3',
         blood_type: '4',
         gender: 'female',
@@ -143,10 +143,10 @@ export const characterData = async () => [
         role: CharacterRole.SUPPORTING,
         description: `
             Кузен Юки, лучший друг Аямэ и фактический опекун Тору Хонды.
-            Очень заботливый, но в то же время вечно подшучивающий 
+            Очень заботливый, но в то же время вечно подшучивающий
             над всеми окружающими.
         `,
-        age: '26',
+        age: 26,
         date_of_birth: '',
         blood_type: '3',
         gender: 'male',
@@ -159,12 +159,12 @@ export const characterData = async () => [
         importance: CharacterType.OTHER,
         role: CharacterRole.SUPPORTING,
         description: `
-            Грубоватый в общении, но добрый парень. 
-            Из-за способности превращаться в кота в семье 
-            Сома к нему с детства питали некоторую неприязнь, 
+            Грубоватый в общении, но добрый парень.
+            Из-за способности превращаться в кота в семье
+            Сома к нему с детства питали некоторую неприязнь,
             так как кот не является животным восточного календаря.
         `,
-        age: '17',
+        age: 17,
         date_of_birth: '',
         blood_type: '1',
         gender: 'male',
@@ -177,7 +177,7 @@ export const characterData = async () => [
         importance: CharacterType.CONFIDANTE,
         role: CharacterRole.SUPPORTING,
         description: `Бывший член «Чёрной организации», известная под кодовым именем «Херес» `,
-        age: '8',
+        age: 8,
         date_of_birth: '',
         blood_type: '2',
         gender: 'female',
@@ -195,13 +195,13 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: `
-            Главный герой, детектив-старшеклассник. Джин, 
-            член «Чёрной организации», заставил его принять 
-            наркотик «APTX-4869», который должен был его убить, 
-            но вместо этого тело Шиничи уменьшилось до шестилетнего 
+            Главный герой, детектив-старшеклассник. Джин,
+            член «Чёрной организации», заставил его принять
+            наркотик «APTX-4869», который должен был его убить,
+            но вместо этого тело Шиничи уменьшилось до шестилетнего
             возраста.
         `,
-        age: '7',
+        age: 7,
         date_of_birth: 'May 4',
         blood_type: '2',
         gender: 'male',
@@ -216,7 +216,7 @@ export const characterData = async () => [
         description: `
             Главный герой аниме и манги «Блич», созданный Тайто Кубо
         `,
-        age: '25',
+        age: 25,
         date_of_birth: 'Jul 15',
         blood_type: '1',
         gender: 'male',
@@ -229,11 +229,11 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: `
-            Персонаж аниме и манги «Блич», созданный Тайто Кубо. 
-            Одноклассник Ичиго Куросаки, называющий себя «последним 
+            Персонаж аниме и манги «Блич», созданный Тайто Кубо.
+            Одноклассник Ичиго Куросаки, называющий себя «последним
             из квинси».
         `,
-        age: '21',
+        age: 21,
         date_of_birth: 'Nov 6',
         blood_type: '3',
         gender: 'male',
@@ -248,7 +248,7 @@ export const characterData = async () => [
         description: `
             Персонаж аниме и манги «Играйте круто, ребята!».
         `,
-        age: '17',
+        age: 17,
         date_of_birth: 'Jul 7',
         blood_type: '3',
         gender: 'male',
@@ -264,7 +264,7 @@ export const characterData = async () => [
             Персонаж аниме и манги «Играйте круто, ребята!».
             Студент первокурсник, любит гулять один.
         `,
-        age: '20',
+        age: 20,
         date_of_birth: 'Apr 24',
         blood_type: '1',
         gender: 'male',
@@ -277,11 +277,11 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: `
-            Один из главных персонажей манги и аниме Hunter Х Hunter. 
-            Наследник знаменитого клана убийц Золдиков, 
+            Один из главных персонажей манги и аниме Hunter Х Hunter.
+            Наследник знаменитого клана убийц Золдиков,
             который хочет найти друзей, а не наследовать семейное дело.
         `,
-        age: '15',
+        age: 15,
         date_of_birth: 'Jul 7',
         blood_type: '1',
         gender: 'male',
@@ -294,10 +294,10 @@ export const characterData = async () => [
         importance: CharacterType.PROTAGONIST,
         role: CharacterRole.MAIN,
         description: `
-            Один из главных персонажей манги и аниме Hunter Х Hunter. 
-            Живёт со своей тётей Мито и бабушкой на Китовом острове. 
+            Один из главных персонажей манги и аниме Hunter Х Hunter.
+            Живёт со своей тётей Мито и бабушкой на Китовом острове.
         `,
-        age: '15',
+        age: 15,
         date_of_birth: 'May 5',
         blood_type: '2',
         gender: 'male',
@@ -312,7 +312,7 @@ export const characterData = async () => [
         description: `
             Один из главных персонажей манги и будущего аниме "О движении Земли'
         `,
-        age: '12',
+        age: 12,
         date_of_birth: '',
         blood_type: '3',
         gender: 'male',
@@ -327,7 +327,7 @@ export const characterData = async () => [
         description: `
             Один из главных антоганистов манги и будущего аниме "О движении Земли'
         `,
-        age: '21',
+        age: 21,
         date_of_birth: '',
         blood_type: '1',
         gender: 'male',
@@ -343,7 +343,7 @@ export const characterData = async () => [
             Дочь Шихо Нишизуми и младшая сестра Махо Нишизуми,
             Михо второкурсница девичьей академии.
         `,
-        age: '18',
+        age: 18,
         date_of_birth: 'Oct 23',
         blood_type: '1',
         gender: 'female',
@@ -356,11 +356,11 @@ export const characterData = async () => [
         importance: CharacterType.CONFIDANTE,
         role: CharacterRole.SUPPORTING,
         description: `
-            Девочка с немного вьющимися светло-рыжими волосами до лопаток 
-            и светло-карими глазами. Ищет красивого парня, 
-            но безуспешно. 
+            Девочка с немного вьющимися светло-рыжими волосами до лопаток
+            и светло-карими глазами. Ищет красивого парня,
+            но безуспешно.
         `,
-        age: '17',
+        age: 17,
         date_of_birth: 'Jun 22',
         blood_type: '4',
         gender: 'female',
@@ -375,7 +375,7 @@ export const characterData = async () => [
         description: `
             Главный герой будущего аниме "Класс для героев".
         `,
-        age: '17',
+        age: 17,
         date_of_birth: '',
         blood_type: '2',
         gender: 'male',
@@ -392,7 +392,7 @@ export const characterData = async () => [
             Привлекательная, молодая девушка с красными глазами
             и длинными волосами.
         `,
-        age: '18',
+        age: 18,
         date_of_birth: '',
         blood_type: '3',
         gender: 'female',

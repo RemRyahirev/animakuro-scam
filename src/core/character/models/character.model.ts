@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { CharacterRole, CharacterType } from '../../../common/models/enums';
 import { Anime } from '../../anime/models/anime.model';
 
@@ -32,11 +32,11 @@ export class Character {
     })
     date_of_birth: string;
 
-    @Field(() => String, {
+    @Field(() => Int, {
         nullable: true,
         description: `The character's age`,
     })
-    age: string;
+    age: number;
 
     @Field(() => String, {
         nullable: true,

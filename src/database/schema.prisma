@@ -181,7 +181,7 @@ model Character {
   gender        String        @db.VarChar(30)
   blood_type    String        @db.VarChar(30)
   date_of_birth String        @db.VarChar(30)
-  age           String
+  age           Int
   synonyms      String[]
   importance    CharacterType @default(PROTAGONIST)
   role          CharacterRole @default(MAIN)

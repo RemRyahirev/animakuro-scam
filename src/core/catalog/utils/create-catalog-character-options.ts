@@ -14,12 +14,18 @@ export function createCatalogCharacterOptions(
     >,
     sort: CatalogCharacterSort,
     pagination: PaginationInputType,
-    search_table: CatalogCharacterSearchTable | undefined,
+    search_table: CatalogCharacterSearchTable | undefined
 ) {
+    const { max_age, min_age, ...fieldsOptions } = options ;
+
     const prismaOptions: Prisma.CharacterFindManyArgs = {
         ...transformPaginationUtil(pagination),
         where: {
-            ...options,
+            ...fieldsOptions,
+            age: {
+                gte: min_age,
+                lte: max_age,
+            },
         },
         include: {
             animes: true,
@@ -32,24 +38,30 @@ export function createCatalogCharacterOptions(
         };
     }
 
-    if (elasticResults.done && search_table === CatalogCharacterSearchTable.CHARACTERS) {
+    if (
+        elasticResults.done &&
+        search_table === CatalogCharacterSearchTable.CHARACTERS
+    ) {
         prismaOptions.where = {
             ...prismaOptions.where,
             id: {
                 in: elasticResults.results.map((r) => r.id),
             },
         };
-    } else if (elasticResults.done && search_table === CatalogCharacterSearchTable.ANIMES) {
+    } else if (
+        elasticResults.done &&
+        search_table === CatalogCharacterSearchTable.ANIMES
+    ) {
         prismaOptions.where = {
             ...prismaOptions.where,
             animes: {
                 some: {
                     id: {
                         in: elasticResults.results.map((r) => r.id),
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        };
     }
 
     return prismaOptions;

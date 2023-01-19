@@ -56,14 +56,14 @@ CREATE TYPE "ProfileCountries" AS ENUM ('USA', 'RUSSIA', 'JAPAN', 'UKRAINE', 'UN
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
     "username" VARCHAR(64) NOT NULL,
-    "email" VARCHAR(320),
-    "is_email_confirmed" BOOLEAN DEFAULT false,
+    "email" VARCHAR(320) NOT NULL,
+    "is_email_confirmed" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT NOT NULL,
-    "avatar" TEXT,
+    "avatar" TEXT NOT NULL,
     "birthday" DATE,
     "gender" "Gender" NOT NULL,
     "created_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "deleted" BOOLEAN DEFAULT false,
+    "deleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -209,7 +209,7 @@ CREATE TABLE "character" (
     "gender" VARCHAR(30) NOT NULL,
     "blood_type" VARCHAR(30) NOT NULL,
     "date_of_birth" VARCHAR(30) NOT NULL,
-    "age" TEXT NOT NULL,
+    "age" INTEGER NOT NULL,
     "synonyms" TEXT[],
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
