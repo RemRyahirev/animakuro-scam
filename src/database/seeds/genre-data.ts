@@ -23,4 +23,20 @@ export const genreData = async () => [
         id: 'c2c51789-bbff-490b-a817-31665c905ea7',
         name: 'Horror',
     },
+    {
+        id: '893a0480-3c72-415e-9c45-da1d540bc440',
+        name: 'Action',
+    },
+    {
+        id: '29873f37-d33e-43e3-9841-71447b4cbf47',
+        name: 'Comedy',
+    },
+    {
+        id: '60f525ad-0afc-4a68-b38f-4ef0dae5ef53',
+        name: 'Music',
+    },
+    {
+        id: 'bde686dd-1719-4597-ad50-8378d00de146',
+        name: 'Mystery',
+    },
 ];
