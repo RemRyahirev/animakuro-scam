@@ -30,7 +30,7 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[0].id,
+                        id: '4f02be8b-cafb-4f1d-baa8-c34279b1def1',
                     },
                 ],
             },
@@ -62,17 +62,17 @@ export const animeData = async () => {
             characters: {
                 connect: [
                     {
-                        id: characterList[0].id,
+                        id: '08bee141-9254-4fa5-a5dd-7eb2f4f7bff9',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[0].id,
+                        id: '1347a799-c5e1-4326-9bec-f6eb5e6e087e',
                     },
                     {
-                        id: authorList[1].id,
+                        id: '3027030a-65ee-45c3-9c1b-2dae2444a5e9',
                     },
                 ],
             },
@@ -88,10 +88,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[1].id,
+                        id: '48c8e29c-c942-4c15-a3e3-0fed7a0a8cb8',
                     },
                     {
-                        id: genreList[2].id,
+                        id: 'cab8c75f-9544-41fc-a042-f2909bd9be32',
                     },
                 ],
             },
@@ -119,14 +119,14 @@ export const animeData = async () => {
             characters: {
                 connect: [
                     {
-                        id: characterList[1].id,
+                        id: '07730046-340c-4052-9a38-853216c283be',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[2].id,
+                        id: '996e603b-d3dc-4fd8-b6fe-f5e2837168e5',
                     },
                 ],
             },
@@ -142,13 +142,13 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[3].id,
+                        id: 'c71ec9c1-ee65-4412-a89b-529ae69dca99',
                     },
                     {
-                        id: genreList[4].id,
+                        id: '050a2fb2-667c-4048-8cdf-aa1181e98fa4',
                     },
                     {
-                        id: genreList[5].id,
+                        id: 'c2c51789-bbff-490b-a817-31665c905ea7',
                     },
                 ],
             },
@@ -176,20 +176,20 @@ export const animeData = async () => {
             characters: {
                 connect: [
                     {
-                        id: characterList[3].id,
+                        id: 'a7c14064-ad31-46d6-8129-7a44aab098b7',
                     },
                     {
-                        id: characterList[4].id,
+                        id: 'a836e064-0e87-4f34-aaf2-9b753717f6e2',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[3].id,
+                        id: '43580db0-1e6f-463d-82d5-883aeae2457f',
                     },
                     {
-                        id: authorList[4].id,
+                        id: 'ea5a020b-40ad-402a-8215-e9050a817b64',
                     },
                 ],
             },
@@ -205,13 +205,13 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[6].id,
+                        id: '893a0480-3c72-415e-9c45-da1d540bc440',
                     },
                     {
-                        id: genreList[7].id,
+                        id: '29873f37-d33e-43e3-9841-71447b4cbf47',
                     },
                     {
-                        id: genreList[1].id,
+                        id: '48c8e29c-c942-4c15-a3e3-0fed7a0a8cb8',
                     },
                 ],
             },
@@ -233,35 +233,34 @@ export const animeData = async () => {
             duration: 73440,
             next_episode: new Date('2016-03-30'),
             rating: FilmRating.PG_13,
-            description: `
-                Четвёртый сезон всё также рассказывает о бесстрашном самурае и его товарищах.
-                За свою деятельность в качестве членов организации «Мастера», они действительно сдружились, 
-                и смогли наладить командную работу. Постоянные трудности, необычные просьбы клиентов, 
-                а также таинственные места ждут главного героя. И он всё также не теряет в уверенности в своих силах. 
-                Тем более, что намечаются изменения с пришельцами. Они уже не могут всё контролировать как раньше, 
-                а значит это шанс найти способ полностью изгнать их с Земли. Всё же Гинтама и остальные сосредоточены на другом, 
-                ведь всё также им предстоит встреча с неизвестными личностями и опасностями.
-            `,
+            description:
+                'Четвёртый сезон всё также рассказывает о бесстрашном самурае и его товарищах. ' +
+                'За свою деятельность в качестве членов организации «Мастера», они действительно сдружились, ' +
+                'и смогли наладить командную работу. Постоянные трудности, необычные просьбы клиентов, ' +
+                'а также таинственные места ждут главного героя. И он всё также не теряет в уверенности ' +
+                'в своих силах. Тем более, что намечаются изменения с пришельцами. Они уже не могут всё контролировать как раньше ' +
+                'а значит это шанс найти способ полностью изгнать их с Земли. Всё же Гинтама и остальные сосредоточены на другом, ' +
+                'ведь всё также им предстоит встреча с неизвестными личностями и опасностями.',
             preview_link: 'https://gintama.com',
             status_description: 'в 2015-2016 гг',
             release_status: ReleaseStatus.COMPLETED,
             characters: {
                 connect: [
                     {
-                        id: characterList[5].id,
+                        id: '0573891e-edec-492c-9793-45c04299969b',
                     },
                     {
-                        id: characterList[6].id,
+                        id: 'e75ccf37-6d74-47fa-bbf4-26093579af69',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[5].id,
+                        id: '4bc5062e-b024-4477-84cc-59f4ac203b11',
                     },
                     {
-                        id: authorList[6].id,
+                        id: '74f44b75-75e5-4922-a5ba-4c1fd4d614f6',
                     },
                 ],
             },
@@ -277,7 +276,7 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[8].id,
+                        id: '60f525ad-0afc-4a68-b38f-4ef0dae5ef53',
                     },
                 ],
             },
@@ -304,32 +303,31 @@ export const animeData = async () => {
             duration: 36000,
             next_episode: new Date('2021-06-27'),
             rating: FilmRating.G,
-            description: `
-                Гибридный лайв-экшн-аниме-CG проект. История вращается вокруг «Планеты Айкацу», мира, 
-                где каждый может взять на себя роль аватара и стать очаровательно милым кумиром. 
-                Мао Отоха, обычная первокурсница частной средней школы Сэйрэй, становится идолом №1 Хана, 
-                когда предыдущее альтер-эго Ханы Мэйса Хината внезапно исчезла.
-            `,
+            description:
+                'Гибридный лайв-экшн-аниме-CG проект. История вращается вокруг «Планеты Айкацу», мира, ' +
+                'где каждый может взять на себя роль аватара и стать очаровательно милым кумиром. ' +
+                'Мао Отоха, обычная первокурсница частной средней школы Сэйрэй, становится идолом №1 Хана, ' +
+                'когда предыдущее альтер-эго Ханы Мэйса Хината внезапно исчезла.',
             preview_link: 'https://aikatsu-planet.com',
             status_description: 'в 2021-2021 гг',
             release_status: ReleaseStatus.COMPLETED,
             characters: {
                 connect: [
                     {
-                        id: characterList[7].id,
+                        id: '4a1081d4-4b62-4fcd-981d-2feb39d7aabe',
                     },
                     {
-                        id: characterList[8].id,
+                        id: 'eec7492e-1706-474a-980b-aaf44a8ce19d',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[7].id,
+                        id: 'f505131e-4d9f-4e3c-a3a0-cb5b2751fc9d',
                     },
                     {
-                        id: authorList[8].id,
+                        id: 'c8d6cd01-a845-41b7-878d-f495809fc36f',
                     },
                 ],
             },
@@ -345,10 +343,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[7].id,
+                        id: '29873f37-d33e-43e3-9841-71447b4cbf47',
                     },
                     {
-                        id: genreList[1].id,
+                        id: '48c8e29c-c942-4c15-a3e3-0fed7a0a8cb8',
                     },
                 ],
             },
@@ -378,31 +376,30 @@ export const animeData = async () => {
             duration: 18720,
             next_episode: new Date('2021-06-29'),
             rating: FilmRating.NC_21,
-            description: `
-                Сотни лет назад китайские духи Зодиака и их бог поклялись вечно оставаться вместе. 
-                Объединенные этим обещанием, одержимые члены семьи Сома должны всегда и при любых обстоятельствах возвращаться друг к другу. 
-                Однако, когда эти узы сковывают их свободу, это становится нежелательным бременем — проклятием.
-            `,
+            description:
+                'Сотни лет назад китайские духи Зодиака и их бог поклялись вечно оставаться вместе. ' +
+                'Объединенные этим обещанием, одержимые члены семьи Сома должны всегда и при любых обстоятельствах возвращаться друг к другу. ' +
+                'Однако, когда эти узы сковывают их свободу, это становится нежелательным бременем — проклятием. ',
             preview_link: 'https://fruits-basket.com',
             status_description: 'в 2021-2021 гг',
             release_status: ReleaseStatus.COMPLETED,
             characters: {
                 connect: [
                     {
-                        id: characterList[9].id,
+                        id: 'ec77a84f-eda6-4072-9218-b9847f9e0f46',
                     },
                     {
-                        id: characterList[10].id,
+                        id: 'd4da5105-57a6-47f6-ad12-8dd3eb29937a',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[9].id,
+                        id: '225662ac-0888-4bf1-a252-2e53b41e446c',
                     },
                     {
-                        id: authorList[10].id,
+                        id: '3f2fb7e6-6f94-40bc-ab31-f8d90a0df134',
                     },
                 ],
             },
@@ -417,10 +414,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[1].id,
+                        id: '48c8e29c-c942-4c15-a3e3-0fed7a0a8cb8',
                     },
                     {
-                        id: genreList[9].id,
+                        id: 'bde686dd-1719-4597-ad50-8378d00de146',
                     },
                 ],
             },
@@ -455,20 +452,20 @@ export const animeData = async () => {
             characters: {
                 connect: [
                     {
-                        id: characterList[11].id,
+                        id: '295a47fb-4c91-4da8-a91b-a4732ae3c34c',
                     },
                     {
-                        id: characterList[12].id,
+                        id: '84f7b15c-ec2a-4c2a-9427-92ff4b3d8ad6',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[11].id,
+                        id: '6e190a1c-3dd4-4140-91ce-5d706e20c00b',
                     },
                     {
-                        id: authorList[12].id,
+                        id: 'c287a823-3976-467e-a093-9d7b9f65c544',
                     },
                 ],
             },
@@ -484,10 +481,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[6].id,
+                        id: '893a0480-3c72-415e-9c45-da1d540bc440',
                     },
                     {
-                        id: genreList[9].id,
+                        id: 'bde686dd-1719-4597-ad50-8378d00de146',
                     },
                 ],
             },
@@ -512,32 +509,31 @@ export const animeData = async () => {
             duration: 23040,
             next_episode: new Date('2022-12-27'),
             rating: FilmRating.NC_21,
-            description: `
-                Во главе с Яхве, отцом всех квинси, который был запечатан много лет,
-                «Ванденрейх» объявляет войну всем синигами и грозится через пять дней стереть Сообщество душ в порошок.
-                Ичиго Куросаки, временно исполняющему обязанности синигами, предстоит вновь взять в руки меч и стать на
-                защиту мира людей и Сообщества душ.
-            `,
+            description:
+                'Во главе с Яхве, отцом всех квинси, который был запечатан много лет, ' +
+                '«Ванденрейх» объявляет войну всем синигами и грозится через пять дней стереть Сообщество душ в порошок. ' +
+                'Ичиго Куросаки, временно исполняющему обязанности синигами, предстоит вновь взять в руки меч и стать на ' +
+                'защиту мира людей и Сообщества душ.',
             preview_link: 'https://bleach.com',
             status_description: 'в 2022-2022 гг',
             release_status: ReleaseStatus.COMPLETED,
             characters: {
                 connect: [
                     {
-                        id: characterList[13].id,
+                        id: '68c734e5-cfb9-43f5-93da-b201fb0c3ab1',
                     },
                     {
-                        id: characterList[14].id,
+                        id: '04bfafc6-eb2f-4f0e-ba52-ec634efc133a',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[13].id,
+                        id: '60c1958e-9938-4ddd-b515-1ada1961ae0d',
                     },
                     {
-                        id: authorList[14].id,
+                        id: '6a6d7780-a4f8-43da-8a6b-50ba6befff11',
                     },
                 ],
             },
@@ -552,10 +548,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[8].id,
+                        id: '60f525ad-0afc-4a68-b38f-4ef0dae5ef53',
                     },
                     {
-                        id: genreList[7].id,
+                        id: '29873f37-d33e-43e3-9841-71447b4cbf47',
                     },
                 ],
             },
@@ -582,33 +578,32 @@ export const animeData = async () => {
             duration: 15840,
             next_episode: new Date('2023-01-23 21:30'),
             rating: FilmRating.PG,
-            description: `
-                Мужественность — неотъемлемая часть представителей сильного пола. 
-                Однако не только мужественность определяет парней, не стоит забывать и о целеустремлённости, 
-                смелости, трудолюбии и способности не ударить в грязь лицом. Следует также отметить, что мужчины 
-                обладают и иными чертами, которые обычно приписывают прекрасному полу. 
-                Парни тоже бывают милыми, чувствительными и неуклюжими.
-            `,
+            description:
+                'Мужественность — неотъемлемая часть представителей сильного пола. ' +
+                'Однако не только мужественность определяет парней, не стоит забывать и о целеустремлённости, ' +
+                'смелости, трудолюбии и способности не ударить в грязь лицом. Следует также отметить, что мужчины ' +
+                'обладают и иными чертами, которые обычно приписывают прекрасному полу. ' +
+                'Парни тоже бывают милыми, чувствительными и неуклюжими.',
             preview_link: 'https://play-cool.com',
             status_description: 'в 2022-2023 гг',
             release_status: ReleaseStatus.RELEASING,
             characters: {
                 connect: [
                     {
-                        id: characterList[15].id,
+                        id: '9020b9e1-82de-4357-9ea2-0e0f36803392',
                     },
                     {
-                        id: characterList[16].id,
+                        id: 'ec280d18-f4db-42e9-987d-b3fa749e844e',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[15].id,
+                        id: 'e688bb57-ecdf-416a-957d-b8d8c5b57a5d',
                     },
                     {
-                        id: authorList[16].id,
+                        id: 'f2e513e0-ef4a-4d67-8119-c734c9df9b75',
                     },
                 ],
             },
@@ -624,13 +619,13 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[6].id,
+                        id: '893a0480-3c72-415e-9c45-da1d540bc440',
                     },
                     {
-                        id: genreList[7].id,
+                        id: '29873f37-d33e-43e3-9841-71447b4cbf47',
                     },
                     {
-                        id: genreList[1].id,
+                        id: '48c8e29c-c942-4c15-a3e3-0fed7a0a8cb8',
                     },
                 ],
             },
@@ -659,31 +654,30 @@ export const animeData = async () => {
             duration: 213120,
             next_episode: new Date('2014-09-24'),
             rating: FilmRating.R,
-            description: `
-                Главный герой, Гон Фрикс, отправляется на экзамен с целью стать Охотником и найти своего отца. 
-                Ему предстоит преодолеть много трудностей на своем пути и встретить замечательных друзей, 
-                у каждого из которых свои причины стать Охотником.
-            `,
+            description:
+                'Главный герой, Гон Фрикс, отправляется на экзамен с целью стать Охотником и найти своего отца. ' +
+                'Ему предстоит преодолеть много трудностей на своем пути и встретить замечательных друзей, ' +
+                'у каждого из которых свои причины стать Охотником.',
             preview_link: 'https://HUNTERXHUNTER.com',
             status_description: 'в 2011-2014 гг',
             release_status: ReleaseStatus.COMPLETED,
             characters: {
                 connect: [
                     {
-                        id: characterList[17].id,
+                        id: '22a74e6c-65db-4b66-9a2c-4f166b5490da',
                     },
                     {
-                        id: characterList[18].id,
+                        id: 'ffb2654c-058b-4ed9-bcb0-3299c9752543',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[17].id,
+                        id: '369f1fc2-e1b8-4448-82d5-24099f80eb4d',
                     },
                     {
-                        id: authorList[18].id,
+                        id: 'cb6faea1-d7d8-4a5e-bdcb-8fec9daa9587',
                     },
                 ],
             },
@@ -697,7 +691,7 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[1].id,
+                        id: '48c8e29c-c942-4c15-a3e3-0fed7a0a8cb8',
                     },
                 ],
             },
@@ -721,30 +715,29 @@ export const animeData = async () => {
             duration: 0,
             next_episode: new Date('2023-12-31'),
             rating: FilmRating.PG,
-            description: `
-                Польша, XV-й век. Времена, когда за еретические идеи сжигали на костре.
-                Рафал — вундеркинд, интересующийся теологией, самым важным в те времена предметом, 
-                и собирающийся поступать в университет по этому направлению. 
-                По стечению обстоятельств он однажды встречает таинственного человека 
-                и открывает для себя возможную «истину» среди тумана инакомыслия.
-            `,
+            description:
+                'Польша, XV-й век. Времена, когда за еретические идеи сжигали на костре. ' +
+                'Рафал — вундеркинд, интересующийся теологией, самым важным в те времена предметом, ' +
+                'и собирающийся поступать в университет по этому направлению. ' +
+                'По стечению обстоятельств он однажды встречает таинственного человека ' +
+                'и открывает для себя возможную «истину» среди тумана инакомыслия ',
             preview_link: 'https://Chi-about.com',
             status_description: 'в 2023-2024 гг',
             release_status: ReleaseStatus.NOT_YET_RELEASED,
             characters: {
                 connect: [
                     {
-                        id: characterList[19].id,
+                        id: 'c96d9432-bd32-450d-94ec-5d890f30c0e4',
                     },
                     {
-                        id: characterList[20].id,
+                        id: 'a34303be-e696-49b4-831b-d5541b6d5747',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[19].id,
+                        id: 'e602ecea-435c-4419-9f50-890d3faaf808',
                     },
                 ],
             },
@@ -760,10 +753,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[6].id,
+                        id: '893a0480-3c72-415e-9c45-da1d540bc440',
                     },
                     {
-                        id: genreList[7].id,
+                        id: '29873f37-d33e-43e3-9841-71447b4cbf47',
                     },
                 ],
             },
@@ -785,33 +778,32 @@ export const animeData = async () => {
             duration: 288,
             next_episode: new Date('2013-03-25'),
             rating: FilmRating.PG_13,
-            description: `
-                Семья Михо Нисидзуми много поколений пилотирует танки, а вот самой ей это не особо нравится.
-                Именно поэтому Михо пошла учиться в Академию Оарай, где не было подобных занятий.
-                Но теперь всё изменилось, и студсовет принуждает нашу малышку вступить на танковый факультатив,
-                чтобы Оарай могли участвовать в ежегодном турнире Сэнся-до. А ведь у неё только наконец
-                появились подруги! Но они-то не против, даже наоборот.
-            `,
+            description:
+                'Семья Михо Нисидзуми много поколений пилотирует танки, а вот самой ей это не особо нравится. ' +
+                'Именно поэтому Михо пошла учиться в Академию Оарай, где не было подобных занятий. ' +
+                'Но теперь всё изменилось, и студсовет принуждает нашу малышку вступить на танковый факультатив, ' +
+                'чтобы Оарай могли участвовать в ежегодном турнире Сэнся-до. А ведь у неё только наконец ' +
+                'появились подруги! Но они-то не против, даже наоборот.',
             preview_link: 'https://girls-and-panzer.com',
             status_description: 'в 2012-2013 гг',
             release_status: ReleaseStatus.COMPLETED,
             characters: {
                 connect: [
                     {
-                        id: characterList[21].id,
+                        id: '985e8f32-37e8-4a69-b849-daaa6c86f9d3',
                     },
                     {
-                        id: characterList[22].id,
+                        id: '03b7d2b8-8ab4-425d-8b9c-1480de602800',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[20].id,
+                        id: 'd4e62fc0-ff58-4e52-adea-b649ac4185ca',
                     },
                     {
-                        id: authorList[21].id,
+                        id: 'bc9ee071-5935-4d1f-a99f-9f2c1a0646e3',
                     },
                 ],
             },
@@ -826,10 +818,10 @@ export const animeData = async () => {
             genres: {
                 connect: [
                     {
-                        id: genreList[6].id,
+                        id: '893a0480-3c72-415e-9c45-da1d540bc440',
                     },
                     {
-                        id: genreList[0].id,
+                        id: '4f02be8b-cafb-4f1d-baa8-c34279b1def1',
                     },
                 ],
             },
@@ -854,32 +846,31 @@ export const animeData = async () => {
             duration: 0,
             next_episode: new Date('2023-12-31'),
             rating: FilmRating.NC_21,
-            description: `
-                Оказывается герои, одолевшие короля демонов, могут быть знамениты не только этим.
-                Например, один такой герой взял и создал специальную академию, которая смогла бы
-                воспитать ему достойную смену. Одной из лучших учениц академии стала Арнест Флейминг,
-                которая за свои успехи в управлении огнём, получила прозвище Императрица Пламени. 
-            `,
+            description:
+                'Оказывается герои, одолевшие короля демонов, могут быть знамениты не только этим. ' +
+                'Например, один такой герой взял и создал специальную академию, которая смогла бы ' +
+                'воспитать ему достойную смену. Одной из лучших учениц академии стала Арнест Флейминг, ' +
+                'которая за свои успехи в управлении огнём, получила прозвище Императрица Пламени.',
             preview_link: 'https://class-for-heroes.com',
             status_description: 'в 2023-2023 гг',
             release_status: ReleaseStatus.NOT_YET_RELEASED,
             characters: {
                 connect: [
                     {
-                        id: characterList[23].id,
+                        id: 'acdddc06-68cc-4765-a88d-a3f852738569',
                     },
                     {
-                        id: characterList[24].id,
+                        id: '6b2c741d-ed72-4c38-a0f6-53c9f0f69daf',
                     },
                 ],
             },
             authors: {
                 connect: [
                     {
-                        id: authorList[22].id,
+                        id: 'a22c040f-c228-43e0-a628-35e82ed293d3',
                     },
                     {
-                        id: authorList[23].id,
+                        id: '75f855d1-9148-434c-8552-07fdb1c277a4',
                     },
                 ],
             },
