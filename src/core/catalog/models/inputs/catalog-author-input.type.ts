@@ -1,7 +1,14 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { CatalogBasicInputType } from './catalog-basic-input.type';
-import { IsInt, IsOptional, IsString, IsArray } from '@nestjs/class-validator';
+import {
+    IsInt,
+    IsOptional,
+    IsString,
+    IsArray,
+    IsEnum,
+} from '@nestjs/class-validator';
 import { CatalogAuthorSortField } from '../enums/catalog-author-sort-field.enum';
+import { CatalogAuthorSearchTable } from '../enums/catalog-author-search-table.enum';
 
 @ArgsType()
 export class CatalogAuthorInputType extends CatalogBasicInputType {
@@ -12,6 +19,15 @@ export class CatalogAuthorInputType extends CatalogBasicInputType {
         description: 'Field for sorting',
     })
     sort_field?: CatalogAuthorSortField;
+
+    @IsOptional()
+    @IsEnum(CatalogAuthorSearchTable)
+    @Field(() => CatalogAuthorSearchTable, {
+        nullable: true,
+        description: 'Which table to search',
+        defaultValue: CatalogAuthorSearchTable.AUTHORS,
+    })
+    search_table?: CatalogAuthorSearchTable;
 
     @IsOptional()
     @IsInt()

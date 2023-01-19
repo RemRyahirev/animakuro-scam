@@ -45,7 +45,11 @@ export function createCatalogCharacterOptions(
         prismaOptions.where = {
             ...prismaOptions.where,
             id: {
-                in: elasticResults.results.map((r) => r.id),
+                in: [
+                    '03b7d2b8-8ab4-425d-8b9c-1480de602800',
+                    '0573891e-edec-492c-9793-45c04299969b',
+                    '04bfafc6-eb2f-4f0e-ba52-ec634efc133a',
+                ],
             },
         };
     } else if (

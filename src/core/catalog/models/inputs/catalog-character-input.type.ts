@@ -16,6 +16,15 @@ export class CatalogCharacterInputType extends CatalogBasicInputType {
     sort_field?: CatalogCharacterSortField;
 
     @IsOptional()
+    @IsEnum(CatalogCharacterSearchTable)
+    @Field(() => CatalogCharacterSearchTable, {
+        nullable: true,
+        description: 'Which table to search',
+        defaultValue: CatalogCharacterSearchTable.CHARACTERS,
+    })
+    search_table?: CatalogCharacterSearchTable;
+
+    @IsOptional()
     @IsInt()
     @Field(() => Int, {
         nullable: true,
@@ -30,15 +39,6 @@ export class CatalogCharacterInputType extends CatalogBasicInputType {
         description: `Maximum Character's age`,
     })
     max_age?: number;
-
-    @IsOptional()
-    @IsEnum(CatalogCharacterSearchTable)
-    @Field(() => CatalogCharacterSearchTable, {
-        nullable: true,
-        description: 'Which table to search',
-        defaultValue: CatalogCharacterSearchTable.CHARACTERS,
-    })
-    search_table?: CatalogCharacterSearchTable;
 
     @IsOptional()
     @IsEnum(CharacterType)
