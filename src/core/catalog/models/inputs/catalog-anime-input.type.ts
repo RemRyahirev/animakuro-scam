@@ -113,7 +113,7 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsDate()
     @Field(() => Date, {
         nullable: true,
-        description: 'The first official release date of the media',
+        description: 'ISO 8601 .The first official release date of the media',
     })
     date_start?: Date;
 
@@ -121,7 +121,7 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     @IsDate()
     @Field(() => Date, {
         nullable: true,
-        description: 'The last official release date of the media',
+        description: 'ISO 8601. The last official release date of the media',
     })
     date_end?: Date;
 
