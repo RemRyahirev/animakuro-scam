@@ -8,6 +8,7 @@ service DocumentService {
     rpc CreateDocument (CreateDocument) returns (Document) {}
     rpc UpdateDocument (UpdateDocument) returns (Document) {}
     rpc DeleteDocument (DocumentById) returns (Null) {}
+    rpc ForceUpdateDocuments (Null) returns (Null) {}
 }
 
 message Null {}

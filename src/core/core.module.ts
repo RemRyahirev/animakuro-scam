@@ -9,9 +9,10 @@ import { StudioModule } from './studio/studio.module';
 import { TranslationModule } from './translation/translation.module';
 import { UserAnimeModule } from './user-anime/user-anime.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
-import { CatalogModule } from "./catalog/catalog.module";
+import { CatalogModule } from './catalog/catalog.module';
 import { AiringScheduleModule } from './airing-schedule/airing-schedule.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
+import { MicroserviceModule } from './microservice/microservice.module';
 
 @Module({
     imports: [
@@ -28,6 +29,7 @@ import { AuthSessionModule } from './auth-session/auth-session.module';
         UserAnimeModule,
         UserProfileModule,
         CatalogModule,
+        MicroserviceModule,
     ],
     exports: [
         AuthModule,
@@ -43,6 +45,7 @@ import { AuthSessionModule } from './auth-session/auth-session.module';
         UserAnimeModule,
         UserProfileModule,
         CatalogModule,
+        MicroserviceModule,
     ],
 })
 export class CoreModule {}

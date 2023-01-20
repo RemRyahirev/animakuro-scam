@@ -6,7 +6,10 @@ export interface DocumentService {
     createDocument(createDocument: CreateDocument): Observable<any>;
     updateDocument(updateDocument: CreateDocument): Observable<any>;
     deleteDocument(documentById: DocumentById): Observable<any>;
+    forceUpdateDocuments(empty: Empty): Observable<any>;
 }
+
+export interface Empty {}
 
 export interface Document {
     id: string;
@@ -24,12 +27,12 @@ export interface SearchDocument {
 }
 
 export interface DocumentById {
-    index: string
-    id: string
+    index: string;
+    id: string;
 }
 
 export interface CreateDocument {
-    index: string
-    id: string
-    document: Document
+    index: string;
+    id: string;
+    document: Document;
 }
