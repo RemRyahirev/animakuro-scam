@@ -13,13 +13,11 @@ export function createCatalogCharacterOptions(
         'search' | 'sort_field' | 'sort_order' | 'search_table'
     >,
     sort: CatalogCharacterSort,
-    pagination: PaginationInputType,
     search_table: CatalogCharacterSearchTable | undefined
 ) {
     const { max_age, min_age, ...fieldsOptions } = options ;
 
     const prismaOptions: Prisma.CharacterFindManyArgs = {
-        ...transformPaginationUtil(pagination),
         where: {
             ...fieldsOptions,
             age: {

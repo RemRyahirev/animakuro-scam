@@ -56,15 +56,6 @@ export class CatalogAuthorInputType extends CatalogBasicInputType {
     date_of_death?: string;
 
     @IsOptional()
-    @IsArray()
-    @Field(() => [String], {
-        nullable: true,
-        description:
-            '[startYear, endYear] (If the 2nd value is not present author is still active)',
-    })
-    years_active?: string[];
-
-    @IsOptional()
     @IsString()
     @Field(() => String, {
         nullable: true,

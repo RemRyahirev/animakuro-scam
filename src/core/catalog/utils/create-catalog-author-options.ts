@@ -1,9 +1,7 @@
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
 import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input.type';
 import { Prisma } from '@prisma/client';
-import { PaginationInputType } from '../../../common/models/inputs';
 import { CatalogAuthorSort } from '../models/interfaces/catalog-author-sort';
-import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { CatalogAuthorSearchTable } from '../models/enums/catalog-author-search-table.enum';
 
 export function createCatalogAuthorOptions(
@@ -13,13 +11,11 @@ export function createCatalogAuthorOptions(
         'search' | 'sort_field' | 'sort_order'
     >,
     sort: CatalogAuthorSort,
-    pagination: PaginationInputType,
     search_table: CatalogAuthorSearchTable | undefined,
 ): Prisma.AuthorFindManyArgs {
     const { min_age, max_age, ...filterOptions } = options;
 
     const prismaOptions: Prisma.AuthorFindManyArgs = {
-        ...transformPaginationUtil(pagination),
         where: {
             ...filterOptions,
             age: {

@@ -3,7 +3,6 @@ import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { PaginationService } from '../../../common/services/pagination.service';
-import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
 import { CatalogGrpcService } from './catalog.grpc.service';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { CatalogIndices } from '../models/enums/catalog-indices.enum';
@@ -17,6 +16,10 @@ import { CatalogCharacterInputType } from '../models/inputs/catalog-character-in
 import { createCatalogCharacterOptions } from '../utils/create-catalog-character-options';
 import { CatalogCharacterSearchTable } from '../models/enums/catalog-character-search-table.enum';
 import { CatalogAuthorSearchTable } from '../models/enums/catalog-author-search-table.enum';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { ElasticResults } from '../models/interfaces/elastic-response.type';
+import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
 
 @Injectable()
 export class CatalogService {
@@ -30,7 +33,16 @@ export class CatalogService {
         args: CatalogAnimeInputType,
         pages: PaginationInputType,
     ): Promise<GetCatalogAnimeResultsType> {
-        const { search, sort_field, sort_order, ...filterOptions } = args;
+        const {
+            search,
+            sort_field,
+            sort_order,
+            genres,
+            studios,
+            date_start,
+            date_end,
+            ...filterOptions
+        } = args;
         const sort = { sort_field, sort_order };
 
         const elasticResults = await this.catalogGrpcService.searchDocument(
@@ -42,13 +54,25 @@ export class CatalogService {
             elasticResults,
             filterOptions,
             sort,
-            pages,
         );
 
-        const anime_list = await this.prisma.anime.findMany(prismaOptions);
-        const pagination = await this.paginationService.getPagination(
-            'anime',
+        let anime_list: any[] = [];
+
+        if (!(sort_field && sort_order) && elasticResults.done) {
+            const list = await this.prisma.anime.findMany(prismaOptions);
+            await this.sortByMatchScore(list, elasticResults);
+            anime_list = this.takeByPages(list, pages);
+        } else {
+            anime_list = await this.prisma.anime.findMany({
+                ...prismaOptions,
+                ...transformPaginationUtil(pages),
+            });
+        }
+
+        const pagination = await this.getCatalogPagination(
+            'Anime',
             pages,
+            prismaOptions.where,
         );
 
         return {
@@ -85,14 +109,26 @@ export class CatalogService {
             elasticResults,
             filterOptions,
             sort,
-            pages,
             search_table,
         );
 
-        const author_list = await this.prisma.author.findMany(prismaOptions);
-        const pagination = await this.paginationService.getPagination(
-            'author',
+        let author_list: any[] = [];
+
+        if (!(sort_field && sort_order) && elasticResults.done) {
+            const list = await this.prisma.author.findMany(prismaOptions);
+            await this.sortByMatchScore(list, elasticResults);
+            author_list = this.takeByPages(list, pages);
+        } else {
+            author_list = await this.prisma.author.findMany({
+                ...prismaOptions,
+                ...transformPaginationUtil(pages),
+            });
+        }
+
+        const pagination = await this.getCatalogPagination(
+            'Author',
             pages,
+            prismaOptions.where,
         );
 
         return {
@@ -119,13 +155,25 @@ export class CatalogService {
             elasticResults,
             filterOptions,
             sort,
-            pages,
         );
 
-        const studio_list = await this.prisma.studio.findMany(prismaOptions);
-        const pagination = await this.paginationService.getPagination(
-            'studio',
+        let studio_list: any = [];
+
+        if (!(sort_field && sort_order) && elasticResults.done) {
+            const list = await this.prisma.studio.findMany(prismaOptions);
+            await this.sortByMatchScore(list, elasticResults);
+            studio_list = this.takeByPages(list, pages);
+        } else {
+            studio_list = await this.prisma.studio.findMany({
+                ...prismaOptions,
+                ...transformPaginationUtil(pages),
+            });
+        }
+
+        const pagination = await this.getCatalogPagination(
+            'Studio',
             pages,
+            prismaOptions.where,
         );
 
         return {
@@ -162,16 +210,26 @@ export class CatalogService {
             elasticResults,
             filterOptions,
             sort,
-            pages,
             search_table,
         );
 
-        const character_list = await this.prisma.character.findMany(
-            prismaOptions,
-        );
-        const pagination = await this.paginationService.getPagination(
-            'character',
+        let character_list: any[] = [];
+
+        if (!(sort_field && sort_order) && elasticResults.done) {
+            const list = await this.prisma.character.findMany(prismaOptions);
+            await this.sortByMatchScore(list, elasticResults);
+            character_list = this.takeByPages(list, pages);
+        } else {
+            character_list = await this.prisma.character.findMany({
+                ...prismaOptions,
+                ...transformPaginationUtil(pages),
+            });
+        }
+
+        const pagination = await this.getCatalogPagination(
+            'Character',
             pages,
+            prismaOptions.where,
         );
 
         return {
@@ -180,5 +238,49 @@ export class CatalogService {
             character_list: character_list as any,
             pagination,
         };
+    }
+
+    private async sortByMatchScore<T extends Array<{ id: string }>>(
+        list: T,
+        elasticResults: ElasticResults,
+    ) {
+        list.sort((a, b) => {
+            const firstScore = elasticResults.results.find(
+                (el) => el.id === a.id,
+            );
+            const secondScore = elasticResults.results.find(
+                (el) => el.id === b.id,
+            );
+            // @ts-ignore
+            if (firstScore.matchScore > secondScore.matchScore) return -1;
+            return 1;
+        });
+    }
+
+    private async getCatalogPagination<
+        N extends keyof Prisma.TypeMap['model'],
+        A extends PaginationInputType,
+        T extends Prisma.TypeMap['model'][N]['count']['args']['where'],
+    >(entityName: N, pages: A, where: T) {
+        // @ts-ignore
+        const totalCount = await this.prisma[entityName].count({
+            where,
+        });
+        return {
+            page: pages.page,
+            perPage: pages.perPage,
+            totalCount: totalCount,
+            pageCount: Math.ceil(totalCount / pages.perPage) ?? 0,
+        };
+    }
+
+    private takeByPages<T extends Array<{}>, A extends PaginationInputType>(
+        list: T,
+        pages: A,
+    ) {
+        return list.slice(
+            (pages.page - 1) * pages.perPage,
+            pages.page * pages.perPage,
+        );
     }
 }

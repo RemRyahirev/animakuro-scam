@@ -3,8 +3,6 @@ import { Prisma } from '@prisma/client';
 import { CatalogAnimeSortField } from '../models/enums/catalog-anime-sort-field.enum';
 import { ReleaseStatus } from '../../../common/models/enums';
 import { CatalogAnimeSort } from '../models/interfaces/catalog-anime-sort';
-import { PaginationInputType } from '../../../common/models/inputs';
-import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
 
 export function createCatalogAnimeOptions(
@@ -14,12 +12,10 @@ export function createCatalogAnimeOptions(
         'search' | 'sort_field' | 'sort_order'
     >,
     sort: CatalogAnimeSort,
-    pagination: PaginationInputType,
 ): Prisma.AnimeFindManyArgs {
     const { genres, studios, date_start, date_end, ...filterOptions } = options;
 
     const prismaOptions: Prisma.AnimeFindManyArgs = {
-        ...transformPaginationUtil(pagination),
         where: {
             ...filterOptions,
             genres: {
