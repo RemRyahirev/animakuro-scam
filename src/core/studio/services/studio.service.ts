@@ -26,7 +26,7 @@ export class StudioService {
                 id,
             },
             include: {
-                anime: {
+                animes: {
                     include: {
                         genres: true,
                         authors: true,
@@ -54,7 +54,7 @@ export class StudioService {
         const studioList = await this.prisma.studio.findMany({
             ...transformPaginationUtil(args),
             include: {
-                anime: {
+                animes: {
                     include: {
                         genres: true,
                         authors: true,
@@ -82,7 +82,7 @@ export class StudioService {
                 ...args,
             },
             include: {
-                anime: {
+                animes: {
                     include: {
                         genres: true,
                         authors: true,
@@ -108,7 +108,7 @@ export class StudioService {
                 ...args,
             },
             include: {
-                anime: {
+                animes: {
                     include: {
                         genres: true,
                         authors: true,
@@ -135,7 +135,7 @@ export class StudioService {
         const studio = await this.prisma.studio.delete({
             where: { id },
             include: {
-                anime: {
+                animes: {
                     include: {
                         genres: true,
                         authors: true,
@@ -164,12 +164,12 @@ export class StudioService {
                     include: {
                         _count: {
                             select: {
-                                anime: true
+                                animes: true
                             }
                         }
                     }
                 })
-                .then((item) => item?._count.anime ?? 0);
+                .then((item) => item?._count.animes ?? 0);
         }
         const animeYearArray: number[] = await this.prisma.anime
             .findMany({

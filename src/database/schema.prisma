@@ -64,7 +64,7 @@ model Studio {
   anime_starts        Float    @db.Real
   anime_ends          Float    @db.Real
   is_animation_studio Boolean  @default(true)
-  anime               Anime[]
+  animes               Anime[]
 
   @@map("studio")
 }

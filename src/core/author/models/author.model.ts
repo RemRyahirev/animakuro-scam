@@ -1,4 +1,5 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class Author {
@@ -92,4 +93,10 @@ export class Author {
 
     @Field(() => Date, { description: 'When the author data was last updated' })
     updated_at: Date;
+
+    @Field(() => [Anime], {
+        nullable: true,
+        description: 'List of the animes in which the character appears',
+    })
+    animes: Anime[];
 }

@@ -1,6 +1,7 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { IsArray, IsEnum, IsString, Length } from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
+import { IsNumber } from 'class-validator';
 
 @ArgsType()
 export class CreateCharacterInputType {
@@ -29,7 +30,7 @@ export class CreateCharacterInputType {
     @Field(() => String)
     blood_type: string;
 
-    @IsString()
+    @IsNumber()
     @Field(() => Int)
     age: number;
 

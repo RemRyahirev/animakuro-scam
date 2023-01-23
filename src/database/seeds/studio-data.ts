@@ -82,7 +82,7 @@ export const studioDependencies = async () => {
     return [
         {
             id: 'ac9ab0e3-2d72-4e7c-9255-d1a20e49b113',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[0].id,
@@ -95,7 +95,7 @@ export const studioDependencies = async () => {
         },
         {
             id: '9acd2bf7-6fcf-4648-bd03-5e6dbf68a244',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[2].id,
@@ -105,7 +105,7 @@ export const studioDependencies = async () => {
         },
         {
             id: '48117d7a-5946-4940-937c-d733d8d46e3f',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[3].id,
@@ -118,7 +118,7 @@ export const studioDependencies = async () => {
         },
         {
             id: 'bfa55967-e6dc-4a22-a763-acf08b9a8ae1',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[5].id,
@@ -131,7 +131,7 @@ export const studioDependencies = async () => {
         },
         {
             id: '0a0beac9-7395-4383-b894-b55f7263824e',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[7].id,
@@ -144,7 +144,7 @@ export const studioDependencies = async () => {
         },
         {
             id: 'e34522f4-6656-4d97-a0f5-728089494bef',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[9].id,
@@ -157,7 +157,7 @@ export const studioDependencies = async () => {
         },
         {
             id: '2a968ac7-b82a-41ce-beb6-25f790a4b31b',
-            anime: {
+            animes: {
                 set: [
                     {
                         id: animeList[11].id,

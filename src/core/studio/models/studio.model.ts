@@ -22,9 +22,10 @@ export class Studio {
     thumbnail: string;
 
     @Field(() => [Anime], {
+        nullable: true,
         description: 'Animes produced by the studio',
     })
-    anime: Anime[];
+    animes: Anime[];
 
     @Field(() => Int, {
         description: 'Number of animes produced by the studio',

@@ -39,8 +39,12 @@ export class UserProfileService {
     ): Promise<GetListUserProfileResultsType> {
         const userProfileList = await this.prisma.userProfile.findMany({
             ...transformPaginationUtil(args),
+            include: {
+                user: true,
+            },
         });
         const pagination = await this.paginationService.getPagination('userProfile', args);
+
         return {
             success: true,
             errors: [],

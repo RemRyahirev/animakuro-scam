@@ -152,6 +152,8 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
+                ...entityUpdateUtil('relating_animes', args),
+                ...entityUpdateUtil('similar_animes', args),
                 ...args,
             },
             include: {
@@ -171,6 +173,7 @@ export class AnimeService {
                 },
             } as any,
         });
+        console.log(anime);
         return {
             success: true,
             anime: anime as any,
@@ -187,6 +190,8 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
+                ...entityUpdateUtil('relating_animes', args),
+                ...entityUpdateUtil('similar_animes', args),
                 ...args,
             },
             include: {

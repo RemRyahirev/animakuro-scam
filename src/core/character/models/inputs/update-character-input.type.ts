@@ -1,7 +1,8 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 import {
     IsArray,
     IsEnum,
+    IsNumber,
     IsOptional,
     IsString,
     IsUUID,
@@ -56,6 +57,11 @@ export class UpdateCharacterInputType {
     @IsString()
     @Field(() => String, { nullable: true })
     gender?: string;
+
+    @IsOptional()
+    @IsNumber()
+    @Field(() => Int, { nullable: true })
+    age?: number;
 
     @IsOptional()
     @IsString()

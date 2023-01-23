@@ -3,7 +3,6 @@ import {
     IsArray,
     IsBoolean,
     IsDate,
-    IsDecimal,
     IsInt,
     IsOptional,
     IsString,
@@ -18,8 +17,8 @@ import {
     MediaSource,
     ReleaseStatus,
     YearSeason,
-    AnimeRelation,
 } from '../../../../common/models/enums';
+import { IsNumber } from 'class-validator';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -34,7 +33,7 @@ export class UpdateAnimeInputType {
     title?: string;
 
     @IsOptional()
-    @IsDecimal()
+    @IsNumber()
     @Field(() => Float, { nullable: true })
     score?: number;
 
@@ -62,13 +61,13 @@ export class UpdateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    genresToAdd?: string[];
+    genres_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    genresToRemove?: string[];
+    genres_remove?: string[];
 
     @IsOptional()
     @IsString()
@@ -90,13 +89,13 @@ export class UpdateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    studiosToAdd?: string[];
+    studios_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    studiosToRemove?: string[];
+    studios_remove?: string[];
 
     @IsOptional()
     @IsInt()
@@ -169,25 +168,25 @@ export class UpdateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    charactersToAdd?: string[];
+    characters_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    charactersToRemove?: string[];
+    characters_remove?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    authorsToAdd?: string[];
+    authors_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { nullable: true })
-    authorsToRemove?: string[];
+    authors_remove?: string[];
 
     @IsOptional()
     @Field(() => [ID], {
@@ -202,13 +201,6 @@ export class UpdateAnimeInputType {
         description: 'Remove from the list of relating animes',
     })
     relating_animes_remove: string[];
-
-    @IsOptional()
-    @Field(() => [AnimeRelation], {
-        nullable: true,
-        defaultValue: AnimeRelation.NULL,
-    })
-    related_status: AnimeRelation[];
 
     @IsOptional()
     @Field(() => [ID], {

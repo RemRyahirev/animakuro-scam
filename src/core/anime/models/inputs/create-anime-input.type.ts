@@ -18,7 +18,6 @@ import {
     MediaSource,
     ReleaseStatus,
     YearSeason,
-    AnimeRelation,
 } from '../../../../common/models/enums';
 
 @ArgsType()
@@ -65,7 +64,7 @@ export class CreateAnimeInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [ID], { description: "Array of studio id's to add" })
-    studios_Add: string[];
+    studios_add: string[];
 
     @IsInt()
     @Field(() => Int)
@@ -147,11 +146,4 @@ export class CreateAnimeInputType {
         description: 'Add to the list of similar animes',
     })
     similar_animes_add: string[];
-
-    @IsOptional()
-    @Field(() => [AnimeRelation], {
-        nullable: true,
-        defaultValue: AnimeRelation.NULL,
-    })
-    related_status: [AnimeRelation];
 }

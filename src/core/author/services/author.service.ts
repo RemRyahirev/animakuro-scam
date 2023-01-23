@@ -10,7 +10,9 @@ import { DeleteAuthorResultsType } from '../models/results/delete-author-results
 import { UpdateAuthorResultsType } from '../models/results/update-author-results.type';
 import { CreateAuthorResultsType } from '../models/results/create-author-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AuthorService {
     constructor(
         private prisma: PrismaService,
@@ -22,6 +24,16 @@ export class AuthorService {
             where: {
                 id,
             },
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true,
+                        studios: true,
+                    },
+                },
+            },
         });
         if (!author) {
             return {
@@ -31,7 +43,7 @@ export class AuthorService {
         }
         return {
             success: true,
-            author,
+            author: author as any,
             errors: [],
         };
     }
@@ -41,12 +53,22 @@ export class AuthorService {
     ): Promise<GetListAuthorResultsType> {
         const authorList = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),
+            include: {
+                animes: {
+                    include: {
+                        genres: true,
+                        characters: true,
+                        authors: true,
+                        studios: true,
+                    },
+                },
+            },
         });
         const pagination = await this.paginationService.getPagination('author', args);
         return {
             success: true,
             errors: [],
-            authorList,
+            authorList: authorList as any,
             pagination,
         };
     }
@@ -60,10 +82,10 @@ export class AuthorService {
             where: {
                 animes: {
                     some: {
-                        id
-                    }
-                }
-            }
+                        id,
+                    },
+                },
+            },
         });
         const pagination = await this.paginationService.getPagination(
             "author",
@@ -77,8 +99,8 @@ export class AuthorService {
         return {
             success: true,
             errors: [],
-            authorList,
-            pagination
+            authorList: authorList as any,
+            pagination,
         };
     }
 
@@ -90,7 +112,7 @@ export class AuthorService {
         });
         return {
             success: true,
-            author,
+            author: author as any,
         };
     }
 
@@ -103,7 +125,7 @@ export class AuthorService {
         });
         return {
             success: true,
-            author,
+            author: author as any,
         };
     }
 
@@ -115,7 +137,7 @@ export class AuthorService {
         });
         return {
             success: true,
-            author,
+            author: author as any,
         };
     }
 }
