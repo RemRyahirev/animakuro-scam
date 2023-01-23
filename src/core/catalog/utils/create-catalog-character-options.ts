@@ -1,9 +1,7 @@
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
-import { PaginationInputType } from '../../../common/models/inputs';
 import { Prisma } from '@prisma/client';
 import { CatalogCharacterInputType } from '../models/inputs/catalog-character-input.type';
 import { CatalogCharacterSort } from '../models/interfaces/catalog-character-sort';
-import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { CatalogCharacterSearchTable } from '../models/enums/catalog-character-search-table.enum';
 
 export function createCatalogCharacterOptions(
@@ -43,11 +41,7 @@ export function createCatalogCharacterOptions(
         prismaOptions.where = {
             ...prismaOptions.where,
             id: {
-                in: [
-                    '03b7d2b8-8ab4-425d-8b9c-1480de602800',
-                    '0573891e-edec-492c-9793-45c04299969b',
-                    '04bfafc6-eb2f-4f0e-ba52-ec634efc133a',
-                ],
+                in: elasticResults.results.map((r) => r.id),
             },
         };
     } else if (

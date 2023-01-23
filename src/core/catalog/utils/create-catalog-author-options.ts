@@ -15,7 +15,7 @@ export function createCatalogAuthorOptions(
 ): Prisma.AuthorFindManyArgs {
     const { min_age, max_age, ...filterOptions } = options;
 
-    const prismaOptions: Prisma.AuthorFindManyArgs = {
+    let prismaOptions: Prisma.AuthorFindManyArgs = {
         where: {
             ...filterOptions,
             age: {
@@ -45,15 +45,21 @@ export function createCatalogAuthorOptions(
         elasticResults.done &&
         search_table === CatalogAuthorSearchTable.ANIMES
     ) {
-        prismaOptions.where = {
-            ...prismaOptions.where,
-            animes: {
-                some: {
-                    id: {
-                        in: elasticResults.results.map((r) => r.id),
+        prismaOptions = {
+            ...prismaOptions,
+            where: {
+                ...prismaOptions.where,
+                animes: {
+                    some: {
+                        id: {
+                            in: elasticResults.results.map((r) => r.id),
+                        },
                     },
                 },
             },
+            include: {
+                animes: true
+            }
         };
     }
 

@@ -5,5 +5,5 @@ export type ElasticResults = {
 
 type ElasticResultsItem = {
     id: string;
-    matchScore: string;
+    matchScore: number;
 }

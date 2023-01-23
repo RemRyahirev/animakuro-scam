@@ -17,7 +17,7 @@ import { createCatalogCharacterOptions } from '../utils/create-catalog-character
 import { CatalogCharacterSearchTable } from '../models/enums/catalog-character-search-table.enum';
 import { CatalogAuthorSearchTable } from '../models/enums/catalog-author-search-table.enum';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
 import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
 
@@ -115,8 +115,32 @@ export class CatalogService {
         let author_list: any[] = [];
 
         if (!(sort_field && sort_order) && elasticResults.done) {
-            const list = await this.prisma.author.findMany(prismaOptions);
-            await this.sortByMatchScore(list, elasticResults);
+            const list: any[] = await this.prisma.author.findMany(
+                prismaOptions,
+            );
+            if (search_table === CatalogAuthorSearchTable.AUTHORS) {
+                await this.sortByMatchScore(list, elasticResults);
+            } else {
+                list.sort((a, b) => {
+                    const firstScore = elasticResults.results.find((el) => {
+                        for (const anime of a.animes) {
+                            return anime.id === el.id;
+                        }
+                    });
+                    const secondScore = elasticResults.results.find((el) => {
+                        for (const anime of b.animes) {
+                            return anime.id === el.id;
+                        }
+                    });
+
+                    if (firstScore && secondScore) {
+                        if (firstScore.matchScore > secondScore.matchScore)
+                            return -1;
+                        return 1;
+                    }
+                    return 0;
+                });
+            }
             author_list = this.takeByPages(list, pages);
         } else {
             author_list = await this.prisma.author.findMany({
@@ -216,8 +240,32 @@ export class CatalogService {
         let character_list: any[] = [];
 
         if (!(sort_field && sort_order) && elasticResults.done) {
-            const list = await this.prisma.character.findMany(prismaOptions);
-            await this.sortByMatchScore(list, elasticResults);
+            const list: any[] = await this.prisma.character.findMany(
+                prismaOptions,
+            );
+            if (search_table === CatalogCharacterSearchTable.CHARACTERS) {
+                await this.sortByMatchScore(list, elasticResults);
+            } else {
+                list.sort((a, b) => {
+                    const firstScore = elasticResults.results.find((el) => {
+                        for (const anime of a.animes) {
+                            return anime.id === el.id;
+                        }
+                    });
+                    const secondScore = elasticResults.results.find((el) => {
+                        for (const anime of b.animes) {
+                            return anime.id === el.id;
+                        }
+                    });
+
+                    if (firstScore && secondScore) {
+                        if (firstScore.matchScore > secondScore.matchScore)
+                            return -1;
+                        return 1;
+                    }
+                    return 0;
+                });
+            }
             character_list = this.takeByPages(list, pages);
         } else {
             character_list = await this.prisma.character.findMany({
@@ -251,9 +299,12 @@ export class CatalogService {
             const secondScore = elasticResults.results.find(
                 (el) => el.id === b.id,
             );
-            // @ts-ignore
-            if (firstScore.matchScore > secondScore.matchScore) return -1;
-            return 1;
+
+            if (firstScore && secondScore) {
+                if (firstScore.matchScore > secondScore.matchScore) return -1;
+                return 1;
+            }
+            return 0;
         });
     }
 
