@@ -26,7 +26,7 @@ export function createCatalogStudioOptions(
                 gte: min_anime_count,
                 lte: max_anime_count,
             },
-            anime: {
+            animes: {
                 some: {
                     genres: {
                         some: {
@@ -39,7 +39,7 @@ export function createCatalogStudioOptions(
             },
         },
         include: {
-            anime: true,
+            animes: true,
         },
     };
 
