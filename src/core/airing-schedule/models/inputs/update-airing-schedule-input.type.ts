@@ -1,16 +1,27 @@
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
+import { IsDate, IsInt, IsOptional, IsUUID } from '@nestjs/class-validator';
 
 @ArgsType()
 export class UpdateAiringScheduleInputType {
+    @IsUUID()
     @Field(() => ID, {
-        nullable: true,
-        description: 'ID of anime',
+        description: `The airing schedule's ID`,
     })
-    anime_id: string;
+    id: string;
 
-    @Field(() => Int, {
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        description: 'The official airing date of the media',
         nullable: true,
-        defaultValue: null,
     })
-    episode: number;
+    airing_at?: Date;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        description: 'The airing episode number',
+        nullable: true,
+    })
+    episode?: number;
 }

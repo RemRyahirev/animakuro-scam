@@ -76,6 +76,9 @@ export const animeData = async () => {
                     },
                 ],
             },
+            airing_schedule: {
+                connect: []
+            },
         },
         {
             id: 'f2d82632-d15d-496f-a45b-dd57b1297f6e',
@@ -129,6 +132,9 @@ export const animeData = async () => {
                         id: '996e603b-d3dc-4fd8-b6fe-f5e2837168e5',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -192,6 +198,9 @@ export const animeData = async () => {
                         id: 'ea5a020b-40ad-402a-8215-e9050a817b64',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -264,6 +273,9 @@ export const animeData = async () => {
                     },
                 ],
             },
+            airing_schedule: {
+                connect: []
+            },
         },
         {
             id: 'b7e9104f-9453-4414-8d23-0bd7e3a33d53',
@@ -330,6 +342,9 @@ export const animeData = async () => {
                         id: 'c8d6cd01-a845-41b7-878d-f495809fc36f',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -403,6 +418,9 @@ export const animeData = async () => {
                     },
                 ],
             },
+            airing_schedule: {
+                connect: []
+            },
         },
         {
             id: '5318851d-3348-4cf7-81a9-b08ccf505796',
@@ -468,6 +486,9 @@ export const animeData = async () => {
                         id: 'c287a823-3976-467e-a093-9d7b9f65c544',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -536,6 +557,9 @@ export const animeData = async () => {
                         id: '6a6d7780-a4f8-43da-8a6b-50ba6befff11',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -606,6 +630,9 @@ export const animeData = async () => {
                         id: 'f2e513e0-ef4a-4d67-8119-c734c9df9b75',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -681,6 +708,9 @@ export const animeData = async () => {
                     },
                 ],
             },
+            airing_schedule: {
+                connect: []
+            },
         },
         {
             id: 'eef70dab-1363-4b4b-99cb-574655321b28',
@@ -740,6 +770,9 @@ export const animeData = async () => {
                         id: 'e602ecea-435c-4419-9f50-890d3faaf808',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
         {
@@ -807,6 +840,9 @@ export const animeData = async () => {
                     },
                 ],
             },
+            airing_schedule: {
+                connect: []
+            },
         },
         {
             id: '8a1d7510-f7fb-4656-a38d-f06239d57cfe',
@@ -873,6 +909,9 @@ export const animeData = async () => {
                         id: '75f855d1-9148-434c-8552-07fdb1c277a4',
                     },
                 ],
+            },
+            airing_schedule: {
+                connect: []
             },
         },
     ];

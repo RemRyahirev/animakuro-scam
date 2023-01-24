@@ -7,6 +7,9 @@ import { CreateAiringScheduleResultsType } from '../models/results/create-airing
 import { UpdateAiringScheduleResultsType } from '../models/results/update-airing-schedule-results.type';
 import { DeleteAiringScheduleResultsType } from '../models/results/delete-airing-schedule-results.type';
 import { Injectable } from '@nestjs/common';
+import { CreateAiringScheduleInputType } from '../models/inputs/create-airing-schedule-input.type';
+import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-schedule-input.type';
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 
 @Injectable()
 export class AiringScheduleService {
@@ -19,7 +22,7 @@ export class AiringScheduleService {
         const airing_schedule = await this.prisma.airingSchedule.findUnique({
             where: {
                 id,
-            },
+            }
         });
         if (!airing_schedule) {
             return {
@@ -35,13 +38,10 @@ export class AiringScheduleService {
     }
 
     async getAiringScheduleList(
-        scheduled_animes: string[],
         args: PaginationInputType,
     ): Promise<GetListAiringScheduleResultsType> {
         const airing_schedule = await this.prisma.airingSchedule.findMany({
-            where: {
-                id: { in: scheduled_animes },
-            },
+            ...transformPaginationUtil(args),
         });
         const pagination = await this.paginationService.getPagination(
             'airingSchedule',
@@ -56,30 +56,26 @@ export class AiringScheduleService {
     }
 
     async createAiringSchedule(
-        scheduled_animes_add: string[],
-        episodes: number[],
+        args: CreateAiringScheduleInputType,
     ): Promise<CreateAiringScheduleResultsType> {
-        for (let i = 0; i < scheduled_animes_add.length; i++) {
-            const anime = await this.prisma.anime.findUnique({
-                where: { id: scheduled_animes_add[i] },
-            });
-            const next_episode = anime?.next_episode || '';
+        const anime = await this.prisma.anime.findUnique({
+            where: { id: args.anime_id },
+        });
 
-            await this.prisma.airingSchedule.create({
-                data: {
-                    anime_id: scheduled_animes_add[i],
-                    episode: episodes[i],
-                    airing_at: next_episode,
-                    time_until_airing: Math.round(
-                        (+next_episode - +new Date()) / 1000,
-                    ),
+        const next_episode = anime?.next_episode || '';
+
+        const airing_schedule = await this.prisma.airingSchedule.create({
+            data: {
+                airing_at: args.airing_at,
+                time_until_airing: Math.round(
+                    (+next_episode - +new Date()) / 1000,
+                ),
+                anime: {
+                    connect: {
+                        id: args.anime_id,
+                    },
                 },
-            });
-        }
-
-        const airing_schedule: any = await this.prisma.airingSchedule.findMany({
-            where: {
-                anime_id: { in: scheduled_animes_add },
+                episode: args.episode,
             },
             include: {
                 anime: true,
@@ -89,54 +85,33 @@ export class AiringScheduleService {
         return {
             success: true,
             errors: [],
-            airing_schedule: airing_schedule,
+            airing_schedule: airing_schedule as any,
         };
     }
 
     async updateAiringSchedule(
-        id: string,
-        anime_id: string,
-        episode: number,
-        airing_at: Date,
-        time_until_airing: number,
+        args: UpdateAiringScheduleInputType,
     ): Promise<UpdateAiringScheduleResultsType> {
-        await this.prisma.airingSchedule.update({
-            where: { id },
-            data: {
-                anime_id,
-                episode,
-                airing_at,
-                time_until_airing,
-            },
+        const airing_schedule = await this.prisma.airingSchedule.update({
+            where: { id: args.id },
+            data: args,
         });
-
-        const airing_schedule: any =
-            await this.prisma.airingSchedule.findUnique({
-                where: { id },
-                include: {
-                    anime: true,
-                },
-            });
 
         return {
             success: true,
-            airing_schedule,
+            airing_schedule: airing_schedule as any,
         };
     }
 
     async deleteAiringSchedule(
-        scheduled_animes_remove: string[],
+        id: string,
     ): Promise<DeleteAiringScheduleResultsType> {
-        await this.prisma.airingSchedule.deleteMany({
-            where: {
-                anime_id: {
-                    in: scheduled_animes_remove,
-                },
-            },
+        const airing_schedule = await this.prisma.airingSchedule.delete({
+            where: { id },
         });
         return {
             success: true,
-            airing_schedule: null,
+            airing_schedule: airing_schedule as any,
         };
     }
 }

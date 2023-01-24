@@ -15,21 +15,16 @@ export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
     }
 
     @ResolveField(() => GetAiringScheduleResultsType)
-    async getGenre(
+    async getAiringSchedule(
         @Args('id') id: string,
     ): Promise<GetAiringScheduleResultsType> {
         return await this.airingScheduleService.getAiringSchedule(id);
     }
 
     @ResolveField(() => GetListAiringScheduleResultsType)
-    async getGenreList(
-        @Args({ name: 'scheduled_animes_remove', type: () => [String] })
-        scheduled_animes_remove: string[],
+    async getAiringScheduleList(
         @Args() args: PaginationInputType,
     ): Promise<GetListAiringScheduleResultsType> {
-        return await this.airingScheduleService.getAiringScheduleList(
-            scheduled_animes_remove,
-            args,
-        );
+        return await this.airingScheduleService.getAiringScheduleList(args);
     }
 }

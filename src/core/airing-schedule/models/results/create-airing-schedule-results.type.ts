@@ -4,9 +4,9 @@ import { AiringSchedule } from '../airing-schedule.model';
 
 @ObjectType()
 export class CreateAiringScheduleResultsType extends BaseResultsType {
-    @Field(() => [AiringSchedule], {
+    @Field(() => AiringSchedule, {
         nullable: true,
         description: 'AiringSchedule',
     })
-    airing_schedule: AiringSchedule[] | null;
+    airing_schedule: AiringSchedule | null;
 }

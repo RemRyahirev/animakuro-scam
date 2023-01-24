@@ -42,6 +42,7 @@ export class AnimeService {
                         child_anime: true,
                     },
                 },
+                airing_schedule: true,
             },
         });
         return {
@@ -71,6 +72,7 @@ export class AnimeService {
                         child_anime: true,
                     },
                 },
+                airing_schedule: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -171,9 +173,9 @@ export class AnimeService {
                         child_anime: true,
                     },
                 },
+                airing_schedule: true,
             } as any,
         });
-        console.log(anime);
         return {
             success: true,
             anime: anime as any,
@@ -209,6 +211,7 @@ export class AnimeService {
                         child_anime: true,
                     },
                 },
+                airing_schedule: true,
             } as any,
         });
         return {
@@ -419,6 +422,7 @@ export class AnimeService {
                 studios: true,
                 relating_animes: true,
                 similar_animes: true,
+                airing_schedule: true,
             },
         });
         return {

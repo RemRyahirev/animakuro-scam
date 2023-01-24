@@ -114,7 +114,7 @@ model Anime {
   similar_animes      SimilarAnime[]   @relation("similar")
   similar_by_animes   SimilarAnime[]   @relation("similar_by")
   user_anime          UserAnime[]
-  next_airing_episode AiringSchedule[]
+  airing_schedule     AiringSchedule[]
 
   @@map("anime")
 }

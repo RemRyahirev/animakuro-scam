@@ -3,28 +3,33 @@ import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
 export class AiringSchedule {
-    @Field(() => Date)
+    @Field(() => ID, {
+        description: 'Unique ID of the airing schedule',
+    })
+    id?: string;
+
+    @Field(() => Date, {
+        description: 'The official airing date of the media',
+    })
     airing_at: Date;
 
     @Field(() => Int, {
-        nullable: true,
-        defaultValue: null,
+        description: 'Seconds until episode starts airing',
     })
     time_until_airing: number;
 
     @Field(() => Int, {
-        nullable: true,
-        defaultValue: null,
+        description: 'The airing episode number',
     })
     episode: number;
 
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'The associate anime id of the airing episode',
+    })
     anime_id: string;
 
     @Field(() => Anime, {
-        nullable: true,
-        defaultValue: null,
-        description: 'Anime',
+        description: 'The associate Anime of the airing episode',
     })
     anime: Anime;
 }

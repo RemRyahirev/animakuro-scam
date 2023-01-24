@@ -7,11 +7,11 @@ import { AiringSchedule } from '../airing-schedule.model';
 
 @ObjectType()
 export class GetListAiringScheduleResultsType extends BaseResultsType {
-    @Field(() => AiringSchedule, {
+    @Field(() => [AiringSchedule], {
         nullable: true,
         description: 'AiringSchedule',
     })
-    airing_schedule: AiringSchedule | null;
+    airing_schedule: AiringSchedule[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

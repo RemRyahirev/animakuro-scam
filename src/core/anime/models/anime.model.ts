@@ -13,6 +13,7 @@ import { Character } from '../../character/models/character.model';
 import { Studio } from '../../studio/models/studio.model';
 import { RelatingAnime } from '../../relating-anime/models/relating-anime.model';
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
+import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
 
 @ObjectType()
 export class Anime {
@@ -176,6 +177,11 @@ export class Anime {
         description: 'The companies who produced the media',
     })
     studios: Studio[];
+
+    @Field(() => [AiringSchedule], {
+        description: `List of anime's airing schedule`,
+    })
+    airing_schedule: AiringSchedule[];
 
     @Field(() => Date, { description: 'When the anime data was created' })
     created_at: Date;
