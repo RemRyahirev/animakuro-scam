@@ -12,11 +12,9 @@ model User {
   id                 String        @id @default(uuid()) @db.Uuid
   username           String        @unique @db.VarChar(64)
   email              String        @db.VarChar(320)
+  avatar             String        @db.Text
   is_email_confirmed Boolean       @default(false)
   password           String        @map("password")
-  avatar             String        @db.Text
-  birthday           DateTime?     @db.Date
-  gender             Gender
   created_at         DateTime      @default(now()) @map("created_at") @db.Date
   deleted            Boolean       @default(false)
   auth               Auth[]
@@ -214,19 +212,51 @@ model UserProfile {
   id                 String           @id @default(uuid()) @db.Uuid
   user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id            String           @unique @db.Uuid //Field name changed 28/12 from user_id
-  displayed_name     String?          @db.VarChar(30)
-  profile_picture_id String?          @db.Uuid // аватар!
-  banner_image       String?          @db.Uuid
   about              String?          @db.Text
-  country            ProfileCountries @default(UNSPECIFIED)
-  language           ProfileLanguages @default(ENGLISH)
   created_at         DateTime?        @default(now()) @db.Date
-  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
   moderator_role     ModeratorRoles   @default(VIEWER)
   is_blocked         Boolean          @default(false)
   user_anime         UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
+  profile_settings   ProfileSettings?
+  profile_notifications ProfileNotifications?
 
   @@map("user_profile")
+}
+
+model ProfileSettings {
+  id                 String           @id @default(uuid()) @db.Uuid
+  profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String           @unique @db.Uuid
+  displayed_name     String?          @db.VarChar(30)
+  gender             Gender
+  birthday           DateTime?        @db.Date
+  site_theme         SiteTheme
+  avatar             String           @db.Text
+  cover              String           @db.Text
+  country            ProfileCountries @default(UNSPECIFIED)
+  language           ProfileLanguages @default(ENGLISH)
+  timezone           String           @db.VarChar(10)
+  profile_type       ProfileType
+  integrations       Json             @db.Json
+  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
+  updated_at         DateTime         @default(now()) @map("updated_at")
+
+  @@map("profile_settings")
+}
+
+model ProfileNotifications {
+  id                 String           @id @default(uuid()) @db.Uuid
+  profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String           @unique @db.Uuid
+  sound              Boolean          @default(true)
+  new_episode        Boolean          @default(true)
+  //friends_activity   Boolean          @default(true)
+  //messages           Boolean          @default(true)
+  //new_friends        Boolean          @default(true)          Пока нереализуемо!
+  //mentions           Boolean          @default(true)
+  //likes              Boolean          @default(true)
+
+  @@map("profile_notifications")
 }
 
 model UserAnime {
@@ -400,4 +430,16 @@ enum ProfileCountries {
   JAPAN
   UKRAINE
   UNSPECIFIED
+}
+
+enum SiteTheme {
+  LIGHT
+  DARK
+  AUTO
+}
+
+enum ProfileType {
+  PUBLIC
+  //FOR_FRIENDS Пока не реализуем
+  PRIVATE
 }
