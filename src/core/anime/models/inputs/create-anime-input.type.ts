@@ -138,12 +138,12 @@ export class CreateAnimeInputType {
         nullable: true,
         description: 'Add to the list of relating animes',
     })
-    relating_animes_add: string[];
+    related_by_animes_add: string[];
 
     @IsOptional()
     @Field(() => [ID], {
         nullable: true,
         description: 'Add to the list of similar animes',
     })
-    similar_animes_add: string[];
+    similar_by_animes_add: string[];
 }

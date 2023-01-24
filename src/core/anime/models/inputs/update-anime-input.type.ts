@@ -193,26 +193,26 @@ export class UpdateAnimeInputType {
         nullable: true,
         description: 'Add to the list of relating animes',
     })
-    relating_animes_add: string[];
+    related_by_animes_add: string[];
 
     @IsOptional()
     @Field(() => [ID], {
         nullable: true,
         description: 'Remove from the list of relating animes',
     })
-    relating_animes_remove: string[];
+    related_by_animes_remove: string[];
 
     @IsOptional()
     @Field(() => [ID], {
         nullable: true,
         description: 'Add to the list of similar animes',
     })
-    similar_animes_add: string[];
+    similar_by_animes_add: string[];
 
     @IsOptional()
     @Field(() => [ID], {
         nullable: true,
         description: 'Remove from the list of similar animes',
     })
-    similar_animes_remove: string[];
+    similar_by_animes_remove: string[];
 }
