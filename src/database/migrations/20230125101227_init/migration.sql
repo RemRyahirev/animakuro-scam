@@ -169,14 +169,14 @@ CREATE TABLE "similar_anime" (
 );
 
 -- CreateTable
-CREATE TABLE "airing-schedule" (
+CREATE TABLE "airing_schedule" (
     "id" UUID NOT NULL,
     "airing_at" TIMESTAMP(3) NOT NULL,
-    "time_until_airing" INTEGER NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
     "episode" SMALLINT NOT NULL,
     "anime_id" UUID NOT NULL,
 
-    CONSTRAINT "airing-schedule_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "airing_schedule_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -352,7 +352,7 @@ ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_child_anime_id_fkey" F
 ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_parent_anime_id_fkey" FOREIGN KEY ("parent_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "airing-schedule" ADD CONSTRAINT "airing-schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "airing_schedule" ADD CONSTRAINT "airing_schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
