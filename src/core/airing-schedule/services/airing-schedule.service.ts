@@ -10,6 +10,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateAiringScheduleInputType } from '../models/inputs/create-airing-schedule-input.type';
 import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-schedule-input.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-next-airing-schedule-by-anime-results.type';
+import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
 
 @Injectable()
 export class AiringScheduleService {
@@ -22,7 +24,7 @@ export class AiringScheduleService {
         const airing_schedule = await this.prisma.airingSchedule.findUnique({
             where: {
                 id,
-            }
+            },
         });
         if (!airing_schedule) {
             return {
@@ -47,6 +49,59 @@ export class AiringScheduleService {
             'airingSchedule',
             args,
         );
+        return {
+            success: true,
+            errors: [],
+            airing_schedule: airing_schedule as any,
+            pagination,
+        };
+    }
+
+    async getNextAiringScheduleByAnime(
+        anime_id: string,
+    ): Promise<GetNextAiringScheduleByAnimeResultsType> {
+        const airing_schedule = await this.prisma.airingSchedule.findFirst({
+            where: {
+                anime_id,
+                airing_at: {
+                    gte: new Date(),
+                },
+            },
+            orderBy: {
+                airing_at: 'asc',
+            },
+        });
+
+        if (!airing_schedule) {
+            return {
+                success: false,
+                airing_schedule: null,
+            };
+        }
+
+        return {
+            success: true,
+            errors: [],
+            airing_schedule: airing_schedule as any,
+        };
+    }
+
+    async getListAiringScheduleByAnime(
+        anime_id: string,
+        args: PaginationInputType,
+    ): Promise<GetListAiringScheduleByAnimeResultsType> {
+        const airing_schedule = await this.prisma.airingSchedule.findMany({
+            ...transformPaginationUtil(args),
+            where: {
+                anime_id,
+            },
+        });
+
+        const pagination = await this.paginationService.getPagination(
+            'airingSchedule',
+            args,
+        );
+
         return {
             success: true,
             errors: [],

@@ -7,6 +7,8 @@ import {
 import { GetListAiringScheduleResultsType } from '../models/results/get-list-airing-schedule-results.type';
 import { GetAiringScheduleResultsType } from '../models/results/get-airing-schedule-results.type';
 import { AiringScheduleService } from '../services/airing-schedule.service';
+import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
+import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-next-airing-schedule-by-anime-results.type';
 
 @Resolver(AiringScheduleQueryType)
 export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
@@ -26,5 +28,23 @@ export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
         @Args() args: PaginationInputType,
     ): Promise<GetListAiringScheduleResultsType> {
         return await this.airingScheduleService.getAiringScheduleList(args);
+    }
+
+    @ResolveField(() => GetNextAiringScheduleByAnimeResultsType)
+    async getNextAiringScheduleByAnime(@Args('anime_id') anime_id: string) {
+        return await this.airingScheduleService.getNextAiringScheduleByAnime(
+            anime_id,
+        );
+    }
+
+    @ResolveField(() => GetListAiringScheduleByAnimeResultsType)
+    async getListAiringScheduleByAnime(
+        @Args('anime_id') anime_id: string,
+        @Args() args: PaginationInputType,
+    ) {
+        return await this.airingScheduleService.getListAiringScheduleByAnime(
+            anime_id,
+            args
+        );
     }
 }
