@@ -12,7 +12,7 @@ import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-l
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
-import { relationUpdateUtil } from '../../../common/utils/relation-update.util';
+import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 
@@ -153,8 +153,8 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
-                ...relationUpdateUtil('related_by_animes', args),
-                ...relationUpdateUtil('similar_by_animes', args),
+                ...relationAnimeUpdateUtil('related_by_animes', args),
+                ...relationAnimeUpdateUtil('similar_by_animes', args),
                 ...args,
             },
             include: {
@@ -174,7 +174,6 @@ export class AnimeService {
                 },
             } as any,
         });
-        console.log(anime);
         return {
             success: true,
             anime: anime as any,
@@ -191,8 +190,8 @@ export class AnimeService {
                 ...entityUpdateUtil('authors', args),
                 ...entityUpdateUtil('characters', args),
                 ...entityUpdateUtil('studios', args),
-                ...relationUpdateUtil('related_by_animes', args),
-                ...relationUpdateUtil('similar_by_animes', args),
+                ...relationAnimeUpdateUtil('related_by_animes', args),
+                ...relationAnimeUpdateUtil('similar_by_animes', args),
                 ...args,
             },
             include: {

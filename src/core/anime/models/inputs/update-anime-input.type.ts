@@ -11,6 +11,8 @@ import {
     Length,
 } from '@nestjs/class-validator';
 import {
+    AnimeApproval,
+    AnimeRelation,
     AnimeType,
     FilmRating,
     MediaFormat,
@@ -196,6 +198,14 @@ export class UpdateAnimeInputType {
     related_by_animes_add: string[];
 
     @IsOptional()
+    @Field(() => [AnimeRelation], {
+        nullable: true,
+        defaultValue: [AnimeRelation.NULL],
+        description: 'Add related status of related anime',
+    })
+    related_status: [AnimeRelation];
+
+    @IsOptional()
     @Field(() => [ID], {
         nullable: true,
         description: 'Remove from the list of relating animes',
@@ -208,6 +218,14 @@ export class UpdateAnimeInputType {
         description: 'Add to the list of similar animes',
     })
     similar_by_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => [AnimeApproval], {
+        nullable: true,
+        defaultValue: [AnimeApproval.PENDING],
+        description: 'Add anime approval of similar anime',
+    })
+    similar_status: [AnimeApproval];
 
     @IsOptional()
     @Field(() => [ID], {
