@@ -10,8 +10,6 @@ export function relationAnimeUpdateUtil<F, I>(field: F, input: I) {
         status: AnimeRelation | AnimeApproval;
     }[] = [];
 
-    const status = (field as string).split('_')[0] + '_status';
-
     const normalizeArray = (
         inputArray: I[Extract<keyof I, string>],
         outputArray: {
@@ -21,15 +19,15 @@ export function relationAnimeUpdateUtil<F, I>(field: F, input: I) {
         key: string,
     ) => {
         if (Array.isArray(inputArray)) {
-            inputArray.forEach((child_anime_id: string, index: number) => {
+            inputArray.forEach((element) => {
                 if (key.includes('add')) {
                     outputArray.push({
-                        child_anime_id,
-                        status: (input as any)[status][index],
+                        child_anime_id: element.id,
+                        status: element.status,
                     });
                 } else {
                     outputArray.push({
-                        child_anime_id,
+                        child_anime_id: element.id,
                     });
                 }
             });
@@ -42,7 +40,6 @@ export function relationAnimeUpdateUtil<F, I>(field: F, input: I) {
             key.includes(field as string)
         ) {
             normalizeArray(input[key], arrayToAdd, key);
-            delete (input as any)[status];
             delete input[key];
         }
         if (

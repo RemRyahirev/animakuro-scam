@@ -11,8 +11,6 @@ import {
     Length,
 } from '@nestjs/class-validator';
 import {
-    AnimeApproval,
-    AnimeRelation,
     AnimeType,
     FilmRating,
     MediaFormat,
@@ -21,6 +19,8 @@ import {
     YearSeason,
 } from '../../../../common/models/enums';
 import { IsNumber } from 'class-validator';
+import { Relate } from '../related.model';
+import { Similar } from '../similar.model';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -191,44 +191,28 @@ export class UpdateAnimeInputType {
     authors_remove?: string[];
 
     @IsOptional()
-    @Field(() => [ID], {
+    @Field(() => [Relate], {
         nullable: true,
         description: 'Add to the list of relating animes',
     })
     related_by_animes_add: string[];
 
     @IsOptional()
-    @Field(() => [AnimeRelation], {
-        nullable: true,
-        defaultValue: [AnimeRelation.NULL],
-        description: 'Add related status of related anime',
-    })
-    related_status: [AnimeRelation];
-
-    @IsOptional()
-    @Field(() => [ID], {
+    @Field(() => [Relate], {
         nullable: true,
         description: 'Remove from the list of relating animes',
     })
     related_by_animes_remove: string[];
 
     @IsOptional()
-    @Field(() => [ID], {
+    @Field(() => [Similar], {
         nullable: true,
         description: 'Add to the list of similar animes',
     })
     similar_by_animes_add: string[];
 
     @IsOptional()
-    @Field(() => [AnimeApproval], {
-        nullable: true,
-        defaultValue: [AnimeApproval.PENDING],
-        description: 'Add anime approval of similar anime',
-    })
-    similar_status: [AnimeApproval];
-
-    @IsOptional()
-    @Field(() => [ID], {
+    @Field(() => [Similar], {
         nullable: true,
         description: 'Remove from the list of similar animes',
     })
