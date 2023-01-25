@@ -71,7 +71,7 @@ export class CharacterService {
         return {
             success: true,
             errors: [],
-            characterList: characterList as any,
+            character_list: characterList as any,
             pagination,
         };
     }
@@ -102,7 +102,7 @@ export class CharacterService {
         return {
             success: true,
             errors: [],
-            characterList: characterList as any,
+            character_list: characterList as any,
             pagination,
         };
     }

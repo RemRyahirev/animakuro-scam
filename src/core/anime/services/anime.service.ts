@@ -83,7 +83,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            animeList: animeList as any,
+            anime_list: animeList as any,
             pagination,
         };
     }

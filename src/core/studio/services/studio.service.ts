@@ -67,7 +67,7 @@ export class StudioService {
         return {
             success: true,
             errors: [],
-            studioList: studioList as unknown as Array<Studio>,
+            studio_list: studioList as unknown as Array<Studio>,
             pagination,
         };
     }

@@ -11,7 +11,7 @@ export class GetListCharacterByAnimeIdResultsType extends BaseResultsType {
         nullable: true,
         description: 'Character list',
     })
-    characterList: Character[];
+    character_list: Character[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

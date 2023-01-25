@@ -49,7 +49,7 @@ export class GenreService {
         return {
             success: true,
             errors: [],
-            genreList,
+            genre_list: genreList,
             pagination,
         };
     }

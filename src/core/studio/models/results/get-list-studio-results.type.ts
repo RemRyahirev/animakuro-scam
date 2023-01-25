@@ -11,7 +11,7 @@ export class GetListStudioResultsType extends BaseResultsType {
         nullable: true,
         description: 'Studio list',
     })
-    studioList: Studio[];
+    studio_list: Studio[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

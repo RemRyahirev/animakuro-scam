@@ -11,7 +11,7 @@ export class GetListAnimeResultsType extends BaseResultsType {
         nullable: true,
         description: 'Anime list',
     })
-    animeList: Anime[];
+    anime_list: Anime[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

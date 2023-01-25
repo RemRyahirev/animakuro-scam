@@ -11,7 +11,7 @@ export class GetListTranslationResultsType extends BaseResultsType {
         nullable: true,
         description: 'Translation list',
     })
-    translationList: Translation[];
+    translation_list: Translation[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

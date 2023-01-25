@@ -47,7 +47,7 @@ export class TranslationService {
         return {
             success: true,
             errors: [],
-            translationList,
+            translation_list: translationList,
             pagination,
         };
     }
