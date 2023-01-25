@@ -68,7 +68,7 @@ export class AuthorService {
         return {
             success: true,
             errors: [],
-            authorList: authorList as any,
+            author_list: authorList as any,
             pagination,
         };
     }

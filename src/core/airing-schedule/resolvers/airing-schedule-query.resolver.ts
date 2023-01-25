@@ -9,6 +9,7 @@ import { GetAiringScheduleResultsType } from '../models/results/get-airing-sched
 import { AiringScheduleService } from '../services/airing-schedule.service';
 import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
 import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-next-airing-schedule-by-anime-results.type';
+import { GetListAiringScheduleInput } from '../models/inputs/get-list-airing-schedule-input';
 
 @Resolver(AiringScheduleQueryType)
 export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
@@ -25,9 +26,10 @@ export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
 
     @ResolveField(() => GetListAiringScheduleResultsType)
     async getAiringScheduleList(
-        @Args() args: PaginationInputType,
+        @Args() args: GetListAiringScheduleInput,
+        @Args() pages: PaginationInputType,
     ): Promise<GetListAiringScheduleResultsType> {
-        return await this.airingScheduleService.getAiringScheduleList(args);
+        return await this.airingScheduleService.getAiringScheduleList(args, pages);
     }
 
     @ResolveField(() => GetNextAiringScheduleByAnimeResultsType)
@@ -44,7 +46,7 @@ export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
     ) {
         return await this.airingScheduleService.getListAiringScheduleByAnime(
             anime_id,
-            args
+            args,
         );
     }
 }

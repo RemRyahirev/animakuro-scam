@@ -175,6 +175,8 @@ CREATE TABLE "airing_schedule" (
     "name" VARCHAR(100) NOT NULL,
     "episode" SMALLINT NOT NULL,
     "anime_id" UUID NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "airing_schedule_pkey" PRIMARY KEY ("id")
 );

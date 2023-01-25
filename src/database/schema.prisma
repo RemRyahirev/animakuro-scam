@@ -148,7 +148,8 @@ model AiringSchedule {
   episode           Int      @db.SmallInt
   anime_id          String   @db.Uuid
   anime             Anime    @relation(fields: [anime_id], references: [id])
-
+  created_at        DateTime @default(now()) @map("created_at")
+  updated_at        DateTime @default(now()) @map("updated_at")
   @@map("airing_schedule")
 }
 

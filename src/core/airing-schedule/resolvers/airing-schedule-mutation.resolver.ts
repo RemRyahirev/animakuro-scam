@@ -1,4 +1,4 @@
-import { Args, ID, Int, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import {
     AiringScheduleMutationType,
     AiringScheduleRootResolver,

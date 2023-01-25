@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import {Field, HideField, ID, Int, ObjectType} from '@nestjs/graphql';
 import { Anime } from '../../anime/models/anime.model';
 
 @ObjectType()
@@ -23,13 +23,17 @@ export class AiringSchedule {
     })
     episode: number;
 
-    @Field(() => ID, {
-        description: 'The associate anime id of the airing episode',
-    })
+    @HideField()
     anime_id: string;
 
     @Field(() => Anime, {
         description: 'The associate Anime of the airing episode',
     })
     anime: Anime;
+
+    @Field(() => Date, { description: 'When the airing schedule was created' })
+    created_at: Date;
+
+    @Field(() => Date, { description: 'When the airing schedule was last updated' })
+    updated_at: Date;
 }

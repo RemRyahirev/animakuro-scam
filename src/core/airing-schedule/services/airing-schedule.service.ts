@@ -12,6 +12,8 @@ import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-sc
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-next-airing-schedule-by-anime-results.type';
 import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
+import { GetListAiringScheduleInput } from '../models/inputs/get-list-airing-schedule-input';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AiringScheduleService {
@@ -24,6 +26,9 @@ export class AiringScheduleService {
         const airing_schedule = await this.prisma.airingSchedule.findUnique({
             where: {
                 id,
+            },
+            include: {
+                anime: true,
             },
         });
         if (!airing_schedule) {
@@ -40,14 +45,31 @@ export class AiringScheduleService {
     }
 
     async getAiringScheduleList(
-        args: PaginationInputType,
+        args: GetListAiringScheduleInput,
+        pages: PaginationInputType,
     ): Promise<GetListAiringScheduleResultsType> {
-        const airing_schedule = await this.prisma.airingSchedule.findMany({
-            ...transformPaginationUtil(args),
-        });
+        const prismaOptions: Prisma.AiringScheduleFindManyArgs = {
+            ...transformPaginationUtil(pages),
+            where: {
+                airing_at: {
+                    gte: args.start_airing_at,
+                    lte: args.end_airing_at,
+                },
+            },
+            include: {
+                anime: true,
+            },
+        };
+        if (args.sort_field && args.sort_order) {
+            prismaOptions.orderBy = {
+                [args.sort_field]: args.sort_order,
+            };
+        }
+
+        const airing_schedule = await this.prisma.airingSchedule.findMany(prismaOptions);
         const pagination = await this.paginationService.getPagination(
             'airingSchedule',
-            args,
+            pages,
         );
         return {
             success: true,
@@ -66,6 +88,9 @@ export class AiringScheduleService {
                 airing_at: {
                     gte: new Date(),
                 },
+            },
+            include: {
+                anime: true,
             },
             orderBy: {
                 airing_at: 'asc',
@@ -94,6 +119,9 @@ export class AiringScheduleService {
             ...transformPaginationUtil(args),
             where: {
                 anime_id,
+            },
+            include: {
+                anime: true,
             },
         });
 
@@ -142,6 +170,9 @@ export class AiringScheduleService {
         const airing_schedule = await this.prisma.airingSchedule.update({
             where: { id: args.id },
             data: args,
+            include: {
+                anime: true,
+            },
         });
 
         return {
