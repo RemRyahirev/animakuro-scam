@@ -1,5 +1,12 @@
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
-import { IsDate, IsInt, IsOptional, IsUUID } from '@nestjs/class-validator';
+import {
+    IsDate,
+    IsInt,
+    IsOptional,
+    IsString,
+    IsUUID,
+    Length,
+} from '@nestjs/class-validator';
 
 @ArgsType()
 export class UpdateAiringScheduleInputType {
@@ -16,6 +23,15 @@ export class UpdateAiringScheduleInputType {
         nullable: true,
     })
     airing_at?: Date;
+
+    @IsOptional()
+    @IsString()
+    @Length(1, 100)
+    @Field(() => String, {
+        description: 'The name of the airing episode',
+        nullable: true,
+    })
+    name?: string;
 
     @IsOptional()
     @IsInt()

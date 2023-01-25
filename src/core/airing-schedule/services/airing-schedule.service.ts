@@ -58,18 +58,10 @@ export class AiringScheduleService {
     async createAiringSchedule(
         args: CreateAiringScheduleInputType,
     ): Promise<CreateAiringScheduleResultsType> {
-        const anime = await this.prisma.anime.findUnique({
-            where: { id: args.anime_id },
-        });
-
-        const next_episode = anime?.next_episode || '';
-
         const airing_schedule = await this.prisma.airingSchedule.create({
             data: {
                 airing_at: args.airing_at,
-                time_until_airing: Math.round(
-                    (+next_episode - +new Date()) / 1000,
-                ),
+                name: args.name,
                 anime: {
                     connect: {
                         id: args.anime_id,

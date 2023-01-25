@@ -13,10 +13,10 @@ export class AiringSchedule {
     })
     airing_at: Date;
 
-    @Field(() => Int, {
-        description: 'Seconds until episode starts airing',
+    @Field(() => String, {
+        description: 'The name of the airing episode',
     })
-    time_until_airing: number;
+    name: string;
 
     @Field(() => Int, {
         description: 'The airing episode number',

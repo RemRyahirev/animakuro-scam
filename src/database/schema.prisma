@@ -144,12 +144,12 @@ model SimilarAnime {
 model AiringSchedule {
   id                String   @id @default(uuid()) @db.Uuid
   airing_at         DateTime
-  time_until_airing Int      @db.Integer
+  name              String   @db.VarChar(100)
   episode           Int      @db.SmallInt
   anime_id          String   @db.Uuid
   anime             Anime    @relation(fields: [anime_id], references: [id])
 
-  @@map("airing-schedule")
+  @@map("airing_schedule")
 }
 
 model Author {
