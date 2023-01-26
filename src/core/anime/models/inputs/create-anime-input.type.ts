@@ -10,7 +10,9 @@ import {
     IsUrl,
     IsUUID,
     Length,
+    ValidateNested,
 } from '@nestjs/class-validator';
+import { Type } from 'class-transformer';
 import {
     AnimeType,
     FilmRating,
@@ -136,6 +138,8 @@ export class CreateAnimeInputType {
     authors_add: string[];
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => Relate)
     @Field(() => [Relate], {
         nullable: true,
         description: 'Add to the list of relating animes',
@@ -143,6 +147,8 @@ export class CreateAnimeInputType {
     related_by_animes_add: string[];
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => Similar)
     @Field(() => [Similar], {
         nullable: true,
         description: 'Add to the list of similar animes',

@@ -9,6 +9,7 @@ import {
     IsUrl,
     IsUUID,
     Length,
+    ValidateNested,
 } from '@nestjs/class-validator';
 import {
     AnimeType,
@@ -21,6 +22,7 @@ import {
 import { IsNumber } from 'class-validator';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
+import { Type } from 'class-transformer';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -191,6 +193,8 @@ export class UpdateAnimeInputType {
     authors_remove?: string[];
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => Relate)
     @Field(() => [Relate], {
         nullable: true,
         description: 'Add to the list of relating animes',
@@ -198,6 +202,8 @@ export class UpdateAnimeInputType {
     related_by_animes_add: string[];
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => Relate)
     @Field(() => [Relate], {
         nullable: true,
         description: 'Remove from the list of relating animes',
@@ -205,6 +211,8 @@ export class UpdateAnimeInputType {
     related_by_animes_remove: string[];
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => Similar)
     @Field(() => [Similar], {
         nullable: true,
         description: 'Add to the list of similar animes',
@@ -212,6 +220,8 @@ export class UpdateAnimeInputType {
     similar_by_animes_add: string[];
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => Similar)
     @Field(() => [Similar], {
         nullable: true,
         description: 'Remove from the list of similar animes',
