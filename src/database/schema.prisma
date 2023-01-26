@@ -150,6 +150,8 @@ model AiringSchedule {
   anime             Anime    @relation(fields: [anime_id], references: [id])
   created_at        DateTime @default(now()) @map("created_at")
   updated_at        DateTime @default(now()) @map("updated_at")
+
+  @@unique([airing_at, name, episode])
   @@map("airing_schedule")
 }
 

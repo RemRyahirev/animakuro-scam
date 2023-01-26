@@ -306,6 +306,9 @@ CREATE UNIQUE INDEX "auth_username_key" ON "auth"("username");
 CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("friend_one", "friend_two");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "airing_schedule_airing_at_name_episode_key" ON "airing_schedule"("airing_at", "name", "episode");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "user_profile_user_id_key" ON "user_profile"("user_id");
 
 -- CreateIndex
