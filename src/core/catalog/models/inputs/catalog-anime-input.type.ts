@@ -110,6 +110,12 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     genres?: string[];
 
     @IsOptional()
+    @IsUUID(4, { each: true })
+    @IsArray()
+    @Field(() => [ID], { nullable: true, description: 'Studio ID array' })
+    studios?: string[];
+
+    @IsOptional()
     @IsDate()
     @Field(() => Date, {
         nullable: true,
@@ -126,8 +132,34 @@ export class CatalogAnimeInputType extends CatalogBasicInputType {
     date_end?: Date;
 
     @IsOptional()
-    @IsUUID(4, { each: true })
-    @IsArray()
-    @Field(() => [ID], { nullable: true, description: 'Studio ID array' })
-    studios?: string[];
+    @IsDate()
+    @Field(() => Date, {
+        nullable: true,
+        description: 'ISO 8601. Start created_at date',
+    })
+    start_created_at?: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        nullable: true,
+        description: 'ISO 8601. End created_at date',
+    })
+    end_created_at?: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        nullable: true,
+        description: 'ISO 8601. Start updated_at date',
+    })
+    start_updated_at?: Date;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        nullable: true,
+        description: 'ISO 8601. End updated_at date',
+    })
+    end_updated_at?: Date;
 }

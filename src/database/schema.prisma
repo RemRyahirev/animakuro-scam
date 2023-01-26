@@ -147,7 +147,7 @@ model AiringSchedule {
   name              String   @db.VarChar(100)
   episode           Int      @db.SmallInt
   anime_id          String   @db.Uuid
-  anime             Anime    @relation(fields: [anime_id], references: [id])
+  anime             Anime    @relation(fields: [anime_id], references: [id], onDelete: Cascade)
   created_at        DateTime @default(now()) @map("created_at")
   updated_at        DateTime @default(now()) @map("updated_at")
 

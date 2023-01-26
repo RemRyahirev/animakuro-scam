@@ -37,10 +37,6 @@ export class CatalogService {
             search,
             sort_field,
             sort_order,
-            genres,
-            studios,
-            date_start,
-            date_end,
             ...filterOptions
         } = args;
         const sort = { sort_field, sort_order };
@@ -112,7 +108,7 @@ export class CatalogService {
             search_table,
         );
 
-        let author_list: any[] = [];
+        let author_list: any[];
 
         if (!(sort_field && sort_order) && elasticResults.done) {
             const list: any[] = await this.prisma.author.findMany(
@@ -181,7 +177,7 @@ export class CatalogService {
             sort,
         );
 
-        let studio_list: any = [];
+        let studio_list: any;
 
         if (!(sort_field && sort_order) && elasticResults.done) {
             const list = await this.prisma.studio.findMany(prismaOptions);
@@ -237,7 +233,7 @@ export class CatalogService {
             search_table,
         );
 
-        let character_list: any[] = [];
+        let character_list: any[];
 
         if (!(sort_field && sort_order) && elasticResults.done) {
             const list: any[] = await this.prisma.character.findMany(
