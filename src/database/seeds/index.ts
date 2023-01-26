@@ -52,15 +52,19 @@ async function createEntities<
     Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
         if (!entity.id) {
-            Logger.log(
-                `ℹ️ Entity id ${entityName} not defined, will be create random`,
-            );
-            // @ts-ignore
-            const createdEntity = await prisma[entityName].create({
-                data: entity as any,
-            });
-            Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
-            continue;
+            if (entity.parent_anime_id) {
+                continue;
+            } else {
+                Logger.log(
+                    `ℹ️ Entity id ${entityName} not defined, will be create random`,
+                );
+                // @ts-ignore
+                const createdEntity = await prisma[entityName].create({
+                    data: entity as any,
+                });
+                Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
+                continue;
+            }
         }
         // @ts-ignore
         const existenceEntity = await prisma[entityName].findUnique({
