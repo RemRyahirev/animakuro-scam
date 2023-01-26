@@ -22,12 +22,4 @@ export class User {
 
     @Field(() => String, { nullable: true, description: "Avatar (image) of the user" })
     avatar: string | null;
-
-    @Field(() => Date, { nullable: true, description: "Date of birth of the user" })
-    birthday: Date | null;
-
-    @Field(() => String, {
-        description: "Gender of the user"
-    })
-    gender: string;
 }

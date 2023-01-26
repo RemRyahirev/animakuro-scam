@@ -13,6 +13,7 @@ import { Logger } from '@nestjs/common';
 import { relatingAnimeData } from './relating-anime';
 import { similarAnimeData } from './similar-anime';
 import { airingScheduleData } from './airing-schedule';
+import { profileSettingsData } from './profile-settings-data';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,9 @@ async function seedAll() {
     await userProfileData().then((array) =>
         createEntities(array, 'userProfile'),
     );
+    await profileSettingsData().then((array) =>
+        createEntities(array, 'profileSettings'),
+    );
     await userAnimeData().then((array) => createEntities(array, 'userAnime'));
     await relatingAnimeData().then((array) =>
         createEntities(array, 'relatingAnime'),
@@ -52,15 +56,19 @@ async function createEntities<
     Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
         if (!entity.id) {
-            Logger.log(
-                `ℹ️ Entity id ${entityName} not defined, will be create random`,
-            );
-            // @ts-ignore
-            const createdEntity = await prisma[entityName].create({
-                data: entity as any,
-            });
-            Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
-            continue;
+            if (entity.parent_anime_id) {
+                continue;
+            } else {
+                Logger.log(
+                    `ℹ️ Entity id ${entityName} not defined, will be create random`,
+                );
+                // @ts-ignore
+                const createdEntity = await prisma[entityName].create({
+                    data: entity as any,
+                });
+                Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
+                continue;
+            }
         }
         // @ts-ignore
         const existenceEntity = await prisma[entityName].findUnique({

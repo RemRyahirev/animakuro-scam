@@ -12,11 +12,9 @@ model User {
   id                 String        @id @default(uuid()) @db.Uuid
   username           String        @unique @db.VarChar(64)
   email              String        @db.VarChar(320)
+  avatar             String        @db.Text
   is_email_confirmed Boolean       @default(false)
   password           String        @map("password")
-  avatar             String        @db.Text
-  birthday           DateTime?     @db.Date
-  gender             Gender
   created_at         DateTime      @default(now()) @map("created_at") @db.Date
   deleted            Boolean       @default(false)
   auth               Auth[]
@@ -217,19 +215,36 @@ model UserProfile {
   id                 String           @id @default(uuid()) @db.Uuid
   user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id            String           @unique @db.Uuid //Field name changed 28/12 from user_id
-  displayed_name     String?          @db.VarChar(30)
-  profile_picture_id String?          @db.Uuid // аватар!
-  banner_image       String?          @db.Uuid
   about              String?          @db.Text
-  country            ProfileCountries @default(UNSPECIFIED)
-  language           ProfileLanguages @default(ENGLISH)
   created_at         DateTime?        @default(now()) @db.Date
-  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
   moderator_role     ModeratorRoles   @default(VIEWER)
   is_blocked         Boolean          @default(false)
   user_anime         UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
+  profile_settings   ProfileSettings?
 
   @@map("user_profile")
+}
+
+model ProfileSettings {
+  id                 String           @id @default(uuid()) @db.Uuid
+  profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id         String           @unique @db.Uuid
+  displayed_name     String?          @db.VarChar(30)
+  gender             Gender           @default(UNSPECIFIED)
+  birthday           DateTime?        @db.Date
+  site_theme         SiteTheme        @default(AUTO)
+  avatar_id          String?          @unique @db.Uuid
+  cover_id           String?          @unique @db.Uuid
+  country            ProfileCountries @default(UNSPECIFIED)
+  language           ProfileLanguages @default(ENGLISH)
+  timezone           String?          @db.VarChar(7)
+  profile_type       ProfileType      @default(PUBLIC)
+  integrations       Json             @db.Json
+  notifications      Json             @db.Json
+  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
+  updated_at         DateTime         @default(now()) @map("updated_at")
+
+  @@map("profile_settings")
 }
 
 model UserAnime {
@@ -403,4 +418,16 @@ enum ProfileCountries {
   JAPAN
   UKRAINE
   UNSPECIFIED
+}
+
+enum SiteTheme {
+  LIGHT
+  DARK
+  AUTO
+}
+
+enum ProfileType {
+  PUBLIC
+  //FOR_FRIENDS Пока не реализуем
+  PRIVATE
 }

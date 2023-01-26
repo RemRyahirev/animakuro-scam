@@ -1,5 +1,6 @@
+import { ProfileSettings } from '../../profile-settings/models/profile-settings.model';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { ModeratorRoles, SubscribeTier } from '../../../common/models/enums';
+import { ModeratorRoles } from '../../../common/models/enums';
 import { User } from '../../user/models/user.model';
 
 @ObjectType()
@@ -22,28 +23,13 @@ export class UserProfile {
     // user_anime: UserAnime;
 
     @Field({ nullable: true })
-    displayed_name?: string;
-
-    @Field({ nullable: true })
-    profile_picture_id?: string;
-
-    @Field({ nullable: true })
-    banner_image?: string;
-
-    @Field({ nullable: true })
     about?: string;
 
-    @Field({ nullable: true })
-    country?: string;
-
-    @Field({ nullable: true })
-    language?: string;
+    @Field(() => ProfileSettings)
+    profile_settings: ProfileSettings;
 
     @Field({ defaultValue: new Date() })
     createdAt: Date;
-
-    @Field(() => SubscribeTier, { defaultValue: SubscribeTier.FREE_ACCOUNT })
-    subscribe_tier: string;
 
     @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
     moderator_role: string;
