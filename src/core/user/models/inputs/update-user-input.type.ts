@@ -46,8 +46,4 @@ export class UpdateUserInputType {
     @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
     avatar?: IUpload;
-
-    @IsOptional()
-    @Field(() => GraphQLUpload, { nullable: true })
-    banner?: IUpload;
 }

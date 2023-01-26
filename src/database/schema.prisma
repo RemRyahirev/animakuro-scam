@@ -218,7 +218,6 @@ model UserProfile {
   is_blocked         Boolean          @default(false)
   user_anime         UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
   profile_settings   ProfileSettings?
-  profile_notifications ProfileNotifications?
 
   @@map("user_profile")
 }
@@ -228,35 +227,21 @@ model ProfileSettings {
   profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   profile_id         String           @unique @db.Uuid
   displayed_name     String?          @db.VarChar(30)
-  gender             Gender
+  gender             Gender           @default(UNSPECIFIED)
   birthday           DateTime?        @db.Date
-  site_theme         SiteTheme
-  avatar             String           @db.Text
-  cover              String           @db.Text
+  site_theme         SiteTheme        @default(AUTO)
+  avatar_id          String?          @unique @db.Uuid
+  cover_id           String?          @unique @db.Uuid
   country            ProfileCountries @default(UNSPECIFIED)
   language           ProfileLanguages @default(ENGLISH)
-  timezone           String           @db.VarChar(10)
-  profile_type       ProfileType
+  timezone           String?          @db.VarChar(7)
+  profile_type       ProfileType      @default(PUBLIC)
   integrations       Json             @db.Json
+  notifications      Json             @db.Json
   subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
   updated_at         DateTime         @default(now()) @map("updated_at")
 
   @@map("profile_settings")
-}
-
-model ProfileNotifications {
-  id                 String           @id @default(uuid()) @db.Uuid
-  profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String           @unique @db.Uuid
-  sound              Boolean          @default(true)
-  new_episode        Boolean          @default(true)
-  //friends_activity   Boolean          @default(true)
-  //messages           Boolean          @default(true)
-  //new_friends        Boolean          @default(true)          Пока нереализуемо!
-  //mentions           Boolean          @default(true)
-  //likes              Boolean          @default(true)
-
-  @@map("profile_notifications")
 }
 
 model UserAnime {

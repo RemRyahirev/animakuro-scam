@@ -9,7 +9,10 @@ import { UpdateProfileSettingsResultsType } from '../models/results/update-profi
 import { UpdateProfileSettingsInputType } from '../models/inputs/update-profile-settings-input.type';
 import { DeleteProfileSettingsResultsType } from '../models/results/delete-profile-settings-results.type';
 import { ProfileSettingsService } from '../services/profile-settings.service';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
 
+//@UseGuards(JwtAuthGuard)
 @Resolver(ProfileSettingsMutationType)
 export class ProfileSettingsMutationResolver extends ProfileSettingsRootResolver {
     constructor(private profileSettingsService: ProfileSettingsService) {

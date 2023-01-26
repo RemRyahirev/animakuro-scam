@@ -1,3 +1,4 @@
+import { ProfileIntegrations } from '../../common/models/enums';
 import {
     Gender,
     PrismaClient,
@@ -24,21 +25,23 @@ export const profileSettingsData = async () => {
             gender: Gender.MALE,
             birthday: new Date('2000-11-10'),
             site_theme: SiteTheme.DARK,
-            avatar: '',
-            cover: '',
             country: ProfileCountries.RUSSIA,
             timezone: 'UTC-3',
             profile_type: ProfileType.PRIVATE,
             integrations: [
                 {
-                    name: 'discord',
+                    name: ProfileIntegrations.DISCORD,
                     url: 'https://discord.com/34agrdtaaewt',
                 },
                 {
-                    name: 'VK',
+                    name: ProfileIntegrations.VK,
                     url: 'https://vk.com/undefinedProfile',
                 },
             ],
+            notifications: {
+                new_episode: true,
+                sound: true,
+            },
             subscribe_tier: SubscribeTier.PLATINUM,
         },
         {
@@ -48,40 +51,44 @@ export const profileSettingsData = async () => {
             gender: Gender.MALE,
             birthday: new Date('1997-05-30'),
             site_theme: SiteTheme.LIGHT,
-            avatar: '',
-            cover: '',
             country: ProfileCountries.JAPAN,
             timezone: 'UTC+2',
             profile_type: ProfileType.PUBLIC,
             integrations: [
                 {
-                    name: 'skype',
+                    name: ProfileIntegrations.SKYPE,
                     url: 'https://skype.net/53a5awe5aew',
                 },
             ],
+            notifications: {
+                new_episode: false,
+                sound: true,
+            },
         },
         {
             id: '62f8a268-16b6-4c51-8291-cc61f90fc9e9',
             profile_id: 'de076ab4-e5a3-4913-9040-6fd157922282',
             displayed_name: 'Evgen353',
-            gender: Gender.OTHER,
+            gender: Gender.UNSPECIFIED,
             birthday: new Date('1579-01-22'),
             site_theme: SiteTheme.AUTO,
-            avatar: '',
-            cover: '',
             country: ProfileCountries.UKRAINE,
             timezone: 'UTC+14',
             profile_type: ProfileType.PUBLIC,
             integrations: [
                 {
-                    name: 'Steam',
+                    name: ProfileIntegrations.STEAM,
                     url: 'https://steam.community.com/myId',
                 },
                 {
-                    name: 'Telegram',
+                    name: ProfileIntegrations.TELEGRAM,
                     url: 'https://telegram.web.com/eatsdta35',
                 },
             ],
+            notifications: {
+                new_episode: true,
+                sound: false,
+            },
         },
     ];
 };

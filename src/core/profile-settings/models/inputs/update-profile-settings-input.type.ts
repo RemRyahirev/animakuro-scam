@@ -1,10 +1,11 @@
 import {
     IsDate,
     IsEnum,
-    IsJSON,
+    IsObject,
     IsOptional,
     IsString,
     IsUUID,
+    ValidateNested,
 } from '@nestjs/class-validator';
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import {
@@ -25,6 +26,9 @@ import {
 } from '@prisma/client';
 import { IsArray, Length } from 'class-validator';
 import { Integration } from '../integration.model';
+import { Type } from 'class-transformer';
+import { notificationsDefault } from './defaults/notifications.default';
+import { Notifications } from '../notifications.model';
 
 @ArgsType()
 export class UpdateProfileSettingsInputType {
@@ -54,13 +58,15 @@ export class UpdateProfileSettingsInputType {
 
     @IsOptional()
     @IsString()
-    @Field(() => String)
-    avatar: string;
+    @IsUUID()
+    @Field(() => ID)
+    avatar_id: string;
 
     @IsOptional()
     @IsString()
-    @Field(() => String)
-    cover: string;
+    @IsUUID()
+    @Field(() => ID)
+    cover_id: string;
 
     @IsOptional()
     @IsEnum(ProfileCountries)
@@ -85,8 +91,17 @@ export class UpdateProfileSettingsInputType {
 
     @IsOptional()
     @IsArray()
-    @Field(() => [Integration])
+    @ValidateNested()
+    @Type(() => Integration)
+    @Field(() => [Integration], { defaultValue: [] })
     integrations: string[];
+
+    @IsOptional()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => Notifications)
+    @Field(() => Notifications, { defaultValue: notificationsDefault })
+    notifications: object;
 
     @IsOptional()
     @IsEnum(SubscribeTier)

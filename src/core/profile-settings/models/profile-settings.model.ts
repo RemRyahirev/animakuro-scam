@@ -9,6 +9,7 @@ import {
     SubscribeTier,
 } from '../../../common/models/enums';
 import { Integration } from './integration.model';
+import { Notifications } from './notifications.model';
 
 @ObjectType()
 export class ProfileSettings {
@@ -29,6 +30,7 @@ export class ProfileSettings {
 
     @Field(() => String, {
         description: 'Displayed name in profile',
+        nullable: true,
     })
     displayed_name: string;
 
@@ -39,6 +41,7 @@ export class ProfileSettings {
 
     @Field(() => Date, {
         description: 'Birthday of user',
+        nullable: true,
     })
     birthday: Date;
 
@@ -47,15 +50,17 @@ export class ProfileSettings {
     })
     site_theme: SiteTheme;
 
-    @Field(() => String, {
+    @Field(() => ID, {
         description: 'Avatar of profile',
+        nullable: true,
     })
-    avatar: string;
+    avatar_id: string;
 
-    @Field(() => String, {
+    @Field(() => ID, {
         description: 'Cover of profile',
+        nullable: true,
     })
-    cover: string;
+    cover_id: string;
 
     @Field(() => ProfileCountries, {
         description: 'Profile country',
@@ -69,6 +74,7 @@ export class ProfileSettings {
 
     @Field(() => String, {
         description: 'Profile Timezone',
+        nullable: true,
     })
     timezone: string;
 
@@ -79,8 +85,12 @@ export class ProfileSettings {
 
     @Field(() => [Integration], {
         description: 'Integrations of profile in JSON format',
+        nullable: true,
     })
     integrations: Integration[];
+
+    @Field(() => Notifications, { nullable: true })
+    notifications: Notifications;
 
     @Field(() => SubscribeTier, {
         description: 'Type of profile subscription',
