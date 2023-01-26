@@ -34,7 +34,7 @@ export class UpdateStudioInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String], { nullable: true })
-    animeToAdd?: string[];
+    anime_to_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })

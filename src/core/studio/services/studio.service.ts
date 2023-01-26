@@ -155,7 +155,7 @@ export class StudioService {
     ) {
         let animeCount: number;
         if (args instanceof CreateStudioInputType) {
-            animeCount = args.animeToAdd.length;
+            animeCount = args.anime_to_add.length;
         }
         if (args instanceof UpdateStudioInputType) {
             animeCount = await this.prisma.studio
@@ -173,7 +173,7 @@ export class StudioService {
         }
         const animeYearArray: number[] = await this.prisma.anime
             .findMany({
-                where: { id: { in: args.animeToAdd } },
+                where: { id: { in: args.anime_to_add } },
                 orderBy: { year: "asc" }
             })
             .then((array) => array.map((item) => item.year));
