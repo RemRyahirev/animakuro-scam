@@ -13,6 +13,7 @@ import { Logger } from '@nestjs/common';
 import { relatingAnimeData } from './relating-anime';
 import { similarAnimeData } from './similar-anime';
 import { airingScheduleData } from './airing-schedule';
+import { profileSettingsData } from './profile-settings-data';
 
 const prisma = new PrismaClient();
 
@@ -32,6 +33,9 @@ async function seedAll() {
     );
     await userProfileData().then((array) =>
         createEntities(array, 'userProfile'),
+    );
+    await profileSettingsData().then((array) =>
+        createEntities(array, 'profileSettings'),
     );
     await userAnimeData().then((array) => createEntities(array, 'userAnime'));
     await relatingAnimeData().then((array) =>

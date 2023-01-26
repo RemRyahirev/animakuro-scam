@@ -10,7 +10,6 @@ import { UpdateUserResultsType } from '../models/results/update-user-results.typ
 import { GetListUserResultsType } from "../models/results/get-list-user-results.type";
 import { User } from "../models/user.model";
 import { GetUserResultsType } from "../models/results/get-user-results.type";
-import { Gender } from "../../../common/models/enums";
 
 @Injectable()
 export class UserService {

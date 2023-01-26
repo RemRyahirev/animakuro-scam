@@ -1,12 +1,11 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { ModeratorRoles, SubscribeTier } from '../../../../common/models/enums';
+import { ModeratorRoles } from '../../../../common/models/enums';
 import {
     IsBoolean,
     IsDate,
     IsOptional,
     IsString,
     IsUUID,
-    Length,
 } from '@nestjs/class-validator';
 
 @ArgsType()
@@ -25,46 +24,13 @@ export class CreateUserProfileInputType {
 
     @IsOptional()
     @IsString()
-    @Length(1, 30)
-    @Field({ nullable: true, defaultValue: 'incognito' })
-    displayed_name: string;
-
-    @IsOptional()
-    @IsUUID()
-    @Field({nullable: true, description: 'internal CDN ID/uuid'})
-    profile_picture_id?: string;
-
-    @IsOptional()
-    @IsUUID()
-    @Field({nullable: true, description: 'internal CDN ID/uuid'})
-    banner_image?: string;
-
-    @IsOptional()
-    @IsString()
-    @Field({nullable: true, defaultValue: 'personal data not filled'})
-    about?: string
-
-    @IsOptional()
-    @IsString()
-    @Length(1, 30)
-    @Field({ nullable: true })
-    country?: string;
-
-    @IsOptional()
-    @IsString()
-    @Length(1, 30)
-    @Field({ nullable: true })
-    language: string;
+    @Field({ nullable: true, defaultValue: 'personal data not filled' })
+    about?: string;
 
     @IsOptional()
     @IsDate()
     @Field({ defaultValue: new Date() })
     created_at: Date;
-
-    @IsOptional()
-    @IsString()
-    @Field(() => SubscribeTier, { defaultValue: SubscribeTier.FREE_ACCOUNT })
-    subscribe_tier: string;
 
     @IsOptional()
     @IsString()

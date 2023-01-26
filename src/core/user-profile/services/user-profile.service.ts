@@ -25,6 +25,7 @@ export class UserProfileService {
             },
             include: {
                 user: true,
+                profile_settings: true,
             },
         });
         return {
@@ -41,9 +42,13 @@ export class UserProfileService {
             ...transformPaginationUtil(args),
             include: {
                 user: true,
+                profile_settings: true,
             },
         });
-        const pagination = await this.paginationService.getPagination('userProfile', args);
+        const pagination = await this.paginationService.getPagination(
+            'userProfile',
+            args,
+        );
 
         return {
             success: true,
@@ -68,6 +73,7 @@ export class UserProfileService {
             },
             include: {
                 user: true,
+                profile_settings: true,
             },
         });
         //console.log(userProfile)
@@ -85,6 +91,9 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
             data: args as any,
+            include: {
+                user: true,
+            },
         });
         return {
             success: true,
@@ -93,9 +102,7 @@ export class UserProfileService {
         };
     }
 
-    async deleteUserProfile(
-        id: string,
-    ): Promise<DeleteUserProfileResultsType> {
+    async deleteUserProfile(id: string): Promise<DeleteUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.delete({
             where: { id },
         });

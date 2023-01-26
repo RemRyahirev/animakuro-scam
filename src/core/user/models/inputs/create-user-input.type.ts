@@ -1,6 +1,11 @@
-import { IsBoolean, IsDate, IsEmail, IsEnum, IsOptional, IsString, Length } from "@nestjs/class-validator";
+import {
+    IsBoolean,
+    IsEmail,
+    IsOptional,
+    IsString,
+    Length,
+} from '@nestjs/class-validator';
 import { ArgsType, Field } from '@nestjs/graphql';
-import { Gender } from '../../../../common/models/enums';
 
 @ArgsType()
 export class CreateUserInputType {
@@ -23,15 +28,6 @@ export class CreateUserInputType {
     is_email_confirmed: boolean;
 
     @IsOptional()
-    @IsDate()
-    @Field(() => Date, { nullable: true })
-    birthday?: Date | null;
-
-    @IsOptional()
     @Field(() => String, { nullable: true })
     avatar?: string | null;
-
-    @IsEnum(Gender)
-    @Field(() => Gender)
-    gender: Gender;
 }

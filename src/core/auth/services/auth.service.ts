@@ -2,7 +2,7 @@ import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { RegisterInputType } from '../models/inputs/register-input.type';
 import { UserService } from '../../user/services/user.service';
-import { AuthType, Gender, MailPurpose, TokenType } from "../../../common/models/enums";
+import { AuthType, MailPurpose, TokenType } from "../../../common/models/enums";
 import { LoginInputType } from '../models/inputs/login-input.type';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
@@ -175,7 +175,6 @@ export class AuthService {
             password: '',
             avatar: profile.account.avatar,
             is_email_confirmed: false,
-            gender: Gender.UNSPECIFIED
         });
         const access_token = await this.tokenService.generateToken(
             profile.account.uuid,

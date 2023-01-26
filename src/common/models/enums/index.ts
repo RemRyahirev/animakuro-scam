@@ -18,3 +18,6 @@ export * from './auth-type.enum';
 export * from './anime-relation.enum';
 export * from './anime-approval.enum';
 export * from './token-type.enum';
+export * from './profile-type.enum';
+export * from './site-theme.enum';
+export * from './profile-integrations.enum';

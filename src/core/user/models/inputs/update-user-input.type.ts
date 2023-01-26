@@ -2,14 +2,13 @@ import { GraphQLUpload } from 'graphql-upload';
 import {
     IsEmail,
     IsOptional,
-    IsString, IsUUID,
+    IsString,
+    IsUUID,
     Length,
-    ValidateIf
-} from "class-validator";
+    ValidateIf,
+} from 'class-validator';
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { Gender } from '../../../../common/models/enums';
 import { IUpload } from '../../../../common/models/interfaces';
-import { IsDate, IsEnum } from "@nestjs/class-validator";
 
 @ArgsType()
 export class UpdateUserInputType {
@@ -45,20 +44,6 @@ export class UpdateUserInputType {
     newPassword?: string;
 
     @IsOptional()
-    @IsDate()
-    @Field(() => Date, { nullable: true })
-    birthday?: Date;
-
-    @IsOptional()
-    @IsEnum(Gender)
-    @Field(() => Gender, { nullable: true })
-    gender?: Gender;
-
-    @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
     avatar?: IUpload;
-
-    @IsOptional()
-    @Field(() => GraphQLUpload, { nullable: true })
-    banner?: IUpload;
 }
