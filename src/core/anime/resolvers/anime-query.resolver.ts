@@ -6,6 +6,7 @@ import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-l
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { AnimeService } from '../services/anime.service';
+import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 
 @Resolver(AnimeQueryType)
 export class AnimeQueryResolver extends AnimeRootResolver {
@@ -14,8 +15,10 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     }
 
     @ResolveField(() => GetAnimeResultsType)
-    async getAnime(@Args('id') id: string): Promise<GetAnimeResultsType> {
-        return await this.animeService.getAnime(id);
+    async getAnime(
+        @Args() args: GetAnimeByIdInputType,
+    ): Promise<GetAnimeResultsType> {
+        return await this.animeService.getAnime(args);
     }
 
     @ResolveField(() => GetListAnimeResultsType)

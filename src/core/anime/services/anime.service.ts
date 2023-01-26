@@ -15,6 +15,7 @@ import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
+import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 
 @Injectable()
 export class AnimeService {
@@ -23,22 +24,36 @@ export class AnimeService {
         private paginationService: PaginationService,
     ) {}
 
-    async getAnime(id: string): Promise<GetAnimeResultsType> {
+    async getAnime(args: GetAnimeByIdInputType): Promise<GetAnimeResultsType> {
+        const {
+            id,
+            max_authors_count,
+            max_characters_count,
+            max_similar_by_animes_count,
+            max_related_by_animes_count,
+        } = args;
+
         const anime = await this.prisma.anime.findUnique({
             where: {
                 id,
             },
             include: {
                 genres: true,
-                authors: true,
-                characters: true,
+                authors: {
+                    take: max_authors_count,
+                },
+                characters: {
+                    take: max_characters_count,
+                },
                 studios: true,
                 related_by_animes: {
+                    take: max_similar_by_animes_count,
                     include: {
                         child_anime: true,
                     },
                 },
                 similar_by_animes: {
+                    take: max_related_by_animes_count,
                     include: {
                         child_anime: true,
                     },
