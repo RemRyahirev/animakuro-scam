@@ -10,7 +10,7 @@ import { PaginationInputType } from '../../../common/models/inputs';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Resolver(ProfileSettingsQueryType)
 export class ProfileSettingsQueryResolver extends ProfileSettingsRootResolver {
     constructor(private profileSettingsService: ProfileSettingsService) {

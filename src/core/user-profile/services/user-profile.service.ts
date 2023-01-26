@@ -91,6 +91,9 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
             data: args as any,
+            include: {
+                user: true,
+            },
         });
         return {
             success: true,

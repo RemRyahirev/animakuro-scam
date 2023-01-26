@@ -12,7 +12,7 @@ import { ProfileSettingsService } from '../services/profile-settings.service';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Resolver(ProfileSettingsMutationType)
 export class ProfileSettingsMutationResolver extends ProfileSettingsRootResolver {
     constructor(private profileSettingsService: ProfileSettingsService) {
