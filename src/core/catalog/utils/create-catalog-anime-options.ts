@@ -13,30 +13,56 @@ export function createCatalogAnimeOptions(
     >,
     sort: CatalogAnimeSort,
 ): Prisma.AnimeFindManyArgs {
-    const { genres, studios, date_start, date_end, ...filterOptions } = options;
+    const {
+        genres,
+        studios,
+        date_start,
+        date_end,
+        start_created_at,
+        end_created_at,
+        start_updated_at,
+        end_updated_at,
+        ...filterOptions
+    } = options;
 
     const prismaOptions: Prisma.AnimeFindManyArgs = {
         where: {
             ...filterOptions,
-            genres: {
-                some: {
-                    id: {
-                        in: genres,
-                    },
-                },
+            genres: genres
+                ? {
+                      some: {
+                          id: {
+                              in: genres,
+                          },
+                      },
+                  }
+                : {},
+            studios: studios
+                ? {
+                      some: {
+                          id: {
+                              in: studios,
+                          },
+                      },
+                  }
+                : {},
+            date_start: date_start
+                ? {
+                      gte: date_start,
+                  }
+                : {},
+            date_end: date_end
+                ? {
+                      lte: date_end,
+                  }
+                : {},
+            created_at: {
+                gte: start_created_at,
+                lte: end_created_at,
             },
-            studios: {
-                some: {
-                    id: {
-                        in: studios,
-                    },
-                },
-            },
-            date_start: {
-                gte: date_start,
-            },
-            date_end: {
-                lte: date_end,
+            updated_at: {
+                gte: start_updated_at,
+                lte: end_updated_at,
             },
         },
         include: {
@@ -46,6 +72,7 @@ export function createCatalogAnimeOptions(
             studios: true,
             relating_animes: true,
             similar_animes: true,
+            airing_schedule: true,
         },
     };
 
