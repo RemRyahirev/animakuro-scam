@@ -16,7 +16,12 @@ async function bootstrap(): Promise<void> {
     try {
         const app = await NestFactory.create(AppModule, {
             logger: new MyLogger(),
-            cors: true,
+        });
+        app.enableCors({
+            credentials: true,
+            origin: true,
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+            allowedHeaders: '*',
         });
         await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
             transport: Transport.REDIS,
@@ -55,8 +60,8 @@ async function bootstrap(): Promise<void> {
                 'oauth/facebook',
                 'oauth/facebook/redirect',
                 'oauth/apple',
-                'oauth/apple/redirect'
-            ]
+                'oauth/apple/redirect',
+            ],
         });
         app.useGlobalFilters(new PrismaClientExceptionFilter());
         app.useGlobalFilters(new ValidationExceptionFilter());
@@ -83,6 +88,6 @@ async function bootstrap(): Promise<void> {
 }
 
 bootstrap().catch((e) => {
-    Logger.error(`❌ Error starting server, ${e}`, "", "Bootstrap", false);
+    Logger.error(`❌ Error starting server, ${e}`, '', 'Bootstrap', false);
     throw e;
 });

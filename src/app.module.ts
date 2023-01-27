@@ -19,12 +19,14 @@ import { MailerModule } from './mailer/mailer.module';
             fieldResolverEnhancers: ['guards', 'interceptors'],
             playground: {
                 settings: {
-                    "request.credentials": "include"
-                }
+                    'request.credentials': 'include',
+                },
             },
             cors: {
                 credentials: true,
                 origin: true,
+                methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+                allowedHeaders: '*',
             },
         }),
         ThrottlerModule.forRoot({
