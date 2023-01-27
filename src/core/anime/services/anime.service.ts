@@ -476,7 +476,7 @@ export class AnimeService {
         };
     }
 
-    private async updateStudioData(studios: Studio[]) {
+    private async updateStudioData(studios: any[]) {
         studios.map(async (studio) => {
             const anime_count = await this.prisma.studio
                 .findUnique({
