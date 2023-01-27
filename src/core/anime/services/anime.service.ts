@@ -16,6 +16,7 @@ import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
+import { Studio } from '../../studio/models/studio.model';
 
 @Injectable()
 export class AnimeService {
@@ -178,7 +179,11 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
-                studios: true,
+                studios: {
+                    include: {
+                        animes: true,
+                    },
+                },
                 related_by_animes: {
                     include: {
                         child_anime: true,
@@ -192,6 +197,11 @@ export class AnimeService {
                 airing_schedule: true,
             } as any,
         });
+
+        if (anime && anime.studios) {
+            await this.updateStudioData(anime.studios);
+        }
+
         return {
             success: true,
             anime: anime as any,
@@ -216,7 +226,11 @@ export class AnimeService {
                 genres: true,
                 authors: true,
                 characters: true,
-                studios: true,
+                studios: {
+                    include: {
+                        animes: true,
+                    },
+                },
                 related_by_animes: {
                     include: {
                         child_anime: true,
@@ -230,6 +244,11 @@ export class AnimeService {
                 airing_schedule: true,
             } as any,
         });
+
+        if (anime && anime.studios) {
+            await this.updateStudioData(anime.studios);
+        }
+
         return {
             success: true,
             errors: [],
@@ -429,22 +448,70 @@ export class AnimeService {
     }
 
     async deleteAnime(id: string): Promise<DeleteAnimeResultsType> {
-        const anime = await this.prisma.anime.delete({
+        const anime = (await this.prisma.anime.delete({
             where: { id },
             include: {
                 genres: true,
                 authors: true,
                 characters: true,
-                studios: true,
+                studios: {
+                    include: {
+                        animes: true,
+                    },
+                },
                 relating_animes: true,
                 similar_animes: true,
                 airing_schedule: true,
             },
-        });
+        })) as any;
+
+        if (anime && anime.studios) {
+            await this.updateStudioData(anime.studios);
+        }
+
         return {
             success: true,
             errors: [],
             anime: anime as any,
         };
+    }
+
+    private async updateStudioData(studios: Studio[]) {
+        studios.map(async (studio) => {
+            const anime_count = await this.prisma.studio
+                .findUnique({
+                    where: { id: studio.id },
+                    include: {
+                        _count: {
+                            select: {
+                                animes: true,
+                            },
+                        },
+                    },
+                })
+                .then((item) => item?._count.animes ?? 0);
+
+            const animeYearArray: number[] = await this.prisma.anime
+                .findMany({
+                    where: {
+                        id: {
+                            in: studio.animes.map((anime: any) => anime.id),
+                        },
+                    },
+                    orderBy: { year: 'asc' },
+                })
+                .then((animes) => animes.map((anime) => anime.year));
+
+            await this.prisma.studio.update({
+                where: {
+                    id: studio.id,
+                },
+                data: {
+                    anime_count,
+                    anime_starts: animeYearArray[0],
+                    anime_ends: animeYearArray[animeYearArray?.length - 1],
+                },
+            });
+        });
     }
 }

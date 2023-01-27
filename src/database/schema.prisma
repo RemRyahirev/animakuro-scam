@@ -253,7 +253,7 @@ model UserAnime {
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
   user_profile     UserProfile? @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
   user_profile_id  String       @unique @db.Uuid // o-2-o relation
-  anime            Anime?       @relation(fields: [anime_id], references: [id])
+  anime            Anime?       @relation(fields: [anime_id], references: [id], onDelete: Cascade)
   anime_id         String       @db.Uuid
   // информативный блок
   status           WatchStatus  @default(WATCHING)
