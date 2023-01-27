@@ -149,7 +149,6 @@ model AiringSchedule {
   created_at        DateTime @default(now()) @map("created_at")
   updated_at        DateTime @default(now()) @map("updated_at")
 
-  @@unique([airing_at, name, episode])
   @@map("airing_schedule")
 }
 
