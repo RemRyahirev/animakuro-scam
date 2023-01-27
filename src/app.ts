@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap(): Promise<void> {
     try {
         const app = await NestFactory.create(AppModule, {
-            cors: true,
+            cors: false,
             logger: new MyLogger(),
         });
         await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
