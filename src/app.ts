@@ -16,8 +16,8 @@ async function bootstrap(): Promise<void> {
     try {
         const app = await NestFactory.create(AppModule, {
             logger: new MyLogger(),
+            cors: true,
         });
-        app.enableCors();
         await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
             transport: Transport.REDIS,
             options: {
