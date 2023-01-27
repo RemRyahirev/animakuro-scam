@@ -10,6 +10,7 @@ import { UpdateUserProfileResultsType } from '../models/results/update-user-prof
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
+import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
 
 @Injectable()
 export class UserProfileService {
@@ -65,6 +66,12 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.create({
             data: {
                 ...(other as any),
+                profile_settings: {
+                    create: {
+                        integrations: [],
+                        notifications: notificationsDefault,
+                    },
+                },
                 user: {
                     connect: {
                         id: user_id,

@@ -2,6 +2,7 @@ import { UserProfile } from '../../user-profile/models/user-profile.model';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import {
     Gender,
+    ModeratorRoles,
     ProfileCountries,
     ProfileLanguages,
     ProfileType,
@@ -82,6 +83,17 @@ export class ProfileSettings {
         description: 'Type of profile',
     })
     profile_type: ProfileType;
+
+    @Field(() => ModeratorRoles, {
+        description: 'Role of Moderator(Actually Role of Profile)',
+    })
+    moderator_role: ModeratorRoles;
+
+    @Field(() => Boolean, { description: 'Is blocked profile or not' })
+    is_blocked: boolean;
+
+    @Field(() => String, { description: 'About profile ' })
+    about: string;
 
     @Field(() => [Integration], {
         description: 'Integrations of profile in JSON format',
