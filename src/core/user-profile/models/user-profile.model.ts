@@ -28,9 +28,6 @@ export class UserProfile {
     @Field(() => ProfileSettings)
     profile_settings: ProfileSettings;
 
-    @Field({ defaultValue: new Date() })
-    createdAt: Date;
-
     @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
     moderator_role: string;
 

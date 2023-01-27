@@ -1,4 +1,4 @@
-import { ProfileIntegrations } from '../../common/models/enums';
+import { ModeratorRoles, ProfileIntegrations } from '../../common/models/enums';
 import {
     Gender,
     PrismaClient,
@@ -28,6 +28,9 @@ export const profileSettingsData = async () => {
             country: ProfileCountries.RUSSIA,
             timezone: 'UTC-3',
             profile_type: ProfileType.PRIVATE,
+            is_blocked: false,
+            moderator_role: ModeratorRoles.VIEWER,
+            about: 'Я Александр',
             integrations: [
                 {
                     name: ProfileIntegrations.DISCORD,
@@ -53,6 +56,9 @@ export const profileSettingsData = async () => {
             site_theme: SiteTheme.LIGHT,
             country: ProfileCountries.JAPAN,
             timezone: 'UTC+2',
+            is_blocked: false,
+            moderator_role: ModeratorRoles.ADMIN,
+            about: 'Я Анатолий',
             profile_type: ProfileType.PUBLIC,
             integrations: [
                 {
@@ -74,6 +80,9 @@ export const profileSettingsData = async () => {
             site_theme: SiteTheme.AUTO,
             country: ProfileCountries.UKRAINE,
             timezone: 'UTC+14',
+            is_blocked: true,
+            moderator_role: ModeratorRoles.MODERATOR,
+            about: 'Я Евгений',
             profile_type: ProfileType.PUBLIC,
             integrations: [
                 {

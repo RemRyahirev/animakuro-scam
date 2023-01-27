@@ -1,4 +1,5 @@
 import {
+    IsBoolean,
     IsDate,
     IsEnum,
     IsOptional,
@@ -8,6 +9,7 @@ import {
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import {
     Gender,
+    ModeratorRoles,
     ProfileCountries,
     ProfileLanguages,
     ProfileType,
@@ -21,6 +23,7 @@ import {
     ProfileType as ProfileTypePrisma,
     SiteTheme as SiteThemePrisma,
     SubscribeTier as SubscribeTierPrisma,
+    ModeratorRoles as ModeratorRolesPrisma,
 } from '@prisma/client';
 import { IsArray, IsObject, IsUUID, Length } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -89,17 +92,34 @@ export class CreateProfileSettingsInputType {
     profile_type: ProfileTypePrisma;
 
     @IsOptional()
+    @IsEnum(ModeratorRoles)
+    @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
+    moderator_role: ModeratorRolesPrisma;
+
+    @IsOptional()
+    @IsBoolean()
+    @Field(() => Boolean, { defaultValue: false })
+    is_blocked: boolean;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    about: string;
+
+    @IsOptional()
     @IsArray()
     @ValidateNested()
     @Type(() => Integration)
-    @Field(() => [Integration], { nullable: true, defaultValue: [] })
+    @Field(() => [Integration], { defaultValue: [] })
     integrations: string[];
 
     @IsOptional()
     @IsObject()
     @ValidateNested()
     @Type(() => Notifications)
-    @Field(() => Notifications, { defaultValue: notificationsDefault })
+    @Field(() => Notifications, {
+        defaultValue: notificationsDefault,
+    })
     notifications: object;
 
     @IsOptional()

@@ -1,4 +1,5 @@
 import {
+    IsBoolean,
     IsDate,
     IsEnum,
     IsObject,
@@ -10,6 +11,7 @@ import {
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 import {
     Gender,
+    ModeratorRoles,
     ProfileCountries,
     ProfileLanguages,
     ProfileType,
@@ -23,6 +25,7 @@ import {
     ProfileType as ProfileTypePrisma,
     SiteTheme as SiteThemePrisma,
     SubscribeTier as SubscribeTierPrisma,
+    ModeratorRoles as ModeratorRolesPrisma,
 } from '@prisma/client';
 import { IsArray, Length } from 'class-validator';
 import { Integration } from '../integration.model';
@@ -88,6 +91,21 @@ export class UpdateProfileSettingsInputType {
     @IsEnum(ProfileType)
     @Field(() => ProfileType)
     profile_type: ProfileTypePrisma;
+
+    @IsOptional()
+    @IsEnum(ModeratorRoles)
+    @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
+    moderator_role: ModeratorRolesPrisma;
+
+    @IsOptional()
+    @IsBoolean()
+    @Field(() => Boolean, { defaultValue: false })
+    is_blocked: boolean;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    about: string;
 
     @IsOptional()
     @IsArray()
