@@ -1,7 +1,8 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { IsDate, IsOptional, IsString } from '@nestjs/class-validator';
+import { IsDate, IsEnum, IsOptional, IsString } from '@nestjs/class-validator';
 import { GetAiringScheduleSortField } from '../enums/get-airing-schedule-sort-field.enum';
 import { SortOrder } from '../../../../common/models/enums/sort-order.enum';
+import { AiringScheduleRelevance } from '../enums/airing-schedule-relevance.enum';
 
 @ArgsType()
 export class GetListAiringScheduleInput {
@@ -17,6 +18,14 @@ export class GetListAiringScheduleInput {
     @IsString()
     @Field(() => SortOrder, { nullable: true, description: 'Sort order' })
     sort_order?: SortOrder;
+
+    @IsOptional()
+    @IsEnum(AiringScheduleRelevance)
+    @Field(() => AiringScheduleRelevance, {
+        nullable: true,
+        defaultValue: AiringScheduleRelevance.ALL,
+    })
+    relevance?: AiringScheduleRelevance;
 
     @IsOptional()
     @IsDate()

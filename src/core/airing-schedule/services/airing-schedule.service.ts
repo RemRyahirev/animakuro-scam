@@ -14,6 +14,7 @@ import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-n
 import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
 import { GetListAiringScheduleInput } from '../models/inputs/get-list-airing-schedule-input';
 import { Prisma } from '@prisma/client';
+import { AiringScheduleRelevance } from '../models/enums/airing-schedule-relevance.enum';
 
 @Injectable()
 export class AiringScheduleService {
@@ -48,25 +49,41 @@ export class AiringScheduleService {
         args: GetListAiringScheduleInput,
         pages: PaginationInputType,
     ): Promise<GetListAiringScheduleResultsType> {
+        let { start_airing_at, end_airing_at } = args;
+
+        const now = new Date();
+        if (args.relevance === AiringScheduleRelevance.RELEASED) {
+            end_airing_at =
+                !end_airing_at || end_airing_at > now ? now : end_airing_at;
+        } else if (args.relevance === AiringScheduleRelevance.PLANNED) {
+            start_airing_at =
+                !start_airing_at || start_airing_at < now
+                    ? now
+                    : start_airing_at;
+        }
+
         const prismaOptions: Prisma.AiringScheduleFindManyArgs = {
             ...transformPaginationUtil(pages),
             where: {
                 airing_at: {
-                    gte: args.start_airing_at,
-                    lte: args.end_airing_at,
+                    gte: start_airing_at,
+                    lte: end_airing_at,
                 },
             },
             include: {
                 anime: true,
             },
         };
+
         if (args.sort_field && args.sort_order) {
             prismaOptions.orderBy = {
                 [args.sort_field]: args.sort_order,
             };
         }
 
-        const airing_schedule = await this.prisma.airingSchedule.findMany(prismaOptions);
+        const airing_schedule = await this.prisma.airingSchedule.findMany(
+            prismaOptions,
+        );
         const pagination = await this.paginationService.getPagination(
             'airingSchedule',
             pages,
