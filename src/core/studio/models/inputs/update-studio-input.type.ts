@@ -34,13 +34,13 @@ export class UpdateStudioInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String], { nullable: true })
-    anime_to_add?: string[];
+    animes_to_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String], { nullable: true })
-    animeToRemove?: string[];
+    animes_to_remove?: string[];
 
     @IsBoolean()
     @Field(() => Boolean, { defaultValue: true })

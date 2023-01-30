@@ -27,7 +27,7 @@ export class CreateStudioInputType {
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String])
-    anime_to_add: string[];
+    animes_to_add: string[];
 
     @IsBoolean()
     @Field(() => Boolean, { defaultValue: true })
