@@ -18,11 +18,6 @@ export class UpdateCharacterInputType {
 
     @IsOptional()
     @IsString()
-    @Field(() => String, { nullable: true })
-    bucket_id?: string;
-
-    @IsOptional()
-    @IsString()
     @Length(1, 50)
     @Field(() => String, { nullable: true })
     name?: string;

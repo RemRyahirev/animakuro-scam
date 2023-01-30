@@ -9,9 +9,6 @@ export class Character {
     })
     id: string;
 
-    @Field(() => String)
-    bucket_id: string;
-
     @Field(() => String, {
         description: 'The names of the character',
     })

@@ -5,9 +5,6 @@ import { IsNumber } from 'class-validator';
 
 @ArgsType()
 export class CreateCharacterInputType {
-    @IsString()
-    @Field(() => String)
-    bucket_id: string;
 
     @IsString()
     @Length(1, 50)

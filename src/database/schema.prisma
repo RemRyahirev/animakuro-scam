@@ -175,7 +175,6 @@ model Author {
 
 model Character {
   id            String        @id @default(uuid()) @db.Uuid
-  bucket_id     String        @db.Uuid
   name          String        @db.VarChar(50)
   gender        String        @db.VarChar(30)
   blood_type    String        @db.VarChar(30)
