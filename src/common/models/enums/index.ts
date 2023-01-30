@@ -21,3 +21,4 @@ export * from './token-type.enum';
 export * from './profile-type.enum';
 export * from './site-theme.enum';
 export * from './profile-integrations.enum';
+export * from './media.enum';
