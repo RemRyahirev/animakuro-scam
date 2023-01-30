@@ -10,10 +10,6 @@ export class CreateAuthorInputType {
 
     @IsString()
     @Field(() => String)
-    bucket_id: string;
-
-    @IsString()
-    @Field(() => String)
     bio: string;
 
     @IsString()

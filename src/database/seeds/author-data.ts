@@ -2,7 +2,6 @@ export const authorData = async () => [
     {
         id: '1347a799-c5e1-4326-9bec-f6eb5e6e087e',
         name: 'Хаяо Миядзаки',
-        bucket_id: 'd2c94865-3981-406b-a9e6-1f15a62019a1',
         primary_occupations: [
             'Писатель',
             'Сценарист',
@@ -27,7 +26,6 @@ export const authorData = async () => [
         name: 'Харуки Мураками',
         primary_occupations: ['Писатель', 'Переводчик'],
         synonyms: ['Haruki Murakami', '村上春樹'],
-        bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
         years_active: ['1985', 'Present'],
         bio: 'Об этом авторе не слышали разве что младенцы',
         age: 25,
@@ -42,7 +40,6 @@ export const authorData = async () => [
         id: '996e603b-d3dc-4fd8-b6fe-f5e2837168e5',
         name: 'Depeshe Mode',
         primary_occupations: ['Композитор'],
-        bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
         synonyms: ['デペッシュ・モード', 'Режим депеши'],
         years_active: ['2011', 'Present'],
         bio: 'Synth wave',
@@ -58,7 +55,6 @@ export const authorData = async () => [
         id: '43580db0-1e6f-463d-82d5-883aeae2457f',
         name: 'Rammstein',
         primary_occupations: ['Композитор'],
-        bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
         synonyms: ['Раммштайн', 'ラムシュタイン'],
         years_active: ['1990', 'Present'],
         bio: 'Rock',
@@ -74,7 +70,6 @@ export const authorData = async () => [
         id: 'ea5a020b-40ad-402a-8215-e9050a817b64',
         name: 'The Architects',
         primary_occupations: ['Мангака', 'Режиссёр', 'Композитор'],
-        bucket_id: 'd2c94865-7575-406b-a9e6-1f15a98364a1',
         synonyms: ['Архитекторы', '建築家'],
         years_active: ['2005', '2018'],
         bio: 'Metal core',
@@ -99,7 +94,6 @@ export const authorData = async () => [
         blood_type: '4',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Японский мангака, наиболее известной его работой ' +
             'является манга Gintama. ' +
@@ -118,7 +112,6 @@ export const authorData = async () => [
         blood_type: '2',
         language: 'jpn',
         gender: 'female',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Режиссёр аниме',
     },
     {
@@ -134,7 +127,6 @@ export const authorData = async () => [
         blood_type: '1',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Режиссёр анимации',
     },
     {
@@ -150,7 +142,6 @@ export const authorData = async () => [
         blood_type: '1',
         language: 'jpn',
         gender: 'female',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Участник аниме проектов',
     },
     {
@@ -166,7 +157,6 @@ export const authorData = async () => [
         blood_type: '2',
         language: 'jpn',
         gender: 'female',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Родилась 7 июля 1973 года в японской префектуре Сидзуока. ' +
             'Левша. Дебютировала в качестве мангаки в 1992 году. ' +
@@ -185,7 +175,6 @@ export const authorData = async () => [
         blood_type: '1',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Японский сценарист аниме. ' +
             'После ухода из Studio Ghibli он был назначен ' +
@@ -207,7 +196,6 @@ export const authorData = async () => [
         blood_type: '3',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Японский режиссер аниме. ' +
             'Начав свою карьеру в Madhouse, ' +
@@ -227,7 +215,6 @@ export const authorData = async () => [
         blood_type: '4',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Мангака, наиболее известен как создатель манги ' +
             '«Детектив Конан». Настоящее имя Ёсимаса Аояма.',
@@ -250,7 +237,6 @@ export const authorData = async () => [
         blood_type: '2',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Японский аниматор, режиссер, художник-раскадровщик и сценарист.',
     },
     {
@@ -266,7 +252,6 @@ export const authorData = async () => [
         blood_type: '3',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Тайто Кубо, настоящее имя Нориаки Кубо — японский мангака. ' +
             'Он наиболее известен своей мангой «Блич». ' +
@@ -286,7 +271,6 @@ export const authorData = async () => [
         blood_type: '3',
         language: 'jpn',
         gender: 'female',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Родилась 29 сентября в префектуре Тиба. ' +
             'Первоначально работала в студии Pierrot, где приняла участие в качестве' +
@@ -305,7 +289,6 @@ export const authorData = async () => [
         blood_type: '2',
         language: 'jpn',
         gender: 'female',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Японская мангака',
     },
     {
@@ -321,7 +304,6 @@ export const authorData = async () => [
         blood_type: '4',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Японский аниматор, дизайнер персонажей и режиссер аниме. ' +
             'Его режиссерские работы включают « Гренадер» , ' +
@@ -342,7 +324,6 @@ export const authorData = async () => [
         blood_type: '3',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Японский мангака, автор популярных манга-сериалов ' +
             'YuYu Hakusho, Level E и Хантер X Хантер, ' +
@@ -361,7 +342,6 @@ export const authorData = async () => [
         blood_type: '3',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Японский мангака, автор манги "Чи: О движении Земли',
     },
     {
@@ -377,7 +357,6 @@ export const authorData = async () => [
         blood_type: '2',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Японский режиссёр аниме.',
     },
     {
@@ -393,7 +372,6 @@ export const authorData = async () => [
         blood_type: '2',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio:
             'Иллюстратор аниме и видеоигр и дизайнер персонажей' +
             'из префектуры Окаяма.',
@@ -411,7 +389,6 @@ export const authorData = async () => [
         blood_type: '1',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Иллюстратор аниме из префектуры Тояма',
     },
     {
@@ -427,7 +404,6 @@ export const authorData = async () => [
         blood_type: '4',
         language: 'jpn',
         gender: 'male',
-        bucket_id: 'd9a1d7bd-f8a0-44a5-89b6-1973fe92ac63',
         bio: 'Японский мангака',
     },
 ];

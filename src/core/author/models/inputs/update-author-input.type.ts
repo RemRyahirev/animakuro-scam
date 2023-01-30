@@ -23,11 +23,6 @@ export class UpdateAuthorInputType {
     @IsOptional()
     @IsString()
     @Field(() => String, { nullable: true })
-    bucket_id?: string;
-
-    @IsOptional()
-    @IsString()
-    @Field(() => String, { nullable: true })
     bio?: string;
 
     @IsOptional()

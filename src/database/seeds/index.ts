@@ -56,7 +56,7 @@ async function createEntities<
     Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
         if (!entity.id) {
-            if (entity.parent_anime_id || entity.airing_at) {
+            if (entity.parent_anime_id) {
                 continue;
             } else {
                 Logger.log(

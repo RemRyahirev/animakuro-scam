@@ -80,9 +80,6 @@ export class Author {
     })
     gender: string;
 
-    @Field(() => String)
-    bucket_id: string;
-
     @Field(() => String, {
         description: 'Short biography of the author',
     })

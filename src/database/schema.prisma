@@ -165,7 +165,6 @@ model Author {
   blood_type          String   @db.VarChar(30)
   language            String   @db.VarChar(30)
   gender              String   @db.VarChar(30)
-  bucket_id           String   @db.Uuid
   bio                 String   @db.Text
   created_at          DateTime @default(now()) @map("created_at")
   updated_at          DateTime @default(now()) @map("updated_at")
