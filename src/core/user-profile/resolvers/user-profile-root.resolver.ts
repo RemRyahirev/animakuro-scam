@@ -9,35 +9,52 @@ import { JwtAuthGuard } from '../../../common/guards';
 
 @ObjectType()
 export class UserProfileMutationType {
-    @Field(() => CreateUserProfileResultsType, { description: 'Create user profile' })
+    @Field(() => CreateUserProfileResultsType, {
+        description: 'Create user profile',
+    })
     createUserProfile: CreateUserProfileResultsType;
 
-    @Field(() => UpdateUserProfileResultsType, { description: 'Update user profile' })
+    @Field(() => UpdateUserProfileResultsType, {
+        description: 'Update user profile',
+    })
     updateUserProfile: UpdateUserProfileResultsType;
 
-    @Field(() => DeleteUserProfileResultsType, { description: 'Delete user profile' })
+    @Field(() => UpdateUserProfileResultsType, {
+        description: 'Update profile favourites',
+    })
+    updateProfileFavourites: UpdateUserProfileResultsType;
+
+    @Field(() => DeleteUserProfileResultsType, {
+        description: 'Delete user profile',
+    })
     deleteUserProfile: DeleteUserProfileResultsType;
 }
 
 @ObjectType()
 export class UserProfileQueryType {
-    @Field(() => GetUserProfileResultsType, { description: 'Get user profile by ID' })
+    @Field(() => GetUserProfileResultsType, {
+        description: 'Get user profile by ID',
+    })
     getUserProfile: GetUserProfileResultsType;
 
-    @Field(() => GetListUserProfileResultsType, { description: 'Get user profile list' })
+    @Field(() => GetListUserProfileResultsType, {
+        description: 'Get user profile list',
+    })
     getUserProfileList: GetListUserProfileResultsType;
 }
 
 @Resolver()
 export class UserProfileRootResolver {
-    @Mutation(() => UserProfileMutationType, { description: 'User Profile mutations' })
-    @UseGuards(JwtAuthGuard)
+    @Mutation(() => UserProfileMutationType, {
+        description: 'User Profile mutations',
+    })
+    //@UseGuards(JwtAuthGuard)
     userProfileMutations() {
         return {};
     }
 
     @Query(() => UserProfileQueryType, { description: 'User Profile queries' })
-    @UseGuards(JwtAuthGuard)
+    //@UseGuards(JwtAuthGuard)
     userProfileQueries() {
         return {};
     }

@@ -9,6 +9,7 @@ import { UpdateUserProfileResultsType } from '../models/results/update-user-prof
 import { UpdateUserProfileInputType } from '../models/inputs/update-user-profile-input.type';
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { UserProfileService } from '../services/user-profile.service';
+import { UpdateProfileFavouritesInputType } from '../models/inputs/update-profile-favourites-input.type';
 
 @Resolver(UserProfileMutationType)
 export class UserProfileMutationResolver extends UserProfileRootResolver {
@@ -30,9 +31,16 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         return await this.userProfileService.updateUserProfile(args);
     }
 
+    @ResolveField(() => UpdateUserProfileResultsType)
+    async updateProfileFavourites(
+        @Args() args: UpdateProfileFavouritesInputType,
+    ): Promise<UpdateUserProfileResultsType> {
+        return await this.userProfileService.updateProfileFavourites(args);
+    }
+
     @ResolveField(() => DeleteUserProfileResultsType)
     async deleteUserProfile(
-        @Args("id") id: string,
+        @Args('id') id: string,
     ): Promise<DeleteUserProfileResultsType> {
         return await this.userProfileService.deleteUserProfile(id);
     }

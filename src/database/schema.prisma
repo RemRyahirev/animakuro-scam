@@ -63,7 +63,7 @@ model Studio {
   anime_ends          Float    @db.Real
   is_animation_studio Boolean  @default(true)
   animes               Anime[]
-  favourite_by        ProfileFavourites[]
+  favourite_by        UserProfile[]
 
   @@map("studio")
 }
@@ -114,7 +114,7 @@ model Anime {
   similar_by_animes   SimilarAnime[]   @relation("similar_by")
   user_anime          UserAnime[]
   airing_schedule     AiringSchedule[]
-  favourite_by        ProfileFavourites[]
+  favourite_by        UserProfile[]
 
   @@map("anime")
 }
@@ -172,7 +172,7 @@ model Author {
   created_at          DateTime @default(now()) @map("created_at")
   updated_at          DateTime @default(now()) @map("updated_at")
   animes              Anime[]
-  favourite_by        ProfileFavourites[]
+  favourite_by        UserProfile[]
 
   @@map("author")
 }
@@ -192,7 +192,7 @@ model Character {
   created_at    DateTime      @default(now()) @map("created_at")
   updated_at    DateTime      @default(now()) @map("updated_at")
   animes        Anime[]
-  favourite_by        ProfileFavourites[]
+  favourite_by  UserProfile[]
 
   @@map("character")
 }
@@ -201,7 +201,7 @@ model Genre {
   id     String  @id @default(uuid()) @db.Uuid
   name   String  @db.VarChar(50)
   animes Anime[]
-  favourite_by        ProfileFavourites[]
+  favourite_by        UserProfile[]
 
   @@map("genre")
 }
@@ -221,25 +221,28 @@ model UserProfile {
   user_id            String           @unique @db.Uuid //Field name changed 28/12 from user_id
   user_anime         UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
   profile_settings   ProfileSettings?
-  profile_favourites ProfileFavourites[]
+  favourite_animes   Anime[]  
+  favourite_studios  Studio[]
+  favourite_authors  Author[]
+  favourite_characters  Character[]
+  favourite_genres   Genre[]
   created_at         DateTime?        @default(now()) @db.Date
 
   @@map("user_profile")
 }
 
-model ProfileFavourites {
-  id                 String           @id @default(uuid()) @db.Uuid
-  profile            UserProfile      @relation( fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String           @db.Uuid
-  animes             Anime[]
-  studios            Studio[]
-  authors            Author[]
-  characters         Character[]
-  genres             Genre[]
-  media_type         Media
+//model ProfileFavourites {
+//  id                 String           @id @default(uuid()) @db.Uuid
+//  profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+//  profile_id         String           @unique @db.Uuid
+//  animes             Anime[]  
+//  studios            Studio[]
+//  authors            Author[]
+//  characters         Character[]
+//  genres             Genre[]
 
-  @@map("profile_favourites")
-}
+//  @@map("profile_favourites")
+//}
 
 model ProfileSettings {
   id                 String           @id @default(uuid()) @db.Uuid

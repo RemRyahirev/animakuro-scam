@@ -1,7 +1,11 @@
 import { ProfileSettings } from '../../profile-settings/models/profile-settings.model';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { ModeratorRoles } from '../../../common/models/enums';
 import { User } from '../../user/models/user.model';
+import { Anime } from '../../anime/models/anime.model';
+import { Character } from '../../character/models/character.model';
+import { Author } from '../../author/models/author.model';
+import { Studio } from '../../studio/models/studio.model';
+import { Genre } from '../../genre/models/genre.model';
 
 @ObjectType()
 export class UserProfile {
@@ -22,15 +26,21 @@ export class UserProfile {
     // @Field(() => UserAnime)
     // user_anime: UserAnime;
 
-    @Field({ nullable: true })
-    about?: string;
+    @Field(() => [Anime])
+    favourite_animes: Anime;
+
+    @Field(() => [Studio])
+    favourite_studios: Studio[];
+
+    @Field(() => [Character])
+    favourite_characters: Character[];
+
+    @Field(() => [Author])
+    favourite_authors: Author[];
+
+    @Field(() => [Genre])
+    favourite_genres: Genre[];
 
     @Field(() => ProfileSettings)
     profile_settings: ProfileSettings;
-
-    @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
-    moderator_role: string;
-
-    @Field({ defaultValue: false })
-    isBlocked: boolean;
 }
