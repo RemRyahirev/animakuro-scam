@@ -34,6 +34,7 @@ export class UserProfileService {
                 favourite_authors: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                profile_folders: true,
             },
         });
         return {
@@ -56,6 +57,7 @@ export class UserProfileService {
                 favourite_authors: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                profile_folders: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -88,9 +90,10 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
+                profile_folders: true,
             },
         });
-        //console.log(userProfile)
+        console.log(userProfile);
 
         return {
             success: true,
@@ -113,6 +116,7 @@ export class UserProfileService {
                 favourite_authors: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                profile_folders: true,
             },
         });
         return {
@@ -137,6 +141,7 @@ export class UserProfileService {
                 favourite_genres: true,
                 favourite_studios: true,
                 profile_settings: true,
+                profile_folders: true,
                 user: true,
             },
         });

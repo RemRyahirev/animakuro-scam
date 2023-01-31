@@ -3,15 +3,15 @@ import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
-import { UserAnime } from '../user-anime.model';
+import { ProfileFolder } from '../profile-folder.model';
 
 @ObjectType()
-export class GetListUserAnimeResultsType extends BaseResultsType {
-    @Field(() => [UserAnime], {
+export class GetListProfileFolderResultsType extends BaseResultsType {
+    @Field(() => [ProfileFolder], {
         nullable: true,
-        description: 'User Anime list',
+        description: 'Profile Folder list',
     })
-    userAnimeList: UserAnime[];
+    profileFolderList: ProfileFolder[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

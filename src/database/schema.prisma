@@ -112,7 +112,7 @@ model Anime {
   related_by_animes   RelatingAnime[]  @relation("related")
   similar_animes      SimilarAnime[]   @relation("similar")
   similar_by_animes   SimilarAnime[]   @relation("similar_by")
-  user_anime          UserAnime[]
+  profile_folders     ProfileFolder[]
   airing_schedule     AiringSchedule[]
   favourite_by        UserProfile[]
 
@@ -219,7 +219,7 @@ model UserProfile {
   id                 String           @id @default(uuid()) @db.Uuid
   user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id            String           @unique @db.Uuid //Field name changed 28/12 from user_id
-  user_anime         UserAnime? // o-2-o relation. Field name changed 28/12 from user_anime
+  profile_folders    ProfileFolder[]
   profile_settings   ProfileSettings?
   favourite_animes   Anime[]  
   favourite_studios  Studio[]
@@ -230,19 +230,6 @@ model UserProfile {
 
   @@map("user_profile")
 }
-
-//model ProfileFavourites {
-//  id                 String           @id @default(uuid()) @db.Uuid
-//  profile            UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-//  profile_id         String           @unique @db.Uuid
-//  animes             Anime[]  
-//  studios            Studio[]
-//  authors            Author[]
-//  characters         Character[]
-//  genres             Genre[]
-
-//  @@map("profile_favourites")
-//}
 
 model ProfileSettings {
   id                 String           @id @default(uuid()) @db.Uuid
@@ -269,24 +256,22 @@ model ProfileSettings {
   @@map("profile_settings")
 }
 
-model UserAnime {
+model ProfileFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
   id               String       @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user_profile     UserProfile? @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
-  user_profile_id  String       @unique @db.Uuid // o-2-o relation
-  anime            Anime?       @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-  anime_id         String       @db.Uuid
+  profile          UserProfile? @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id       String       @db.Uuid // o-2-o relation
+  animes           Anime[]
   // информативный блок
-  status           WatchStatus  @default(WATCHING)
-  in_favourites    Boolean      @default(false)
+  name             String       @db.VarChar(25)
+  description      String
   // блок для аниме со статусом WATCHING
-  season           Int?         @db.SmallInt // какой сезон данного аниме смотрит юзер
-  episode          Int?         @db.SmallInt // какой эпизод(серию)
-  episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода
-  watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
+  //episode          Int?         @db.SmallInt // какой эпизод(серию)
+  //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
+  //watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
 
-  @@map("user_anime")
+  @@map("profile_folder")
 }
 
 enum FriendshipStatus {
@@ -300,13 +285,6 @@ enum AnimeRelation {
   CHRONOLOGY
   FRANCHISE
   NULL
-}
-
-enum WatchStatus {
-  WATCHING // Currently watching
-  PLANNED // Planned to watch
-  COMPLETED // renamed from SEEN. Finished watching
-  DROPPED // renamed from ABANDONED. Stopped watching before completing
 }
 
 enum Gender {

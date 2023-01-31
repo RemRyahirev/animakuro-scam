@@ -6,6 +6,7 @@ import { Character } from '../../character/models/character.model';
 import { Author } from '../../author/models/author.model';
 import { Studio } from '../../studio/models/studio.model';
 import { Genre } from '../../genre/models/genre.model';
+import { ProfileFolder } from '../../profile-folder/models/profile-folder.model';
 
 @ObjectType()
 export class UserProfile {
@@ -43,4 +44,7 @@ export class UserProfile {
 
     @Field(() => ProfileSettings)
     profile_settings: ProfileSettings;
+
+    @Field(() => [ProfileFolder])
+    profile_folders: ProfileFolder[];
 }
