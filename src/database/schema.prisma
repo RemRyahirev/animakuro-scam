@@ -264,6 +264,8 @@ model ProfileFolder {
   profile_id       String       @db.Uuid // o-2-o relation
   animes           Anime[]
   // информативный блок
+  is_catalog       Boolean      @db.Boolean() @default(false)
+  is_public        Boolean      @db.Boolean() @default(false)
   name             String       @db.VarChar(25)
   description      String
   // блок для аниме со статусом WATCHING
