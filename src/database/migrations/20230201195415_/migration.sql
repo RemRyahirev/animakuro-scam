@@ -5,9 +5,6 @@ CREATE TYPE "FriendshipStatus" AS ENUM ('AWAITING', 'REQUESTED', 'CONFIRMED');
 CREATE TYPE "AnimeRelation" AS ENUM ('DIRECT', 'CHRONOLOGY', 'FRANCHISE', 'NULL');
 
 -- CreateEnum
-CREATE TYPE "WatchStatus" AS ENUM ('WATCHING', 'PLANNED', 'COMPLETED', 'DROPPED');
-
--- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('UNSPECIFIED', 'MALE', 'FEMALE', 'OTHER');
 
 -- CreateEnum
@@ -52,16 +49,23 @@ CREATE TYPE "ProfileLanguages" AS ENUM ('ENGLISH', 'RUSSIAN', 'JAPANESE', 'UKRAI
 -- CreateEnum
 CREATE TYPE "ProfileCountries" AS ENUM ('USA', 'RUSSIA', 'JAPAN', 'UKRAINE', 'UNSPECIFIED');
 
+-- CreateEnum
+CREATE TYPE "SiteTheme" AS ENUM ('LIGHT', 'DARK', 'AUTO');
+
+-- CreateEnum
+CREATE TYPE "ProfileType" AS ENUM ('PUBLIC', 'PRIVATE');
+
+-- CreateEnum
+CREATE TYPE "Media" AS ENUM ('ANIMES', 'STUDIOS', 'CHARACTERS', 'AUTHORS', 'GENRES');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL,
     "username" VARCHAR(64) NOT NULL,
     "email" VARCHAR(320) NOT NULL,
+    "avatar" TEXT,
     "is_email_confirmed" BOOLEAN NOT NULL DEFAULT false,
     "password" TEXT NOT NULL,
-    "avatar" TEXT NOT NULL,
-    "birthday" DATE,
-    "gender" "Gender" NOT NULL,
     "created_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted" BOOLEAN NOT NULL DEFAULT false,
 
@@ -195,7 +199,6 @@ CREATE TABLE "author" (
     "blood_type" VARCHAR(30) NOT NULL,
     "language" VARCHAR(30) NOT NULL,
     "gender" VARCHAR(30) NOT NULL,
-    "bucket_id" UUID NOT NULL,
     "bio" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -206,7 +209,6 @@ CREATE TABLE "author" (
 -- CreateTable
 CREATE TABLE "character" (
     "id" UUID NOT NULL,
-    "bucket_id" UUID NOT NULL,
     "name" VARCHAR(50) NOT NULL,
     "gender" VARCHAR(30) NOT NULL,
     "blood_type" VARCHAR(30) NOT NULL,
@@ -243,33 +245,52 @@ CREATE TABLE "translation" (
 CREATE TABLE "user_profile" (
     "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
-    "displayed_name" VARCHAR(30),
-    "profile_picture_id" UUID,
-    "banner_image" UUID,
-    "about" TEXT,
-    "country" "ProfileCountries" NOT NULL DEFAULT 'UNSPECIFIED',
-    "language" "ProfileLanguages" NOT NULL DEFAULT 'ENGLISH',
     "created_at" DATE DEFAULT CURRENT_TIMESTAMP,
-    "subscribe_tier" "SubscribeTier" NOT NULL DEFAULT 'FREE_ACCOUNT',
-    "moderator_role" "ModeratorRoles" NOT NULL DEFAULT 'VIEWER',
-    "is_blocked" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "user_profile_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "user_anime" (
+CREATE TABLE "profile_settings" (
     "id" UUID NOT NULL,
-    "user_profile_id" UUID NOT NULL,
-    "anime_id" UUID NOT NULL,
-    "status" "WatchStatus" NOT NULL DEFAULT 'WATCHING',
-    "in_favourites" BOOLEAN NOT NULL DEFAULT false,
-    "season" SMALLINT,
-    "episode" SMALLINT,
-    "episode_duration" INTEGER,
-    "watched_duration" INTEGER,
+    "profile_id" UUID NOT NULL,
+    "displayed_name" VARCHAR(30),
+    "gender" "Gender" NOT NULL DEFAULT 'UNSPECIFIED',
+    "birthday" DATE,
+    "site_theme" "SiteTheme" NOT NULL DEFAULT 'AUTO',
+    "avatar_id" UUID,
+    "cover_id" UUID,
+    "country" "ProfileCountries" NOT NULL DEFAULT 'UNSPECIFIED',
+    "language" "ProfileLanguages" NOT NULL DEFAULT 'ENGLISH',
+    "about" TEXT,
+    "timezone" VARCHAR(7),
+    "moderator_role" "ModeratorRoles" NOT NULL DEFAULT 'VIEWER',
+    "is_blocked" BOOLEAN NOT NULL DEFAULT false,
+    "profile_type" "ProfileType" NOT NULL DEFAULT 'PUBLIC',
+    "integrations" JSON NOT NULL,
+    "notifications" JSON NOT NULL,
+    "subscribe_tier" "SubscribeTier" NOT NULL DEFAULT 'FREE_ACCOUNT',
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "user_anime_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "profile_settings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "profile_folder" (
+    "id" UUID NOT NULL,
+    "profile_id" UUID NOT NULL,
+    "is_catalog" BOOLEAN NOT NULL DEFAULT false,
+    "is_public" BOOLEAN NOT NULL DEFAULT false,
+    "name" VARCHAR(25) NOT NULL,
+    "description" TEXT NOT NULL,
+
+    CONSTRAINT "profile_folder_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_StudioToUserProfile" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
 );
 
 -- CreateTable
@@ -296,6 +317,36 @@ CREATE TABLE "_AnimeToAuthor" (
     "B" UUID NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "_AnimeToProfileFolder" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_AnimeToUserProfile" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_AuthorToUserProfile" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_CharacterToUserProfile" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_GenreToUserProfile" (
+    "A" UUID NOT NULL,
+    "B" UUID NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
@@ -306,13 +357,22 @@ CREATE UNIQUE INDEX "auth_username_key" ON "auth"("username");
 CREATE UNIQUE INDEX "friendship_friend_one_friend_two_key" ON "friendship"("friend_one", "friend_two");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "airing_schedule_airing_at_name_episode_key" ON "airing_schedule"("airing_at", "name", "episode");
-
--- CreateIndex
 CREATE UNIQUE INDEX "user_profile_user_id_key" ON "user_profile"("user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_anime_user_profile_id_key" ON "user_anime"("user_profile_id");
+CREATE UNIQUE INDEX "profile_settings_profile_id_key" ON "profile_settings"("profile_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "profile_settings_avatar_id_key" ON "profile_settings"("avatar_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "profile_settings_cover_id_key" ON "profile_settings"("cover_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_StudioToUserProfile_AB_unique" ON "_StudioToUserProfile"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_StudioToUserProfile_B_index" ON "_StudioToUserProfile"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
@@ -338,6 +398,36 @@ CREATE UNIQUE INDEX "_AnimeToAuthor_AB_unique" ON "_AnimeToAuthor"("A", "B");
 -- CreateIndex
 CREATE INDEX "_AnimeToAuthor_B_index" ON "_AnimeToAuthor"("B");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "_AnimeToProfileFolder_AB_unique" ON "_AnimeToProfileFolder"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AnimeToProfileFolder_B_index" ON "_AnimeToProfileFolder"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AnimeToUserProfile_AB_unique" ON "_AnimeToUserProfile"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AnimeToUserProfile_B_index" ON "_AnimeToUserProfile"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_AuthorToUserProfile_AB_unique" ON "_AuthorToUserProfile"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_AuthorToUserProfile_B_index" ON "_AuthorToUserProfile"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_CharacterToUserProfile_AB_unique" ON "_CharacterToUserProfile"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_CharacterToUserProfile_B_index" ON "_CharacterToUserProfile"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_GenreToUserProfile_AB_unique" ON "_GenreToUserProfile"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_GenreToUserProfile_B_index" ON "_GenreToUserProfile"("B");
+
 -- AddForeignKey
 ALTER TABLE "auth" ADD CONSTRAINT "auth_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -357,16 +447,22 @@ ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_child_anime_id_fkey" F
 ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_parent_anime_id_fkey" FOREIGN KEY ("parent_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "airing_schedule" ADD CONSTRAINT "airing_schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "airing_schedule" ADD CONSTRAINT "airing_schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_user_profile_id_fkey" FOREIGN KEY ("user_profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "profile_settings" ADD CONSTRAINT "profile_settings_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_anime" ADD CONSTRAINT "user_anime_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "profile_folder" ADD CONSTRAINT "profile_folder_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_StudioToUserProfile" ADD CONSTRAINT "_StudioToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_StudioToUserProfile" ADD CONSTRAINT "_StudioToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -391,3 +487,33 @@ ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_A_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_B_fkey" FOREIGN KEY ("B") REFERENCES "author"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToProfileFolder" ADD CONSTRAINT "_AnimeToProfileFolder_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToProfileFolder" ADD CONSTRAINT "_AnimeToProfileFolder_B_fkey" FOREIGN KEY ("B") REFERENCES "profile_folder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToUserProfile" ADD CONSTRAINT "_AnimeToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AnimeToUserProfile" ADD CONSTRAINT "_AnimeToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AuthorToUserProfile" ADD CONSTRAINT "_AuthorToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "author"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AuthorToUserProfile" ADD CONSTRAINT "_AuthorToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CharacterToUserProfile" ADD CONSTRAINT "_CharacterToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_CharacterToUserProfile" ADD CONSTRAINT "_CharacterToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GenreToUserProfile" ADD CONSTRAINT "_GenreToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GenreToUserProfile" ADD CONSTRAINT "_GenreToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
