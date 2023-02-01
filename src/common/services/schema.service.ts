@@ -31,14 +31,14 @@ import { StudioMutationResolver } from '../../core/studio/resolvers/studio-mutat
 import { TranslationRootResolver } from '../../core/translation/resolvers/translation-root.resolver';
 import { TranslationQueryResolver } from '../../core/translation/resolvers/translation-query.resolver';
 import { TranslationMutationResolver } from '../../core/translation/resolvers/translation-mutation.resolver';
-import { UserAnimeRootResolver } from '../../core/user-anime/resolvers/user-anime-root.resolver';
-import { UserAnimeQueryResolver } from '../../core/user-anime/resolvers/user-anime-query.resolver';
-import { UserAnimeMutationResolver } from '../../core/user-anime/resolvers/user-anime-mutation.resolver';
+import { ProfileFolderRootResolver } from '../../core/profile-folder/resolvers/profile-folder-root.resolver';
+import { ProfileFolderQueryResolver } from '../../core/profile-folder/resolvers/profile-folder-query.resolver';
+import { ProfileFolderMutationResolver } from '../../core/profile-folder/resolvers/profile-folder-mutation.resolver';
 import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
 import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
 import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
-import { CatalogRootResolver } from "../../core/catalog/resolvers/catalog-root.resolver";
-import { CatalogQueryResolver } from "../../core/catalog/resolvers/catalog-query.resolver";
+import { CatalogRootResolver } from '../../core/catalog/resolvers/catalog-root.resolver';
+import { CatalogQueryResolver } from '../../core/catalog/resolvers/catalog-query.resolver';
 import { AiringScheduleRootResolver } from '../../core/airing-schedule/resolvers/airing-schedule-root.resolver';
 import { AiringScheduleQueryResolver } from '../../core/airing-schedule/resolvers/airing-schedule-query.resolver';
 import { AiringScheduleMutationResolver } from '../../core/airing-schedule/resolvers/airing-schedule-mutation.resolver';
@@ -80,9 +80,9 @@ export class SchemaService {
             TranslationRootResolver,
             TranslationQueryResolver,
             TranslationMutationResolver,
-            UserAnimeRootResolver,
-            UserAnimeQueryResolver,
-            UserAnimeMutationResolver,
+            ProfileFolderRootResolver,
+            ProfileFolderQueryResolver,
+            ProfileFolderMutationResolver,
             UserProfileRootResolver,
             UserProfileQueryResolver,
             UserProfileMutationResolver,
