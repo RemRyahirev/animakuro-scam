@@ -18,7 +18,7 @@ export class UpdateUserFolderInputType {
 
     @IsOptional()
     @IsString()
-    @Field(() => String)
+    @Field(() => String, { nullable: true })
     description: string;
 
     @IsOptional()
