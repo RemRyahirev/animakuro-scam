@@ -7,14 +7,14 @@ import { CharacterModule } from './character/character.module';
 import { GenreModule } from './genre/genre.module';
 import { StudioModule } from './studio/studio.module';
 import { TranslationModule } from './translation/translation.module';
-import { ProfileFolderModule } from './profile-folder/profile-folder.module';
+import { UserFolderModule } from './user-folder/user-folder.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { AiringScheduleModule } from './airing-schedule/airing-schedule.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
 import { MicroserviceModule } from './microservice/microservice.module';
 import { ProfileSettingsModule } from './profile-settings/profile-settings.module';
-import { ProfileCatalogModule } from './profile-catalog/profile-catalog.module';
+import { UserCatalogModule } from './user-catalog/user-catalog.module';
 
 @Module({
     imports: [
@@ -28,12 +28,12 @@ import { ProfileCatalogModule } from './profile-catalog/profile-catalog.module';
         StudioModule,
         TranslationModule,
         UserModule,
-        ProfileFolderModule,
+        UserFolderModule,
         UserProfileModule,
         CatalogModule,
         MicroserviceModule,
         ProfileSettingsModule,
-        ProfileCatalogModule,
+        UserCatalogModule,
     ],
     exports: [
         AuthModule,
@@ -46,12 +46,12 @@ import { ProfileCatalogModule } from './profile-catalog/profile-catalog.module';
         StudioModule,
         TranslationModule,
         UserModule,
-        ProfileFolderModule,
+        UserFolderModule,
         UserProfileModule,
         CatalogModule,
         MicroserviceModule,
         ProfileSettingsModule,
-        ProfileCatalogModule,
+        UserCatalogModule,
     ],
 })
 export class CoreModule {}

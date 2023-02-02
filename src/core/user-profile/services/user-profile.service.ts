@@ -10,9 +10,7 @@ import { UpdateUserProfileResultsType } from '../models/results/update-user-prof
 import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
-import { profileDefaults } from './defaults/profile-defaults';
-import { UpdateProfileFavouritesInputType } from '../models/inputs/update-profile-favourites-input.type';
-import { mediaConnectUtil } from '../utils/media-connect.util';
+import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
 
 @Injectable()
 export class UserProfileService {
@@ -29,12 +27,6 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
-                favourite_animes: true,
-                favourite_characters: true,
-                favourite_authors: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                profile_folders: true,
             },
         });
         return {
@@ -52,12 +44,6 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
-                favourite_animes: true,
-                favourite_characters: true,
-                favourite_authors: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                profile_folders: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -80,7 +66,12 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.create({
             data: {
                 ...(other as any),
-                ...profileDefaults,
+                profile_settings: {
+                    create: {
+                        integrations: [],
+                        notifications: notificationsDefault,
+                    },
+                },
                 user: {
                     connect: {
                         id: user_id,
@@ -90,7 +81,6 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
-                profile_folders: true,
             },
         });
         console.log(userProfile);
@@ -111,41 +101,8 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
-                favourite_animes: true,
-                favourite_characters: true,
-                favourite_authors: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                profile_folders: true,
             },
         });
-        return {
-            success: true,
-            errors: [],
-            userProfile: userProfile as any,
-        };
-    }
-
-    async updateProfileFavourites(
-        args: UpdateProfileFavouritesInputType,
-    ): Promise<UpdateUserProfileResultsType> {
-        const userProfile = await this.prisma.userProfile.update({
-            where: { id: args.id },
-            data: {
-                ...mediaConnectUtil(args),
-            },
-            include: {
-                favourite_animes: true,
-                favourite_characters: true,
-                favourite_authors: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                profile_settings: true,
-                profile_folders: true,
-                user: true,
-            },
-        });
-
         return {
             success: true,
             errors: [],

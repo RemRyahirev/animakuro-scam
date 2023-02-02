@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
@@ -7,9 +7,12 @@ import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
 import { UpdateUserResultsType } from '../models/results/update-user-results.type';
-import { GetListUserResultsType } from "../models/results/get-list-user-results.type";
-import { User } from "../models/user.model";
-import { GetUserResultsType } from "../models/results/get-user-results.type";
+import { GetListUserResultsType } from '../models/results/get-list-user-results.type';
+import { User } from '../models/user.model';
+import { GetUserResultsType } from '../models/results/get-user-results.type';
+import { mediaConnectUtil } from '../utils/media-connect.util';
+import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
+import { userDefaults } from '../../../common/defaults/user-defaults';
 
 @Injectable()
 export class UserService {
@@ -25,6 +28,21 @@ export class UserService {
             ...transformPaginationUtil(args),
             include: {
                 auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -46,6 +64,41 @@ export class UserService {
         };
     }
 
+    async updateUserFavourites(
+        args: UpdateUserFavouritesInputType,
+    ): Promise<UpdateUserResultsType> {
+        const user = await this.prisma.user.update({
+            where: { id: args.id },
+            data: {
+                ...mediaConnectUtil(args),
+            },
+            include: {
+                auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
+            },
+        });
+
+        return {
+            success: true,
+            errors: [],
+            user: user as any,
+        };
+    }
+
     async getUsersByEmail(
         email: string,
         args: PaginationInputType,
@@ -55,6 +108,21 @@ export class UserService {
             ...transformPaginationUtil(args),
             include: {
                 auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -68,15 +136,34 @@ export class UserService {
         };
     }
 
-    async findOneById(id: string): Promise<User | null> {
-        return await this.prisma.user.findUnique({
+    async findOneById(id: string): Promise<GetUserResultsType> {
+        const user = await this.prisma.user.findUnique({
             where: {
                 id,
             },
             include: {
-                auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
+        return {
+            errors: [],
+            success: true,
+            user: user as any,
+        };
     }
 
     async findUserByEmailOrUsername(
@@ -86,6 +173,24 @@ export class UserService {
         return await this.prisma.user.findFirst({
             where: {
                 OR: [{ email }, { username }],
+            },
+            include: {
+                auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
     }
@@ -97,6 +202,21 @@ export class UserService {
             },
             include: {
                 auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
     }
@@ -105,14 +225,32 @@ export class UserService {
         args: CreateUserInputType,
     ): Promise<CreateUserResultsType> {
         const user = await this.prisma.user.create({
-            data: args as any,
+            data: {
+                ...args,
+                ...userDefaults,
+            },
             include: {
                 auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
         return {
             success: true,
-            user,
+            user: user as any,
         };
     }
 
@@ -124,11 +262,26 @@ export class UserService {
             data: args as any,
             include: {
                 auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
         return {
             success: true,
-            user,
+            user: user as any,
         };
     }
 }

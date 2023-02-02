@@ -8,7 +8,7 @@ import { authorData } from './author-data';
 import { animeData } from './anime-data';
 import { deepEqual } from '../../common/utils/deep-equal';
 import { userProfileData } from './user-profile-data';
-import { profileFoldersData } from './profile-folders-data';
+import { userFoldersData } from './user-folders-data';
 import { Logger } from '@nestjs/common';
 import { relatingAnimeData } from './relating-anime';
 import { similarAnimeData } from './similar-anime';
@@ -37,7 +37,7 @@ async function seedAll() {
     await profileSettingsData().then((array) =>
         createEntities(array, 'profileSettings'),
     );
-    await profileFoldersData().then((array) => createEntities(array, 'profileFolder'));
+    await userFoldersData().then((array) => createEntities(array, 'userFolder'));
     await relatingAnimeData().then((array) =>
         createEntities(array, 'relatingAnime'),
     );

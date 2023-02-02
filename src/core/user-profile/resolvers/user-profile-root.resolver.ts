@@ -19,11 +19,6 @@ export class UserProfileMutationType {
     })
     updateUserProfile: UpdateUserProfileResultsType;
 
-    @Field(() => UpdateUserProfileResultsType, {
-        description: 'Update profile favourites',
-    })
-    updateProfileFavourites: UpdateUserProfileResultsType;
-
     @Field(() => DeleteUserProfileResultsType, {
         description: 'Delete user profile',
     })
@@ -48,13 +43,13 @@ export class UserProfileRootResolver {
     @Mutation(() => UserProfileMutationType, {
         description: 'User Profile mutations',
     })
-    //@UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     userProfileMutations() {
         return {};
     }
 
     @Query(() => UserProfileQueryType, { description: 'User Profile queries' })
-    //@UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     userProfileQueries() {
         return {};
     }

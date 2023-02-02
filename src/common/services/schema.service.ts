@@ -31,9 +31,9 @@ import { StudioMutationResolver } from '../../core/studio/resolvers/studio-mutat
 import { TranslationRootResolver } from '../../core/translation/resolvers/translation-root.resolver';
 import { TranslationQueryResolver } from '../../core/translation/resolvers/translation-query.resolver';
 import { TranslationMutationResolver } from '../../core/translation/resolvers/translation-mutation.resolver';
-import { ProfileFolderRootResolver } from '../../core/profile-folder/resolvers/profile-folder-root.resolver';
-import { ProfileFolderQueryResolver } from '../../core/profile-folder/resolvers/profile-folder-query.resolver';
-import { ProfileFolderMutationResolver } from '../../core/profile-folder/resolvers/profile-folder-mutation.resolver';
+import { UserFolderRootResolver } from '../../core/user-folder/resolvers/user-folder-root.resolver';
+import { UserFolderQueryResolver } from '../../core/user-folder/resolvers/user-folder-query.resolver';
+import { UserFolderMutationResolver } from '../../core/user-folder/resolvers/user-folder-mutation.resolver';
 import { UserProfileRootResolver } from '../../core/user-profile/resolvers/user-profile-root.resolver';
 import { UserProfileQueryResolver } from '../../core/user-profile/resolvers/user-profile-query.resolver';
 import { UserProfileMutationResolver } from '../../core/user-profile/resolvers/user-profile-mutation.resolver';
@@ -80,9 +80,9 @@ export class SchemaService {
             TranslationRootResolver,
             TranslationQueryResolver,
             TranslationMutationResolver,
-            ProfileFolderRootResolver,
-            ProfileFolderQueryResolver,
-            ProfileFolderMutationResolver,
+            UserFolderRootResolver,
+            UserFolderQueryResolver,
+            UserFolderMutationResolver,
             UserProfileRootResolver,
             UserProfileQueryResolver,
             UserProfileMutationResolver,
