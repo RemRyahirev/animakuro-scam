@@ -3,15 +3,15 @@ import {
     BaseResultsType,
     PaginationResultsType,
 } from '../../../../common/models/results';
-import { UserCatalog } from '../user-catalog.model';
+import { UserCollection } from '../user-collection.model';
 
 @ObjectType()
-export class GetListUserCatalogResultsType extends BaseResultsType {
-    @Field(() => [UserCatalog], {
+export class GetListUserCollectionResultsType extends BaseResultsType {
+    @Field(() => [UserCollection], {
         nullable: true,
-        description: 'User Catalog list',
+        description: 'User Collection list',
     })
-    userCatalogList: UserCatalog[];
+    userCollectionList: UserCollection[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

@@ -279,10 +279,12 @@ CREATE TABLE "profile_settings" (
 CREATE TABLE "user_folder" (
     "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
-    "is_catalog" BOOLEAN NOT NULL DEFAULT false,
+    "is_collection" BOOLEAN NOT NULL DEFAULT false,
     "is_public" BOOLEAN NOT NULL DEFAULT false,
     "name" VARCHAR(25) NOT NULL,
     "description" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_folder_pkey" PRIMARY KEY ("id")
 );

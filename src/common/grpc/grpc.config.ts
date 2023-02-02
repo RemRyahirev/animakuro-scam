@@ -9,6 +9,6 @@ export const grpcClientConfig: ClientOptions = {
         protoPath: join(__dirname, './document.proto'),
         url: process.env.GRPC_URL,
         loader: { keepCase: true },
-        credentials: credentials.createSsl(),
+        //credentials: credentials.createSsl(),
     },
 };

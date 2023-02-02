@@ -6,6 +6,7 @@ export enum CatalogIndices {
     AUTHOR = 'backend-author',
     CHARACTER = 'backend-character',
     STUDIO = 'backend-studio',
+    COLLECTION = 'backend-collection',
 }
 
 registerEnumType(CatalogIndices, {

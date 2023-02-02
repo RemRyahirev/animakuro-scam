@@ -14,7 +14,7 @@ import { AiringScheduleModule } from './airing-schedule/airing-schedule.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
 import { MicroserviceModule } from './microservice/microservice.module';
 import { ProfileSettingsModule } from './profile-settings/profile-settings.module';
-import { UserCatalogModule } from './user-catalog/user-catalog.module';
+import { UserCollectionModule } from './user-collection/user-collection.module';
 
 @Module({
     imports: [
@@ -33,7 +33,7 @@ import { UserCatalogModule } from './user-catalog/user-catalog.module';
         CatalogModule,
         MicroserviceModule,
         ProfileSettingsModule,
-        UserCatalogModule,
+        UserCollectionModule,
     ],
     exports: [
         AuthModule,
@@ -51,7 +51,7 @@ import { UserCatalogModule } from './user-catalog/user-catalog.module';
         CatalogModule,
         MicroserviceModule,
         ProfileSettingsModule,
-        UserCatalogModule,
+        UserCollectionModule,
     ],
 })
 export class CoreModule {}

@@ -20,6 +20,9 @@ import { transformPaginationUtil } from '../../../common/utils/transform-paginat
 import { Prisma } from '@prisma/client';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
 import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
+import { CatalogCollectionInputType } from '../models/inputs/catalog-collection-input.type';
+import { GetCatalogCollectionResultsType } from '../models/results/get-catalog-collection-results.type';
+import { createCatalogCollectionOptions } from '../utils/create-catalog-collection-options';
 
 @Injectable()
 export class CatalogService {
@@ -33,12 +36,7 @@ export class CatalogService {
         args: CatalogAnimeInputType,
         pages: PaginationInputType,
     ): Promise<GetCatalogAnimeResultsType> {
-        const {
-            search,
-            sort_field,
-            sort_order,
-            ...filterOptions
-        } = args;
+        const { search, sort_field, sort_order, ...filterOptions } = args;
         const sort = { sort_field, sort_order };
 
         const elasticResults = await this.catalogGrpcService.searchDocument(
@@ -155,6 +153,49 @@ export class CatalogService {
             success: true,
             errors: [],
             author_list: author_list as any,
+            pagination,
+        };
+    }
+
+    async getCatalogCollectionList(
+        args: CatalogCollectionInputType,
+        pages: PaginationInputType,
+    ): Promise<GetCatalogCollectionResultsType> {
+        const { search, ...sort } = args;
+
+        const elasticResults = await this.catalogGrpcService.searchDocument(
+            search,
+            CatalogIndices.COLLECTION,
+        );
+
+        const prismaOptions = createCatalogCollectionOptions(
+            elasticResults,
+            sort,
+        );
+
+        let collection_list: any;
+
+        if (!(sort.sort_field && sort.sort_order) && elasticResults.done) {
+            const list = await this.prisma.userFolder.findMany(prismaOptions);
+            await this.sortByMatchScore(list, elasticResults);
+            collection_list = this.takeByPages(list, pages);
+        } else {
+            collection_list = await this.prisma.userFolder.findMany({
+                ...prismaOptions,
+                ...transformPaginationUtil(pages),
+            });
+        }
+
+        const pagination = await this.getCatalogPagination(
+            'UserFolder',
+            pages,
+            prismaOptions.where,
+        );
+
+        return {
+            success: true,
+            errors: [],
+            collection_list: collection_list as any,
             pagination,
         };
     }

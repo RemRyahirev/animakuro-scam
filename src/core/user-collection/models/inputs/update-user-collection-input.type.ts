@@ -3,7 +3,7 @@ import { IsBoolean, IsOptional } from 'class-validator';
 import { UpdateUserFolderInputType } from '../../../user-folder/models/inputs/update-user-folder-input.type';
 
 @ArgsType()
-export class UpdateUserCatalogInputType extends UpdateUserFolderInputType {
+export class UpdateUserCollectionInputType extends UpdateUserFolderInputType {
     @IsOptional()
     @IsBoolean()
     @Field(() => Boolean)

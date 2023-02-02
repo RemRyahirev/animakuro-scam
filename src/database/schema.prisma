@@ -262,7 +262,7 @@ model UserFolder {
   user_id          String       @db.Uuid // o-2-o relation
   animes           Anime[]
   // информативный блок
-  is_catalog       Boolean      @db.Boolean() @default(false)
+  is_collection    Boolean      @db.Boolean() @default(false)
   is_public        Boolean      @db.Boolean() @default(false)
   name             String       @db.VarChar(25)
   description      String
@@ -270,6 +270,8 @@ model UserFolder {
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
   //watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
+  created_at          DateTime @default(now()) @map("created_at")
+  updated_at          DateTime @default(now()) @map("updated_at")
 
   @@map("user_folder")
 }

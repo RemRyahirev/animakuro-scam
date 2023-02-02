@@ -10,6 +10,8 @@ import { GetCatalogStudioResultsType } from '../models/results/get-catalog-studi
 import { CatalogStudioInputType } from '../models/inputs/catalog-studio-input.type';
 import { CatalogCharacterInputType } from '../models/inputs/catalog-character-input.type';
 import { GetCatalogCharacterResultsType } from '../models/results/get-catalog-character-results.type';
+import { GetCatalogCollectionResultsType } from '../models/results/get-catalog-collection-results.type';
+import { CatalogCollectionInputType } from '../models/inputs/catalog-collection-input.type';
 
 @Resolver(CatalogQueryType)
 export class CatalogQueryResolver extends CatalogRootResolver {
@@ -23,6 +25,14 @@ export class CatalogQueryResolver extends CatalogRootResolver {
         @Args() pages: PaginationInputType,
     ): Promise<GetCatalogAnimeResultsType> {
         return await this.catalogService.getCatalogAnimeList(args, pages);
+    }
+
+    @ResolveField(() => GetCatalogCollectionResultsType)
+    async getCatalogCollectionList(
+        @Args() args: CatalogCollectionInputType,
+        @Args() pages: PaginationInputType,
+    ): Promise<GetCatalogCollectionResultsType> {
+        return this.catalogService.getCatalogCollectionList(args, pages);
     }
 
     @ResolveField(() => GetCatalogAuthorResultsType)

@@ -31,6 +31,16 @@ export class UserFolder {
     })
     description: string;
 
+    @Field(() => Date, {
+        description: 'Creation date',
+    })
+    created_at: Date;
+
+    @Field(() => Date, {
+        description: 'Updation date',
+    })
+    updated_at: Date;
+
     /*@Field(() => Int, {
         description: 'Which episode the user is currently watching',
     })

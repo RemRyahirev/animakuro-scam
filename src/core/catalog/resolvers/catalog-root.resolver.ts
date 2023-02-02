@@ -3,6 +3,7 @@ import { Field, ObjectType, Query, Resolver } from '@nestjs/graphql';
 import { GetCatalogAuthorResultsType } from '../models/results/get-catalog-author-results.type';
 import { GetCatalogStudioResultsType } from '../models/results/get-catalog-studio-results.type';
 import { GetCatalogCharacterResultsType } from '../models/results/get-catalog-character-results.type';
+import { GetCatalogCollectionResultsType } from '../models/results/get-catalog-collection-results.type';
 
 @ObjectType()
 export class CatalogQueryType {
@@ -15,6 +16,11 @@ export class CatalogQueryType {
         description: 'Search for author',
     })
     getCatalogAuthorList: GetCatalogAuthorResultsType;
+
+    @Field(() => GetCatalogCollectionResultsType, {
+        description: 'Search for collections',
+    })
+    getCatalogCollectionList: GetCatalogCollectionResultsType;
 
     @Field(() => GetCatalogStudioResultsType, {
         description: 'Search for studio',

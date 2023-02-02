@@ -1,29 +1,29 @@
-import { CreateUserCatalogInputType } from '../models/inputs/create-user-catalog-input.type';
-import { UpdateUserCatalogInputType } from '../models/inputs/update-user-catalog-input.type';
+import { CreateUserCollectionInputType } from '../models/inputs/create-user-collection-input.type';
+import { UpdateUserCollectionInputType } from '../models/inputs/update-user-collection-input.type';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { GetUserCatalogResultsType } from '../models/results/get-user-catalog-results.type';
-import { GetListUserCatalogResultsType } from '../models/results/get-list-user-catalog-results.type';
-import { CreateUserCatalogResultsType } from '../models/results/create-user-catalog-results.type';
-import { UpdateUserCatalogResultsType } from '../models/results/update-user-catalog-results.type';
-import { DeleteUserCatalogResultsType } from '../models/results/delete-user-catalog-results.type';
+import { GetUserCollectionResultsType } from '../models/results/get-user-collection-results.type';
+import { GetListUserCollectionResultsType } from '../models/results/get-list-user-collection-results.type';
+import { CreateUserCollectionResultsType } from '../models/results/create-user-collection-results.type';
+import { UpdateUserCollectionResultsType } from '../models/results/update-user-collection-results.type';
+import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 
 @Injectable()
-export class UserCatalogService {
+export class UserCollectionService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
     ) {}
 
-    async getUserCatalog(id: string): Promise<GetUserCatalogResultsType> {
-        const userCatalog = await this.prisma.userFolder.findMany({
+    async getUserCollection(id: string): Promise<GetUserCollectionResultsType> {
+        const userCollection = await this.prisma.userFolder.findMany({
             where: {
                 id,
-                is_catalog: true,
+                is_collection: true,
             },
             include: {
                 user: {
@@ -31,6 +31,11 @@ export class UserCatalogService {
                         user_profile: {
                             include: {
                                 profile_settings: true,
+                            },
+                        },
+                        user_folders: {
+                            include: {
+                                animes: true,
                             },
                         },
                         auth: true,
@@ -48,14 +53,15 @@ export class UserCatalogService {
         return {
             success: true,
             errors: [],
-            userCatalog: userCatalog[0] as any,
+            userCollection: userCollection[0] as any,
         };
     }
 
-    async getUserCatalogList(
+    async getUserCollectionListByUserId(
+        user_id: string,
         args: PaginationInputType,
-    ): Promise<GetListUserCatalogResultsType> {
-        const userCatalogList = await this.prisma.userFolder.findMany({
+    ): Promise<GetListUserCollectionResultsType> {
+        const userCollectionList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
             include: {
                 user: {
@@ -65,6 +71,11 @@ export class UserCatalogService {
                                 profile_settings: true,
                             },
                         },
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
                         auth: true,
                         favourite_animes: true,
                         favourite_authors: true,
@@ -76,7 +87,53 @@ export class UserCatalogService {
                 animes: true,
             },
             where: {
-                is_catalog: true,
+                is_collection: true,
+                user_id,
+            },
+        });
+
+        const pagination = await this.paginationService.getPagination(
+            'userFolder',
+            args,
+        );
+        return {
+            success: true,
+            errors: [],
+            userCollectionList: userCollectionList as any,
+            pagination,
+        };
+    }
+
+    async getUserCollectionList(
+        args: PaginationInputType,
+    ): Promise<GetListUserCollectionResultsType> {
+        const userCollectionList = await this.prisma.userFolder.findMany({
+            ...transformPaginationUtil(args),
+            include: {
+                user: {
+                    include: {
+                        user_profile: {
+                            include: {
+                                profile_settings: true,
+                            },
+                        },
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        auth: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_genres: true,
+                        favourite_characters: true,
+                        favourite_studios: true,
+                    },
+                },
+                animes: true,
+            },
+            where: {
+                is_collection: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -86,19 +143,19 @@ export class UserCatalogService {
         return {
             success: true,
             errors: [],
-            userCatalogList: userCatalogList as any,
+            userCollectionList: userCollectionList as any,
             pagination,
         };
     }
 
-    async createUserCatalog(
-        args: CreateUserCatalogInputType,
-    ): Promise<CreateUserCatalogResultsType> {
-        const userCatalog = await this.prisma.userFolder.create({
+    async createUserCollection(
+        args: CreateUserCollectionInputType,
+    ): Promise<CreateUserCollectionResultsType> {
+        const userCollection = await this.prisma.userFolder.create({
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                is_catalog: true,
+                is_collection: true,
             },
             include: {
                 user: {
@@ -106,6 +163,11 @@ export class UserCatalogService {
                         user_profile: {
                             include: {
                                 profile_settings: true,
+                            },
+                        },
+                        user_folders: {
+                            include: {
+                                animes: true,
                             },
                         },
                         auth: true,
@@ -123,14 +185,14 @@ export class UserCatalogService {
         return {
             success: true,
             errors: [],
-            userCatalog: userCatalog as any,
+            userCollection: userCollection as any,
         };
     }
 
-    async updateUserCatalog(
-        args: UpdateUserCatalogInputType,
-    ): Promise<UpdateUserCatalogResultsType> {
-        const userCatalog = await this.prisma.userFolder.update({
+    async updateUserCollection(
+        args: UpdateUserCollectionInputType,
+    ): Promise<UpdateUserCollectionResultsType> {
+        const userCollection = await this.prisma.userFolder.update({
             where: { id: args.id },
             data: {
                 ...entityUpdateUtil('animes', args),
@@ -144,34 +206,9 @@ export class UserCatalogService {
                                 profile_settings: true,
                             },
                         },
-                        auth: true,
-                        favourite_animes: true,
-                        favourite_authors: true,
-                        favourite_genres: true,
-                        favourite_characters: true,
-                        favourite_studios: true,
-                    },
-                },
-                animes: true,
-            },
-        });
-
-        return {
-            success: true,
-            errors: [],
-            userCatalog: userCatalog as any,
-        };
-    }
-
-    async deleteUserCatalog(id: string): Promise<DeleteUserCatalogResultsType> {
-        const userCatalog = await this.prisma.userFolder.delete({
-            where: { id },
-            include: {
-                user: {
-                    include: {
-                        user_profile: {
+                        user_folders: {
                             include: {
-                                profile_settings: true,
+                                animes: true,
                             },
                         },
                         auth: true,
@@ -189,7 +226,44 @@ export class UserCatalogService {
         return {
             success: true,
             errors: [],
-            userCatalog: userCatalog as any,
+            userCollection: userCollection as any,
+        };
+    }
+
+    async deleteUserCollection(
+        id: string,
+    ): Promise<DeleteUserCollectionResultsType> {
+        const userCollection = await this.prisma.userFolder.delete({
+            where: { id },
+            include: {
+                user: {
+                    include: {
+                        user_profile: {
+                            include: {
+                                profile_settings: true,
+                            },
+                        },
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        auth: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_genres: true,
+                        favourite_characters: true,
+                        favourite_studios: true,
+                    },
+                },
+                animes: true,
+            },
+        });
+
+        return {
+            success: true,
+            errors: [],
+            userCollection: userCollection as any,
         };
     }
 }

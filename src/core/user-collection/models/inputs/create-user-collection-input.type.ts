@@ -3,7 +3,7 @@ import { ArgsType, Field } from '@nestjs/graphql';
 import { IsBoolean } from 'class-validator';
 
 @ArgsType()
-export class CreateUserCatalogInputType extends CreateUserFolderInputType {
+export class CreateUserCollectionInputType extends CreateUserFolderInputType {
     @IsBoolean()
     @Field(() => Boolean)
     is_public: boolean;
