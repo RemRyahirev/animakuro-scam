@@ -22,6 +22,7 @@ export function createCatalogCollectionOptions(
         },
         where: {
             is_collection: true,
+            is_public: true,
         },
     };
 
