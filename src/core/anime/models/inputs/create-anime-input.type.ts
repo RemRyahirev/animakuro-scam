@@ -52,9 +52,13 @@ export class CreateAnimeInputType {
     @Field(() => Date, { nullable: true })
     date_end: Date;
 
+    @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [String], { description: "Array of genre id's to add" })
+    @Field(() => [String], {
+        description: "Array of genre id's to add",
+        nullable: true,
+    })
     genres_add: string[];
 
     @IsString()
@@ -65,9 +69,13 @@ export class CreateAnimeInputType {
     @Field(() => MediaSource, { defaultValue: MediaSource.OTHER })
     source: MediaSource;
 
+    @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], { description: "Array of studio id's to add" })
+    @Field(() => [ID], {
+        description: "Array of studio id's to add",
+        nullable: true,
+    })
     studios_add: string[];
 
     @IsInt()
@@ -127,14 +135,22 @@ export class CreateAnimeInputType {
     @Field(() => YearSeason, { defaultValue: YearSeason.FALL })
     season: YearSeason;
 
+    @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], { description: "Array of character id's to add" })
+    @Field(() => [ID], {
+        description: "Array of character id's to add",
+        nullable: true,
+    })
     characters_add: string[];
 
+    @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], { description: "Array of author id's to add" })
+    @Field(() => [ID], {
+        description: "Array of author id's to add",
+        nullable: true,
+    })
     authors_add: string[];
 
     @IsOptional()

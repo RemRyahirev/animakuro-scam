@@ -276,19 +276,19 @@ CREATE TABLE "profile_settings" (
 );
 
 -- CreateTable
-CREATE TABLE "profile_folder" (
+CREATE TABLE "user_folder" (
     "id" UUID NOT NULL,
-    "profile_id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
     "is_catalog" BOOLEAN NOT NULL DEFAULT false,
     "is_public" BOOLEAN NOT NULL DEFAULT false,
     "name" VARCHAR(25) NOT NULL,
     "description" TEXT NOT NULL,
 
-    CONSTRAINT "profile_folder_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "user_folder_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "_StudioToUserProfile" (
+CREATE TABLE "_StudioToUser" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
@@ -318,31 +318,31 @@ CREATE TABLE "_AnimeToAuthor" (
 );
 
 -- CreateTable
-CREATE TABLE "_AnimeToProfileFolder" (
+CREATE TABLE "_AnimeToUserFolder" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "_AnimeToUserProfile" (
+CREATE TABLE "_AnimeToUser" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "_AuthorToUserProfile" (
+CREATE TABLE "_AuthorToUser" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "_CharacterToUserProfile" (
+CREATE TABLE "_CharacterToUser" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "_GenreToUserProfile" (
+CREATE TABLE "_GenreToUser" (
     "A" UUID NOT NULL,
     "B" UUID NOT NULL
 );
@@ -369,10 +369,10 @@ CREATE UNIQUE INDEX "profile_settings_avatar_id_key" ON "profile_settings"("avat
 CREATE UNIQUE INDEX "profile_settings_cover_id_key" ON "profile_settings"("cover_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_StudioToUserProfile_AB_unique" ON "_StudioToUserProfile"("A", "B");
+CREATE UNIQUE INDEX "_StudioToUser_AB_unique" ON "_StudioToUser"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_StudioToUserProfile_B_index" ON "_StudioToUserProfile"("B");
+CREATE INDEX "_StudioToUser_B_index" ON "_StudioToUser"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_AnimeToGenre_AB_unique" ON "_AnimeToGenre"("A", "B");
@@ -399,34 +399,34 @@ CREATE UNIQUE INDEX "_AnimeToAuthor_AB_unique" ON "_AnimeToAuthor"("A", "B");
 CREATE INDEX "_AnimeToAuthor_B_index" ON "_AnimeToAuthor"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_AnimeToProfileFolder_AB_unique" ON "_AnimeToProfileFolder"("A", "B");
+CREATE UNIQUE INDEX "_AnimeToUserFolder_AB_unique" ON "_AnimeToUserFolder"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_AnimeToProfileFolder_B_index" ON "_AnimeToProfileFolder"("B");
+CREATE INDEX "_AnimeToUserFolder_B_index" ON "_AnimeToUserFolder"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_AnimeToUserProfile_AB_unique" ON "_AnimeToUserProfile"("A", "B");
+CREATE UNIQUE INDEX "_AnimeToUser_AB_unique" ON "_AnimeToUser"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_AnimeToUserProfile_B_index" ON "_AnimeToUserProfile"("B");
+CREATE INDEX "_AnimeToUser_B_index" ON "_AnimeToUser"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_AuthorToUserProfile_AB_unique" ON "_AuthorToUserProfile"("A", "B");
+CREATE UNIQUE INDEX "_AuthorToUser_AB_unique" ON "_AuthorToUser"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_AuthorToUserProfile_B_index" ON "_AuthorToUserProfile"("B");
+CREATE INDEX "_AuthorToUser_B_index" ON "_AuthorToUser"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_CharacterToUserProfile_AB_unique" ON "_CharacterToUserProfile"("A", "B");
+CREATE UNIQUE INDEX "_CharacterToUser_AB_unique" ON "_CharacterToUser"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_CharacterToUserProfile_B_index" ON "_CharacterToUserProfile"("B");
+CREATE INDEX "_CharacterToUser_B_index" ON "_CharacterToUser"("B");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_GenreToUserProfile_AB_unique" ON "_GenreToUserProfile"("A", "B");
+CREATE UNIQUE INDEX "_GenreToUser_AB_unique" ON "_GenreToUser"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_GenreToUserProfile_B_index" ON "_GenreToUserProfile"("B");
+CREATE INDEX "_GenreToUser_B_index" ON "_GenreToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "auth" ADD CONSTRAINT "auth_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -456,13 +456,13 @@ ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KE
 ALTER TABLE "profile_settings" ADD CONSTRAINT "profile_settings_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "profile_folder" ADD CONSTRAINT "profile_folder_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_folder" ADD CONSTRAINT "user_folder_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_StudioToUserProfile" ADD CONSTRAINT "_StudioToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_StudioToUser" ADD CONSTRAINT "_StudioToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_StudioToUserProfile" ADD CONSTRAINT "_StudioToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_StudioToUser" ADD CONSTRAINT "_StudioToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_AnimeToGenre" ADD CONSTRAINT "_AnimeToGenre_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -489,31 +489,31 @@ ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_A_fkey" FOREIGN KEY 
 ALTER TABLE "_AnimeToAuthor" ADD CONSTRAINT "_AnimeToAuthor_B_fkey" FOREIGN KEY ("B") REFERENCES "author"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AnimeToProfileFolder" ADD CONSTRAINT "_AnimeToProfileFolder_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_AnimeToUserFolder" ADD CONSTRAINT "_AnimeToUserFolder_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AnimeToProfileFolder" ADD CONSTRAINT "_AnimeToProfileFolder_B_fkey" FOREIGN KEY ("B") REFERENCES "profile_folder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_AnimeToUserFolder" ADD CONSTRAINT "_AnimeToUserFolder_B_fkey" FOREIGN KEY ("B") REFERENCES "user_folder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AnimeToUserProfile" ADD CONSTRAINT "_AnimeToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_AnimeToUser" ADD CONSTRAINT "_AnimeToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AnimeToUserProfile" ADD CONSTRAINT "_AnimeToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_AnimeToUser" ADD CONSTRAINT "_AnimeToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AuthorToUserProfile" ADD CONSTRAINT "_AuthorToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "author"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_AuthorToUser" ADD CONSTRAINT "_AuthorToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "author"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_AuthorToUserProfile" ADD CONSTRAINT "_AuthorToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_AuthorToUser" ADD CONSTRAINT "_AuthorToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_CharacterToUserProfile" ADD CONSTRAINT "_CharacterToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_CharacterToUser" ADD CONSTRAINT "_CharacterToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "character"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_CharacterToUserProfile" ADD CONSTRAINT "_CharacterToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_CharacterToUser" ADD CONSTRAINT "_CharacterToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_GenreToUserProfile" ADD CONSTRAINT "_GenreToUserProfile_A_fkey" FOREIGN KEY ("A") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_GenreToUser" ADD CONSTRAINT "_GenreToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_GenreToUserProfile" ADD CONSTRAINT "_GenreToUserProfile_B_fkey" FOREIGN KEY ("B") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_GenreToUser" ADD CONSTRAINT "_GenreToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

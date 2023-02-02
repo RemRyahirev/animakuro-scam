@@ -156,7 +156,11 @@ export class StudioService {
     ) {
         let animeCount: number;
         if (args instanceof CreateStudioInputType) {
-            animeCount = args.animes_to_add.length;
+            if (!args.animes_to_add) {
+                animeCount = 0;
+            } else {
+                animeCount = args.animes_to_add.length;
+            }
         }
         if (args instanceof UpdateStudioInputType) {
             animeCount = await this.prisma.studio

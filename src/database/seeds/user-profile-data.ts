@@ -9,7 +9,7 @@ export const userProfileData = async () => {
         throw new Error('Users table is empty or not available');
     }
 
-    const [user1, user2, user3] = userList;
+    const [user1, user2, user3, user4, user5, user6] = userList;
 
     return [
         {
@@ -23,6 +23,18 @@ export const userProfileData = async () => {
         {
             id: 'de076ab4-e5a3-4913-9040-6fd157922282',
             user_id: user3.id,
+        },
+        {
+            id: '6c41d24f-dae8-4531-8936-bc40afc7e3a5',
+            user_id: user4.id,
+        },
+        {
+            id: 'ed715078-5815-4993-874c-65944a425028',
+            user_id: user5.id,
+        },
+        {
+            id: '0ab2bac4-b633-4fd5-ab09-896589d306d1',
+            user_id: user6.id,
         },
     ];
 };

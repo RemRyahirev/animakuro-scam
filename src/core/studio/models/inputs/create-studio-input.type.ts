@@ -3,6 +3,7 @@ import {
     IsArray,
     IsBoolean,
     IsNumber,
+    IsOptional,
     IsString,
     IsUrl,
     IsUUID,
@@ -24,9 +25,10 @@ export class CreateStudioInputType {
     @Field(() => String)
     thumbnail: string;
 
+    @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [String])
+    @Field(() => [String], { nullable: true })
     animes_to_add: string[];
 
     @IsBoolean()

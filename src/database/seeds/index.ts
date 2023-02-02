@@ -37,7 +37,9 @@ async function seedAll() {
     await profileSettingsData().then((array) =>
         createEntities(array, 'profileSettings'),
     );
-    await userFoldersData().then((array) => createEntities(array, 'userFolder'));
+    await userFoldersData().then((array) =>
+        createEntities(array, 'userFolder'),
+    );
     await relatingAnimeData().then((array) =>
         createEntities(array, 'relatingAnime'),
     );
@@ -66,7 +68,9 @@ async function createEntities<
                 const createdEntity = await prisma[entityName].create({
                     data: entity as any,
                 });
-                Logger.log(`✏️ Created ${entityName} with id: ${createdEntity.id}`);
+                Logger.log(
+                    `✏️ Created ${entityName} with id: ${createdEntity.id}`,
+                );
                 continue;
             }
         }
