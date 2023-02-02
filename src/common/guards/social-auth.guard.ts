@@ -10,7 +10,7 @@ export class SocialAuthGuard extends CustomAuthGuard() {
         const args = ctx.getArgs();
         req.body = {
             ...req.body,
-            access_token: args.access_token,
+            authentication: args.authentication,
             auth_type: args.auth_type,
         };
         return req;
