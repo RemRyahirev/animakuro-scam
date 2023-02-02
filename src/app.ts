@@ -26,8 +26,7 @@ async function bootstrap(): Promise<void> {
         await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
             transport: Transport.REDIS,
             options: {
-                host: process.env.REDIS_URL ?? 'localhost',
-                port: 6379,
+                host: process.env.REDIS_URL ?? 'localhost:6379',
             },
         });
         app.use(
