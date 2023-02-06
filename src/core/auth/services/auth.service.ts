@@ -27,6 +27,50 @@ export class AuthService {
         private authSessionService: AuthSessionService,
     ) {}
 
+    async emailConfirmation(access_token: string): Promise<RegisterResultsType> {
+        const auth = await this.prisma.auth.findFirst({
+            where: {
+                access_token,
+            },
+        });
+
+        if (!auth) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'access_token',
+                        value: access_token,
+                        reason: 'No user matched by this token',
+                    },
+                ],
+                access_token: undefined,
+                user: null,
+            };
+        }
+
+        const user = await this.prisma.user.update({
+            where: {
+                id: auth!.user_id
+            },
+            data: {
+                is_email_confirmed: true
+            }
+        });
+
+        const token = await this.tokenService.generateToken(
+            user.id,
+            null,
+            TokenType.EMAIL_TOKEN,
+        );
+
+        return {
+            success: true,
+            access_token: token,
+            user: user as any,
+        };
+    }
+
     async login(
         args: LoginInputType,
         context: Context,
@@ -196,7 +240,6 @@ export class AuthService {
             email: profile.account.email,
             password: '',
             avatar: profile.account.avatar,
-            is_email_confirmed: false,
         });
         const access_token = await this.tokenService.generateToken(
             profile.account.uuid,

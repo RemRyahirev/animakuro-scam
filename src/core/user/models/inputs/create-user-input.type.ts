@@ -1,5 +1,4 @@
 import {
-    IsBoolean,
     IsEmail,
     IsOptional,
     IsString,
@@ -22,10 +21,6 @@ export class CreateUserInputType {
     @IsString()
     @Length(1, 255)
     password: string;
-
-    @IsBoolean()
-    @Field(() => Boolean)
-    is_email_confirmed: boolean;
 
     @IsOptional()
     @Field(() => String, { nullable: true })

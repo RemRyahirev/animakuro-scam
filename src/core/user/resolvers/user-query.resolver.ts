@@ -28,7 +28,7 @@ export class UserQueryResolver extends UserRootResolver {
     @ResolveField(() => GetUserResultsType)
     @UseGuards(JwtAuthGuard)
     async getUser(@Context() context: any): Promise<GetUserResultsType> {
-        return await this.userService.getUser(context.req.user.account);
+        return await this.userService.getUser(context.req.user.account.user);
     }
 
     @ResolveField(() => GetListUserResultsType)
@@ -37,5 +37,11 @@ export class UserQueryResolver extends UserRootResolver {
         @Args() args: PaginationInputType,
     ): Promise<GetListUserResultsType> {
         return await this.userService.getUserList(args);
+    }
+
+    @ResolveField(() => GetUserResultsType)
+    @UseGuards(JwtAuthGuard)
+    async getUserById(@Args('id') id: string): Promise<GetUserResultsType> {
+        return await this.userService.findOneById(id);
     }
 }

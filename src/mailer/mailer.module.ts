@@ -4,6 +4,7 @@ import { MailerUtil } from './mailer.util';
 
 @Global()
 @Module({
+    
     providers: [Mailer, MailerUtil],
     exports: [Mailer],
 })

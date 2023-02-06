@@ -7,23 +7,34 @@ import { LogoutResultsType } from '../models/results/logout-results.type';
 @ObjectType()
 export class AuthMutationType {
     @Field(() => RegisterResultsType, {
-        description: 'Register user by credentials',
+        description: 'Register user by credentials'
     })
     register: RegisterResultsType;
 
     @Field(() => RegisterResultsType, {
-        description: 'Register user by OAuth',
+        description: 'Register user by OAuth'
     })
     registerSocial: RegisterResultsType;
 
-    @Field(() => LoginResultsType, { description: 'User login by credentials' })
+    @Field(() => LoginResultsType, { 
+        description: 'User login by credentials' 
+    })
     login: LoginResultsType;
 
-    @Field(() => LoginResultsType, { description: 'User login by OAuth' })
+    @Field(() => LoginResultsType, { 
+        description: 'User login by OAuth' 
+    })
     loginSocial: LoginResultsType;
 
-    @Field(() => LogoutResultsType, { description: 'User logout' })
+    @Field(() => LogoutResultsType, { 
+        description: 'User logout' 
+    })
     logout: LogoutResultsType;
+
+    @Field(() => RegisterResultsType, {
+        description: 'Confirm Email'
+    })
+    emailConfirmation: RegisterResultsType;
 }
 
 @ObjectType()

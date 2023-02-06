@@ -4,6 +4,7 @@ import { UpdateUserFolderResultsType } from '../models/results/update-user-folde
 import { DeleteUserFolderResultsType } from '../models/results/delete-user-folder-results.type';
 import { GetListUserFolderResultsType } from '../models/results/get-list-user-folder-results.type';
 import { GetUserFolderResultsType } from '../models/results/get-user-folder-results.type';
+import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-folder-by-user-id-results.type';
 
 @ObjectType()
 export class UserFolderMutationType {
@@ -34,6 +35,11 @@ export class UserFolderQueryType {
         description: 'Get User Folder list',
     })
     getUserFolderList: GetListUserFolderResultsType;
+
+    @Field(() => GetUserFolderByUserIdResultsType, {
+        description: 'Get User Folder by User ID',
+    })
+    getUserFolderByUserId: GetUserFolderByUserIdResultsType;
 }
 
 @Resolver()
