@@ -24,7 +24,7 @@ export class UserService {
     async getUserList(
         args: PaginationInputType,
     ): Promise<GetListUserResultsType> {
-        const userList = await this.prisma.user.findMany({
+        const userList: any = await this.prisma.user.findMany({
             ...transformPaginationUtil(args),
             include: {
                 auth: true,
@@ -39,11 +39,18 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
-                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
                 },
+                user_collection: {
+                    // where: {
+                    //     is_collection: false
+                    // },
+                    include: {
+                        animes: true
+                    }
+                }
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -292,4 +299,5 @@ export class UserService {
             user: user as any,
         };
     }
+
 }

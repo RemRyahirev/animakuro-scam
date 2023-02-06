@@ -9,23 +9,24 @@ datasource db {
 }
 
 model User {
-  id                 String        @id @default(uuid()) @db.Uuid
-  username           String        @unique @db.VarChar(64)
-  email              String        @db.VarChar(320)
+  id                 String         @id @default(uuid()) @db.Uuid
+  username           String         @unique @db.VarChar(64)
+  email              String         @db.VarChar(320)
   avatar             String?        @db.Text
-  is_email_confirmed Boolean       @default(false)
+  is_email_confirmed Boolean        @default(false)
   favourite_animes   Anime[]  
   favourite_studios  Studio[]
   favourite_authors  Author[]
   favourite_characters  Character[]
   favourite_genres   Genre[]
-  user_folders       UserFolder[]
-  password           String        @map("password")
-  created_at         DateTime      @default(now()) @map("created_at") @db.Date
-  deleted            Boolean       @default(false)
+  user_folders       UserFolder[]   @relation("user_folder")
+  password           String         @map("password")
+  created_at         DateTime       @default(now()) @map("created_at") @db.Date
+  deleted            Boolean        @default(false)
   auth               Auth[]
   user_profile       UserProfile?
   auth_sessions      AuthSession[]
+  user_collection    UserFolder[]   @relation("user_collection")
 
   @@map("users")
 }
@@ -259,9 +260,11 @@ model UserFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
   id               String       @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user             User? @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id          String       @db.Uuid // o-2-o relation
-  animes           Anime[]
+  user                        User?        @relation(name: "user_folder", fields: [user_id], references: [id])
+  user_id                     String       @db.Uuid // o-2-o relation
+  user_collection             User?        @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection_id          String?       @db.Uuid 
+  animes                      Anime[]
   // информативный блок
   is_collection    Boolean      @db.Boolean() @default(false)
   is_public        Boolean      @db.Boolean() @default(false)
@@ -274,6 +277,7 @@ model UserFolder {
   created_at          DateTime @default(now()) @map("created_at")
   updated_at          DateTime @default(now()) @map("updated_at")
 
+  // @@id([user_id, user_collection_id])
   @@map("user_folder")
 }
 
