@@ -192,7 +192,7 @@ model Character {
   synonyms      String[]
   importance    CharacterType @default(PROTAGONIST)
   role          CharacterRole @default(MAIN)
-  description   String        @db.Text
+  description   String        @db.Text 
   created_at    DateTime      @default(now()) @map("created_at")
   updated_at    DateTime      @default(now()) @map("updated_at")
   animes        Anime[]
@@ -202,10 +202,11 @@ model Character {
 }
 
 model Genre {
-  id     String  @id @default(uuid()) @db.Uuid
-  name   String  @db.VarChar(50)
-  animes Anime[]
-  favourite_by        User[]
+  id                String    @id @default(uuid()) @db.Uuid
+  name              String    @db.VarChar(50)
+  description       String?  
+  animes            Anime[]
+  favourite_by      User[]
 
   @@map("genre")
 }

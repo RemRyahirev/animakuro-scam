@@ -11,4 +11,7 @@ export class UpdateGenreInputType {
     @Length(1, 50)
     @Field(() => String, { nullable: true })
     name?: string;
+
+    @Field(() => String, { nullable: true })
+    description?: string | null;
 }
