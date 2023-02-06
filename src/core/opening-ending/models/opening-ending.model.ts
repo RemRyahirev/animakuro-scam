@@ -3,7 +3,7 @@ import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 
 
 @ObjectType()
-export class Ending {
+export class OpeningEnding {
     @Field(() => ID, {
         description: 'Unique ID of the ending',
     })

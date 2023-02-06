@@ -1,58 +1,35 @@
-import { GetOpeningListResultsType } from "../models/results/get-opening-list-results.type";
-import { GetEndingListResultsType } from "../models/results/get-ending-list-results.type";
+import { GetOpeningEndingListResultsType } from "../models/results/get-opening-ending-list-results.type";
 import { Field, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
-import { GetEndingResultsType } from "../models/results/get-ending-results.type";
-import { GetOpeningResultsType } from "../models/results/get-opening-results.type";
-import { CreateOpeningResultsType } from "../models/results/create-opening-results.type";
-import { CreateEndingResultsType } from "../models/results/create-ending-results.type";
-import { UpdateOpeningResultsType } from "../models/results/update-opening-results.type";
-import { UpdateEndingResultsType } from "../models/results/update-ending-results.type";
+import { CreateOpeningEndingResultsType } from "../models/results/create-opening-ending-results.type";
+import { UpdateOpeningEndingResultsType } from "../models/results/update-opening-ending-results.type";
+import { GetOpeningEndingResultsType } from "../models/results/get-opening-ending-results.type";
+
 
 
 @ObjectType()
 export class OpeningEndingQueryType {
-    @Field(() => GetOpeningListResultsType, {
-        description: 'Search for opening list',
+    @Field(() => GetOpeningEndingResultsType, {
+        description: 'Search for opening/ending'
     })
-    getOpeningList: GetOpeningListResultsType;
+    getOpeningEnding: GetOpeningEndingResultsType;
 
-    @Field(() => GetOpeningResultsType, {
-        description: 'Search for opening'
+    @Field(() => GetOpeningEndingListResultsType, {
+        description: 'Search for opening/ending list',
     })
-    getOpening: GetOpeningResultsType;
-
-    @Field(() => GetEndingListResultsType, {
-        description: 'Search for ending list',
-    })
-    getEndingList: GetEndingListResultsType;
-    
-    @Field(() => GetEndingResultsType, {
-        description: 'Search for ending'
-    })
-    getEnding: GetEndingResultsType;
+    getOpeningEndingList: GetOpeningEndingListResultsType;
 }
 
 @ObjectType()
 export class OpeningEndingMutationType {
-    @Field(() => CreateOpeningResultsType, {
-        description: 'Create opening'
+    @Field(() => CreateOpeningEndingResultsType, {
+        description: 'Create opening/ending'
     })
-    createOpening: CreateOpeningResultsType
+    createOpeningEnding: CreateOpeningEndingResultsType
 
-    @Field(() => CreateEndingResultsType, {
-        description: 'Create ending'
+    @Field(() => UpdateOpeningEndingResultsType, {
+        description: 'Update opening/ending'
     })
-    createEnding: CreateEndingResultsType
-
-    @Field(() => UpdateOpeningResultsType, {
-        description: 'Update opening'
-    })
-    updateOpening: UpdateOpeningResultsType
-
-    @Field(() => UpdateEndingResultsType, {
-        description: 'Update ending'
-    })
-    updateEnding: UpdateEndingResultsType
+    updateOpeningEnding: UpdateOpeningEndingResultsType
 }
 
 

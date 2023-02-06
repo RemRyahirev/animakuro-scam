@@ -121,6 +121,7 @@ model Anime {
   user_folders     UserFolder[]
   airing_schedule     AiringSchedule[]
   favourite_by        User[]
+  opening_ending      OpeningEnding[]
 
   @@map("anime")
 }
@@ -278,12 +279,14 @@ model UserFolder {
 
 model OpeningEnding {
   id              String              @id @default(uuid()) @db.Uuid
+  anime_id        String              @unique @db.Uuid
   type            OpeningEndingType
   url             String
   name            String
   author_name     String
   episode_start   Int                 @db.SmallInt
   episode_end     Int                 @db.SmallInt
+  anime           Anime               @relation( fields: [anime_id], references: [id], onDelete: Cascade )
 
   @@map("opening_ending")
 }

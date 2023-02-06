@@ -2,9 +2,9 @@ import { ArgsType, Field } from "@nestjs/graphql";
 
 
 @ArgsType()
-export class GetOpeningListInputType {
+export class GetOpeningEndingListInputType {
     @Field(() => String, {
-        description: 'Name of the opening',
+        description: 'Name of the opening/ending',
         nullable: true
     })
     name?: string;

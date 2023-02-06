@@ -1,15 +1,11 @@
 import { OpeningEndingQueryType, OpeningEndingRootResolver } from "./opening-ending-root.resolver";
 import { Args, ResolveField, Resolver } from "@nestjs/graphql";
-import { GetOpeningResultsType } from "../models/results/get-opening-results.type";
+import { GetOpeningEndingResultsType } from "../models/results/get-opening-ending-results.type";
 import { OpeningEndingService } from "../services/opening-ending.service";
-import { GetOpeningInputType } from "../models/inputs/get-opening-input.type";
-import { PaginationInputType } from "../../../common/models/inputs/";
-import { GetOpeningListResultsType } from "../models/results/get-opening-list-results.type";
-import { GetOpeningListInputType } from "../models/inputs/get-opening-list-input.type"
-import { GetEndingInputType } from "../models/inputs/get-ending-input.type";
-import { GetEndingResultsType } from "../models/results/get-ending-results.type";
-import { GetEndingListResultsType } from "../models/results/get-ending-list-results.type";
-import { GetEndingListInputType } from "../models/inputs/get-ending-list-input.type";
+import { GetOpeningEndingInputType } from "../models/inputs/get-opening-ending-input.type";
+import { PaginationInputType } from "../../../common/models/inputs";
+import { GetOpeningEndingListResultsType } from "../models/results/get-opening-ending-list-results.type";
+import { GetOpeningEndingListInputType } from "../models/inputs/get-opening-ending-list-input.type"
 
 @Resolver(OpeningEndingQueryType)
 export class OpeningEndingQueryResolver extends OpeningEndingRootResolver {
@@ -17,33 +13,19 @@ export class OpeningEndingQueryResolver extends OpeningEndingRootResolver {
         super();
     }
 
-    @ResolveField(() => GetOpeningResultsType)
-    async getOpening(
-      @Args() args: GetOpeningInputType,
-    ): Promise<GetOpeningResultsType> {
-        return await this.opendingService.getOpening(args);
+    @ResolveField(() => GetOpeningEndingResultsType)
+    async getOpeningEnding(
+      @Args() args: GetOpeningEndingInputType,
+    ): Promise<GetOpeningEndingResultsType> {
+        return await this.opendingService.getOpeningEnding(args);
     }
 
-    @ResolveField(() => GetOpeningListResultsType)
-    async getOpeningList(
-        @Args() args: GetOpeningListInputType,
+    @ResolveField(() => GetOpeningEndingListResultsType)
+    async getOpeningEndingList(
+        @Args() args: GetOpeningEndingListInputType,
         @Args() pages: PaginationInputType,
-    ): Promise<GetOpeningListResultsType> {
-        return await this.opendingService.getOpeningList(args, pages);
+    ): Promise<GetOpeningEndingListResultsType> {
+        return await this.opendingService.getOpeningEndingList(args, pages);
     }
 
-    @ResolveField(() => GetEndingResultsType)
-    async getEnding(
-      @Args() args: GetEndingInputType,
-    ): Promise<GetEndingResultsType> {
-        return await this.opendingService.getEnding(args);
-    }
-
-    @ResolveField(() => GetEndingListResultsType)
-    async getEndingList(
-        @Args() args: GetEndingListInputType,
-        @Args() pages: PaginationInputType,
-    ): Promise<GetOpeningListResultsType> {
-        return await this.opendingService.getOpeningList(args, pages);
-    }
 }

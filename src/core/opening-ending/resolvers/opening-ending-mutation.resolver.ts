@@ -1,16 +1,11 @@
 import { OpeningEndingMutationType, OpeningEndingRootResolver } from "./opening-ending-root.resolver";
 import { Args, ResolveField, Resolver } from "@nestjs/graphql";
 import { OpeningEndingService } from "../services/opening-ending.service";
-import { CreateOpeningResultsType } from "../models/results/create-opening-results.type";
-import { CreateEndingResultsType } from "../models/results/create-ending-results.type";
-import { UpdateOpeningResultsType } from "../models/results/update-opening-results.type";
-import { UpdateEndingResultsType } from "../models/results/update-ending-results.type";
-import { DeleteOpeningResultsType } from "../models/results/delete-opening-reslts.type";
-import { DeleteEndingResultsType } from "../models/results/delete-ending-reslts.type";
-import { CreateOpeningInputType } from "../models/inputs/create-opening-input.type";
-import { CreateEndingInputType } from "../models/inputs/create-ending-input.type";
-import { UpdateOpeningInputType } from "../models/inputs/update-opening-input.type";
-import { UpdateEndingInputType } from "../models/inputs/update-ending-input.type";
+import { CreateOpeningEndingResultsType } from "../models/results/create-opening-ending-results.type";
+import { UpdateOpeningEndingResultsType} from "../models/results/update-opening-ending-results.type";
+import { UpdateOpeningInputType } from "../models/inputs/update-opening-ending-input.type";
+import { DeleteOpeningEndingResultsType } from "../models/results/delete-opening-ending-reslts.type";
+import { CreateOpeningEndingInputType } from "../models/inputs/create-opening-ending-input.type";
 
 
 @Resolver(OpeningEndingMutationType)
@@ -19,45 +14,25 @@ export class OpeningEndingMutationResolver extends OpeningEndingRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateOpeningResultsType)
-    async createOpening(
-      @Args() args: CreateOpeningInputType,
-    ): Promise<CreateOpeningResultsType> {
-        return await this.opendingService.createOpening(args);
+    @ResolveField(() => CreateOpeningEndingResultsType)
+    async createOpeningEnding(
+      @Args() args: CreateOpeningEndingInputType,
+    ): Promise<CreateOpeningEndingResultsType> {
+        return await this.opendingService.createOpeningEnding(args);
     }
 
-    @ResolveField(() => CreateEndingResultsType)
-    async createEnding(
-      @Args() args: CreateEndingInputType,
-    ): Promise<CreateEndingResultsType> {
-        return await this.opendingService.createEnding(args);
-    }
-
-    @ResolveField(() => UpdateOpeningResultsType)
+    @ResolveField(() => UpdateOpeningEndingResultsType)
     async updateOpening(
       @Args() args: UpdateOpeningInputType,
-    ): Promise<UpdateOpeningResultsType> {
-        return await this.opendingService.updateOpening(args);
+    ): Promise<UpdateOpeningEndingResultsType> {
+        return await this.opendingService.updateOpeningEnding(args);
     }
 
-    @ResolveField(() => UpdateEndingResultsType)
-    async updateEnding(
-      @Args() args: UpdateEndingInputType,
-    ): Promise<UpdateEndingResultsType> {
-        return await this.opendingService.updateEnding(args);
-    }
-
-    @ResolveField(() => DeleteOpeningResultsType)
+    @ResolveField(() => DeleteOpeningEndingResultsType)
     async deleteOpening(
       @Args('id') id: string,
-    ): Promise<DeleteOpeningResultsType> {
-        return await this.opendingService.deleteOpening(id);
+    ): Promise<DeleteOpeningEndingResultsType> {
+        return await this.opendingService.deleteOpeningEnding(id);
     }
 
-    @ResolveField(() => DeleteEndingResultsType)
-    async deleteEnding(
-      @Args('id') id: string,
-    ): Promise<DeleteEndingResultsType> {
-        return await this.opendingService.deleteEnding(id);
-    }
 }

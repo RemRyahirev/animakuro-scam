@@ -3,7 +3,7 @@ import { ArgsType, Field, ID } from "@nestjs/graphql";
 
 
 @ArgsType()
-export class GetOpeningInputType {
+export class GetOpeningEndingInputType {
     @Field(() => ID)
     @IsUUID()
     id: string;
