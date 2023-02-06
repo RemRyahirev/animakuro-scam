@@ -16,7 +16,7 @@ export class GenreService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
     async getGenre(id: string): Promise<GetGenreResultsType> {
         const genre = await this.prisma.genre.findUnique({
             where: {

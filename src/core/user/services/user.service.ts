@@ -19,7 +19,7 @@ export class UserService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getUserList(
         args: PaginationInputType,
@@ -39,6 +39,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -85,6 +86,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -119,6 +121,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -153,6 +156,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -187,6 +191,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -213,6 +218,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -242,6 +248,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
@@ -273,6 +280,7 @@ export class UserService {
                 favourite_genres: true,
                 favourite_studios: true,
                 user_folders: {
+                    where: { is_collection: true },
                     include: {
                         animes: true,
                     },
