@@ -204,7 +204,7 @@ model Character {
 model Genre {
   id                String    @id @default(uuid()) @db.Uuid
   name              String    @db.VarChar(50)
-  description       String?  
+  description       String?   @db.Text
   animes            Anime[]
   favourite_by      User[]
 
