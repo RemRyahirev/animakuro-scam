@@ -30,7 +30,9 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
     }
 
     @ResolveField(() => GetUserFolderByUserIdResultsType)
-    async getUserFolderByUserId(@Args('id') id: string): Promise<GetUserFolderByUserIdResultsType> {
+    async getUserFolderByUserId(
+        @Args('id') id: string,
+    ): Promise<GetUserFolderByUserIdResultsType> {
         return await this.userFolderService.getUserFolderByUserId(id);
     }
 }

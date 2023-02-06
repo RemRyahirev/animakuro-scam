@@ -27,7 +27,9 @@ export class AuthService {
         private authSessionService: AuthSessionService,
     ) {}
 
-    async emailConfirmation(access_token: string): Promise<RegisterResultsType> {
+    async emailConfirmation(
+        access_token: string,
+    ): Promise<RegisterResultsType> {
         const auth = await this.prisma.auth.findFirst({
             where: {
                 access_token,
@@ -51,11 +53,11 @@ export class AuthService {
 
         const user = await this.prisma.user.update({
             where: {
-                id: auth!.user_id
+                id: auth!.user_id,
             },
             data: {
-                is_email_confirmed: true
-            }
+                is_email_confirmed: true,
+            },
         });
 
         const token = await this.tokenService.generateToken(

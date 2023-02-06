@@ -20,19 +20,21 @@ export class UserFolderService {
         private paginationService: PaginationService,
     ) {}
 
-    async getUserFolderByUserId(id: string): Promise<GetUserFolderByUserIdResultsType> {
+    async getUserFolderByUserId(
+        id: string,
+    ): Promise<GetUserFolderByUserIdResultsType> {
         const user = await this.prisma.user.findUnique({
             where: { id },
             include: {
-                user_folders: true
-            }
+                user_folders: true,
+            },
         });
         const userFolders = user?.user_folders;
         return {
             success: true,
             errors: [],
             userFolderList: userFolders as any,
-        }
+        };
     }
 
     async getUserFolder(id: string): Promise<GetUserFolderResultsType> {
