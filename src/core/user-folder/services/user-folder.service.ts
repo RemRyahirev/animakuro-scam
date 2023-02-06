@@ -17,7 +17,7 @@ export class UserFolderService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+    ) {}
 
     async getUserFolder(id: string): Promise<GetUserFolderResultsType> {
         const userFolder = await this.prisma.userFolder.findUnique({
@@ -94,7 +94,7 @@ export class UserFolderService {
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                user_collection_id: args.user_id
+                user_collection_id: args.user_id,
             },
             include: {
                 user: {
