@@ -8,6 +8,7 @@ import { GetListUserFolderResultsType } from '../models/results/get-list-user-fo
 import { GetUserFolderResultsType } from '../models/results/get-user-folder-results.type';
 import { UserFolderService } from '../services/user-folder.service';
 import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-folder-by-user-id-results.type';
+import { AccessToken } from 'common/decorators';
 
 @Resolver(UserFolderQueryType)
 export class UserFolderQueryResolver extends UserFolderRootResolver {
@@ -31,8 +32,12 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
 
     @ResolveField(() => GetUserFolderByUserIdResultsType)
     async getUserFolderByUserId(
-        @Args('id') id: string,
+        @AccessToken() access_token: string,
+        @Args('id', { nullable: true }) id?: string,
     ): Promise<GetUserFolderByUserIdResultsType> {
-        return await this.userFolderService.getUserFolderByUserId(id);
+        return await this.userFolderService.getUserFolderByUserId(
+            access_token,
+            id,
+        );
     }
 }
