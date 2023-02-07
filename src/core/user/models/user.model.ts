@@ -6,6 +6,7 @@ import { Character } from '../../character/models/character.model';
 import { Author } from '../../author/models/author.model';
 import { Genre } from '../../genre/models/genre.model';
 import { UserFolder } from '../../user-folder/models/user-folder.model';
+import { UserCollection } from '../../user-collection/models/user-collection.model';
 
 @ObjectType()
 export class User {
@@ -55,4 +56,7 @@ export class User {
 
     @Field(() => [UserFolder])
     user_folders: UserFolder[];
+
+    @Field(() => [UserCollection])
+    user_collection: UserCollection[];
 }

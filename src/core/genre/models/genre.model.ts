@@ -11,4 +11,10 @@ export class Genre {
         description: 'Name of the genre',
     })
     name: string;
+
+    @Field(() => String, {
+        description: 'Description of the genre',
+        nullable: true,
+    })
+    description?: string | null;
 }

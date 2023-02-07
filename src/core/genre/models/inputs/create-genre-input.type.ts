@@ -1,5 +1,5 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { IsString, Length } from '@nestjs/class-validator';
+import { IsOptional, IsString, Length } from '@nestjs/class-validator';
 
 @ArgsType()
 export class CreateGenreInputType {
@@ -7,4 +7,9 @@ export class CreateGenreInputType {
     @Length(1, 50)
     @Field(() => String)
     name: string;
+
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    description?: string | null;
 }

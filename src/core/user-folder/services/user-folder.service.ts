@@ -138,6 +138,7 @@ export class UserFolderService {
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
+                user_collection_id: args.user_id,
             },
             include: {
                 user: {
@@ -158,8 +159,6 @@ export class UserFolderService {
                 animes: true,
             },
         });
-        console.log(userFolder);
-
         return {
             success: true,
             errors: [],
