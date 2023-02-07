@@ -27,14 +27,14 @@ export class AuthService {
         private authSessionService: AuthSessionService,
     ) { }
 
-    async emailConfirmation(user_id: string): Promise<RegisterResultsType> {
-        if (!user_id) {
+    async emailConfirmation(id: string): Promise<RegisterResultsType> {
+        if (!id) {
             return {
                 success: false,
                 errors: [
                     {
                         property: 'access_token',
-                        value: "access_token",
+                        value: 'access_token',
                         reason: 'No user matched by this token',
                     },
                 ],
@@ -43,20 +43,20 @@ export class AuthService {
             };
         }
         const user = await this.prisma.user.findUnique({
-            where: { id: auth!.user_id },
+            where: { id },
         });
 
         if (user?.is_email_confirmed) {
             return {
                 success: false,
-                access_token,
+                access_token: '',
                 user: user as any,
             };
         }
 
         const updatedUser = await this.prisma.user.update({
             where: {
-                id: user_id,
+                id,
             },
             data: {
                 is_email_confirmed: true,
