@@ -34,7 +34,7 @@ export class TokenService {
                 ),
                 algorithm: 'HS256',
                 expiresIn:
-                this.strategyConfigService.config.JWT[tokenType].signOptions
+                    this.strategyConfigService.config.JWT[tokenType].signOptions
                         .expiresIn,
             },
         );

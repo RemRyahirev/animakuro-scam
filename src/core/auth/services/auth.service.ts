@@ -50,8 +50,19 @@ export class AuthService {
                 user: null,
             };
         }
+        const user = await this.prisma.user.findUnique({
+            where: { id: auth!.user_id },
+        });
 
-        const user = await this.prisma.user.update({
+        if (user?.is_email_confirmed) {
+            return {
+                success: false,
+                access_token,
+                user: user as any,
+            };
+        }
+
+        const updatedUser = await this.prisma.user.update({
             where: {
                 id: auth!.user_id,
             },
@@ -61,7 +72,7 @@ export class AuthService {
         });
 
         const token = await this.tokenService.generateToken(
-            user.id,
+            updatedUser.id,
             null,
             TokenType.EMAIL_TOKEN,
         );
@@ -69,7 +80,7 @@ export class AuthService {
         return {
             success: true,
             access_token: token,
-            user: user as any,
+            user: updatedUser as any,
         };
     }
 
@@ -242,8 +253,9 @@ export class AuthService {
             password: '',
             avatar: profile.account.avatar,
         });
+        const id = result.user?.id;
         const access_token = await this.tokenService.generateToken(
-            profile.account.uuid,
+            id as any,
             null,
             TokenType.ACCESS_TOKEN,
         );
