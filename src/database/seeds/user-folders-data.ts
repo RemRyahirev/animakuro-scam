@@ -17,6 +17,7 @@ export const userFoldersData = async () => {
         {
             id: '809d1892-92fc-421d-9889-10e4be311057',
             user_id: user1.id,
+            user_collection_id: user1.id,
             animes: {
                 connect: { id: anime1.id },
             },
@@ -27,6 +28,7 @@ export const userFoldersData = async () => {
         {
             id: 'c892638f-bc77-4ae8-ac7f-2ffcfb9a2f32',
             user_id: user2.id,
+            user_collection_id: user2.id,
             animes: {
                 connect: { id: anime2.id },
             },

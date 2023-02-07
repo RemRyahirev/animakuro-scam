@@ -25,24 +25,16 @@ export class AuthService {
         private passwordService: PasswordService,
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
-    ) {}
+    ) { }
 
-    async emailConfirmation(
-        access_token: string,
-    ): Promise<RegisterResultsType> {
-        const auth = await this.prisma.auth.findFirst({
-            where: {
-                access_token,
-            },
-        });
-
-        if (!auth) {
+    async emailConfirmation(user_id: string): Promise<RegisterResultsType> {
+        if (!user_id) {
             return {
                 success: false,
                 errors: [
                     {
                         property: 'access_token',
-                        value: access_token,
+                        value: "access_token",
                         reason: 'No user matched by this token',
                     },
                 ],
@@ -53,7 +45,7 @@ export class AuthService {
 
         const user = await this.prisma.user.update({
             where: {
-                id: auth!.user_id,
+                id: user_id,
             },
             data: {
                 is_email_confirmed: true,
@@ -288,14 +280,9 @@ export class AuthService {
         };
     }
 
-    async logout(session: Record<string, any>, access_token: string) {
+    async logout(session: Record<string, any>, user_id: string) {
         // TODO made cleanup database and store after user logout
-        const auth = await this.prisma.auth.findFirst({
-            where: {
-                access_token,
-            },
-        });
-        const authorizedUserId = auth?.user_id;
+        const authorizedUserId = user_id;
         const authorizedSession = await this.prisma.authSession.findFirst({
             where: {
                 user_id: authorizedUserId,

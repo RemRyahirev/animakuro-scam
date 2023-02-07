@@ -21,38 +21,10 @@ export class UserFolderService {
     ) {}
 
     async getUserFolderByUserId(
-        access_token: string,
         id?: string,
     ): Promise<GetUserFolderByUserIdResultsType> {
-        if (id) {
-            const user = await this.prisma.user.findUnique({
-                where: { id },
-                include: {
-                    user_folders: true,
-                },
-            });
-
-            const userFolders = user?.user_folders;
-            return {
-                success: true,
-                errors: [],
-                userFolderList: userFolders as any,
-            };
-        }
-        const auth = await this.prisma.auth.findFirst({
-            where: {
-                access_token,
-            },
-        });
-        if (!auth) {
-            return {
-                success: false,
-                errors: [],
-                userFolderList: [],
-            };
-        }
         const userByToken = await this.prisma.user.findUnique({
-            where: { id: auth.user_id },
+            where: { id },
             include: { user_folders: true },
         });
         const userFolders = userByToken?.user_folders;
@@ -133,12 +105,14 @@ export class UserFolderService {
 
     async createUserFolder(
         args: CreateUserFolderInputType,
+        user_id: string,
     ): Promise<CreateUserFolderResultsType> {
         const userFolder = await this.prisma.userFolder.create({
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                user_collection_id: args.user_id,
+                user_id,
+                user_collection_id: user_id,
             },
             include: {
                 user: {
