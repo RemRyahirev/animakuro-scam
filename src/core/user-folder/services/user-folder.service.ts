@@ -18,20 +18,21 @@ export class UserFolderService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getUserFolderByUserId(
-        id?: string,
+        id: string,
     ): Promise<GetUserFolderByUserIdResultsType> {
-        const userByToken = await this.prisma.user.findUnique({
+        const userByFolders = await this.prisma.user.findUnique({
             where: { id },
-            include: { user_folders: true },
+            include: {
+                user_folders: true,
+            },
         });
-        const userFolders = userByToken?.user_folders;
         return {
             success: true,
             errors: [],
-            userFolderList: userFolders as any,
+            userFolderList: userByFolders?.user_folders as any,
         };
     }
 
@@ -59,7 +60,6 @@ export class UserFolderService {
                 animes: true,
             },
         });
-        console.log(userFolder);
         return {
             success: true,
             errors: [],
