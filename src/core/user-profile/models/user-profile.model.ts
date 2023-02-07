@@ -21,6 +21,6 @@ export class UserProfile {
     // @Field(() => UserAnime)
     // user_anime: UserAnime;
 
-    @Field(() => ProfileSettings)
-    profile_settings: ProfileSettings;
+    @Field(() => ProfileSettings, { nullable: true })
+    profile_settings: ProfileSettings | null;
 }

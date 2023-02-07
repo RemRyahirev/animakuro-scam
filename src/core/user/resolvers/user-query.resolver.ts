@@ -10,9 +10,7 @@ import { UseGuards } from '@nestjs/common';
 
 @Resolver(UserQueryType)
 export class UserQueryResolver extends UserRootResolver {
-    constructor(
-        private userService: UserService,
-    ) {
+    constructor(private userService: UserService) {
         super();
     }
 

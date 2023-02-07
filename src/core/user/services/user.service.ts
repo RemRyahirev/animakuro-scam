@@ -19,7 +19,7 @@ export class UserService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getUserList(
         args: PaginationInputType,
