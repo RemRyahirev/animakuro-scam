@@ -1,5 +1,5 @@
 import { OpeningEndingMutationType, OpeningEndingRootResolver } from "./opening-ending-root.resolver";
-import { Args, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, ID, ResolveField, Resolver } from "@nestjs/graphql";
 import { OpeningEndingService } from "../services/opening-ending.service";
 import { CreateOpeningEndingResultsType } from "../models/results/create-opening-ending-results.type";
 import { UpdateOpeningEndingResultsType} from "../models/results/update-opening-ending-results.type";
@@ -22,15 +22,15 @@ export class OpeningEndingMutationResolver extends OpeningEndingRootResolver {
     }
 
     @ResolveField(() => UpdateOpeningEndingResultsType)
-    async updateOpening(
+    async updateOpeningEnding(
       @Args() args: UpdateOpeningInputType,
     ): Promise<UpdateOpeningEndingResultsType> {
         return await this.opendingService.updateOpeningEnding(args);
     }
 
     @ResolveField(() => DeleteOpeningEndingResultsType)
-    async deleteOpening(
-      @Args('id') id: string,
+    async deleteOpeningEnding(
+      @Args('id', {type: () => ID}) id: string,
     ): Promise<DeleteOpeningEndingResultsType> {
         return await this.opendingService.deleteOpeningEnding(id);
     }

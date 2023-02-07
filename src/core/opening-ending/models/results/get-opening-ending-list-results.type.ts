@@ -9,7 +9,7 @@ export class GetOpeningEndingListResultsType extends BaseResultsType {
     @Field(() => [OpeningEnding], {
         description: 'Opening/ending list'
     })
-    opening_list: OpeningEnding[];
+    opening_ending_list: OpeningEnding[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

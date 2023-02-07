@@ -9,5 +9,5 @@ export class CreateOpeningEndingResultsType extends BaseResultsType {
         description: 'Created opening/ending',
         nullable: true
     })
-    ending: OpeningEnding | null;
+    opening_ending: OpeningEnding | null;
 }

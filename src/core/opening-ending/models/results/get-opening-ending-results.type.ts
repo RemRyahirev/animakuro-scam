@@ -1,6 +1,7 @@
 import { BaseResultsType } from "../../../../common/models/results/index";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { OpeningEnding } from "../opening-ending.model";
+import { Anime } from "../../../anime/models/anime.model";
 
 
 @ObjectType()
@@ -9,5 +10,5 @@ export class GetOpeningEndingResultsType extends BaseResultsType {
         description: 'Exact opening/ending',
         nullable: true
     })
-    ending: OpeningEnding | null;
+    opening_ending: OpeningEnding | null;
 }

@@ -3,6 +3,7 @@ import { Field, Mutation, ObjectType, Query, Resolver } from "@nestjs/graphql";
 import { CreateOpeningEndingResultsType } from "../models/results/create-opening-ending-results.type";
 import { UpdateOpeningEndingResultsType } from "../models/results/update-opening-ending-results.type";
 import { GetOpeningEndingResultsType } from "../models/results/get-opening-ending-results.type";
+import { DeleteOpeningEndingResultsType } from "../models/results/delete-opening-ending-reslts.type";
 
 
 
@@ -30,6 +31,11 @@ export class OpeningEndingMutationType {
         description: 'Update opening/ending'
     })
     updateOpeningEnding: UpdateOpeningEndingResultsType
+
+    @Field(() => DeleteOpeningEndingResultsType, {
+        description:'Deleted opening/ending'
+    })
+    deleteOpeningEnding: DeleteOpeningEndingResultsType
 }
 
 

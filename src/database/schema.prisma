@@ -279,7 +279,7 @@ model UserFolder {
 
 model OpeningEnding {
   id              String              @id @default(uuid()) @db.Uuid
-  anime_id        String              @unique @db.Uuid
+  anime_id        String              @db.Uuid
   type            OpeningEndingType
   url             String
   name            String

@@ -8,5 +8,5 @@ export class DeleteOpeningEndingResultsType extends BaseResultsType {
         description: 'Deleted opening/ending',
         nullable: true
     })
-    opening: OpeningEnding | null;
+    opening_ending: OpeningEnding | null;
 }

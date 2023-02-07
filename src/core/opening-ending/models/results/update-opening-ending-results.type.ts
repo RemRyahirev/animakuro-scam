@@ -9,5 +9,5 @@ export class UpdateOpeningEndingResultsType extends BaseResultsType {
         description: 'Updated opening/ending',
         nullable: true
     })
-    ending: OpeningEnding | null;
+    opening_ending: OpeningEnding | null;
 }
