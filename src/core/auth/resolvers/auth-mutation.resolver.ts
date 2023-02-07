@@ -64,4 +64,11 @@ export class AuthMutationResolver extends AuthRootResolver {
     ) {
         return await this.authService.registerSocial(code, auth_type);
     }
+
+    @ResolveField(() => RegisterResultsType)
+    async emailConfirmation(
+        @AccessToken() access_token: string,
+    ): Promise<RegisterResultsType> {
+        return await this.authService.emailConfirmation(access_token);
+    }
 }

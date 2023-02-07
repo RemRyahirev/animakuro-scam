@@ -16,7 +16,7 @@ export class UserMutationType {
 
 @ObjectType()
 export class UserQueryType {
-    @Field(() => GetUserResultsType, { description: 'Get user by ID' })
+    @Field(() => GetUserResultsType, { description: 'Get user' })
     getUser: GetUserResultsType;
 
     @Field(() => GetListUserByEmailResultsType, {
@@ -27,6 +27,9 @@ export class UserQueryType {
 
     @Field(() => GetListUserResultsType, { description: 'Get user list' })
     getUserList: GetListUserResultsType;
+
+    @Field(() => GetUserResultsType, { description: 'Get user by ID' })
+    getUserById: GetUserResultsType;
 }
 
 @Resolver()

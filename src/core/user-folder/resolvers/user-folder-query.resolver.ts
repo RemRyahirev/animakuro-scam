@@ -7,6 +7,7 @@ import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListUserFolderResultsType } from '../models/results/get-list-user-folder-results.type';
 import { GetUserFolderResultsType } from '../models/results/get-user-folder-results.type';
 import { UserFolderService } from '../services/user-folder.service';
+import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-folder-by-user-id-results.type';
 
 @Resolver(UserFolderQueryType)
 export class UserFolderQueryResolver extends UserFolderRootResolver {
@@ -26,5 +27,12 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
         @Args() args: PaginationInputType,
     ): Promise<GetListUserFolderResultsType> {
         return await this.userFolderService.getUserFolderList(args);
+    }
+
+    @ResolveField(() => GetUserFolderByUserIdResultsType)
+    async getUserFolderByUserId(
+        @Args('id') id: string,
+    ): Promise<GetUserFolderByUserIdResultsType> {
+        return await this.userFolderService.getUserFolderByUserId(id);
     }
 }

@@ -28,10 +28,6 @@ export class UpdateUserInputType {
     email?: string;
 
     @IsOptional()
-    @Field(() => Boolean, { nullable: true })
-    is_email_confirmed?: boolean;
-
-    @IsOptional()
     @IsString()
     @ValidateIf((o) => o.newPassword)
     @Field(() => String, { nullable: true })

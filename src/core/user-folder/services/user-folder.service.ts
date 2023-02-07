@@ -11,6 +11,7 @@ import { DeleteUserFolderResultsType } from '../models/results/delete-user-folde
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
+import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-folder-by-user-id-results.type';
 
 @Injectable()
 export class UserFolderService {
@@ -18,6 +19,23 @@ export class UserFolderService {
         private prisma: PrismaService,
         private paginationService: PaginationService,
     ) {}
+
+    async getUserFolderByUserId(
+        id: string,
+    ): Promise<GetUserFolderByUserIdResultsType> {
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+            include: {
+                user_folders: true,
+            },
+        });
+        const userFolders = user?.user_folders;
+        return {
+            success: true,
+            errors: [],
+            userFolderList: userFolders as any,
+        };
+    }
 
     async getUserFolder(id: string): Promise<GetUserFolderResultsType> {
         const userFolder = await this.prisma.userFolder.findUnique({

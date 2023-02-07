@@ -16,14 +16,25 @@ export class AuthMutationType {
     })
     registerSocial: RegisterResultsType;
 
-    @Field(() => LoginResultsType, { description: 'User login by credentials' })
+    @Field(() => LoginResultsType, {
+        description: 'User login by credentials',
+    })
     login: LoginResultsType;
 
-    @Field(() => LoginResultsType, { description: 'User login by OAuth' })
+    @Field(() => LoginResultsType, {
+        description: 'User login by OAuth',
+    })
     loginSocial: LoginResultsType;
 
-    @Field(() => LogoutResultsType, { description: 'User logout' })
+    @Field(() => LogoutResultsType, {
+        description: 'User logout',
+    })
     logout: LogoutResultsType;
+
+    @Field(() => RegisterResultsType, {
+        description: 'Confirm Email',
+    })
+    emailConfirmation: RegisterResultsType;
 }
 
 @ObjectType()
