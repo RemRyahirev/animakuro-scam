@@ -9,6 +9,8 @@ import { GetUserFolderResultsType } from '../models/results/get-user-folder-resu
 import { UserFolderService } from '../services/user-folder.service';
 import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-folder-by-user-id-results.type';
 import { AccessToken } from 'common/decorators';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../common/guards';
 
 @Resolver(UserFolderQueryType)
 export class UserFolderQueryResolver extends UserFolderRootResolver {
@@ -17,6 +19,7 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
     }
 
     @ResolveField(() => GetUserFolderResultsType)
+    @UseGuards(JwtAuthGuard)
     async getUserFolder(
         @Args('id') id: string,
     ): Promise<GetUserFolderResultsType> {
@@ -32,12 +35,11 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
 
     @ResolveField(() => GetUserFolderByUserIdResultsType)
     async getUserFolderByUserId(
-        @AccessToken() access_token: string,
+        @AccessToken() user_id: string,
         @Args('id', { nullable: true }) id?: string,
     ): Promise<GetUserFolderByUserIdResultsType> {
         return await this.userFolderService.getUserFolderByUserId(
-            access_token,
-            id,
+            id ?? user_id,
         );
     }
 }

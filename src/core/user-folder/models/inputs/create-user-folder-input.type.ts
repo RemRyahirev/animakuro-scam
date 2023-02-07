@@ -4,9 +4,9 @@ import { IsOptional, IsString } from 'class-validator';
 
 @ArgsType()
 export class CreateUserFolderInputType {
-    @IsUUID()
-    @Field(() => ID)
-    user_id: string;
+    // @IsUUID()
+    // @Field(() => ID)
+    // user_id: string;
 
     @IsString()
     @Length(1, 25)
