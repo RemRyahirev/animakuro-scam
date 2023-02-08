@@ -36,6 +36,7 @@ export class User {
 
     @Field(() => UserProfile, {
         description: 'User Profile',
+        nullable: true,
     })
     user_profile: UserProfile | null;
 
