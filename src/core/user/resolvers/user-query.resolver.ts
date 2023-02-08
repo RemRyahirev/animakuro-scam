@@ -1,4 +1,4 @@
-import { Args, Context, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { UserQueryType, UserRootResolver } from './user-root.resolver';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListUserResultsType } from '../models/results/get-list-user-results.type';

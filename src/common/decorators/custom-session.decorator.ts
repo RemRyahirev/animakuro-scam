@@ -9,7 +9,7 @@ export const CustomSession = createParamDecorator(
         const session = {
             sessionID,
             ...sessionData,
-        }
+        };
         return session ?? null;
     },
 );

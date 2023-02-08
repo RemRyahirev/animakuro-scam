@@ -23,12 +23,12 @@ export class AuthMutationResolver extends AuthRootResolver {
         super();
     }
 
-    @ResolveField(() => RegisterResultsType)
+    @ResolveField(() => LogoutResultsType)
     @ValidateSchemas()
     async register(
         @Args() args: RegisterInputType,
         @Context() context: ExecutionContext,
-    ): Promise<RegisterResultsType> {
+    ): Promise<LogoutResultsType> {
         return await this.authService.register(args, context);
     }
 
@@ -42,11 +42,8 @@ export class AuthMutationResolver extends AuthRootResolver {
     }
 
     @ResolveField(() => LogoutResultsType)
-    async logout(
-        @CustomSession() session: Record<string, any>,
-        @AccessToken() user_id: string,
-    ): Promise<LogoutResultsType> {
-        return await this.authService.logout(session, user_id);
+    async logout(@AccessToken() user_id: string): Promise<LogoutResultsType> {
+        return await this.authService.logout(user_id);
     }
 
     @ResolveField(() => LoginResultsType)
@@ -68,8 +65,8 @@ export class AuthMutationResolver extends AuthRootResolver {
 
     @ResolveField(() => RegisterResultsType)
     async emailConfirmation(
-        @AccessToken() user_id: string,
+        @Args('token') token: string,
     ): Promise<RegisterResultsType> {
-        return await this.authService.emailConfirmation(user_id);
+        return await this.authService.emailConfirmation(token);
     }
 }
