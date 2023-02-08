@@ -72,10 +72,7 @@ export class Mailer implements OnModuleInit {
     ): string {
         const template = handlebars.compile(
             fs.readFileSync(
-                path.resolve(
-                    __dirname,
-                    `templates/${purpose}.handlebars`,
-                ),
+                path.resolve(__dirname, `templates/${purpose}.handlebars`),
                 'utf8',
             ),
         );
