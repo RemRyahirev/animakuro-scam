@@ -25,7 +25,7 @@ export class AuthService {
         private passwordService: PasswordService,
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
-    ) { }
+    ) {}
 
     async emailConfirmation(id: string): Promise<RegisterResultsType> {
         if (!id) {
