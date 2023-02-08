@@ -39,22 +39,22 @@ export class UserProfileMutationType {
     @Field(() => UpdateUserFavouriteAuthorsResultType, {
         description: 'Update user Favourites by Authors',
     })
-    userFavouriteAuthors: UpdateUserFavouriteAuthorsResultType;
+    updateFavouriteAuthors: UpdateUserFavouriteAuthorsResultType;
 
     @Field(() => UpdateUserFavouriteCharactersResultType, {
         description: 'Update user Favourites by Charecters',
     })
-    userFavouriteCharacters: UpdateUserFavouriteCharactersResultType;
+    updateFavouriteCharacters: UpdateUserFavouriteCharactersResultType;
 
     @Field(() => UpdateUserFavouriteGenresResultType, {
         description: 'Update user Favourites by Genres',
     })
-    userFavouriteGenres: UpdateUserFavouriteGenresResultType;
+    updateFavouriteGenres: UpdateUserFavouriteGenresResultType;
 
     @Field(() => UpdateUserFavouriteStudiosResultType, {
         description: 'Update user Favourites by Studios',
     })
-    userFavouriteStudios: UpdateUserFavouriteStudiosResultType;
+    updateFavouriteStudios: UpdateUserFavouriteStudiosResultType;
 }
 
 @ObjectType()

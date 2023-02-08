@@ -14,6 +14,7 @@ import { relatingAnimeData } from './relating-anime';
 import { similarAnimeData } from './similar-anime';
 import { airingScheduleData } from './airing-schedule';
 import { profileSettingsData } from './profile-settings-data';
+import { openingEndingData } from './opening-ending';
 
 const prisma = new PrismaClient();
 
@@ -48,6 +49,9 @@ async function seedAll() {
     );
     await airingScheduleData().then((array) =>
         createEntities(array, 'airingSchedule'),
+    );
+    await openingEndingData().then((array) => 
+        createEntities(array, 'openingEnding')
     );
 }
 

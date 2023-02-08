@@ -17,6 +17,36 @@ export class AnimeMutationType {
 
     @Field(() => DeleteAnimeResultsType, { description: 'Delete anime' })
     deleteAnime: DeleteAnimeResultsType;
+
+    @Field(() => UpdateAnimeResultsType, {
+        description: 'Add to the list of relating animes',
+    })
+    addRelatedAnime: UpdateAnimeResultsType;
+
+    @Field(() => UpdateAnimeResultsType, {
+        description: 'remove from the list of relating animes',
+    })
+    deleteRelatedAnime: UpdateAnimeResultsType;
+
+    @Field(() => UpdateAnimeResultsType, {
+        description: 'updating the list of relating animes',
+    })
+    updateRelatedAnime: UpdateAnimeResultsType;
+
+    @Field(() => UpdateAnimeResultsType, {
+        description: 'Add to the list of similar animes',
+    })
+    addSimilarAnime: UpdateAnimeResultsType;
+
+    @Field(() => UpdateAnimeResultsType, {
+        description: 'remove from the list of similar animes',
+    })
+    deleteSimilarAnime: UpdateAnimeResultsType;
+
+    @Field(() => UpdateAnimeResultsType, {
+        description: 'updating the list of similar animes',
+    })
+    updateSimilarAnime: UpdateAnimeResultsType;
 }
 
 @ObjectType()
