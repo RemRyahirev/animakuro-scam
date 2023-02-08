@@ -9,6 +9,8 @@ export enum OpeningEndingType {
 export enum OpeningEndingSortField {
     NAME = 'name',
     AUTHOR_NAME = 'author_name',
+    EPISODE_START = 'episode_start',
+    EPISODE_END = 'episode_end',
     CREATED_AT = 'created_at',
     UPDATED_AT = 'updated_at'
 }

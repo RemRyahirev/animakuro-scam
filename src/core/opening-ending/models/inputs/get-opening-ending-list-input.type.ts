@@ -1,6 +1,6 @@
 import { OpeningEndingType } from "../enums/opening-ending.enum";
-import { ArgsType, Field, ID } from "@nestjs/graphql";
-import { IsISO8601, IsOptional, IsString, IsUUID } from "@nestjs/class-validator";
+import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
+import { IsDate, IsInt, IsISO8601, IsOptional, IsString, IsUUID } from "@nestjs/class-validator";
 
 
 @ArgsType()
@@ -38,18 +38,51 @@ export class GetOpeningEndingListInputType {
     author_name?: string;
     
     @IsOptional()
-    @IsISO8601()
-    @Field(() => Date, {
-        description: 'ISO 8601',
+    @IsInt()
+    @Field(() => Int, {
+        description: 'Start with',
         nullable: true
     })
-    created_at?: Date
+    episode_start?: number;
 
     @IsOptional()
-    @IsISO8601()
-    @Field(() => Date, {
-        description: 'ISO 8601',
+    @IsInt()
+    @Field(() => Int, {
+        description: 'End by',
         nullable: true
     })
-    updated_at?: Date
+    episode_end?: number;
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        description: 'Min created_at ISO undefined',
+        nullable: true
+    })
+    min_created_at?: Date
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        description: 'Max created_at ISO undefined',
+        nullable: true
+    })
+    max_created_at?: Date
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        description: 'Min updated_at ISO undefined',
+        nullable: true
+    })
+    min_updated_at?: Date
+
+    @IsOptional()
+    @IsDate()
+    @Field(() => Date, {
+        description: 'Max updated_at ISO undefined',
+        nullable: true
+    })
+    max_updated_at?: Date
 }
+

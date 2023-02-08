@@ -14,13 +14,15 @@ import { PaginationService } from "../../../common/services/pagination.service";
 import { OpeningEnding } from "../models/opening-ending.model";
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { GetOpeningEndingListSortInputType } from "../models/inputs/get-opening-ending-list-sort-input.type";
+import { OpeningEndingTransformerService } from "./opening-ending-transformer.service";
 
 
 @Injectable()
 export class OpeningEndingService {
     constructor(
-        private prisma: PrismaService,
-        private paginationService: PaginationService,
+        private readonly prisma: PrismaService,
+        private readonly paginationService: PaginationService,
+        private readonly opeTransformer: OpeningEndingTransformerService
     ) {}
 
     async getOpeningEnding(
@@ -50,8 +52,9 @@ export class OpeningEndingService {
         sort: GetOpeningEndingListSortInputType, 
         pages: PaginationInputType
     ): Promise<GetOpeningEndingListResultsType> {
+        const trWhere = this.opeTransformer.transformInput(input, ['min', 'max']);
         const openingEndingList = await this.prisma.openingEnding.findMany({
-            where: input,
+            where: trWhere,
             orderBy: {
                 // @ts-ignore
                 [sort.sort_field]: sort.sort_order
@@ -66,7 +69,7 @@ export class OpeningEndingService {
             'openingEnding',
             pages,
             {
-                where: input
+                where: trWhere
             }
         );
 

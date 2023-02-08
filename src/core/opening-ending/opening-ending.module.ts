@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { OpeningEndingQueryResolver } from "./resolvers/opening-ending-query.resolver";
 import { OpeningEndingService } from "./services/opening-ending.service";
 import { OpeningEndingMutationResolver } from "./resolvers/opening-ending-mutation.resolver";
+import { OpeningEndingTransformerService } from "./services/opening-ending-transformer.service";
 
 
 
@@ -12,7 +13,8 @@ import { OpeningEndingMutationResolver } from "./resolvers/opening-ending-mutati
         OpeningEndingRootResolver,
         OpeningEndingQueryResolver,
         OpeningEndingMutationResolver,
-        OpeningEndingService
+        OpeningEndingService,
+        OpeningEndingTransformerService
     ],
     exports: []
 })
