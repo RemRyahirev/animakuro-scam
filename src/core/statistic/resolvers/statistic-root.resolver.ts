@@ -1,5 +1,8 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
-import { GetUserStatisticFolderResultsType } from '../models/results';
+import {
+    GetUserStatisticFolderResultsType,
+    GetUserStatisticFavouriteResultsType,
+} from '../models/results';
 
 @ObjectType()
 export class StatisticQueryType {
@@ -7,6 +10,11 @@ export class StatisticQueryType {
         description: 'User Statistic by Folder',
     })
     getUserStatisticFolder: GetUserStatisticFolderResultsType;
+
+    @Field(() => GetUserStatisticFavouriteResultsType, {
+        description: 'User Statistic by Favourite',
+    })
+    getUserStatisticFavourite: GetUserStatisticFavouriteResultsType;
 }
 
 @Resolver()

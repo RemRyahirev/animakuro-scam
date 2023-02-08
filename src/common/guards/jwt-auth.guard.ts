@@ -1,4 +1,8 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    ExecutionContext,
+    Injectable,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthType } from '../models/enums';
@@ -7,7 +11,12 @@ import { AuthType } from '../models/enums';
 export class JwtAuthGuard extends AuthGuard(AuthType.JWT) {
     getRequest(context: ExecutionContext): Request {
         const ctx = GqlExecutionContext.create(context);
-        console.log(ctx.getContext().req.headers);
+        if (ctx.getContext().req.error)
+            throw new BadRequestException({
+                statusCode: 401,
+                success: false,
+                message: ctx.getContext().req.error,
+            });
         return ctx.getContext().req;
     }
 }
