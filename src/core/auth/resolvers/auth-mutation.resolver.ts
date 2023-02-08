@@ -23,12 +23,12 @@ export class AuthMutationResolver extends AuthRootResolver {
         super();
     }
 
-    @ResolveField(() => RegisterResultsType)
+    @ResolveField(() => LogoutResultsType)
     @ValidateSchemas()
     async register(
         @Args() args: RegisterInputType,
         @Context() context: ExecutionContext,
-    ): Promise<RegisterResultsType> {
+    ): Promise<LogoutResultsType> {
         return await this.authService.register(args, context);
     }
 
