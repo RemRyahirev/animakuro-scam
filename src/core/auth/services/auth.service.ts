@@ -15,6 +15,7 @@ import { Injectable } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 import { userDefaults } from '../../../common/defaults/user-defaults';
+import { LogoutResultsType } from '../models/results/logout-results.type';
 
 @Injectable()
 export class AuthService {
@@ -85,7 +86,7 @@ export class AuthService {
         )) as unknown as NonNullable<User>;
         const session = await this.authSessionService.createAuthSession({
             agent: context.req.headers['user-agent'] || '',
-            ip: context.req.socket.remoteAddress || '', // TODO: recheck
+            ip: context.req.socket.remoteAddress || '',
             active: true,
             user_id: user.id,
         });
@@ -168,7 +169,7 @@ export class AuthService {
     async register(
         args: RegisterInputType,
         context: Context,
-    ): Promise<RegisterResultsType> {
+    ): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
         const token = this.tokenService.generateEmailToken(
             args.email,
@@ -187,6 +188,7 @@ export class AuthService {
                     'https://' + context.req.headers.host + '/' + token,
             },
         );
+        console.log(token);
         return {
             success: true,
         };
@@ -249,12 +251,10 @@ export class AuthService {
         };
     }
 
-    async logout(session: Record<string, any>, user_id: string) {
-        // TODO made cleanup database and store after user logout
-        const authorizedUserId = user_id;
+    async logout(user_id: string): Promise<LogoutResultsType> {
         const authorizedSession = await this.prisma.authSession.findFirst({
             where: {
-                user_id: authorizedUserId,
+                user_id,
             },
         });
         await this.prisma.authSession.update({
