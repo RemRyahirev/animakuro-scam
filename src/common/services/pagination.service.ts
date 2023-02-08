@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { PaginationInputType } from '../models/inputs';
 import { PaginationResultsType } from '../models/results';
 import { PrismaClient } from '@prisma/client';
@@ -35,22 +36,29 @@ export class PaginationService {
     private async calculateTotalCount<C extends INestedPagination | undefined>(
         condition: C,
     ): Promise<void> {
-        if (condition) {
-            // @ts-ignore
-            this.totalCount = await this.prisma[this.entityName].count({
-                where: {
-                    // @ts-ignore
-                    [condition.nested_field]: {
-                        some: {
-                            [condition.search_property]: condition.search_value,
-                        },
-                    },
-                },
-            });
-        }
+        
         if (!condition) {
             // @ts-ignore
             this.totalCount = await this.prisma[this.entityName].count();
+        }
+        if (condition) {
+            const whereFilters = Object.fromEntries(
+                Object.entries(condition?.where).filter(([, value]) => value !== undefined)
+            )
+
+            if (condition.nested_field) {
+                whereFilters[condition.nested_field] = {
+                    // @ts-ignore
+                    some: [condition.search_property] = condition.search_value
+                }
+            }
+
+            // @ts-ignore
+            this.totalCount = await this.prisma[this.entityName].count({
+                where: {
+                    ...whereFilters
+                },
+            });
         }
         return Promise.resolve();
     }

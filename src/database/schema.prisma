@@ -281,11 +281,13 @@ model OpeningEnding {
   id              String              @id @default(uuid()) @db.Uuid
   anime_id        String              @db.Uuid
   type            OpeningEndingType
-  url             String
-  name            String
-  author_name     String
+  url             String              @db.VarChar(2048)
+  name            String              @db.VarChar(100)
+  author_name     String              @db.VarChar(100)
   episode_start   Int                 @db.SmallInt
   episode_end     Int                 @db.SmallInt
+  created_at      DateTime            @default(now()) @map("created_at")
+  updated_at      DateTime            @default(now()) @map("updated_at")
   anime           Anime               @relation( fields: [anime_id], references: [id], onDelete: Cascade )
 
   @@map("opening_ending")

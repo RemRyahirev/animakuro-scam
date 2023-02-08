@@ -41,6 +41,16 @@ export class OpeningEnding {
     })
     episode_end: number;
 
+    @Field(() => Date, {
+        description: 'ISO 8601'
+    })
+    created_at: string
+
+    @Field(() => Date, {
+        description: 'ISO 8601'
+    })
+    updated_at: string
+
     @Field(() => Anime, {
         nullable: true,
         description: 'Belongs to anime'

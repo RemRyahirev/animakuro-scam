@@ -1,10 +1,10 @@
 import { OpeningEndingType } from "../enums/opening-ending.enum";
 import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
-import { IsUUID } from "@nestjs/class-validator";
+import { IsInt, IsOptional, IsString, IsUUID } from "@nestjs/class-validator";
 
 
 @ArgsType()
-export class UpdateOpeningInputType {
+export class UpdateOpeningEndingInputType {
 
     @IsUUID()
     @Field(() => ID, {
@@ -13,42 +13,53 @@ export class UpdateOpeningInputType {
     id: string;
     
     @IsUUID()
+    @IsOptional()
     @Field(() => ID, {
         nullable: true,
         description: 'Belongs to anime'
     })
     anime_id?: string;
 
+    @IsOptional()
     @Field(() => OpeningEndingType, {
         nullable: true,
         description: 'Is opening or ending'
     })
     type?: OpeningEndingType;
 
+    @IsOptional()
     @Field(() => String, {
         nullable: true,
         description: 'Url to ending'
     })
     url?: string;
 
+    @IsOptional()
+    @IsString()
     @Field(() => String, {
         nullable: true,
         description: 'Name of the ending'
     })
     name?: string;
 
+    @IsOptional()
+    @IsString()
     @Field(() => String, {
         nullable: true,
         description: 'Author\'s name'
     })
     author_name?: string;
 
+    @IsOptional()
+    @IsInt()
     @Field(() => Int, {
         nullable: true,
         description: 'Start with'
     })
     episode_start?: number;
 
+    @IsOptional()
+    @IsInt()
     @Field(() => Int, {
         nullable: true,
         description: 'End by'

@@ -5,14 +5,15 @@ import { GetOpeningEndingListInputType } from "../models/inputs/get-opening-endi
 import { PaginationInputType } from "../../../common/models/inputs";
 import { GetOpeningEndingListResultsType } from "../models/results/get-opening-ending-list-results.type";
 import { CreateOpeningEndingInputType } from "../models/inputs/create-opening-ending-input.type";
-import { UpdateOpeningInputType } from "../models/inputs/update-opening-ending-input.type";
+import { UpdateOpeningEndingInputType } from "../models/inputs/update-opening-ending-input.type";
 import { CreateOpeningEndingResultsType } from "../models/results/create-opening-ending-results.type";
 import { UpdateOpeningEndingResultsType } from "../models/results/update-opening-ending-results.type";
 import { DeleteOpeningEndingResultsType } from "../models/results/delete-opening-ending-reslts.type";
 import { PrismaService } from "../../../common/services/prisma.service";
 import { PaginationService } from "../../../common/services/pagination.service";
 import { OpeningEnding } from "../models/opening-ending.model";
-
+import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
+import { GetOpeningEndingListSortInputType } from "../models/inputs/get-opening-ending-list-sort-input.type";
 
 
 @Injectable()
@@ -45,26 +46,34 @@ export class OpeningEndingService {
     }
 
     async getOpeningEndingList(
-        input: GetOpeningEndingListInputType, 
+        input: GetOpeningEndingListInputType,
+        sort: GetOpeningEndingListSortInputType, 
         pages: PaginationInputType
     ): Promise<GetOpeningEndingListResultsType> {
-
         const openingEndingList = await this.prisma.openingEnding.findMany({
             where: input,
+            orderBy: {
+                // @ts-ignore
+                [sort.sort_field]: sort.sort_order
+            },
             include: {
                 anime: true
-            }
-        })
+            },
+            ...transformPaginationUtil(pages)
+        });
 
         const pagination = await this.paginationService.getPagination(
             'openingEnding',
             pages,
+            {
+                where: input
+            }
         );
 
         if (!openingEndingList.length) {
             return {
                 success: false,
-                errors: [{ property: '', reason: 'not results', value: '' }],
+                errors: [{ property: '', reason: 'no results', value: '' }],
                 opening_ending_list: openingEndingList as any,
                 pagination,
             };
@@ -81,13 +90,13 @@ export class OpeningEndingService {
     async createOpeningEnding(
         input: CreateOpeningEndingInputType
     ): Promise<CreateOpeningEndingResultsType> {
+
         const openingEnding = await this.prisma.openingEnding.create({
             data: input,
             include: {
                 anime: true
             }
         })
-
         if (!openingEnding) {
             return {
                 success: false,
@@ -100,7 +109,7 @@ export class OpeningEndingService {
     }
 
     async updateOpeningEnding(
-        input: UpdateOpeningInputType
+        input: UpdateOpeningEndingInputType
     ): Promise<UpdateOpeningEndingResultsType> {
 
         const updOpeningEnding = await this.prisma.openingEnding.update({

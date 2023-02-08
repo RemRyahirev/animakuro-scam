@@ -6,6 +6,7 @@ import { GetOpeningEndingInputType } from "../models/inputs/get-opening-ending-i
 import { PaginationInputType } from "../../../common/models/inputs";
 import { GetOpeningEndingListResultsType } from "../models/results/get-opening-ending-list-results.type";
 import { GetOpeningEndingListInputType } from "../models/inputs/get-opening-ending-list-input.type"
+import { GetOpeningEndingListSortInputType } from "../models/inputs/get-opening-ending-list-sort-input.type";
 
 @Resolver(OpeningEndingQueryType)
 export class OpeningEndingQueryResolver extends OpeningEndingRootResolver {
@@ -23,9 +24,10 @@ export class OpeningEndingQueryResolver extends OpeningEndingRootResolver {
     @ResolveField(() => GetOpeningEndingListResultsType)
     async getOpeningEndingList(
         @Args() args: GetOpeningEndingListInputType,
+        @Args() sort: GetOpeningEndingListSortInputType,
         @Args() pages: PaginationInputType,
     ): Promise<GetOpeningEndingListResultsType> {
-        return await this.opendingService.getOpeningEndingList(args, pages);
+        return await this.opendingService.getOpeningEndingList(args, sort, pages);
     }
 
 }
