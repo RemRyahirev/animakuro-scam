@@ -8,5 +8,5 @@ export class GetUserFolderByUserIdResultsType extends BaseResultsType {
         nullable: true,
         description: 'User Folder list',
     })
-    userFolderList: UserFolder[];
+    userFolderList: UserFolder[] | null;
 }

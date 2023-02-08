@@ -1,11 +1,18 @@
 import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
-import { CreateUserProfileResultsType } from '../models/results/create-user-profile-results.type';
-import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
-import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
-import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
-import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
+import {
+    GetListUserProfileResultsType,
+    CreateUserProfileResultsType,
+    UpdateUserProfileResultsType,
+    DeleteUserProfileResultsType,
+    GetUserProfileResultsType,
+    UpdateUserFavouriteAnimesResultType,
+    UpdateUserFavouriteAuthorsResultType,
+    UpdateUserFavouriteCharactersResultType,
+    UpdateUserFavouriteGenresResultType,
+    UpdateUserFavouriteStudiosResultType,
+} from '../models/results';
 
 @ObjectType()
 export class UserProfileMutationType {
@@ -23,6 +30,31 @@ export class UserProfileMutationType {
         description: 'Delete user profile',
     })
     deleteUserProfile: DeleteUserProfileResultsType;
+
+    @Field(() => UpdateUserFavouriteAnimesResultType, {
+        description: 'Update user Favourites by Animes',
+    })
+    updateFavouriteAnimes: UpdateUserFavouriteAnimesResultType;
+
+    @Field(() => UpdateUserFavouriteAuthorsResultType, {
+        description: 'Update user Favourites by Authors',
+    })
+    userFavouriteAuthors: UpdateUserFavouriteAuthorsResultType;
+
+    @Field(() => UpdateUserFavouriteCharactersResultType, {
+        description: 'Update user Favourites by Charecters',
+    })
+    userFavouriteCharacters: UpdateUserFavouriteCharactersResultType;
+
+    @Field(() => UpdateUserFavouriteGenresResultType, {
+        description: 'Update user Favourites by Genres',
+    })
+    userFavouriteGenres: UpdateUserFavouriteGenresResultType;
+
+    @Field(() => UpdateUserFavouriteStudiosResultType, {
+        description: 'Update user Favourites by Studios',
+    })
+    userFavouriteStudios: UpdateUserFavouriteStudiosResultType;
 }
 
 @ObjectType()
