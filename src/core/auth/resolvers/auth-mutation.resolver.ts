@@ -37,6 +37,7 @@ export class AuthMutationResolver extends AuthRootResolver {
         @Args() args: LoginInputType,
         @Context() context: ExecutionContext,
     ): Promise<LoginResultsType> {
+        console.log(args);
         return await this.authService.login(args, context);
     }
 
