@@ -67,8 +67,8 @@ export class AuthMutationResolver extends AuthRootResolver {
 
     @ResolveField(() => RegisterResultsType)
     async emailConfirmation(
-        @AccessToken() user_id: string,
+        @Args('token') token: string,
     ): Promise<RegisterResultsType> {
-        return await this.authService.emailConfirmation(user_id);
+        return await this.authService.emailConfirmation(token);
     }
 }

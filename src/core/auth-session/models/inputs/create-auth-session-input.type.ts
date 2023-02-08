@@ -1,5 +1,11 @@
-import { ArgsType, Field, ID } from "@nestjs/graphql";
-import { IsBoolean, IsIP, IsString, IsUUID, Length } from "@nestjs/class-validator";
+import { ArgsType, Field, ID } from '@nestjs/graphql';
+import {
+    IsBoolean,
+    IsIP,
+    IsString,
+    IsUUID,
+    Length,
+} from '@nestjs/class-validator';
 
 @ArgsType()
 export class CreateAuthSessionInputType {

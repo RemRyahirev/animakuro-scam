@@ -4,3 +4,4 @@ export * from './password-input.interface';
 export * from './upload.interface';
 export * from './nested-pagination.interface';
 export * from './custom-jwt-payload.interface';
+export * from './email-jwt-payload.input';

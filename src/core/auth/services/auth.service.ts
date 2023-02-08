@@ -27,52 +27,51 @@ export class AuthService {
         private authSessionService: AuthSessionService,
     ) {}
 
-    async emailConfirmation(id: string): Promise<RegisterResultsType> {
-        if (!id) {
-            return {
-                success: false,
-                errors: [
-                    {
-                        property: 'access_token',
-                        value: 'access_token',
-                        reason: 'No user matched by this token',
-                    },
-                ],
-                access_token: undefined,
-                user: null,
-            };
-        }
-        const user = await this.prisma.user.findUnique({
-            where: { id },
-        });
+    async emailConfirmation(token: string): Promise<RegisterResultsType> {
+        const userData = await this.tokenService.decodeToken(token);
 
-        if (user?.is_email_confirmed) {
-            return {
-                success: false,
-                access_token: '',
-                user: user as any,
-            };
+        if (!userData) {
+            return { success: false };
         }
 
-        const updatedUser = await this.prisma.user.update({
-            where: {
-                id,
-            },
+        const user = await this.prisma.user.create({
             data: {
+                email: userData.email as any,
+                password: userData.password as any,
+                username: userData.username as any,
                 is_email_confirmed: true,
+                ...userDefaults,
+            },
+            include: {
+                auth: true,
+                user_profile: {
+                    include: {
+                        profile_settings: true,
+                    },
+                },
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_genres: true,
+                favourite_studios: true,
+                user_folders: {
+                    include: {
+                        animes: true,
+                    },
+                },
             },
         });
 
-        const token = await this.tokenService.generateToken(
-            updatedUser.id,
+        const access_token = await this.tokenService.generateToken(
+            user.id,
             null,
-            TokenType.EMAIL_TOKEN,
+            TokenType.ACCESS_TOKEN,
         );
 
         return {
             success: true,
-            access_token: token,
-            user: updatedUser as any,
+            access_token,
+            user: user as any,
         };
     }
 
@@ -171,51 +170,11 @@ export class AuthService {
         context: Context,
     ): Promise<RegisterResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
-        const user = await this.prisma.user.create({
-            data: {
-                ...args,
-                ...userDefaults,
-            },
-            include: {
-                auth: true,
-                user_profile: {
-                    include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-            },
-        });
-        const hash = this.tokenService.generateToken(
-            user.id,
-            null,
-            TokenType.EMAIL_TOKEN,
+        const token = this.tokenService.generateEmailToken(
+            args.email,
+            args.password,
+            args.username,
         );
-        const access_token = await this.tokenService.generateToken(
-            user.id,
-            null,
-            TokenType.ACCESS_TOKEN,
-        );
-        await this.prisma.auth.create({
-            data: {
-                type: AuthType.JWT.toUpperCase() as keyof typeof AuthType,
-                access_token,
-                uuid: '',
-                email: user.email,
-                username: user.username,
-                avatar: user?.avatar,
-                user_id: user?.id,
-            },
-        });
         await this.mailer.sendMail(
             {
                 to: args.email,
@@ -225,13 +184,11 @@ export class AuthService {
             {
                 username: args.username,
                 confirm_link:
-                    'https://' + context.req.headers.host + '/' + hash,
+                    'https://' + context.req.headers.host + '/' + token,
             },
         );
         return {
             success: true,
-            access_token,
-            user: user as any,
         };
     }
 

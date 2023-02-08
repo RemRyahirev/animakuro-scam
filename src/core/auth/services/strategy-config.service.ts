@@ -42,7 +42,7 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     signOptions: {
                         expiresIn: this.configService.get<number>(
                             'EMAIL_TOKEN_SECRET_EXP_IN',
-                            86400,
+                            3600,
                         ),
                     },
                 },
