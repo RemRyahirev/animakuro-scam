@@ -25,7 +25,7 @@ export class AuthService {
         private passwordService: PasswordService,
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
-    ) { }
+    ) {}
 
     async emailConfirmation(user_id: string): Promise<RegisterResultsType> {
         if (!user_id) {
@@ -34,7 +34,7 @@ export class AuthService {
                 errors: [
                     {
                         property: 'access_token',
-                        value: "access_token",
+                        value: 'access_token by user_id: ' + user_id,
                         reason: 'No user matched by this token',
                     },
                 ],
