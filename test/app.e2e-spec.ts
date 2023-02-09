@@ -284,7 +284,12 @@ describe('gql', () => {
                     data: {
                         animeQueries: {
                             getAnimeList: {
-                                anime_list: null,
+                                anime_list: [
+                                    {
+                                        airing_schedule: null,
+                                        id: '5318851d-3348-4cf7-81a9-b08ccf505796'
+                                    }
+                                ],
                                 success: true,
                             },
                         },
