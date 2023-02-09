@@ -1,6 +1,6 @@
 import * as pactum from 'pactum';
 import { useContainer } from '@nestjs/class-validator';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
 
@@ -78,6 +78,10 @@ describe('gql', () => {
 
     afterAll(async () => {
         await app.close();
+    });
+
+    beforeEach(async () => {
+        jest.spyOn(Logger, 'error').mockImplementation();
     });
 
     afterEach(async () => {
