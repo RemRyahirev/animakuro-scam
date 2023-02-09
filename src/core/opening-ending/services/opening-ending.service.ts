@@ -39,12 +39,12 @@ export class OpeningEndingService {
         if (!openingEnding) {
             return { 
                 success: false, 
-                opening_ending: null as OpeningEnding | null, 
+                opening_ending: openingEnding, 
                 errors: [{property: 'id', reason: 'not found', value: input.id}]
             }
         }
 
-        return {success: true, opening_ending: openingEnding as any };
+        return {success: true, opening_ending: openingEnding };
     }
 
     async getOpeningEndingList(

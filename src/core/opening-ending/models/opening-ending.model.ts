@@ -1,7 +1,6 @@
 import { OpeningEndingType } from "./enums/opening-ending.enum";
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { Anime } from "../../anime/models/anime.model";
-// import { OpeningEndingType } from '@prisma/client';
 
 
 @ObjectType()
@@ -44,12 +43,12 @@ export class OpeningEnding {
     @Field(() => Date, {
         description: 'ISO 8601'
     })
-    created_at: string
+    created_at: Date
 
     @Field(() => Date, {
         description: 'ISO 8601'
     })
-    updated_at: string
+    updated_at: Date
 
     @Field(() => Anime, {
         nullable: true,
