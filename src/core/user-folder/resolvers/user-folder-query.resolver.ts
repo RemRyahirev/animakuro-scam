@@ -11,6 +11,8 @@ import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-fol
 import { AccessToken } from 'common/decorators';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+
 
 @Resolver(UserFolderQueryType)
 export class UserFolderQueryResolver extends UserFolderRootResolver {
@@ -18,7 +20,9 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
         super();
     }
 
-    @ResolveField(() => GetUserFolderResultsType)
+    @ResolveField(() => GetUserFolderResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async getUserFolder(
         @Args('id') id: string,
@@ -26,14 +30,18 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
         return await this.userFolderService.getUserFolder(id);
     }
 
-    @ResolveField(() => GetListUserFolderResultsType)
+    @ResolveField(() => GetListUserFolderResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getUserFolderList(
         @Args() args: PaginationInputType,
     ): Promise<GetListUserFolderResultsType> {
         return await this.userFolderService.getUserFolderList(args);
     }
 
-    @ResolveField(() => GetUserFolderByUserIdResultsType)
+    @ResolveField(() => GetUserFolderByUserIdResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getUserFolderByUserId(
         @AccessToken() user_id: string,
         @Args('id', { nullable: true }) id?: string,

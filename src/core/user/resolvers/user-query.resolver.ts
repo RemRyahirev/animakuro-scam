@@ -5,8 +5,10 @@ import { GetListUserResultsType } from '../models/results/get-list-user-results.
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { GetListUserByEmailResultsType } from '../models/results/get-list-user-by-email-results.type';
 import { UserService } from '../services/user.service';
-import { JwtAuthGuard } from '../../../common/guards';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { UseGuards } from '@nestjs/common';
+import { AccessToken } from '../../../common/decorators';
+import { JwtAuthGuard } from '../../../common/guards';
 
 @Resolver(UserQueryType)
 export class UserQueryResolver extends UserRootResolver {
@@ -14,7 +16,9 @@ export class UserQueryResolver extends UserRootResolver {
         super();
     }
 
-    @ResolveField(() => GetListUserByEmailResultsType)
+    @ResolveField(() => GetListUserByEmailResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async getUsersByEmail(
         @Args('email') email: string,
@@ -23,13 +27,17 @@ export class UserQueryResolver extends UserRootResolver {
         return await this.userService.getUsersByEmail(email, args);
     }
 
-    @ResolveField(() => GetUserResultsType)
+    @ResolveField(() => GetUserResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async getUser(@Context() context: any): Promise<GetUserResultsType> {
         return await this.userService.getUser(context.req.user.account.user);
     }
 
-    @ResolveField(() => GetListUserResultsType)
+    @ResolveField(() => GetListUserResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async getUserList(
         @Args() args: PaginationInputType,
@@ -37,9 +45,14 @@ export class UserQueryResolver extends UserRootResolver {
         return await this.userService.getUserList(args);
     }
 
-    @ResolveField(() => GetUserResultsType)
+    @ResolveField(() => GetUserResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
-    async getUserById(@Args('id') id: string): Promise<GetUserResultsType> {
-        return await this.userService.findOneById(id);
+    async getUserById(
+        @Args('id') id: string,
+        @AccessToken() user_id: string,
+    ): Promise<GetUserResultsType> {
+        return await this.userService.findOneById(id ?? user_id);
     }
 }
