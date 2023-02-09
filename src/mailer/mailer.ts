@@ -50,6 +50,9 @@ export class Mailer implements OnModuleInit {
         purpose: MailPurpose,
         variables?: ReadonlyMap<string, string> | {},
     ): Promise<void> {
+        console.log('public async sendMail')
+        console.log('to sendMail', options.to)
+        console.log('options sendMail', options)
         return this.nodemailer.sendMail(
             {
                 to: options.to,
