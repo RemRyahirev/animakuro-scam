@@ -1,4 +1,4 @@
-import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
@@ -107,9 +107,7 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     }
 
     @ResolveField(() => DeleteAnimeResultsType)
-    async deleteAnime(
-        @Args('id') id: string,
-    ): Promise<DeleteAnimeResultsType> {
+    async deleteAnime(@Args('id') id: string): Promise<DeleteAnimeResultsType> {
         return await this.animeService.deleteAnime(id);
     }
 }

@@ -23,6 +23,7 @@ export const userFoldersData = async () => {
             },
             name: 'Запланировано',
             description: 'Запланировал я эти аниме!',
+            is_statistic_active: true,
             // информативный блок
         },
         {

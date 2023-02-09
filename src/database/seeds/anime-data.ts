@@ -914,5 +914,84 @@ export const animeData = async () => {
                 connect: []
             },
         },
+        {
+            id: '02bfd954-3cf5-47a1-953b-daad7054c6d6',
+            title: 'Невероятные преключеия Джо Джо(Reference)',
+            score: 5,
+            year: 2012,
+            date_start: new Date('2012-12-31'),
+            country_of_origin: 'JP',
+            genres: {
+                connect: [
+                    {
+                        id: '893a0480-3c72-415e-9c45-da1d540bc440',
+                    },
+                    {
+                        id: '4f02be8b-cafb-4f1d-baa8-c34279b1def1',
+                    },
+                ],
+            },
+            format: MediaFormat.TV,
+            source: MediaSource.MANGA,
+            hashtags: ['#ジョジョの奇妙な冒険', '#jojo_anime'],
+            synonyms: [
+                'ジョジョの奇妙な冒険',
+                'JoJo Bizarres Abenteuer',
+                'JoJo Bizarre Adventure',
+            ],
+            is_licensed: true,
+            studios: {
+                connect: [
+                    {
+                        id: '2a968ac7-b82a-41ce-beb6-25f790a4b31b',
+                    },
+                ],
+            },
+            seasons_count: 6,
+            episodes: 50,
+            duration: 0,
+            next_episode: new Date('2023-12-31'),
+            rating: FilmRating.NC_17,
+            description:
+                'Надоело аниме с кошкодевочками и хочется чего то брутального ? ' +
+                'Это самое брутальное аниме про накаченых мужиков, тут нет места кошачьим ушкам и милым хвостакам. ' +
+                'Война за право быть на вершине, только мощь, только грубая сила! ',
+            preview_link: 'https://jojo.fandom.com',
+            status_description: 'в 2012-2023 гг',
+            release_status: ReleaseStatus.RELEASING,
+            characters: {
+                connect: [
+                    {
+                        id: 'acdddc06-68cc-4765-a88d-a3f852738569',
+                    },
+                    {
+                        id: '6b2c741d-ed72-4c38-a0f6-53c9f0f69daf',
+                    },
+                ],
+            },
+            authors: {
+                connect: [
+                    {
+                        id: 'a22c040f-c228-43e0-a628-35e82ed293d3',
+                    },
+                    {
+                        id: '75f855d1-9148-434c-8552-07fdb1c277a4',
+                    },
+                ],
+            },
+            airing_schedule: {
+                connect: []
+            },
+            opening_ending: {
+                connect: [
+                    // {   
+                    //     id: '51630f1a-32d8-4e23-ace2-66ba69a4878a',
+                    // },
+                    // {   
+                    //     id: '7362f7d3-7c4b-4f78-ab54-9a4b8462773b',
+                    // }
+                ]
+            }
+        }
     ];
 };

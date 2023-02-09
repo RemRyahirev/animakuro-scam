@@ -15,9 +15,12 @@ import { AuthSessionModule } from './auth-session/auth-session.module';
 import { MicroserviceModule } from './microservice/microservice.module';
 import { ProfileSettingsModule } from './profile-settings/profile-settings.module';
 import { UserCollectionModule } from './user-collection/user-collection.module';
+import { OpeningEndingModule } from './opening-ending/opening-ending.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
     imports: [
+        StatisticModule,
         AuthModule,
         AuthSessionModule,
         AiringScheduleModule,
@@ -34,8 +37,10 @@ import { UserCollectionModule } from './user-collection/user-collection.module';
         MicroserviceModule,
         ProfileSettingsModule,
         UserCollectionModule,
+        OpeningEndingModule,
     ],
     exports: [
+        StatisticModule,
         AuthModule,
         AuthSessionModule,
         AiringScheduleModule,
@@ -52,6 +57,7 @@ import { UserCollectionModule } from './user-collection/user-collection.module';
         MicroserviceModule,
         ProfileSettingsModule,
         UserCollectionModule,
+        OpeningEndingModule,
     ],
 })
 export class CoreModule {}

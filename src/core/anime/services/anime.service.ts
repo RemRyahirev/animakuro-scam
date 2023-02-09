@@ -32,6 +32,8 @@ export class AnimeService {
             max_characters_count,
             max_similar_by_animes_count,
             max_related_by_animes_count,
+            max_openings_count,
+            max_endings_count
         } = args;
 
         const anime = await this.prisma.anime.findUnique({
@@ -62,10 +64,31 @@ export class AnimeService {
                 airing_schedule: true,
             },
         });
+
+        let openings;
+        let endings;
+        
+        if (max_openings_count) {
+            openings = await this.prisma.openingEnding.findMany({
+                where: { anime_id: id, type: 'OPENING' },
+                take: max_openings_count
+            })
+        }
+        if (max_endings_count) {
+            endings = await this.prisma.openingEnding.findMany({
+                where: { anime_id: id, type: 'ENDING' },
+                take: max_endings_count
+            })
+        }
+        
+        const opening_ending = [];
+        if (openings) opening_ending.push(...openings)
+        if (endings) opening_ending.push(...endings)
+
         return {
             success: true,
             errors: [],
-            anime: anime as any,
+            anime: {...anime, opening_ending} as any,
         };
     }
 
@@ -90,6 +113,7 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
+                opening_ending: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -99,7 +123,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            anime_list: animeList as any,
+            anime_list: animeList,
             pagination,
         };
     }

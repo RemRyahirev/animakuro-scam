@@ -19,7 +19,7 @@ export class UserService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getUserList(
         args: PaginationInputType,
@@ -45,7 +45,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -99,7 +99,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -141,7 +141,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -183,7 +183,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -225,7 +225,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -259,7 +259,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -297,7 +297,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,
@@ -336,7 +336,7 @@ export class UserService {
                 },
                 user_collection: {
                     where: {
-                        is_collection: false,
+                        is_collection: true,
                     },
                     include: {
                         animes: true,

@@ -46,20 +46,21 @@ export class UpdateAnimeInputType {
     @Field(() => Int, { nullable: true })
     year?: number;
 
+    @IsOptional()
     @IsString()
     @Length(1, 2)
     @Field(() => String, { nullable: true })
-    country_of_origin: string;
+    country_of_origin?: string;
 
     @IsOptional()
     @IsDate()
     @Field(() => Date, { nullable: true })
-    date_start: Date;
+    date_start?: Date;
 
     @IsOptional()
     @IsDate()
     @Field(() => Date, { nullable: true })
-    date_end: Date;
+    date_end?: Date;
 
     @IsOptional()
     @IsUUID(4, { each: true })
@@ -142,15 +143,18 @@ export class UpdateAnimeInputType {
     @Field(() => String, { nullable: true })
     status_description?: string;
 
+    @IsOptional()
     @IsBoolean()
-    @Field(() => Boolean, { defaultValue: true })
-    is_licensed: boolean;
+    @Field(() => Boolean, { defaultValue: true, nullable: true })
+    is_licensed?: boolean;
 
+    @IsOptional()
     @Field(() => [String], { nullable: true })
-    hashtags: string[];
+    hashtags?: string[];
 
+    @IsOptional()
     @Field(() => [String], { nullable: true })
-    synonyms: string[];
+    synonyms?: string[];
 
     @IsOptional()
     @IsString()
@@ -160,13 +164,15 @@ export class UpdateAnimeInputType {
     })
     release_status?: ReleaseStatus;
 
+    @IsOptional()
     @IsString()
-    @Field(() => AnimeType, { defaultValue: AnimeType.ANIME })
-    type: AnimeType;
+    @Field(() => AnimeType, { defaultValue: AnimeType.ANIME, nullable: true })
+    type?: AnimeType;
 
+    @IsOptional()
     @IsString()
-    @Field(() => YearSeason, { defaultValue: YearSeason.FALL })
-    season: YearSeason;
+    @Field(() => YearSeason, { defaultValue: YearSeason.FALL, nullable: true })
+    season?: YearSeason;
 
     @IsOptional()
     @IsUUID(4, { each: true })
@@ -199,7 +205,7 @@ export class UpdateAnimeInputType {
         nullable: true,
         description: 'Add to the list of relating animes',
     })
-    related_by_animes_add: string[];
+    related_by_animes_add?: string[];
 
     @IsOptional()
     @ValidateNested()
@@ -208,7 +214,7 @@ export class UpdateAnimeInputType {
         nullable: true,
         description: 'Remove from the list of relating animes',
     })
-    related_by_animes_remove: string[];
+    related_by_animes_remove?: string[];
 
     @IsOptional()
     @ValidateNested()
@@ -217,7 +223,7 @@ export class UpdateAnimeInputType {
         nullable: true,
         description: 'Add to the list of similar animes',
     })
-    similar_by_animes_add: string[];
+    similar_by_animes_add?: string[];
 
     @IsOptional()
     @ValidateNested()
@@ -226,5 +232,5 @@ export class UpdateAnimeInputType {
         nullable: true,
         description: 'Remove from the list of similar animes',
     })
-    similar_by_animes_remove: string[];
+    similar_by_animes_remove?: string[];
 }

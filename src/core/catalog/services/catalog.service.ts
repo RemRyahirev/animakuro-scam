@@ -320,7 +320,7 @@ export class CatalogService {
         return {
             success: true,
             errors: [],
-            character_list: character_list as any,
+            character_list: character_list,
             pagination,
         };
     }

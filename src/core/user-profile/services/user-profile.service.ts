@@ -1,15 +1,30 @@
-import { CreateUserProfileInputType } from '../models/inputs/create-user-profile-input.type';
-import { UpdateUserProfileInputType } from '../models/inputs/update-user-profile-input.type';
+import {
+    UpdateUserProfileInputType,
+    CreateUserProfileInputType,
+    UpdateUserFavouriteAnimeInputType,
+    UpdateUserFavouriteStudiosInputType,
+    UpdateUserFavouriteAuthorsInputType,
+    UpdateUserFavouriteGenresInputType,
+    UpdateUserFavouriteCharactersInputType,
+} from '../models/inputs';
+import {
+    GetListUserProfileResultsType,
+    CreateUserProfileResultsType,
+    UpdateUserProfileResultsType,
+    DeleteUserProfileResultsType,
+    GetUserProfileResultsType,
+    UpdateUserFavouriteAnimesResultType,
+    UpdateUserFavouriteAuthorsResultType,
+    UpdateUserFavouriteCharactersResultType,
+    UpdateUserFavouriteGenresResultType,
+    UpdateUserFavouriteStudiosResultType,
+} from '../models/results';
 import { PaginationInputType } from '../../../common/models/inputs';
 import { PaginationService } from '../../../common/services/pagination.service';
 import { PrismaService } from '../../../common/services/prisma.service';
-import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
-import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
-import { CreateUserProfileResultsType } from '../models/results/create-user-profile-results.type';
-import { UpdateUserProfileResultsType } from '../models/results/update-user-profile-results.type';
-import { DeleteUserProfileResultsType } from '../models/results/delete-user-profile-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
+import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
 
 @Injectable()
@@ -118,6 +133,122 @@ export class UserProfileService {
             success: true,
             errors: [],
             userProfile: userProfile as any,
+        };
+    }
+
+    async updateFavouriteAnimes(
+        args: UpdateUserFavouriteAnimeInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteAnimesResultType> {
+        const userFavouriteAnimes = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_animes', args),
+            },
+            include: {
+                favourite_animes: true,
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFavouriteAnimes: userFavouriteAnimes['favourite_animes'] as any,
+        };
+    }
+
+    async updateFavouriteStudios(
+        args: UpdateUserFavouriteStudiosInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteStudiosResultType> {
+        const userFavouriteStudios = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_studios', args),
+            },
+            include: {
+                favourite_studios: true,
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFavouriteStudios: userFavouriteStudios[
+                'favourite_studios'
+            ] as any,
+        };
+    }
+
+    async updateFavouriteCharacters(
+        args: UpdateUserFavouriteCharactersInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteCharactersResultType> {
+        const userFavouriteCharacters = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_characters', args),
+            },
+            include: {
+                favourite_characters: true,
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFavouriteCharacters: userFavouriteCharacters[
+                'favourite_characters'
+            ] as any,
+        };
+    }
+
+    async updateFavouriteAuthors(
+        args: UpdateUserFavouriteAuthorsInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteAuthorsResultType> {
+        const userFavouriteAuthors = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_authors', args),
+            },
+            include: {
+                favourite_authors: true,
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFavouriteAuthors: userFavouriteAuthors[
+                'favourite_authors'
+            ] as any,
+        };
+    }
+
+    async updateFavouriteGenres(
+        args: UpdateUserFavouriteGenresInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteGenresResultType> {
+        const userFavouriteGenres = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_genres', args),
+            },
+            include: {
+                favourite_genres: true,
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFavouriteGenres: userFavouriteGenres['favourite_genres'] as any,
         };
     }
 }

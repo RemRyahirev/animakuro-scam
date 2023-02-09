@@ -1,6 +1,6 @@
 import { ArgsType, Field } from '@nestjs/graphql';
-import { IsEnum, Length } from "@nestjs/class-validator";
-import { AuthType } from "../../../../common/models/enums";
+import { IsEnum, Length } from '@nestjs/class-validator';
+import { AuthType } from '../../../../common/models/enums';
 
 @ArgsType()
 export class LoginSocialInputType {

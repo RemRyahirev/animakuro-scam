@@ -15,6 +15,7 @@ import { AuthService } from '../services/auth.service';
 import { ExecutionContext } from '@nestjs/common';
 import { AuthType } from '../../../common/models/enums';
 import { Profile } from 'passport';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
 
 @Resolver(AuthMutationType)
@@ -23,12 +24,12 @@ export class AuthMutationResolver extends AuthRootResolver {
         super();
     }
 
-    @ResolveField(() => RegisterResultsType)
+    @ResolveField(() => LogoutResultsType)
     @ValidateSchemas()
     async register(
         @Args() args: RegisterInputType,
         @Context() context: ExecutionContext,
-    ): Promise<RegisterResultsType> {
+    ): Promise<LogoutResultsType> {
         return await this.authService.register(args, context);
     }
 
@@ -37,15 +38,15 @@ export class AuthMutationResolver extends AuthRootResolver {
         @Args() args: LoginInputType,
         @Context() context: ExecutionContext,
     ): Promise<LoginResultsType> {
+        console.log(args);
         return await this.authService.login(args, context);
     }
 
-    @ResolveField(() => LogoutResultsType)
-    async logout(
-        @CustomSession() session: Record<string, any>,
-        @AccessToken() user_id: string,
-    ): Promise<LogoutResultsType> {
-        return await this.authService.logout(session, user_id);
+    @ResolveField(() => LogoutResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    async logout(@AccessToken() user_id: string): Promise<LogoutResultsType> {
+        return await this.authService.logout(user_id);
     }
 
     @ResolveField(() => LoginResultsType)
@@ -65,10 +66,12 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.registerSocial(code, auth_type);
     }
 
-    @ResolveField(() => RegisterResultsType)
+    @ResolveField(() => RegisterResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async emailConfirmation(
-        @AccessToken() user_id: string,
+        @Args('token') token: string,
     ): Promise<RegisterResultsType> {
-        return await this.authService.emailConfirmation(user_id);
+        return await this.authService.emailConfirmation(token);
     }
 }

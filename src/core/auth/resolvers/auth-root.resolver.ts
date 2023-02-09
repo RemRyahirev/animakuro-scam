@@ -6,10 +6,10 @@ import { LogoutResultsType } from '../models/results/logout-results.type';
 
 @ObjectType()
 export class AuthMutationType {
-    @Field(() => RegisterResultsType, {
+    @Field(() => LogoutResultsType, {
         description: 'Register user by credentials',
     })
-    register: RegisterResultsType;
+    register: LogoutResultsType;
 
     @Field(() => RegisterResultsType, {
         description: 'Register user by OAuth',

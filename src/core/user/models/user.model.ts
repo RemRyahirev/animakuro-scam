@@ -36,8 +36,9 @@ export class User {
 
     @Field(() => UserProfile, {
         description: 'User Profile',
+        nullable: true,
     })
-    user_profile: UserProfile;
+    user_profile: UserProfile | null;
 
     @Field(() => [Anime])
     favourite_animes: Anime;
