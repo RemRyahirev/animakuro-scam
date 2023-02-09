@@ -14,6 +14,7 @@ import { Studio } from '../../studio/models/studio.model';
 import { RelatingAnime } from '../../relating-anime/models/relating-anime.model';
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
+import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
 
 @ObjectType()
 export class Anime {
@@ -47,16 +48,19 @@ export class Anime {
         nullable: true,
         description: 'The first official release date of the media',
     })
-    date_start: Date;
+    date_start?: Date | null;
 
     @Field(() => Date, {
         nullable: true,
         description: 'The last official release date of the media',
     })
-    date_end: Date;
+    date_end?: Date | null;
 
-    @Field(() => [Genre], { description: 'The genres of the media' })
-    genres: Genre[];
+    @Field(() => [Genre], { 
+        nullable: true,
+        description: 'The genres of the media' 
+    })
+    genres?: Genre[];
 
     @Field(() => MediaFormat, {
         defaultValue: MediaFormat.OTHER,
@@ -148,40 +152,53 @@ export class Anime {
     })
     season: YearSeason;
 
-    @Field(() => [Character], { description: 'The characters in the media' })
-    characters: Character[];
+    @Field(() => [Character], { 
+        nullable: true,
+        description: 'The characters in the media'
+    })
+    characters?: Character[];
 
     @Field(() => [Author], {
+        nullable: true,
         description: 'List of the authors of the media',
     })
-    authors: Author[];
+    authors?: Author[];
 
     @HideField()
-    relating_animes: RelatingAnime[];
+    relating_animes?: RelatingAnime[];
 
     @Field(() => [RelatingAnime], {
+        nullable: true,
         description: 'List of relating animes',
     })
-    related_by_animes: RelatingAnime[];
+    related_by_animes?: RelatingAnime[];
 
     @HideField()
-    similar_animes: SimilarAnime[];
+    similar_animes?: SimilarAnime[];
 
     @Field(() => [SimilarAnime], {
         description: 'List of similar animes',
         nullable: true,
     })
-    similar_by_animes: SimilarAnime[];
+    similar_by_animes?: SimilarAnime[];
 
     @Field(() => [Studio], {
         description: 'The companies who produced the media',
+        nullable: true,
     })
-    studios: Studio[];
+    studios?: Studio[];
 
     @Field(() => [AiringSchedule], {
         description: `List of anime's airing schedule`,
+        nullable: true,
     })
-    airing_schedule: AiringSchedule[];
+    airing_schedule?: AiringSchedule[];
+
+    @Field(() => [OpeningEnding], {
+        nullable: true,
+        description: 'Opening ending list'
+    })
+    opening_ending?: OpeningEnding
 
     @Field(() => Date, { description: 'When the anime data was created' })
     created_at: Date;

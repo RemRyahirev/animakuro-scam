@@ -42,4 +42,20 @@ export class GetAnimeByIdInputType {
         defaultValue: 10,
     })
     max_similar_by_animes_count?: number;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Maximum amount of openings returned',
+    })
+    max_openings_count?: number;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Maximum amount of endings returned',
+    })
+    max_endings_count?: number;
 }

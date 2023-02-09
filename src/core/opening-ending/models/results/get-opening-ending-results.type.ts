@@ -10,5 +10,5 @@ export class GetOpeningEndingResultsType extends BaseResultsType {
         description: 'Exact opening/ending',
         nullable: true
     })
-    opening_ending: OpeningEnding | null;
+    opening_ending: (OpeningEnding & { anime: Anime; }) | null;
 }
