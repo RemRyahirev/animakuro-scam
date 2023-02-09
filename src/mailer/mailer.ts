@@ -53,7 +53,7 @@ export class Mailer implements OnModuleInit {
         console.log('public async sendMail')
         console.log('to sendMail', options.to)
         console.log('options sendMail', options)
-        return this.nodemailer.sendMail(
+        const rtestmail = await this.nodemailer.sendMail(
             {
                 to: options.to,
                 subject: options.subject,
@@ -67,6 +67,8 @@ export class Mailer implements OnModuleInit {
                 }
             },
         );
+        console.log('rtestmail', rtestmail)
+        return rtestmail
     }
 
     private getMailTemplate(
