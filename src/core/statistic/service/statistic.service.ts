@@ -12,7 +12,7 @@ export class StatisticService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getUserStatisticFolder({
         id,
@@ -24,7 +24,7 @@ export class StatisticService {
                 user: {
                     id,
                 },
-                is_statistic_active: false,
+                is_statistic_active: true,
                 id: userFoldersId && { in: userFoldersId },
             },
             include: {
@@ -45,7 +45,7 @@ export class StatisticService {
         return {
             success: true,
             errors: [],
-            userStatisticFolders: statisticFolder,
+            userStatisticFolders: statisticFolder as any,
         };
     }
 
@@ -68,7 +68,7 @@ export class StatisticService {
                 ...select,
             },
         });
-        let dataFavourite: any = {};
+        const dataFavourite: any = {};
         for (const key in favourite) {
             if (!key.includes('favourite_')) {
                 dataFavourite[key] = favourite[key];
