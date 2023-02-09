@@ -52,23 +52,20 @@ export class StatisticService {
     async getUserStatisticFavourite(
         id: string,
     ): Promise<GetUserStatisticFavouriteResultsType> {
+        const select = {
+            favourite_animes: true,
+            favourite_authors: true,
+            favourite_characters: true,
+            favourite_genres: true,
+            favourite_studios: true,
+        };
         const favourite: any = await this.prisma.user.findUnique({
             where: { id },
             include: {
                 _count: {
-                    select: {
-                        favourite_animes: true,
-                        favourite_authors: true,
-                        favourite_characters: true,
-                        favourite_genres: true,
-                        favourite_studios: true,
-                    },
+                    select,
                 },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
+                ...select,
             },
         });
         let dataFavourite: any = {};
