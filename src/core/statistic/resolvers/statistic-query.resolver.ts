@@ -12,7 +12,7 @@ import { AccessToken } from 'common/decorators';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
-
+import { GetStatisticFolderInputType } from '../models/inputs';
 @Resolver(StatisticQueryType)
 export class StatisticQueryResolver extends StatisticRootResolver {
     constructor(private statisticService: StatisticService) {
@@ -25,11 +25,12 @@ export class StatisticQueryResolver extends StatisticRootResolver {
     @UseGuards(JwtAuthGuard)
     async getUserStatisticFolder(
         @AccessToken() user_id: string,
-        @Args('id', { nullable: true }) id?: string,
+        @Args({ nullable: true }) args?: GetStatisticFolderInputType,
     ): Promise<GetUserStatisticFolderResultsType> {
-        return await this.statisticService.getUserStatisticFolder(
-            id ?? user_id,
-        );
+        return await this.statisticService.getUserStatisticFolder({
+            ...args,
+            id: args?.id ?? user_id,
+        });
     }
 
     @ResolveField(() => GetUserStatisticFavouriteResultsType, {

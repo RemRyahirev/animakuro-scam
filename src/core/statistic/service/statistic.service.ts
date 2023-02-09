@@ -5,22 +5,27 @@ import {
     GetUserStatisticFavouriteResultsType,
 } from '../models/results';
 import { Injectable } from '@nestjs/common';
+import { GetStatisticFolderInputType } from '../models/inputs';
 
 @Injectable()
 export class StatisticService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+    ) {}
 
-    async getUserStatisticFolder(
-        id: string,
-    ): Promise<GetUserStatisticFolderResultsType> {
-        const folders = await this.prisma.userFolder.findMany({
+    async getUserStatisticFolder({
+        id,
+        take = 5,
+        userFoldersId,
+    }: GetStatisticFolderInputType): Promise<GetUserStatisticFolderResultsType> {
+        const folders: any = await this.prisma.userFolder.findMany({
             where: {
                 user: {
                     id,
                 },
+                is_statistic_active: false,
+                id: userFoldersId && { in: userFoldersId },
             },
             include: {
                 _count: {
@@ -29,14 +34,14 @@ export class StatisticService {
                     },
                 },
             },
+            take,
         });
-        const statisticFolder = folders.map((el: any) => {
+        const statisticFolder: any = folders.map((el: any) => {
             return {
                 folder: { ...el, _count: undefined },
                 count: el._count.animes,
             };
         });
-        await this.getUserStatisticFavourite(id);
         return {
             success: true,
             errors: [],
@@ -66,22 +71,22 @@ export class StatisticService {
                 favourite_studios: true,
             },
         });
-
-        //Доделать
-        const userStatisticFolders: { [x: string]: []; count: any }[] = [];
+        let dataFavourite: any = {};
         for (const key in favourite) {
-            if (key.includes('favourite_')) {
-                userStatisticFolders.push({
-                    [key]: favourite[key],
-                    count: Number(favourite._count[key]),
-                });
+            if (!key.includes('favourite_')) {
+                dataFavourite[key] = favourite[key];
+            } else {
+                dataFavourite[key] = {
+                    favourite: favourite[key],
+                    count: favourite._count[key],
+                };
             }
         }
-        console.log(userStatisticFolders);
+        delete dataFavourite._count;
         return {
             success: true,
             errors: [],
-            userStatisticFolders: userStatisticFolders as any,
+            userStatisticFavourite: dataFavourite,
         };
     }
 }

@@ -11,7 +11,7 @@ export const AuthMiddleware: FieldMiddleware = async (
         const prismaService = new PrismaService();
         const jwtService = new JwtService();
         if (!!auth) {
-            const token: any = jwtService.decode(auth);
+            const token: any = await jwtService.decode(auth);
             if (!!token && !ctx.context.req.user) {
                 const user = await prismaService.user.findUnique({
                     where: { id: token.uuid },
