@@ -31,6 +31,9 @@ export class UpdateUserFolderInputType {
     @Field(() => [ID], { nullable: true })
     animes_remove: string;
 
+    @IsOptional()
+    @Field(() => Boolean, { nullable: true })
+    is_statistic_active: boolean;
     /*@IsOptional()
     @IsNumber()
     @Field(() => Int, { nullable: true,

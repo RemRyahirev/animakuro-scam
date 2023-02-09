@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { CoreModule } from './core/core.module';
 import { MailerModule } from './mailer/mailer.module';
+import { formatError } from './common/utils/error-formatter.util';
 
 @Global()
 @Module({
@@ -14,6 +15,7 @@ import { MailerModule } from './mailer/mailer.module';
             isGlobal: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
+            formatError,
             driver: ApolloDriver,
             autoSchemaFile: true,
             fieldResolverEnhancers: ['guards', 'interceptors'],

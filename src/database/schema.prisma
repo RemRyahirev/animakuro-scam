@@ -9,24 +9,24 @@ datasource db {
 }
 
 model User {
-  id                 String         @id @default(uuid()) @db.Uuid
-  username           String         @unique @db.VarChar(64)
-  email              String         @db.VarChar(320)
-  avatar             String?        @db.Text
-  is_email_confirmed Boolean        @default(false)
-  favourite_animes   Anime[]  
-  favourite_studios  Studio[]
-  favourite_authors  Author[]
-  favourite_characters  Character[]
-  favourite_genres   Genre[]
-  user_folders       UserFolder[]   @relation("user_folder")
-  password           String         @map("password")
-  created_at         DateTime       @default(now()) @map("created_at") @db.Date
-  deleted            Boolean        @default(false)
-  auth               Auth[]
-  user_profile       UserProfile?
-  auth_sessions      AuthSession[]
-  user_collection    UserFolder[]   @relation("user_collection")
+  id                   String        @id @default(uuid()) @db.Uuid
+  username             String        @unique @db.VarChar(64)
+  email                String        @db.VarChar(320)
+  avatar               String?       @db.Text
+  is_email_confirmed   Boolean       @default(false)
+  favourite_animes     Anime[]
+  favourite_studios    Studio[]
+  favourite_authors    Author[]
+  favourite_characters Character[]
+  favourite_genres     Genre[]
+  user_folders         UserFolder[]  @relation("user_folder")
+  password             String        @map("password")
+  created_at           DateTime      @default(now()) @map("created_at") @db.Date
+  deleted              Boolean       @default(false)
+  auth                 Auth[]
+  user_profile         UserProfile?
+  auth_sessions        AuthSession[]
+  user_collection      UserFolder[]  @relation("user_collection")
 
   @@map("users")
 }
@@ -69,7 +69,7 @@ model Studio {
   anime_starts        Float    @db.Real
   anime_ends          Float    @db.Real
   is_animation_studio Boolean  @default(true)
-  animes               Anime[]
+  animes              Anime[]
   favourite_by        User[]
 
   @@map("studio")
@@ -86,43 +86,43 @@ model Friendship {
 }
 
 model Anime {
-  id                  String           @id @default(uuid()) @db.Uuid
-  title               String           @db.VarChar(100)
-  score               Float            @db.Real
-  year                Int              @db.SmallInt
-  date_start          DateTime?        @db.Date
-  date_end            DateTime?        @db.Date
-  country_of_origin   String           @db.VarChar(2)
-  genres              Genre[]
-  format              MediaFormat      @default(OTHER)
-  source              MediaSource      @default(OTHER)
-  season              YearSeason       @default(FALL)
-  type                AnimeType        @default(ANIME)
-  hashtags            String[]
-  synonyms            String[]
-  is_licensed         Boolean
-  seasons_count       Int              @db.SmallInt
-  episodes            Int              @db.SmallInt
-  duration            Int              @db.Integer
-  next_episode        DateTime
-  rating              FilmRating       @default(G)
-  description         String           @db.Text
-  preview_link        String           @db.Text
-  status_description  String           @db.VarChar(30)
-  release_status      ReleaseStatus    @default(COMPLETED)
-  created_at          DateTime         @default(now()) @map("created_at")
-  updated_at          DateTime         @default(now()) @map("updated_at")
-  studios             Studio[]
-  characters          Character[]
-  authors             Author[]
-  relating_animes     RelatingAnime[]  @relation("relating")
-  related_by_animes   RelatingAnime[]  @relation("related")
-  similar_animes      SimilarAnime[]   @relation("similar")
-  similar_by_animes   SimilarAnime[]   @relation("similar_by")
-  user_folders     UserFolder[]
-  airing_schedule     AiringSchedule[]
-  favourite_by        User[]
-  opening_ending      OpeningEnding[]
+  id                 String           @id @default(uuid()) @db.Uuid
+  title              String           @db.VarChar(100)
+  score              Float            @db.Real
+  year               Int              @db.SmallInt
+  date_start         DateTime?        @db.Date
+  date_end           DateTime?        @db.Date
+  country_of_origin  String           @db.VarChar(2)
+  genres             Genre[]
+  format             MediaFormat      @default(OTHER)
+  source             MediaSource      @default(OTHER)
+  season             YearSeason       @default(FALL)
+  type               AnimeType        @default(ANIME)
+  hashtags           String[]
+  synonyms           String[]
+  is_licensed        Boolean
+  seasons_count      Int              @db.SmallInt
+  episodes           Int              @db.SmallInt
+  duration           Int              @db.Integer
+  next_episode       DateTime
+  rating             FilmRating       @default(G)
+  description        String           @db.Text
+  preview_link       String           @db.Text
+  status_description String           @db.VarChar(30)
+  release_status     ReleaseStatus    @default(COMPLETED)
+  created_at         DateTime         @default(now()) @map("created_at")
+  updated_at         DateTime         @default(now()) @map("updated_at")
+  studios            Studio[]
+  characters         Character[]
+  authors            Author[]
+  relating_animes    RelatingAnime[]  @relation("relating")
+  related_by_animes  RelatingAnime[]  @relation("related")
+  similar_animes     SimilarAnime[]   @relation("similar")
+  similar_by_animes  SimilarAnime[]   @relation("similar_by")
+  user_folders       UserFolder[]
+  airing_schedule    AiringSchedule[]
+  favourite_by       User[]
+  opening_ending     OpeningEnding[]
 
   @@map("anime")
 }
@@ -150,14 +150,14 @@ model SimilarAnime {
 }
 
 model AiringSchedule {
-  id                String   @id @default(uuid()) @db.Uuid
-  airing_at         DateTime
-  name              String   @db.VarChar(100)
-  episode           Int      @db.SmallInt
-  anime_id          String   @db.Uuid
-  anime             Anime    @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-  created_at        DateTime @default(now()) @map("created_at")
-  updated_at        DateTime @default(now()) @map("updated_at")
+  id         String   @id @default(uuid()) @db.Uuid
+  airing_at  DateTime
+  name       String   @db.VarChar(100)
+  episode    Int      @db.SmallInt
+  anime_id   String   @db.Uuid
+  anime      Anime    @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @default(now()) @map("updated_at")
 
   @@map("airing_schedule")
 }
@@ -194,7 +194,7 @@ model Character {
   synonyms      String[]
   importance    CharacterType @default(PROTAGONIST)
   role          CharacterRole @default(MAIN)
-  description   String        @db.Text 
+  description   String        @db.Text
   created_at    DateTime      @default(now()) @map("created_at")
   updated_at    DateTime      @default(now()) @map("updated_at")
   animes        Anime[]
@@ -204,11 +204,11 @@ model Character {
 }
 
 model Genre {
-  id                String    @id @default(uuid()) @db.Uuid
-  name              String    @db.VarChar(50)
-  description       String?   @db.Text
-  animes            Anime[]
-  favourite_by      User[]
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String  @db.VarChar(50)
+  description  String? @db.Text
+  animes       Anime[]
+  favourite_by User[]
 
   @@map("genre")
 }
@@ -223,54 +223,55 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id                 String           @id @default(uuid()) @db.Uuid
-  user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id            String           @unique @db.Uuid //Field name changed 28/12 from user_id
-  profile_settings   ProfileSettings?
-  created_at         DateTime?        @default(now()) @db.Date
+  id               String           @id @default(uuid()) @db.Uuid
+  user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id          String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  profile_settings ProfileSettings?
+  created_at       DateTime?        @default(now()) @db.Date
 
   @@map("user_profile")
 }
 
 model ProfileSettings {
-  id                 String           @id @default(uuid()) @db.Uuid
-  profile            UserProfile      @relation( fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id         String           @unique @db.Uuid
-  displayed_name     String?          @db.VarChar(30)
-  gender             Gender           @default(UNSPECIFIED)
-  birthday           DateTime?        @db.Date
-  site_theme         SiteTheme        @default(AUTO)
-  avatar_id          String?          @unique @db.Uuid
-  cover_id           String?          @unique @db.Uuid
-  country            ProfileCountries @default(UNSPECIFIED)
-  language           ProfileLanguages @default(ENGLISH)
-  about              String?          @db.Text
-  timezone           String?          @db.VarChar(7)
-  moderator_role     ModeratorRoles   @default(VIEWER)
-  is_blocked         Boolean          @default(false)
-  profile_type       ProfileType      @default(PUBLIC)
-  integrations       Json             @db.Json
-  notifications      Json             @db.Json
-  subscribe_tier     SubscribeTier    @default(FREE_ACCOUNT)
-  updated_at         DateTime         @default(now()) @map("updated_at")
+  id             String           @id @default(uuid()) @db.Uuid
+  profile        UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id     String           @unique @db.Uuid
+  displayed_name String?          @db.VarChar(30)
+  gender         Gender           @default(UNSPECIFIED)
+  birthday       DateTime?        @db.Date
+  site_theme     SiteTheme        @default(AUTO)
+  avatar_id      String?          @unique @db.Uuid
+  cover_id       String?          @unique @db.Uuid
+  country        ProfileCountries @default(UNSPECIFIED)
+  language       ProfileLanguages @default(ENGLISH)
+  about          String?          @db.Text
+  timezone       String?          @db.VarChar(7)
+  moderator_role ModeratorRoles   @default(VIEWER)
+  is_blocked     Boolean          @default(false)
+  profile_type   ProfileType      @default(PUBLIC)
+  integrations   Json             @db.Json
+  notifications  Json             @db.Json
+  subscribe_tier SubscribeTier    @default(FREE_ACCOUNT)
+  updated_at     DateTime         @default(now()) @map("updated_at")
 
   @@map("profile_settings")
 }
 
 model UserFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
-  id               String       @id @default(uuid()) @db.Uuid
+  id                  String   @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user                        User?        @relation(name: "user_folder", fields: [user_id], references: [id])
-  user_id                     String       @db.Uuid // o-2-o relation
-  user_collection             User?        @relation(name: "user_collection", fields: [user_collection_id], references: [id])
-  user_collection_id          String?       @db.Uuid 
-  animes                      Anime[]
+  user                User?    @relation(name: "user_folder", fields: [user_id], references: [id])
+  user_id             String   @db.Uuid // o-2-o relation
+  user_collection     User?    @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection_id  String?  @db.Uuid
+  animes              Anime[]
   // информативный блок
-  is_collection    Boolean      @db.Boolean() @default(false)
-  is_public        Boolean      @db.Boolean() @default(false)
-  name             String       @db.VarChar(25)
-  description      String
+  is_collection       Boolean  @default(false) @db.Boolean()
+  is_public           Boolean  @default(false) @db.Boolean()
+  is_statistic_active Boolean  @default(false) @db.Boolean() //Активация вывода статистики
+  name                String   @db.VarChar(25)
+  description         String
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
@@ -283,17 +284,17 @@ model UserFolder {
 }
 
 model OpeningEnding {
-  id              String              @id @default(uuid()) @db.Uuid
-  anime_id        String              @db.Uuid
-  type            OpeningEndingType
-  url             String              @db.VarChar(2048)
-  name            String              @db.VarChar(100)
-  author_name     String              @db.VarChar(100)
-  episode_start   Int                 @db.SmallInt
-  episode_end     Int                 @db.SmallInt
-  created_at      DateTime            @default(now()) @map("created_at")
-  updated_at      DateTime            @default(now()) @map("updated_at")
-  anime           Anime               @relation( fields: [anime_id], references: [id], onDelete: Cascade )
+  id            String            @id @default(uuid()) @db.Uuid
+  anime_id      String            @db.Uuid
+  type          OpeningEndingType
+  url           String            @db.VarChar(2048)
+  name          String            @db.VarChar(100)
+  author_name   String            @db.VarChar(100)
+  episode_start Int               @db.SmallInt
+  episode_end   Int               @db.SmallInt
+  created_at    DateTime          @default(now()) @map("created_at")
+  updated_at    DateTime          @default(now()) @map("updated_at")
+  anime         Anime             @relation(fields: [anime_id], references: [id], onDelete: Cascade)
 
   @@map("opening_ending")
 }

@@ -8,7 +8,8 @@
           "es2015.iterable"
         ],
         "typeRoots": [
-            "node_modules/.pnpm/@types"
+            "node_modules/@types",
+            "node_modules/.pnpm/@types+*"
         ],
         "skipLibCheck": true,
         "experimentalDecorators": true,
@@ -18,22 +19,21 @@
         "esModuleInterop": true,
         "sourceMap": true,
         "pretty": true,
-        "baseUrl": "./src",
-        "rootDir": "./src",
+        "baseUrl": "./",
         "outDir": "./dist",
         "allowJs": true,
         "paths": {
-            "@common": [
-                "./common/*"
+            "common/*": [
+                "src/common/*"
             ],
-            "@core": [
-                "./core/*"
+            "core/*": [
+                "src/core/*"
             ],
-            "@database": [
-                "./database/*"
+            "database/*": [
+                "src/database/*"
             ],
-            "@loaders": [
-                "./loaders/*"
+            "loaders/*": [
+                "src/loaders/*"
             ]
         }
     },
@@ -41,11 +41,6 @@
         "node_modules"
     ],
     "include": [
-        "./src/*.ts",
-        "./src/public/.gitignore",
-        "./src/**/*.ts",
-        "./src/**/**/*.ts",
-        "./src/**/**/**/*.ts",
-        "./src/**/**/**/**/*.ts"
+        "src/**/*.ts",
     ],
 }
