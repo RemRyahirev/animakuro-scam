@@ -42,7 +42,7 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.login(args, context);
     }
 
-    @ResolveField(() => LogoutResultsType,{
+    @ResolveField(() => LogoutResultsType, {
         middleware: [AuthMiddleware],
     })
     async logout(@AccessToken() user_id: string): Promise<LogoutResultsType> {
@@ -66,7 +66,7 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.registerSocial(code, auth_type);
     }
 
-    @ResolveField(() => RegisterResultsType,{
+    @ResolveField(() => RegisterResultsType, {
         middleware: [AuthMiddleware],
     })
     async emailConfirmation(

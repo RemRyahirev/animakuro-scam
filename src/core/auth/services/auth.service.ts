@@ -31,7 +31,16 @@ export class AuthService {
         const userData = await this.tokenService.decodeToken(token);
 
         if (!userData) {
-            return { success: false };
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'token',
+                        value: token,
+                        reason: 'No user matched by this token',
+                    },
+                ],
+            };
         }
 
         const user = await this.prisma.user.create({
@@ -140,7 +149,6 @@ export class AuthService {
                 access_token,
             },
         });
-        // TODO move validation in decorator
         if (!auth) {
             return {
                 success: false,
@@ -155,7 +163,7 @@ export class AuthService {
                 user: null,
             };
         }
-        const user = await this.userService.findOneById(
+        const { user, ...data } = await this.userService.findOneById(
             auth!.user_id as string,
         );
         return {
@@ -197,13 +205,16 @@ export class AuthService {
         profile: any,
         auth_type: AuthType,
     ): Promise<RegisterResultsType> {
-        const result = await this.userService.createUser({
-            username: profile.account.username,
-            email: profile.account.email,
-            password: '',
-            avatar: profile.account.avatar,
+        const result = await this.prisma.user.create({
+            data: {
+                username: profile.account.username,
+                email: profile.account.email,
+                password: '',
+                avatar: profile.account.avatar,
+                is_email_confirmed: true,
+            },
         });
-        const id = result.user?.id;
+        const id = result.id;
         const access_token = await this.tokenService.generateToken(
             id as any,
             null,
@@ -211,18 +222,19 @@ export class AuthService {
         );
         await this.prisma.auth.create({
             data: {
+                // @ts-ignore
                 type: auth_type.toUpperCase() as keyof typeof AuthType,
                 access_token,
                 uuid: profile.account.uuid,
                 email: profile.account.email,
                 username: profile.account.username,
                 avatar: profile.account.avatar,
-                user_id: result.user!.id,
+                user_id: result!.id,
             },
         });
         const user = await this.prisma.user.findFirst({
             where: {
-                id: result.user?.id,
+                id: result.id,
             },
             include: {
                 auth: true,
@@ -251,6 +263,18 @@ export class AuthService {
     }
 
     async logout(user_id: string): Promise<LogoutResultsType> {
+        if (!user_id) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'access_token',
+                        value: user_id,
+                        reason: 'Token is invalid',
+                    },
+                ],
+            };
+        }
         const authorizedSession = await this.prisma.authSession.findFirst({
             where: {
                 user_id,

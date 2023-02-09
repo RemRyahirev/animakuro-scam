@@ -90,7 +90,16 @@ export class TokenService {
     public async decodeToken(token: string): Promise<TokenDecodeResultsType> {
         const decoded = this.jwtService.decode(token);
         if (decoded == null || typeof decoded == 'string') {
-            return { success: false };
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'token',
+                        value: token,
+                        reason: 'Token is invalid',
+                    },
+                ],
+            };
         }
         return {
             email: decoded.email,
