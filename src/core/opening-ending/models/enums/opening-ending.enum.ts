@@ -1,10 +1,12 @@
 import { registerEnumType } from "@nestjs/graphql";
+import {OpeningEndingType} from '@prisma/client';
+export {OpeningEndingType} from '@prisma/client';
 import 'reflect-metadata';
 
-export enum OpeningEndingType {
-    OPENING = 'OPENING',
-    ENDING = 'ENDING'
-}
+// export enum OpeningEndingType {
+//     OPENING = 'OPENING',
+//     ENDING = 'ENDING'
+// }
 
 export enum OpeningEndingSortField {
     NAME = 'name',
