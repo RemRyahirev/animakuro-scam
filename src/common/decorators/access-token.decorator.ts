@@ -1,5 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../services/prisma.service';
 
 export const AccessToken = createParamDecorator(
@@ -7,15 +8,23 @@ export const AccessToken = createParamDecorator(
         const context = GqlExecutionContext.create(ctx).getContext();
         const token: string = context.req?.headers?.authentication;
 
+        const jwtService = new JwtService();
         const prisma = new PrismaService();
-        const auth = await prisma.auth.findFirst({
-            where: {
-                access_token: token,
-            },
-        });
-        if (!auth?.user_id) {
+        const decoded = jwtService.decode(token);
+
+        if (decoded == null || typeof decoded == 'string') {
             return null;
         }
-        return auth?.user_id ?? null;
+
+        if (!decoded.user_id) {
+            return null;
+        }
+        const user = prisma.user.findUnique({
+            where: { id: decoded.user_id },
+        });
+        if (!user) {
+            return null;
+        }
+        return decoded.user_id ?? null;
     },
 );
