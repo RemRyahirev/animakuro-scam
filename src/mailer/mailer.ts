@@ -18,7 +18,7 @@ export class Mailer implements OnModuleInit {
         this.nodemailer = nodemailer.createTransport(<SMTPTransport.Options>{
             host: this.configService.get<string>('MAILER_HOST', 'smtp.mail.ru'),
             port,
-            secure: port === 465,
+            secure: false,
             auth: {
                 user: this.configService.get<string>(
                     'MAILER_EMAIL',
