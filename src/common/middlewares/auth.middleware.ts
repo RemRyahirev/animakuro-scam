@@ -19,6 +19,7 @@ export const AuthMiddleware: FieldMiddleware = async (
                 if (!user?.is_email_confirmed) {
                     ctx.context.req.error =
                         'Адрес электронной почты не подтвержден!';
+                    ctx.context.req.user_id = user?.id;
                 } else if (user) {
                     ctx.context.req.user_id = user.id;
                 }

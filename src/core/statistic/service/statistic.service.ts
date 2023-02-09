@@ -30,7 +30,7 @@ export class StatisticService {
                 },
             },
         });
-        const statisticFolder = folders.map((el) => {
+        const statisticFolder = folders.map((el: any) => {
             return {
                 folder: { ...el, _count: undefined },
                 count: el._count.animes,

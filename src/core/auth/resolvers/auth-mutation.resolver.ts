@@ -15,6 +15,7 @@ import { AuthService } from '../services/auth.service';
 import { ExecutionContext } from '@nestjs/common';
 import { AuthType } from '../../../common/models/enums';
 import { Profile } from 'passport';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
 
 @Resolver(AuthMutationType)
@@ -41,7 +42,9 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.login(args, context);
     }
 
-    @ResolveField(() => LogoutResultsType)
+    @ResolveField(() => LogoutResultsType,{
+        middleware: [AuthMiddleware],
+    })
     async logout(@AccessToken() user_id: string): Promise<LogoutResultsType> {
         return await this.authService.logout(user_id);
     }
@@ -63,7 +66,9 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.registerSocial(code, auth_type);
     }
 
-    @ResolveField(() => RegisterResultsType)
+    @ResolveField(() => RegisterResultsType,{
+        middleware: [AuthMiddleware],
+    })
     async emailConfirmation(
         @Args('token') token: string,
     ): Promise<RegisterResultsType> {
