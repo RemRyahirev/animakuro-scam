@@ -45,7 +45,7 @@ export class StatisticService {
         return {
             success: true,
             errors: [],
-            userStatisticFolders: statisticFolder as any,
+            userStatisticFolders: statisticFolder,
         };
     }
 
