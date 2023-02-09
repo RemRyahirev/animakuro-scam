@@ -48,7 +48,6 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     ): Promise<UpdateUserProfileResultsType> {
         return await this.userProfileService.updateUserProfile({
             ...args,
-            id: user_id,
         });
     }
 

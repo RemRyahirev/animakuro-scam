@@ -27,7 +27,6 @@ export class AuthService {
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
     ) {}
-
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeToken(token);
 
