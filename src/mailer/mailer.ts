@@ -59,7 +59,8 @@ export class Mailer implements OnModuleInit {
                 subject: options.subject,
                 html: this.getMailTemplate(purpose, variables),
             },
-            (err) => {
+            (err, info) => {
+                console.log('info', info)
                 if (err) {
                     console.log(err);
                 } else {
