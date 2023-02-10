@@ -103,11 +103,22 @@ export class StudioService {
                         characters: true,
                     },
                 },
+                thumbnail: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         return {
             success: true,
-            studio: studio as any,
+            studio: {
+                ...studio,
+                thumbnail: {
+                    ...studio.thumbnail,
+                    url: '',
+                } as any,
+            } as any,
         };
     }
 
