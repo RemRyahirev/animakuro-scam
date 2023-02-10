@@ -1,164 +1,141 @@
 # Token_Access
-- Add auth middleware
-
+-   Adding auth middleware, ccess by active token and request by user_id
 ## User_Profile
 ### Mutation
-- createUserProfile
-- updateFavouriteAnimes
-- updateFavouriteAuthors
-- updateFavouriteCharacters
-- updateFavouriteGenres
-- updateFavouriteStudios
+-   createUserProfile
+-   updateFavouriteAnimes
+-   updateFavouriteAuthors
+-   updateFavouriteCharacters
+-   updateFavouriteGenres
+-   updateFavouriteStudios
 ### Query
-- getUserProfileList
-- getUserProfile
-
-
+-   getUserProfileList
+-   getUserProfile
 ## User_Folder
 ### Query
-- getUserFolderByUserId
+-   getUserFolderByUserId
 ### Mutation
-- createUserFolder
-
+-   createUserFolder
 ## User_Collection
 ### Query
-- getUserCollectionListByUserId
-- getUserCollectionList
-- getUserCollection
+-   getUserCollectionListByUserId
+-   getUserCollectionList
+-   getUserCollection
 ### Mutation
-- createUserCollection
+-   createUserCollection
 
 ## User
 ### Query
-- getUserById
+-   getUserById
 ### Mutation
-- updateUser
-
+-   updateUser
 ## Statistic
 ### Query
-- getUserStatisticFolder
-- getUserStatisticFavourite
-
+-   getUserStatisticFolder
+-   getUserStatisticFavourite
 ## Auth_Session
 ### Mutation
-- createAuthSession
+-   createAuthSession
 # Validation
+- Adding auth middleware and access by active token
 ## User_Profile
 ### Mutation
-- createUserProfile
-- updateUserProfile
-- deleteUserProfile
-- updateFavouriteAnimes
-- updateFavouriteAuthors
-- updateFavouriteCharacters
-- updateFavouriteGenres
-- updateFavouriteStudios
+-   createUserProfile
+-   updateUserProfile
+-   deleteUserProfile
+-   updateFavouriteAnimes
+-   updateFavouriteAuthors
+-   updateFavouriteCharacters
+-   updateFavouriteGenres
+-   updateFavouriteStudios
 ### Query
-- getUserProfileList
-- getUserProfile
-
-
+-   getUserProfileList
+-   getUserProfile
 ## User_Folder
 ### Query
-- getUserFolderByUserId
-- getUserFolderList
-- getUserFolder
+-   getUserFolderByUserId
+-   getUserFolderList
+-   getUserFolder
 ### Mutation
-- createUserFolder
-- updateUserFolder
-- deleteUserFolder
-
+-   createUserFolder
+-   updateUserFolder
+-   deleteUserFolder
 ## User_Collection
 ### Query
-- getUserCollectionListByUserId
-- getUserCollectionList
-- getUserCollection
+-   getUserCollectionListByUserId
+-   getUserCollectionList
+-   getUserCollection
 ### Mutation
-- createUserCollection
-- updateUserCollection
-- deleteUserCollection
-
+-   createUserCollection
+-   updateUserCollection
+-   deleteUserCollection
 ## User
 ### Query
-- getUsersByEmail
-- getUser
-- getUserList
-- getUserById
+-   getUsersByEmail
+-   getUser
+-   getUserList
+-   getUserById
 ### Mutation
-- updateUser
-- createUser
-
-
+-   updateUser
+-   createUser
 ## Studio
 ### Mutation
-- createStudio
-- updateStudio
-- deleteStudio
-
+-   createStudio
+-   updateStudio
+-   deleteStudio
 ## Statistic
 ### Query
-- getUserStatisticFolder
-- getUserStatisticFavourite
-
+-   getUserStatisticFolder
+-   getUserStatisticFavourite
 ## Profile_Settings
 ### Query
-- getProfileSettingsById
-- getProfileSettingsList
-
+-   getProfileSettingsById
+-   getProfileSettingsList
 ### Mutation
-- createProfileSettings
-- updateProfileSettings
-- deleteProfileSettings
-
+-   createProfileSettings
+-   updateProfileSettings
+-   deleteProfileSettings
 ## Opening_Ending
 ### Mutation
-- createOpeningEnding
-- updateOpeningEnding
-- deleteOpeningEnding
-
-
+-   createOpeningEnding
+-   updateOpeningEnding
+-   deleteOpeningEnding
 ## Genre
 ### Mutation
-- createGenre
-- updateGenre
-- deleteGenre
-
+-   createGenre
+-   updateGenre
+-   deleteGenre
 ## Character
 ### Mutation
-- createCharacter
-- updateCharacter
-- deleteCharacter
-
+-   createCharacter
+-   updateCharacter
+-   deleteCharacter
 ## Author
 ### Mutation
-- createAuthor
-- updateAuthor
-- deleteAuthor
-
+-   createAuthor
+-   updateAuthor
+-   deleteAuthor
 ## Auth_Session
 ### Query
-- getAuthSession
-- getAuthSessionList
+-   getAuthSession
+-   getAuthSessionList
 ### Mutation
-- createAuthSession
-- updateAuthSession
-- deleteAuthSession
-
-
+-   createAuthSession
+-   updateAuthSession
+-   deleteAuthSession
 ## Anime
 ### Mutation
-- createAnime
-- updateAnime
-- addRelatedAnime
-- updateRelatedAnime
-- deleteRelatedAnime
-- addSimilarAnime
-- updateSimilarAnime
-- deleteSimilarAnime
-- deleteAnime
-
+-   createAnime
+-   updateAnime
+-   addRelatedAnime
+-   updateRelatedAnime
+-   deleteRelatedAnime
+-   addSimilarAnime
+-   updateSimilarAnime
+-   deleteSimilarAnime
+-   deleteAnime
 ## Airing_Schedule
 ### Mutation
-- createAiringSchedule
-- updateAiringSchedule
-- deleteAiringSchedule
+-   createAiringSchedule
+-   updateAiringSchedule
+-   deleteAiringSchedule
