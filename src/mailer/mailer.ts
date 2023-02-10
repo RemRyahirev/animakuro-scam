@@ -5,7 +5,9 @@ import { MailPurpose } from '../common/models/enums';
 import SMTPTransport, { Options } from 'nodemailer/lib/smtp-transport';
 import * as handlebars from 'handlebars';
 import { ConfigService } from '@nestjs/config';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, UseGuards } from '@nestjs/common';
+import { GqlThrottlerGuard } from '../common/guards/throttle.guard';
+import { Throttle } from '@nestjs/throttler';
 
 @Injectable()
 export class Mailer implements OnModuleInit {
