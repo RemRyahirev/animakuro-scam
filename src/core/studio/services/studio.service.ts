@@ -83,6 +83,9 @@ export class StudioService {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
+                // fixme
+                thumbnail: undefined,
+                thumbnail_id: undefined,
             },
             include: {
                 animes: {
@@ -109,6 +112,9 @@ export class StudioService {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
+                // fixme
+                thumbnail: undefined,
+                thumbnail_id: undefined,
             },
             include: {
                 animes: {

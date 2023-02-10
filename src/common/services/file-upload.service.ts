@@ -37,17 +37,12 @@ type BucketNames = keyof typeof BUCKET_CONFIG;
 @Injectable()
 export class FileUploadService {
     private cdnClient;
-    private tmpDir;
     constructor(
         private configService: ConfigService,
         private prisma: PrismaService,
     ) {
         const url = this.configService.getOrThrow<string>('CDN_URL');
         const buckets = this.configService.getOrThrow<string>('CDN_BUCKET');
-        this.tmpDir = this.configService.get<string>('FILE_TEMP_DIR', tmpdir());
-        if (!existsSync(this.tmpDir)) {
-            mkdirSync(this.tmpDir, { recursive: true, mode: 0o500 });
-        }
         this.cdnClient = new CdnClient(url, buckets);
     }
 
