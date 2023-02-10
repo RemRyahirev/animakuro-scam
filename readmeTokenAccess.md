@@ -28,6 +28,20 @@
 ### Mutation
 - createUserCollection
 
+## User
+### Query
+- getUserById
+### Mutation
+- updateUser
+
+## Statistic
+### Query
+- getUserStatisticFolder
+- getUserStatisticFavourite
+
+## Auth_Session
+### Mutation
+- createAuthSession
 # Validation
 ## User_Profile
 ### Mutation
@@ -63,3 +77,88 @@
 - createUserCollection
 - updateUserCollection
 - deleteUserCollection
+
+## User
+### Query
+- getUsersByEmail
+- getUser
+- getUserList
+- getUserById
+### Mutation
+- updateUser
+- createUser
+
+
+## Studio
+### Mutation
+- createStudio
+- updateStudio
+- deleteStudio
+
+## Statistic
+### Query
+- getUserStatisticFolder
+- getUserStatisticFavourite
+
+## Profile_Settings
+### Query
+- getProfileSettingsById
+- getProfileSettingsList
+
+### Mutation
+- createProfileSettings
+- updateProfileSettings
+- deleteProfileSettings
+
+## Opening_Ending
+### Mutation
+- createOpeningEnding
+- updateOpeningEnding
+- deleteOpeningEnding
+
+
+## Genre
+### Mutation
+- createGenre
+- updateGenre
+- deleteGenre
+
+## Character
+### Mutation
+- createCharacter
+- updateCharacter
+- deleteCharacter
+
+## Author
+### Mutation
+- createAuthor
+- updateAuthor
+- deleteAuthor
+
+## Auth_Session
+### Query
+- getAuthSession
+- getAuthSessionList
+### Mutation
+- createAuthSession
+- updateAuthSession
+- deleteAuthSession
+
+
+## Anime
+### Mutation
+- createAnime
+- updateAnime
+- addRelatedAnime
+- updateRelatedAnime
+- deleteRelatedAnime
+- addSimilarAnime
+- updateSimilarAnime
+- deleteSimilarAnime
+- deleteAnime
+
+## Airing_Schedule
+### Mutation
+- createAiringSchedule
+- updateAiringSchedule
+- deleteAiringSchedule

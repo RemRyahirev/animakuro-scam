@@ -7,28 +7,39 @@ import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { AnimeService } from '../services/anime.service';
 import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
-
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../common/guards';
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
     constructor(private animeService: AnimeService) {
         super();
     }
 
-    @ResolveField(() => CreateAnimeResultsType)
+    @ResolveField(() => CreateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async createAnime(
         @Args() args: CreateAnimeInputType,
     ): Promise<CreateAnimeResultsType> {
         return await this.animeService.createAnime(args);
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateAnime(
         @Args() args: UpdateAnimeInputType,
     ): Promise<UpdateAnimeResultsType> {
         return await this.animeService.updateAnime(args);
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async addRelatedAnime(
         @Args('id') id: string,
         @Args({ name: 'relating_animes_add', type: () => [String] })
@@ -43,7 +54,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateRelatedAnime(
         @Args('id') id: string,
         @Args({ name: 'relating_animes_add', type: () => [String] })
@@ -58,7 +72,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteRelatedAnime(
         @Args('id') id: string,
         @Args({ name: 'relating_animes_remove', type: () => [String] })
@@ -70,7 +87,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async addSimilarAnime(
         @Args('id') id: string,
         @Args({ name: 'similar_animes_add', type: () => [String] })
@@ -79,7 +99,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         return await this.animeService.addSimilarAnime(id, similar_animes_add);
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateSimilarAnime(
         @Args('id') id: string,
         @Args({ name: 'similar_animes_add', type: () => [String] })
@@ -94,7 +117,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteSimilarAnime(
         @Args('id') id: string,
         @Args({ name: 'similar_animes_remove', type: () => [String] })
@@ -106,7 +132,10 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         );
     }
 
-    @ResolveField(() => DeleteAnimeResultsType)
+    @ResolveField(() => DeleteAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteAnime(@Args('id') id: string): Promise<DeleteAnimeResultsType> {
         return await this.animeService.deleteAnime(id);
     }

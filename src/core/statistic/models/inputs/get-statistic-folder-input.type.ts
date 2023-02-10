@@ -10,11 +10,11 @@ export class GetStatisticFolderInputType {
     @IsOptional()
     @IsNumber()
     @Field(() => Int, { nullable: true })
-    take?: number;
+    max_count?: number;
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()
     @Field(() => [String], { nullable: true })
-    userFoldersId?: string[];
+    user_folders_id?: string[];
 }

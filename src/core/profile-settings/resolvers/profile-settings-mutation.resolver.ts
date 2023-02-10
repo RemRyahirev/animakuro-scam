@@ -11,6 +11,8 @@ import { DeleteProfileSettingsResultsType } from '../models/results/delete-profi
 import { ProfileSettingsService } from '../services/profile-settings.service';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { AccessToken } from '../../../common/decorators';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(ProfileSettingsMutationType)
@@ -19,21 +21,30 @@ export class ProfileSettingsMutationResolver extends ProfileSettingsRootResolver
         super();
     }
 
-    @ResolveField(() => CreateProfileSettingsResultsType)
+    @ResolveField(() => CreateProfileSettingsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async createProfileSettings(
         @Args() args: CreateProfileSettingsInputType,
     ): Promise<CreateProfileSettingsResultsType> {
         return await this.profileSettingsService.createProfileSettings(args);
     }
 
-    @ResolveField(() => UpdateProfileSettingsResultsType)
+    @ResolveField(() => UpdateProfileSettingsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateProfileSettings(
         @Args() args: UpdateProfileSettingsInputType,
     ): Promise<UpdateProfileSettingsResultsType> {
         return await this.profileSettingsService.updateProfileSettings(args);
     }
 
-    @ResolveField(() => DeleteProfileSettingsResultsType)
+    @ResolveField(() => DeleteProfileSettingsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteProfileSettings(
         @Args('id') id: string,
     ): Promise<DeleteProfileSettingsResultsType> {

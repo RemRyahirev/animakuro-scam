@@ -9,28 +9,39 @@ import { UpdateAiringScheduleResultsType } from '../models/results/update-airing
 import { AiringScheduleService } from '../services/airing-schedule.service';
 import { CreateAiringScheduleInputType } from '../models/inputs/create-airing-schedule-input.type';
 import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-schedule-input.type';
-
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../common/guards';
 @Resolver(AiringScheduleMutationType)
 export class AiringScheduleMutationResolver extends AiringScheduleRootResolver {
     constructor(private airingScheduleService: AiringScheduleService) {
         super();
     }
 
-    @ResolveField(() => CreateAiringScheduleResultsType)
+    @ResolveField(() => CreateAiringScheduleResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async createAiringSchedule(
         @Args() args: CreateAiringScheduleInputType,
     ): Promise<CreateAiringScheduleResultsType> {
         return await this.airingScheduleService.createAiringSchedule(args);
     }
 
-    @ResolveField(() => UpdateAiringScheduleResultsType)
+    @ResolveField(() => UpdateAiringScheduleResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateAiringSchedule(
         @Args() args: UpdateAiringScheduleInputType,
     ): Promise<UpdateAiringScheduleResultsType> {
         return await this.airingScheduleService.updateAiringSchedule(args);
     }
 
-    @ResolveField(() => DeleteAiringScheduleResultsType)
+    @ResolveField(() => DeleteAiringScheduleResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteAiringSchedule(
         @Args('id') id: string,
     ): Promise<DeleteAiringScheduleResultsType> {
