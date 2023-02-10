@@ -9,6 +9,7 @@ import {
     IsUUID,
     Length,
 } from '@nestjs/class-validator';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class CreateStudioInputType {
@@ -34,4 +35,11 @@ export class CreateStudioInputType {
     @IsBoolean()
     @Field(() => Boolean, { defaultValue: true })
     is_animation_studio: boolean;
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, {
+        description: 'File to upload',
+        nullable: true
+    })
+    file?: Promise<FileUpload>;
 }

@@ -15,7 +15,21 @@ import { RelatingAnime } from '../../relating-anime/models/relating-anime.model'
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
 import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
+import { User } from '../../user/models/user.model';
 
+@ObjectType()
+class File {
+    @Field(() => String)
+    file_id: string;
+    @Field(() => String)
+    bucket_name: string;
+    @Field(() => User)
+    user: User;
+    @Field(() => String)
+    url: string;
+    @Field(() => Date)
+    created_at: Date
+}
 @ObjectType()
 export class Anime {
     @Field(() => ID, {
@@ -56,9 +70,9 @@ export class Anime {
     })
     date_end?: Date | null;
 
-    @Field(() => [Genre], { 
+    @Field(() => [Genre], {
         nullable: true,
-        description: 'The genres of the media' 
+        description: 'The genres of the media'
     })
     genres?: Genre[];
 
@@ -152,7 +166,7 @@ export class Anime {
     })
     season: YearSeason;
 
-    @Field(() => [Character], { 
+    @Field(() => [Character], {
         nullable: true,
         description: 'The characters in the media'
     })
@@ -205,4 +219,10 @@ export class Anime {
 
     @Field(() => Date, { description: 'When the anime data was last updated' })
     updated_at: Date;
+
+    @Field(() => File, {
+        description: 'File',
+        nullable: true,
+    })
+    file?: File;
 }

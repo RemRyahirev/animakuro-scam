@@ -9,6 +9,7 @@ import {
     Length,
 } from '@nestjs/class-validator';
 import { CharacterRole, CharacterType } from '../../../../common/models/enums';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class UpdateCharacterInputType {
@@ -67,4 +68,11 @@ export class UpdateCharacterInputType {
     @IsArray()
     @Field(() => [String], { nullable: true })
     synonyms?: string[];
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, {
+        description: 'File to upload',
+        nullable: true
+    })
+    file?: Promise<FileUpload>;
 }

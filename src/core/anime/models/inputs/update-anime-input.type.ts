@@ -23,6 +23,7 @@ import { IsNumber } from 'class-validator';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
 import { Type } from 'class-transformer';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -233,4 +234,11 @@ export class UpdateAnimeInputType {
         description: 'Remove from the list of similar animes',
     })
     similar_by_animes_remove?: string[];
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, {
+        description: 'File to upload',
+        nullable: true
+    })
+    file?: Promise<FileUpload>;
 }

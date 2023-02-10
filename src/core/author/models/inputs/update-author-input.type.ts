@@ -7,6 +7,7 @@ import {
     IsUUID,
     Length,
 } from '@nestjs/class-validator';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class UpdateAuthorInputType {
@@ -74,4 +75,11 @@ export class UpdateAuthorInputType {
     @IsArray()
     @Field(() => [String], { nullable: true })
     synonyms?: string[];
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, {
+        description: 'File to upload',
+        nullable: true
+    })
+    file?: Promise<FileUpload>;
 }
