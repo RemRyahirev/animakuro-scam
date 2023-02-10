@@ -50,7 +50,7 @@ export class UserQueryResolver extends UserRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async getUserById(
-        @Args('id') id: string,
+        @Args('id', { nullable: true }) id: string,
         @AccessToken() user_id: string,
     ): Promise<GetUserResultsType> {
         return await this.userService.findOneById(id ?? user_id);

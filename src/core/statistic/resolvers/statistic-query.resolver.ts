@@ -10,7 +10,7 @@ import {
 import { StatisticService } from '../service/statistic.service';
 import { AccessToken } from 'common/decorators';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../common/guards';
+import { SocialAuthGuard, JwtAuthGuard } from '../../../common/guards';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { GetStatisticFolderInputType } from '../models/inputs';
 @Resolver(StatisticQueryType)

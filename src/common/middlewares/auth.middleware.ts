@@ -11,18 +11,22 @@ export const AuthMiddleware: FieldMiddleware = async (
         const prismaService = new PrismaService();
         const jwtService = new JwtService();
         if (!!auth) {
-            const token: any = await jwtService.decode(auth);
+            const token: any = jwtService.decode(auth);
             if (!!token && !ctx.context.req.user) {
                 const user = await prismaService.user.findUnique({
                     where: { id: token.uuid },
                 });
-                if (!user?.is_email_confirmed) {
+                if (!!user && !user?.is_email_confirmed) {
                     ctx.context.req.error =
                         'The email address is not confirmed!';
                     ctx.context.req.user_id = user?.id;
-                } else if (user) {
+                } else if (!!user) {
                     ctx.context.req.user_id = user.id;
+                } else {
+                    ctx.context.req.error = 'The entered token was not found';
                 }
+            } else {
+                ctx.context.req.error = 'Error of the entered token';
             }
         } else {
             ctx.context.req.error = 'The token is missing!';
