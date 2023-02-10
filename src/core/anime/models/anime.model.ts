@@ -15,21 +15,8 @@ import { RelatingAnime } from '../../relating-anime/models/relating-anime.model'
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
 import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
-import { User } from '../../user/models/user.model';
+import { File } from 'common/models/results/file.model';
 
-@ObjectType()
-class File {
-    @Field(() => String)
-    file_id: string;
-    @Field(() => String)
-    bucket_name: string;
-    @Field(() => User)
-    user: User;
-    @Field(() => String)
-    url: string;
-    @Field(() => Date)
-    created_at: Date
-}
 @ObjectType()
 export class Anime {
     @Field(() => ID, {

@@ -3,6 +3,7 @@ import { SchemaService } from './services/schema.service';
 import { PaginationService } from './services/pagination.service';
 import { PasswordService } from './services/password.service';
 import { PrismaService } from './services/prisma.service';
+import { FileUploadService } from './services/file-upload.service';
 import {
     AccountLimitConstraint,
     ComparePasswordConstraint,
@@ -17,6 +18,7 @@ import {
         PasswordService,
         PrismaService,
         SchemaService,
+        FileUploadService,
         EntityExistsConstraint,
         ComparePasswordConstraint,
         AccountLimitConstraint,
@@ -27,6 +29,7 @@ import {
         PasswordService,
         PrismaService,
         SchemaService,
+        FileUploadService,
         EntityExistsConstraint,
         ComparePasswordConstraint,
         AccountLimitConstraint,
