@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CoreModule } from './core/core.module';
 import { MailerModule } from './mailer/mailer.module';
 import { formatError } from './common/utils/error-formatter.util';
+import { APP_GUARD } from '@nestjs/core';
+import { GqlThrottlerGuard } from './common/guards/throttle.guard';
 
 @Global()
 @Module({
@@ -15,7 +17,7 @@ import { formatError } from './common/utils/error-formatter.util';
             isGlobal: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
-            formatError,
+            context: ({ req, res }) => ({ req, res }),
             driver: ApolloDriver,
             autoSchemaFile: true,
             fieldResolverEnhancers: ['guards', 'interceptors'],
@@ -32,15 +34,20 @@ import { formatError } from './common/utils/error-formatter.util';
             },
         }),
         ThrottlerModule.forRoot({
-            ttl: 60,
-            limit: 0,
+            ttl: 30,
+            limit: 10,
         }),
         CommonModule,
         CoreModule,
         MailerModule,
     ],
     controllers: [],
-    providers: [],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: GqlThrottlerGuard,
+        },
+    ],
     exports: [],
 })
 export class AppModule {}

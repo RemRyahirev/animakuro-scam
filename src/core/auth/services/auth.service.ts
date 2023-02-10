@@ -11,11 +11,13 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 import { userDefaults } from '../../../common/defaults/user-defaults';
 import { LogoutResultsType } from '../models/results/logout-results.type';
+import { GqlThrottlerGuard } from '../../../common/guards/throttle.guard';
+import { Throttle } from '@nestjs/throttler';
 
 @Injectable()
 export class AuthService {
@@ -170,6 +172,15 @@ export class AuthService {
             success: true,
             access_token: access_token,
             user: user as any,
+        };
+    }
+
+    async checkArgs(args: RegisterInputType): Promise<LogoutResultsType> {
+        if (!args) {
+            return { success: false };
+        }
+        return {
+            success: true,
         };
     }
 
