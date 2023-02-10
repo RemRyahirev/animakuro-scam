@@ -1,5 +1,3 @@
-import { tmpdir } from 'os';
-import { existsSync, unlink, mkdirSync } from 'fs';
 import { FileUpload } from 'graphql-upload';
 import { default as CdnClient, FormData } from '@animakuro/animakuro-cdn';
 import { Injectable } from '@nestjs/common';
@@ -22,7 +20,7 @@ const BUCKET_CONFIG = {
     studio: {
         maxFileSize: 1000,
         maxFileCount: 2,
-        bucket: 'studios',
+        bucket: 'images1',
         validation: VALIDATION.image,
     },
     animeBanner: {
@@ -55,9 +53,9 @@ export class FileUploadService {
             throw new CustomError('Bad bucket name', { bucket });
         }
 
-        const data = new FormData();
+        const formData = new FormData();
         files.forEach(file => {
-            data.append(
+            formData.append(
                 file.filename,
                 file.createReadStream(),
                 {
@@ -66,15 +64,28 @@ export class FileUploadService {
                 });
         });
 
-        const result = await this.cdnClient.uploadFilesFromFormData(data, BUCKET_CONFIG[bucket].bucket);
+        const result = await this.cdnClient.uploadFilesFromFormData(formData, BUCKET_CONFIG[bucket].bucket);
 
-        this.prisma.file.createMany();
+        if (!result?.ids?.length || !result?.urls?.length) {
+            throw new CustomError('CDN upload error');
+        }
 
-        // TODO:
-        //   - add files into db via prisma
-        //   - return db ids of added files
+        const ids = result.ids.map(async (file_id, i) => {
+            const url = result.urls[i];
 
-        return [];
+            const data = await this.prisma.file.create({
+                data: {
+                    file_id,
+                    bucket_name: BUCKET_CONFIG[bucket].bucket,
+                    // fixme
+                    user_id: '5b594675-a3c6-4e1b-acaa-2e612419b9e2',
+                },
+            });
+
+            return data.id;
+        });
+
+        return await Promise.all(ids);
     }
 
     // async _upload(files: FileUpload[]) {

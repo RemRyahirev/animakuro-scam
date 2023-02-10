@@ -5,6 +5,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import session from 'express-session';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { useContainer } from '@nestjs/class-validator';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { CommonModule } from './common/common.module';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
 import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
@@ -63,6 +64,7 @@ async function bootstrap(): Promise<void> {
                 'oauth/apple/redirect',
             ],
         });
+        app.use(graphqlUploadExpress({ maxFiles: 10, maxFileSize: 100000000 }))
         app.useGlobalFilters(new PrismaClientExceptionFilter());
         app.useGlobalFilters(new ValidationExceptionFilter());
         app.useGlobalPipes(

@@ -17,6 +17,7 @@ import { GqlThrottlerGuard } from './common/guards/throttle.guard';
             isGlobal: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
+            formatError,
             context: ({ req, res }) => ({ req, res }),
             driver: ApolloDriver,
             autoSchemaFile: true,

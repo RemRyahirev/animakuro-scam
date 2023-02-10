@@ -29,7 +29,7 @@ export class UpdateStudioInputType {
 
     @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
-    thumbnail?: FileUpload;
+    thumbnail?: Promise<FileUpload>;
 
     @IsOptional()
     @IsUUID(4, { each: true })
@@ -46,11 +46,4 @@ export class UpdateStudioInputType {
     @IsBoolean()
     @Field(() => Boolean, { defaultValue: true })
     is_animation_studio: boolean;
-
-    @IsOptional()
-    @Field(() => GraphQLUpload, {
-        description: 'File to upload',
-        nullable: true
-    })
-    file?: Promise<FileUpload>;
 }
