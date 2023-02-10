@@ -26,6 +26,8 @@ import { UserProfileService } from '../services/user-profile.service';
 import { JwtAuthGuard } from '../../../common/guards';
 import { AccessToken } from '../../../common/decorators';
 import { UseGuards } from '@nestjs/common';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+
 
 @Resolver(UserProfileMutationType)
 export class UserProfileMutationResolver extends UserProfileRootResolver {
@@ -40,7 +42,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         return await this.userProfileService.createUserProfile(args);
     }
 
-    @ResolveField(() => UpdateUserProfileResultsType)
+    @ResolveField(() => UpdateUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateUserProfile(
         @AccessToken() user_id: string,
@@ -51,7 +55,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         });
     }
 
-    @ResolveField(() => DeleteUserProfileResultsType)
+    @ResolveField(() => DeleteUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async deleteUserProfile(
         @AccessToken() user_id: string,
@@ -60,7 +66,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         return await this.userProfileService.deleteUserProfile(user_id);
     }
 
-    @ResolveField(() => UpdateUserFavouriteAnimesResultType)
+    @ResolveField(() => UpdateUserFavouriteAnimesResultType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteAnimes(
         @AccessToken() user_id: string,
@@ -72,7 +80,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateUserFavouriteAuthorsResultType)
+    @ResolveField(() => UpdateUserFavouriteAuthorsResultType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteAuthors(
         @AccessToken() user_id: string,
@@ -84,7 +94,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateUserFavouriteCharactersResultType)
+    @ResolveField(() => UpdateUserFavouriteCharactersResultType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteCharacters(
         @AccessToken() user_id: string,
@@ -96,19 +108,24 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         );
     }
 
-    @ResolveField(() => UpdateUserFavouriteGenresResultType)
+    @ResolveField(() => UpdateUserFavouriteGenresResultType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteGenres(
         @AccessToken() user_id: string,
         @Args() args: UpdateUserFavouriteGenresInputType,
     ): Promise<UpdateUserFavouriteGenresResultType> {
+        console.log(user_id);
         return await this.userProfileService.updateFavouriteGenres(
             args,
             user_id,
         );
     }
 
-    @ResolveField(() => UpdateUserFavouriteStudiosResultType)
+    @ResolveField(() => UpdateUserFavouriteStudiosResultType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteStudios(
         @AccessToken() user_id: string,

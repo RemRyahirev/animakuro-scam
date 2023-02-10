@@ -41,6 +41,9 @@ export class UserFolder {
     })
     updated_at: Date;
 
+    @Field(() => Boolean, { description: 'Active statistic' })
+    is_statistic_active: boolean;
+
     /*@Field(() => Int, {
         description: 'Which episode the user is currently watching',
     })

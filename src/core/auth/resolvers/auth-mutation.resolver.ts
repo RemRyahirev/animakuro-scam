@@ -12,7 +12,7 @@ import { AuthType } from '../../../common/models/enums';
 import { Profile } from 'passport';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { GqlThrottlerGuard } from '../../../common/guards/throttle.guard';
 
 @Resolver(AuthMutationType)
@@ -21,6 +21,7 @@ export class AuthMutationResolver extends AuthRootResolver {
         super();
     }
 
+    @SkipThrottle()
     @ResolveField(() => LogoutResultsType)
     @ValidateSchemas()
     async checkArgs(
