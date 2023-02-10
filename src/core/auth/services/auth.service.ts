@@ -11,16 +11,23 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable, UseGuards } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 import { userDefaults } from '../../../common/defaults/user-defaults';
 import { LogoutResultsType } from '../models/results/logout-results.type';
-import { GqlThrottlerGuard } from '../../../common/guards/throttle.guard';
-import { Throttle } from '@nestjs/throttler';
+import {
+    InjectThrottlerOptions,
+    InjectThrottlerStorage,
+    ThrottlerModuleOptions,
+    ThrottlerStorage,
+} from '@nestjs/throttler';
+import { Reflector } from '@nestjs/core';
+import { HandleRequest } from './handleRequest';
 
 @Injectable()
 export class AuthService {
+    throttler: HandleRequest;
     constructor(
         private prisma: PrismaService,
         private userService: UserService,
@@ -28,7 +35,15 @@ export class AuthService {
         private passwordService: PasswordService,
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
-    ) {}
+
+        @InjectThrottlerOptions()
+        protected readonly options: ThrottlerModuleOptions,
+        @InjectThrottlerStorage()
+        protected readonly storageService: ThrottlerStorage,
+        protected readonly reflector: Reflector,
+    ) {
+        this.throttler = new HandleRequest(options, storageService, reflector);
+    }
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeToken(token);
 
@@ -175,13 +190,21 @@ export class AuthService {
         };
     }
 
-    async checkArgs(args: RegisterInputType): Promise<LogoutResultsType> {
+    async sendEmail(
+        args: RegisterInputType,
+        context: ExecutionContext,
+        req: any,
+        res: any,
+    ): Promise<LogoutResultsType> {
         if (!args) {
-            return { success: false };
+            return {
+                success: false,
+            };
         }
-        return {
-            success: true,
-        };
+        if (await this.throttler._handleRequest(1, 120, req, res)) {
+            return await this.register(args, context);
+        }
+        return { success: false };
     }
 
     async register(

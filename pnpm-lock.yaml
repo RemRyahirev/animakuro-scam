@@ -95,6 +95,7 @@ specifiers:
   passport-http-bearer: ^1.0.1
   passport-jwt: ^4.0.1
   passport-local: ^1.0.0
+  passport-shikimori: ^1.0.2
   prettier: ^2.8.1
   prisma: ^4.8.1
   redis: ^4.5.1
@@ -165,6 +166,7 @@ dependencies:
   passport-http-bearer: 1.0.1
   passport-jwt: 4.0.1
   passport-local: 1.0.0
+  passport-shikimori: 1.0.2
   redis: 4.5.1
   reflect-metadata: 0.1.13
   request-ip: 3.3.0
@@ -9216,6 +9218,13 @@ packages:
       passport-strategy: 1.0.0
       uid2: 0.0.4
       utils-merge: 1.0.1
+    dev: false
+
+  /passport-shikimori/1.0.2:
+    resolution: {integrity: sha512-w/JD8xlnDAgh8Q5oskmps8uqMKRKwR8xBrNX66J1863WJoKIOycywhj9G/J4wLsZKoLYFJZ8JfWI+dzVwGULYA==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      passport-oauth2: 1.6.1
     dev: false
 
   /passport-strategy/1.0.0:

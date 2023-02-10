@@ -61,6 +61,8 @@ async function bootstrap(): Promise<void> {
                 'oauth/facebook/redirect',
                 'oauth/apple',
                 'oauth/apple/redirect',
+                'oauth/shikimori',
+                'oauth/shikimori/redirect',
             ],
         });
         app.useGlobalFilters(new PrismaClientExceptionFilter());
