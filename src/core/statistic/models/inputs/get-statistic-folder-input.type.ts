@@ -1,5 +1,5 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql';
-import { IsArray, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsUUID, Min } from 'class-validator';
 @ArgsType()
 export class GetStatisticFolderInputType {
     @IsOptional()
@@ -8,6 +8,7 @@ export class GetStatisticFolderInputType {
     id?: string;
 
     @IsOptional()
+    @Min(1)
     @IsNumber()
     @Field(() => Int, { nullable: true })
     max_count?: number;
