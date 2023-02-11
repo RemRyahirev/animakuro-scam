@@ -5,6 +5,9 @@ import {
     Injectable,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { GraphQLError } from 'graphql';
+// import { GraphQLError } from "../models/error/error"
+
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -12,11 +15,19 @@ export class JwtAuthGuard implements CanActivate {
         const ctx = GqlExecutionContext.create(context);
         const req = ctx.getContext().req;
         if (req.error) {
-            throw new BadRequestException({
-                statusCode: 401,
-                success: false,
-                message: req.error,
-            });
+            // throw new BadRequestException({
+            //     statusCode: '401',
+            //     success: false,
+            //     message: req.error,
+            // });
+            throw new GraphQLError(req.error, {
+                extensions: {
+                    exception: {
+                        code: 401,
+                        stacktrace: "test"
+                    },
+                },
+            })
         }
         return req;
     }
