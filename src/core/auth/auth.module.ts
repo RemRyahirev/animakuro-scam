@@ -15,7 +15,7 @@ import {
     DiscordStrategy,
     FacebookStrategy,
     GoogleStrategy,
-    // ShikimoriStrategy,
+    ShikimoriStrategy,
     JwtStrategy,
 } from './strategies';
 import { AuthSessionModule } from '../auth-session/auth-session.module';

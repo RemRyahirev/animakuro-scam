@@ -241,8 +241,8 @@ export class AuthService {
     ): Promise<RegisterResultsType> {
         const result = await this.prisma.user.create({
             data: {
-                username: profile.account.username,
-                email: profile.account.email,
+                username: profile.account.username || null,
+                email: profile.account.email || null,
                 password: '',
                 avatar: profile.account.avatar,
                 is_email_confirmed: true,
@@ -260,8 +260,8 @@ export class AuthService {
                 type: auth_type.toUpperCase() as keyof typeof AuthType,
                 access_token,
                 uuid: profile.account.uuid,
-                email: profile.account.email,
-                username: profile.account.username,
+                email: profile.account.email || null,
+                username: profile.account.username || null,
                 avatar: profile.account.avatar,
                 user_id: result!.id,
             },

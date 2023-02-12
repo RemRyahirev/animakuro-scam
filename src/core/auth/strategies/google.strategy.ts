@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
 import { AuthType } from '../../../common/models/enums';
@@ -7,7 +12,7 @@ import { StrategyConfigService } from '../services/strategy-config.service';
 Injectable();
 export class GoogleStrategy extends PassportStrategy(
     Strategy,
-    AuthType.GOOGLE
+    AuthType.GOOGLE,
 ) {
     constructor(
         @Inject(forwardRef(() => StrategyConfigService))
@@ -25,7 +30,7 @@ export class GoogleStrategy extends PassportStrategy(
         access_token: string,
         refresh_token: string,
         profile: Profile,
-        done: VerifyCallback
+        done: VerifyCallback,
     ): Promise<void> {
         const { id, name, emails, photos } = profile;
         const account = {
@@ -36,7 +41,7 @@ export class GoogleStrategy extends PassportStrategy(
         };
         const payload = {
             account,
-            access_token
+            access_token,
         };
         if (!account) {
             return done(new UnauthorizedException(), undefined);

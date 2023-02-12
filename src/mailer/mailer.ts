@@ -5,9 +5,7 @@ import { MailPurpose } from '../common/models/enums';
 import SMTPTransport, { Options } from 'nodemailer/lib/smtp-transport';
 import * as handlebars from 'handlebars';
 import { ConfigService } from '@nestjs/config';
-import { Injectable, OnModuleInit, UseGuards } from '@nestjs/common';
-import { GqlThrottlerGuard } from '../common/guards/throttle.guard';
-import { Throttle } from '@nestjs/throttler';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
 export class Mailer implements OnModuleInit {
@@ -18,9 +16,10 @@ export class Mailer implements OnModuleInit {
     onModuleInit(): void {
         const port = this.configService.get<number>('MAILER_PORT', 587);
         this.nodemailer = nodemailer.createTransport(<SMTPTransport.Options>{
+            pool: true,
             host: this.configService.get<string>('MAILER_HOST', 'smtp.mail.ru'),
             port,
-            secure: false,
+            secure: true,
             auth: {
                 user: this.configService.get<string>(
                     'MAILER_EMAIL',

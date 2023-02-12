@@ -1,12 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { CoreModule } from './core/core.module';
 import { MailerModule } from './mailer/mailer.module';
-import { formatError } from './common/utils/error-formatter.util';
 import { APP_GUARD } from '@nestjs/core';
 import { GqlThrottlerGuard } from './common/guards/throttle.guard';
 
