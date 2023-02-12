@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="5" failures="0" errors="0" time="4.174">
+  <testsuite name="Error formatter" errors="0" failures="0" skipped="0" timestamp="2023-02-12T08:18:11" time="4.102" tests="5">
+    <testcase classname="Error formatter formatError format GraphQL errors" name="Error formatter formatError format GraphQL errors" time="0.004">
+    </testcase>
+    <testcase classname="Error formatter formatError write to log on prisma server error" name="Error formatter formatError write to log on prisma server error" time="0.002">
+    </testcase>
+    <testcase classname="Error formatter formatError do not write to log on prisma client error" name="Error formatter formatError do not write to log on prisma client error" time="0">
+    </testcase>
+    <testcase classname="Error formatter formatError write to log if internal server error" name="Error formatter formatError write to log if internal server error" time="0.001">
+    </testcase>
+    <testcase classname="Error formatter exceptionFactory format validation errors" name="Error formatter exceptionFactory format validation errors" time="0.001">
+    </testcase>
+  </testsuite>
+</testsuites>
