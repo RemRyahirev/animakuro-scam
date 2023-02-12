@@ -7,11 +7,6 @@ import { LogoutResultsType } from '../models/results/logout-results.type';
 @ObjectType()
 export class AuthMutationType {
     @Field(() => LogoutResultsType, {
-        description: 'Check data before register',
-    })
-    checkArgs: LogoutResultsType;
-
-    @Field(() => LogoutResultsType, {
         description: 'Register user by credentials',
     })
     register: LogoutResultsType;

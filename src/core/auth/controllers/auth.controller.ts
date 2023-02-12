@@ -3,7 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
 import { AuthType } from '../../../common/models/enums';
 import { Request } from 'express';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('oauth')
 export class AuthController {
     constructor(private authService: AuthService) {}

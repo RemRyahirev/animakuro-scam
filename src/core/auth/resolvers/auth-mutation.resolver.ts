@@ -57,7 +57,9 @@ export class AuthMutationResolver extends AuthRootResolver {
     }
 
     @ResolveField(() => LoginResultsType)
-    async loginSocial(@Args() args: LoginSocialInputType) {
+    async loginSocial(
+        @Args() args: LoginSocialInputType,
+    ): Promise<LoginResultsType> {
         return await this.authService.loginSocial(
             args.access_token,
             args.auth_type,
@@ -68,8 +70,8 @@ export class AuthMutationResolver extends AuthRootResolver {
     async registerSocial(
         @SocialProfile() profile: Profile,
         @Args('code') code: string,
-        @Args('auth_type') auth_type: AuthType,
-    ) {
+        @Args('auth_type', { type: () => AuthType }) auth_type: AuthType,
+    ): Promise<RegisterResultsType> {
         return await this.authService.registerSocial(code, auth_type);
     }
 
