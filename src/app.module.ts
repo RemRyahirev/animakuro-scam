@@ -6,6 +6,7 @@ import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
 import { CoreModule } from './core/core.module';
 import { MailerModule } from './mailer/mailer.module';
+import { GraphQLError } from './common/models/error/error'
 
 @Global()
 @Module({
@@ -28,6 +29,10 @@ import { MailerModule } from './mailer/mailer.module';
                 methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
                 allowedHeaders: '*',
             },
+            formatError: (err) => {
+                const error = new GraphQLError(err.message);
+                return error.errorType();
+            },
         }),
         ThrottlerModule.forRoot({
             ttl: 60,
@@ -41,4 +46,4 @@ import { MailerModule } from './mailer/mailer.module';
     providers: [],
     exports: [],
 })
-export class AppModule {}
+export class AppModule { }

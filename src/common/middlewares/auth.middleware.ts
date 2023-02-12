@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../services/prisma.service';
 import { FieldMiddleware, MiddlewareContext, NextFn } from '@nestjs/graphql';
-
+import { ErrorType } from '../models/enums/error.enum';
 export const AuthMiddleware: FieldMiddleware = async (
     ctx: MiddlewareContext,
     next: NextFn,
@@ -17,19 +17,18 @@ export const AuthMiddleware: FieldMiddleware = async (
                     where: { id: token.uuid },
                 });
                 if (!!user && !user?.is_email_confirmed) {
-                    ctx.context.req.error =
-                        'The email address is not confirmed!';
+                    ctx.context.req.error = ErrorType.UNAUTHORIZED_BY_EMAIL;
                     ctx.context.req.user_id = user?.id;
                 } else if (!!user) {
                     ctx.context.req.user_id = user.id;
                 } else {
-                    ctx.context.req.error = 'The entered token was not found';
+                    ctx.context.req.error = ErrorType.TOKEN_NOT_FOUND;
                 }
             } else {
-                ctx.context.req.error = 'Error of the entered token';
+                ctx.context.req.error = ErrorType.TOKEN_ERROR;
             }
         } else {
-            ctx.context.req.error = 'The token is missing!';
+            ctx.context.req.error = ErrorType.TOKEN_ERROR;
         }
     }
     return await next();
