@@ -19,7 +19,7 @@ export class Mailer implements OnModuleInit {
             pool: true,
             host: this.configService.get<string>('MAILER_HOST', 'smtp.mail.ru'),
             port,
-            secure: true,
+            secure: false,
             auth: {
                 user: this.configService.get<string>(
                     'MAILER_EMAIL',
