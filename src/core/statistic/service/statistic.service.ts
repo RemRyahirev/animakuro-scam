@@ -24,7 +24,7 @@ export class StatisticService {
                 user: {
                     id,
                 },
-                is_statistic_active: true,
+                is_statistic_active: false, //Параметр false только для тестирования
                 id: user_folders_id && { in: user_folders_id },
             },
             include: {
