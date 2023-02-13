@@ -551,6 +551,7 @@ export class AnimeService {
             reyting,
             key: id,
         });
+        this.cacheStatisticService.getCategoryStatistic('Anime');
         return {
             success: true,
             errors: [],

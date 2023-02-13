@@ -11,7 +11,12 @@ export class CacheStatisticService {
         protected readonly prismaService: PrismaService,
     ) {}
 
-    async getCategoryStatistic() {}
+    async getCategoryStatistic(category: string) {
+        const categoryResult = await this.redis.keys(`${category}:*`);
+        // console.log(await this.redis.get(`${category}:*`));
+        console.log(categoryResult);
+        return categoryResult;
+    }
 
     async setCategoryReyting({
         category,
