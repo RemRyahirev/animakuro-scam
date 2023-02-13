@@ -12,10 +12,11 @@ export class StatisticService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+        private cacheDatabaseService: CacheDatabaseService,
+    ) {}
 
     async getUserStatisticFolder({
-        id,
+        id = '',
         max_count = 5,
         user_folders_id,
     }: GetStatisticFolderInputType): Promise<GetUserStatisticFolderResultsType> {
