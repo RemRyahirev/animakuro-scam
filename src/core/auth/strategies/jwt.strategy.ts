@@ -19,10 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, AuthType.JWT) {
         private strategyConfigService: StrategyConfigService
     ) {
         super({
-            jwtFromRequest: ExtractJwt.fromHeader("authentication"),
+            jwtFromRequest: ExtractJwt.fromHeader('authentication'),
             ignoreExpiration: true,
             secretOrKey:
-            strategyConfigService.config.JWT.accessToken.privateKey
+                strategyConfigService.config.JWT.accessToken.privateKey,
         });
     }
 

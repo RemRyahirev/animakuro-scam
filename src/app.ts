@@ -11,6 +11,7 @@ import { ValidationExceptionFilter } from './common/filters/validation-exception
 import { SchemaService } from './common/services/schema.service';
 import { PrismaService } from './common/services/prisma.service';
 import { ConfigService } from '@nestjs/config';
+import { exceptionFactory } from './common/utils/error-formatter.util';
 
 async function bootstrap(): Promise<void> {
     try {
@@ -60,6 +61,8 @@ async function bootstrap(): Promise<void> {
                 'oauth/facebook/redirect',
                 'oauth/apple',
                 'oauth/apple/redirect',
+                'oauth/shikimori',
+                'oauth/shikimori/redirect',
             ],
         });
         app.useGlobalFilters(new PrismaClientExceptionFilter());
@@ -68,6 +71,7 @@ async function bootstrap(): Promise<void> {
             new ValidationPipe({
                 whitelist: true,
                 transform: true,
+                exceptionFactory,
             }),
         );
         const port = configService.get('APP_PORT', 8080);

@@ -7,25 +7,25 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { StrategyConfigService } from '../services/strategy-config.service';
 import { UserService } from '../../user/services/user.service';
-import { Strategy } from "passport-local";
+import { Strategy } from 'passport-local';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     constructor(
         private userService: UserService,
         @Inject(forwardRef(() => StrategyConfigService))
-        private strategyConfigService: StrategyConfigService
+        private strategyConfigService: StrategyConfigService,
     ) {
         super({
             usernameField: 'username',
-            passwordField: 'password'
+            passwordField: 'password',
         });
     }
 
     async validate(
         username: string,
         password: string,
-        done: any
+        done: any,
     ): Promise<void> {
         const account = await this.userService.findUserByUsername(username);
         if (!account) {

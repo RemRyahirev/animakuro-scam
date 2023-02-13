@@ -16,9 +16,10 @@ export class Mailer implements OnModuleInit {
     onModuleInit(): void {
         const port = this.configService.get<number>('MAILER_PORT', 587);
         this.nodemailer = nodemailer.createTransport(<SMTPTransport.Options>{
+            pool: true,
             host: this.configService.get<string>('MAILER_HOST', 'smtp.mail.ru'),
             port,
-            secure: port === 465,
+            secure: false,
             auth: {
                 user: this.configService.get<string>(
                     'MAILER_EMAIL',
@@ -50,13 +51,17 @@ export class Mailer implements OnModuleInit {
         purpose: MailPurpose,
         variables?: ReadonlyMap<string, string> | {},
     ): Promise<void> {
-        return this.nodemailer.sendMail(
+        console.log('public async sendMail');
+        console.log('to sendMail', options.to);
+        console.log('options sendMail', options);
+        const rtestmail = await this.nodemailer.sendMail(
             {
                 to: options.to,
                 subject: options.subject,
                 html: this.getMailTemplate(purpose, variables),
             },
-            (err) => {
+            (err, info) => {
+                console.log('info', info);
                 if (err) {
                     console.log(err);
                 } else {
@@ -64,6 +69,8 @@ export class Mailer implements OnModuleInit {
                 }
             },
         );
+        console.log('rtestmail', rtestmail);
+        return rtestmail;
     }
 
     private getMailTemplate(

@@ -1,28 +1,28 @@
+import { PassportStrategy } from '@nestjs/passport';
+import { AuthType } from '../../../common/models/enums';
 import {
     forwardRef,
     Inject,
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
-import { AuthType } from '../../../common/models/enums';
+import { Profile, Strategy } from 'passport-shikimori';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
-Injectable();
-export class GoogleStrategy extends PassportStrategy(
+@Injectable()
+export class ShikimoriStrategy extends PassportStrategy(
     Strategy,
-    AuthType.GOOGLE,
+    AuthType.SHIKIMORI,
 ) {
     constructor(
         @Inject(forwardRef(() => StrategyConfigService))
         private strategyConfigService: StrategyConfigService,
     ) {
         super({
-            clientID: strategyConfigService.config.GOOGLE.clientID,
-            clientSecret: strategyConfigService.config.GOOGLE.clientSecret,
-            callbackURL: strategyConfigService.config.GOOGLE.callbackURL,
-            scope: ['email', 'profile'],
+            clientID: strategyConfigService.config.SHIKIMORI.clientID,
+            clientSecret: strategyConfigService.config.SHIKIMORI.clientSecret,
+            callbackURL: strategyConfigService.config.SHIKIMORI.callbackURL,
+            scope: ['user_rates'],
         });
     }
 
@@ -30,14 +30,14 @@ export class GoogleStrategy extends PassportStrategy(
         access_token: string,
         refresh_token: string,
         profile: Profile,
-        done: VerifyCallback,
+        done: (err: any, user: any, info?: any) => void,
     ): Promise<void> {
-        const { id, name, emails, photos } = profile;
+        const { id, username, email } = profile;
         const account = {
             uuid: id,
-            email: emails ? emails[0].value : null,
-            username: name?.givenName,
-            avatar: photos?.length ? photos[0].value : null,
+            email: email || null,
+            username: username || null,
+            profileFields: ['id'],
         };
         const payload = {
             account,

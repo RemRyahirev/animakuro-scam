@@ -1,3 +1,6 @@
+coverage/
+junit.xml
+
 # Logs
 logs
 *.log

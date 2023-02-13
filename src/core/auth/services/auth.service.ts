@@ -11,14 +11,23 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 import { userDefaults } from '../../../common/defaults/user-defaults';
 import { LogoutResultsType } from '../models/results/logout-results.type';
+import {
+    InjectThrottlerOptions,
+    InjectThrottlerStorage,
+    ThrottlerModuleOptions,
+    ThrottlerStorage,
+} from '@nestjs/throttler';
+import { Reflector } from '@nestjs/core';
+import { HandleRequest } from './handleRequest';
 
 @Injectable()
 export class AuthService {
+    throttler: HandleRequest;
     constructor(
         private prisma: PrismaService,
         private userService: UserService,
@@ -26,7 +35,15 @@ export class AuthService {
         private passwordService: PasswordService,
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
-    ) {}
+
+        @InjectThrottlerOptions()
+        protected readonly options: ThrottlerModuleOptions,
+        @InjectThrottlerStorage()
+        protected readonly storageService: ThrottlerStorage,
+        protected readonly reflector: Reflector,
+    ) {
+        this.throttler = new HandleRequest(options, storageService, reflector);
+    }
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeToken(token);
 
@@ -173,12 +190,29 @@ export class AuthService {
         };
     }
 
+    async sendEmail(
+        args: RegisterInputType,
+        context: ExecutionContext,
+        req: any,
+        res: any,
+    ): Promise<LogoutResultsType> {
+        if (!args) {
+            return {
+                success: false,
+            };
+        }
+        if (await this.throttler._handleRequest(1, 120, req, res)) {
+            return await this.register(args, context);
+        }
+        return { success: false };
+    }
+
     async register(
         args: RegisterInputType,
         context: Context,
     ): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
-        const token = this.tokenService.generateEmailToken(
+        const token = await this.tokenService.generateEmailToken(
             args.email,
             args.password,
             args.username,
@@ -207,8 +241,8 @@ export class AuthService {
     ): Promise<RegisterResultsType> {
         const result = await this.prisma.user.create({
             data: {
-                username: profile.account.username,
-                email: profile.account.email,
+                username: profile.account.username || null,
+                email: profile.account.email || null,
                 password: '',
                 avatar: profile.account.avatar,
                 is_email_confirmed: true,
@@ -226,8 +260,8 @@ export class AuthService {
                 type: auth_type.toUpperCase() as keyof typeof AuthType,
                 access_token,
                 uuid: profile.account.uuid,
-                email: profile.account.email,
-                username: profile.account.username,
+                email: profile.account.email || null,
+                username: profile.account.username || null,
                 avatar: profile.account.avatar,
                 user_id: result!.id,
             },

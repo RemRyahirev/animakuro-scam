@@ -134,7 +134,6 @@ export class StrategyConfigService implements JwtOptionsFactory {
                 clientID: this.configService.get('SHIKIMORI_CLIENT_ID'),
                 clientSecret: this.configService.get('SHIKIMORI_CLIENT_SECRET'),
                 callbackURL: this.configService.get('SHIKIMORI_CALLBACK_URL'),
-                redirectURL: this.configService.get('SHIKIMORI_ENDPOINT'),
             },
         };
     }
