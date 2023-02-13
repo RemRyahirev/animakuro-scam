@@ -12,9 +12,6 @@ import { AuthType } from '../../../common/models/enums';
 import { Profile } from 'passport';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { GqlThrottlerGuard } from '../../../common/guards/throttle.guard';
-import { Request, Response } from 'express';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
@@ -38,8 +35,6 @@ export class AuthMutationResolver extends AuthRootResolver {
         );
     }
 
-    // @UseGuards(GqlThrottlerGuard)
-    // @Throttle(2, 120)
     @ResolveField(() => LoginResultsType)
     async login(
         @Args() args: LoginInputType,

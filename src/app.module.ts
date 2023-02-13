@@ -33,7 +33,7 @@ import { GqlThrottlerGuard } from './common/guards/throttle.guard';
             },
         }),
         ThrottlerModule.forRoot({
-            ttl: 30,
+            ttl: 10,
             limit: 10,
         }),
         CommonModule,
