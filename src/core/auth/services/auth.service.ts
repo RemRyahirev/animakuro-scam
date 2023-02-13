@@ -212,7 +212,7 @@ export class AuthService {
         context: Context,
     ): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
-        const token = this.tokenService.generateEmailToken(
+        const token = await this.tokenService.generateEmailToken(
             args.email,
             args.password,
             args.username,

@@ -51,9 +51,9 @@ export class Mailer implements OnModuleInit {
         purpose: MailPurpose,
         variables?: ReadonlyMap<string, string> | {},
     ): Promise<void> {
-        console.log('public async sendMail')
-        console.log('to sendMail', options.to)
-        console.log('options sendMail', options)
+        console.log('public async sendMail');
+        console.log('to sendMail', options.to);
+        console.log('options sendMail', options);
         const rtestmail = await this.nodemailer.sendMail(
             {
                 to: options.to,
@@ -61,7 +61,7 @@ export class Mailer implements OnModuleInit {
                 html: this.getMailTemplate(purpose, variables),
             },
             (err, info) => {
-                console.log('info', info)
+                console.log('info', info);
                 if (err) {
                     console.log(err);
                 } else {
@@ -69,8 +69,8 @@ export class Mailer implements OnModuleInit {
                 }
             },
         );
-        console.log('rtestmail', rtestmail)
-        return rtestmail
+        console.log('rtestmail', rtestmail);
+        return rtestmail;
     }
 
     private getMailTemplate(
