@@ -9,13 +9,18 @@ export class CacheStatisticService {
     constructor(
         @InjectRedis() protected readonly redis: Redis,
         protected readonly prismaService: PrismaService,
-    ) {}
+    ) { }
 
     async getCategoryStatistic(category: string) {
         const categoryResult = await this.redis.keys(`${category}:*`);
-        // console.log(await this.redis.get(`${category}:*`));
-        console.log(categoryResult);
-        return categoryResult;
+        const newCategoryResult = [];
+        for await (const elem of categoryResult) {
+            newCategoryResult.push({
+                key: elem,
+                value: await this.redis.get(elem),
+            });
+        }
+        return newCategoryResult;
     }
 
     async setCategoryReyting({
@@ -29,7 +34,7 @@ export class CacheStatisticService {
     }) {
         const countResult = await this.redis.incr(`${category}:${key}`);
         const raytingResult = await this.redis.incrby(
-            `${category}:rayting:${key}`,
+            `${category}:${key}:rayting`,
             reyting,
         );
         return { count: countResult, rayting: raytingResult };
