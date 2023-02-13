@@ -12,7 +12,6 @@ export class StatisticService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-        private cacheDatabaseService: CacheDatabaseService,
     ) {}
 
     async getUserStatisticFolder({

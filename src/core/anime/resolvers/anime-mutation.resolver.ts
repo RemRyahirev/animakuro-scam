@@ -10,6 +10,8 @@ import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
+import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
+import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
     constructor(private animeService: AnimeService) {
@@ -138,5 +140,15 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @UseGuards(JwtAuthGuard)
     async deleteAnime(@Args('id') id: string): Promise<DeleteAnimeResultsType> {
         return await this.animeService.deleteAnime(id);
+    }
+
+    @ResolveField(() => UpdateReytingAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async updateReytingAnime(
+        @Args() args: UpdateRyetingAnimeInputType,
+    ): Promise<UpdateReytingAnimeResultsType> {
+        return await this.animeService.updateReytingAnime(args);
     }
 }

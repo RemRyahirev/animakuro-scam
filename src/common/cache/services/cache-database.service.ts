@@ -20,8 +20,15 @@ export class CacheDatabaseService {
         return await this.redis.set(key, JSON.stringify(value));
     }
 
-    async setCounter(category: string, key: string) {
-        await this.redis.incr(`${category}:${key}`);
-        console.log(`${category}:${key}`);
+    async setCounter(category: string, key: string): Promise<number> {
+        return await this.redis.incr(`${category}:${key}`);
+    }
+
+    async setCounterBy(
+        category: string,
+        key: string,
+        increment: number | string,
+    ): Promise<number> {
+        return await this.redis.incrby(`${category}:${key}`, increment);
     }
 }

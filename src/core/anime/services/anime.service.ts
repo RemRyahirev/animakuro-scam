@@ -16,12 +16,15 @@ import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
-import { Studio } from '../../studio/models/studio.model';
+import { CacheStatisticService } from '../../../common/cache/services';
+import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
+import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
 
 @Injectable()
 export class AnimeService {
     constructor(
         private prisma: PrismaService,
+        protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
     ) {}
 
@@ -33,7 +36,7 @@ export class AnimeService {
             max_similar_by_animes_count,
             max_related_by_animes_count,
             max_openings_count,
-            max_endings_count
+            max_endings_count,
         } = args;
 
         const anime = await this.prisma.anime.findUnique({
@@ -67,28 +70,28 @@ export class AnimeService {
 
         let openings;
         let endings;
-        
+
         if (max_openings_count) {
             openings = await this.prisma.openingEnding.findMany({
                 where: { anime_id: id, type: 'OPENING' },
-                take: max_openings_count
-            })
+                take: max_openings_count,
+            });
         }
         if (max_endings_count) {
             endings = await this.prisma.openingEnding.findMany({
                 where: { anime_id: id, type: 'ENDING' },
-                take: max_endings_count
-            })
+                take: max_endings_count,
+            });
         }
-        
+
         const opening_ending = [];
-        if (openings) opening_ending.push(...openings)
-        if (endings) opening_ending.push(...endings)
+        if (openings) opening_ending.push(...openings);
+        if (endings) opening_ending.push(...endings);
 
         return {
             success: true,
             errors: [],
-            anime: {...anime, opening_ending} as any,
+            anime: { ...anime, opening_ending } as any,
         };
     }
 
@@ -537,5 +540,22 @@ export class AnimeService {
                 },
             });
         });
+    }
+
+    async updateReytingAnime({
+        id,
+        reyting,
+    }: UpdateRyetingAnimeInputType): Promise<UpdateReytingAnimeResultsType> {
+        const data = await this.cacheStatisticService.setCategoryReyting({
+            category: 'Anime',
+            reyting,
+            key: id,
+        });
+        return {
+            success: true,
+            errors: [],
+            reyting: data.rayting,
+            count: data.count,
+        };
     }
 }
