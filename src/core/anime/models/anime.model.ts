@@ -33,6 +33,11 @@ export class Anime {
     })
     score: number;
 
+    @Field(() => String, {
+        description: 'User ratings',
+    })
+    evaluation: string;
+
     @Field(() => Int, {
         description: 'Year of production of the media',
     })
@@ -56,9 +61,9 @@ export class Anime {
     })
     date_end?: Date | null;
 
-    @Field(() => [Genre], { 
+    @Field(() => [Genre], {
         nullable: true,
-        description: 'The genres of the media' 
+        description: 'The genres of the media'
     })
     genres?: Genre[];
 
@@ -152,7 +157,7 @@ export class Anime {
     })
     season: YearSeason;
 
-    @Field(() => [Character], { 
+    @Field(() => [Character], {
         nullable: true,
         description: 'The characters in the media'
     })

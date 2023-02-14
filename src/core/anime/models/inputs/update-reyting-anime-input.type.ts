@@ -1,4 +1,5 @@
-import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { IsNumber } from '@nestjs/class-validator';
+import { ArgsType, Field, Float, ID, Int } from '@nestjs/graphql';
 import { IsString, IsUUID, Max, Min } from 'class-validator';
 
 @ArgsType()
@@ -7,7 +8,9 @@ export class UpdateRyetingAnimeInputType {
     @Field(() => ID)
     id: string;
 
-    @IsString()
-    @Field(() => String)
-    reyting: string;
+    @Min(1)
+    @Max(5)
+    @IsNumber()
+    @Field(() => Int)
+    reyting: number;
 }

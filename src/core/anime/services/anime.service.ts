@@ -26,7 +26,7 @@ export class AnimeService {
         private prisma: PrismaService,
         protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getAnime(args: GetAnimeByIdInputType): Promise<GetAnimeResultsType> {
         const {
@@ -545,18 +545,46 @@ export class AnimeService {
     async updateReytingAnime({
         id,
         reyting,
-    }: UpdateRyetingAnimeInputType): Promise<UpdateReytingAnimeResultsType> {
-        const data = await this.cacheStatisticService.setCategoryReyting({
-            category: 'Anime',
-            reyting,
-            key: id,
-        });
-        this.cacheStatisticService.getCategoryStatistic('Anime');
+        user_id,
+    }: UpdateRyetingAnimeInputType & {
+        user_id: string;
+    }): Promise<UpdateReytingAnimeResultsType> {
+        // const data = await this.cacheStatisticService.setCategoryReyting({
+        //     category: 'Anime',
+        //     reyting,
+        //     key: id,
+        // });
+        // this.cacheStatisticService.getCategoryStatistic('Anime');
+        let data: any;
+        try {
+            data = await this.prisma.reytingAnime.create({
+                data: {
+                    anime_id: id,
+                    user_id,
+                    reyting,
+                },
+            });
+        } catch (error) {
+            data = await this.prisma.reytingAnime.update({
+                data: {
+                    anime_id: id,
+                    user_id,
+                    reyting,
+                },
+                where: {
+                    anime_id_user_id: {
+                        anime_id: id,
+                        user_id,
+                    },
+                },
+            });
+        }
+        console.log(data);
+
         return {
             success: true,
             errors: [],
-            reyting: data.rayting,
-            count: data.count,
+            reyting: data.reyting,
         };
     }
 }

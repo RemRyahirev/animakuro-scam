@@ -12,6 +12,8 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
 import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
 import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
+import { AccessToken } from '../../../common/decorators';
+
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
     constructor(private animeService: AnimeService) {
@@ -148,7 +150,8 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateReytingAnime(
         @Args() args: UpdateRyetingAnimeInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateReytingAnimeResultsType> {
-        return await this.animeService.updateReytingAnime(args);
+        return await this.animeService.updateReytingAnime({ ...args, user_id });
     }
 }
