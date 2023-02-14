@@ -289,7 +289,6 @@ export class UserService {
             data: {
                 ...args,
                 ...userDefaults,
-                is_social: false,
                 is_email_confirmed: false,
             },
             include: {

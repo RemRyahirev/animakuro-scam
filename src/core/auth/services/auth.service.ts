@@ -67,7 +67,6 @@ export class AuthService {
                 password: userData.password as any,
                 username: userData.username as any,
                 is_email_confirmed: true,
-                is_social: false,
                 ...userDefaults,
             },
             include: {
@@ -208,12 +207,21 @@ export class AuthService {
         profile: any,
         auth_type: AuthType,
     ): Promise<RegisterResultsType> {
-        const alreadyCreated = await this.prisma.user.findUnique({
+        const alreadyCreated = await this.prisma.user.findFirst({
+            where: {
+                email: profile.account.email,
+                social_service:
+                    auth_type.toUpperCase() as keyof typeof AuthType,
+            },
+        });
+
+        const byUsername = await this.prisma.user.findFirst({
             where: {
                 username: profile.account.username,
             },
         });
-        if (alreadyCreated?.is_social) {
+
+        if (alreadyCreated) {
             const access_token = await this.tokenService.generateToken(
                 alreadyCreated.id as any,
                 null,
@@ -224,63 +232,83 @@ export class AuthService {
                 user: alreadyCreated as any,
                 access_token,
             };
-        }
-        const result = await this.prisma.user.create({
-            data: {
-                username: profile.account.username,
-                email: profile.account.email || null,
-                password: '',
-                avatar: profile.account.avatar,
-                is_email_confirmed: true,
-                is_social: true,
-            },
-        });
-        const id = result.id;
-        const access_token = await this.tokenService.generateToken(
-            id as any,
-            null,
-            TokenType.ACCESS_TOKEN,
-        );
-        await this.prisma.auth.create({
-            data: {
-                // @ts-ignore
-                type: auth_type.toUpperCase() as keyof typeof AuthType,
+        } else if (!alreadyCreated && !byUsername) {
+            const result = await this.prisma.user.create({
+                data: {
+                    username: profile.account.username,
+                    email: profile.account.email,
+                    password: '',
+                    avatar: profile.account.avatar,
+                    is_email_confirmed: true,
+                    social_service:
+                        auth_type.toUpperCase() as keyof typeof AuthType,
+                },
+            });
+            const id = result.id;
+            const access_token = await this.tokenService.generateToken(
+                id as any,
+                null,
+                TokenType.ACCESS_TOKEN,
+            );
+            await this.prisma.auth.create({
+                data: {
+                    // @ts-ignore
+                    type: auth_type.toUpperCase() as keyof typeof AuthType,
+                    access_token,
+                    uuid: profile.account.uuid,
+                    email: profile.account.email,
+                    username: profile.account.username,
+                    avatar: profile.account.avatar,
+                    user_id: result!.id,
+                },
+            });
+
+            return {
+                success: true,
+                user: result as any,
                 access_token,
-                uuid: profile.account.uuid,
-                email: profile.account.email || null,
-                username: profile.account.username || null,
-                avatar: profile.account.avatar,
-                user_id: result!.id,
-            },
-        });
-        const user = await this.prisma.user.findFirst({
-            where: {
-                id: result.id,
-            },
-            include: {
-                auth: true,
-                user_profile: {
-                    include: {
-                        profile_settings: true,
-                    },
+            };
+        } else {
+            const date = new Date().getTime();
+            const username = 'user_' + date;
+
+            const user = await this.prisma.user.create({
+                data: {
+                    username,
+                    email: profile.account.email,
+                    password: '',
+                    avatar: profile.account.avatar,
+                    is_email_confirmed: true,
+                    social_service:
+                        auth_type.toUpperCase() as keyof typeof AuthType,
                 },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
+            });
+
+            const id = user.id;
+            const access_token = await this.tokenService.generateToken(
+                id as any,
+                null,
+                TokenType.ACCESS_TOKEN,
+            );
+            await this.prisma.auth.create({
+                data: {
+                    // @ts-ignore
+                    type: auth_type.toUpperCase() as keyof typeof AuthType,
+                    access_token,
+                    uuid: profile.account.uuid,
+                    email: profile.account.email,
+                    username,
+                    avatar: profile.account.avatar,
+                    user_id: user!.id,
                 },
-            },
-        });
-        return {
-            success: true,
-            access_token,
-            user: user as any,
-        };
+            });
+
+            return {
+                success: true,
+                user: user as any,
+                access_token,
+            };
+        }
     }
 
     async logout(user_id: string): Promise<LogoutResultsType> {
