@@ -6,6 +6,7 @@ import {
 import { PaginationInputType } from '../../../common/models/inputs';
 import { GetListUserProfileResultsType } from '../models/results/get-list-user-profile-results.type';
 import { GetUserProfileResultsType } from '../models/results/get-user-profile-results.type';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { UserProfileService } from '../services/user-profile.service';
 import { AccessToken } from 'common/decorators';
 
@@ -15,7 +16,9 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         super();
     }
 
-    @ResolveField(() => GetUserProfileResultsType)
+    @ResolveField(() => GetUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getUserProfile(
         @Args('id') id: string,
         @AccessToken() token: string,
@@ -23,7 +26,9 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         return await this.userProfileService.getUserProfile(id, token);
     }
 
-    @ResolveField(() => GetListUserProfileResultsType)
+    @ResolveField(() => GetListUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getUserProfileList(
         @Args() args: PaginationInputType,
     ): Promise<GetListUserProfileResultsType> {

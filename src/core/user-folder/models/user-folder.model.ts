@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Anime } from '../../anime/models/anime.model';
 import { User } from '../../user/models/user.model';
+import { FolderType } from '../../../common/models/enums';
 
 @ObjectType()
 export class UserFolder {
@@ -30,6 +31,12 @@ export class UserFolder {
         description: 'Description of folder',
     })
     description: string;
+
+    @Field(() => FolderType, {
+        defaultValue: FolderType.DEFAULT,
+        description: 'Type of folder',
+    })
+    type: FolderType;
 
     @Field(() => Date, {
         description: 'Creation date',

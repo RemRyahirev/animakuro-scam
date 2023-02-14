@@ -16,14 +16,17 @@ import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
-import { Studio } from '../../studio/models/studio.model';
+import { CacheStatisticService } from '../../../common/cache/services';
+import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
+import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
 
 @Injectable()
 export class AnimeService {
     constructor(
         private prisma: PrismaService,
+        protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getAnime(args: GetAnimeByIdInputType): Promise<GetAnimeResultsType> {
         const {
@@ -83,16 +86,17 @@ export class AnimeService {
                 orderBy: { episode_start: 'asc' },
                 take: max_endings_count
             })
+
         }
-        
         const opening_ending = [];
-        if (openings) opening_ending.push(...openings)
-        if (endings) opening_ending.push(...endings)
+        if (openings) opening_ending.push(...openings);
+        if (endings) opening_ending.push(...endings);
 
         return {
             success: true,
             errors: [],
-            anime: {...anime, opening_ending, openings, endings} as any,
+            anime: { ...anime, opening_ending, openings, endings } as any,
+
         };
     }
 
@@ -147,7 +151,7 @@ export class AnimeService {
                 child_anime: true,
             },
         });
-        
+
         const pagination = await this.paginationService.getPagination(
             'relatingAnime',
             args,
@@ -545,5 +549,51 @@ export class AnimeService {
                 },
             });
         });
+    }
+
+    async updateReytingAnime({
+        id,
+        reyting,
+        user_id,
+    }: UpdateRyetingAnimeInputType & {
+        user_id: string;
+    }): Promise<UpdateReytingAnimeResultsType> {
+        // const data = await this.cacheStatisticService.setCategoryReyting({
+        //     category: 'Anime',
+        //     reyting,
+        //     key: id,
+        // });
+        // this.cacheStatisticService.getCategoryStatistic('Anime');
+        let data: any;
+        try {
+            data = await this.prisma.reytingAnime.create({
+                data: {
+                    anime_id: id,
+                    user_id,
+                    reyting,
+                },
+            });
+        } catch (error) {
+            data = await this.prisma.reytingAnime.update({
+                data: {
+                    anime_id: id,
+                    user_id,
+                    reyting,
+                },
+                where: {
+                    anime_id_user_id: {
+                        anime_id: id,
+                        user_id,
+                    },
+                },
+            });
+        }
+        console.log(data);
+
+        return {
+            success: true,
+            errors: [],
+            reyting: data.reyting,
+        };
     }
 }
