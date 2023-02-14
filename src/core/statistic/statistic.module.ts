@@ -18,29 +18,29 @@ import { join } from 'path';
         StatisticService,
         StatisticQueryResolver,
         StatisticRootResolver,
-        {
-            provide: 'UsersServiceClient',
-            useFactory: (configService: ConfigService): ClientGrpcProxy => {
-                return ClientProxyFactory.create({
-                    transport: Transport.GRPC,
-                    options: {
-                        url: configService.get<string>('STATISTIC_gRPC_URL'),
-                        package: 'statistic',
-                        protoPath: join(
-                            __dirname,
-                            '../../common/grpc/statistic.proto',
-                        ),
-                        loader: {
-                            keepCase: true,
-                            enums: String,
-                            oneofs: true,
-                            arrays: true,
-                        },
-                    },
-                });
-            },
-            inject: [ConfigService],
-        },
+        // {
+        //     provide: 'UsersServiceClient',
+        //     useFactory: (configService: ConfigService): ClientGrpcProxy => {
+        //         return ClientProxyFactory.create({
+        //             transport: Transport.GRPC,
+        //             options: {
+        //                 url: configService.get<string>('STATISTIC_gRPC_URL'),
+        //                 package: 'statistic',
+        //                 protoPath: join(
+        //                     __dirname,
+        //                     '../../common/grpc/statistic.proto',
+        //                 ),
+        //                 loader: {
+        //                     keepCase: true,
+        //                     enums: String,
+        //                     oneofs: true,
+        //                     arrays: true,
+        //                 },
+        //             },
+        //         });
+        //     },
+        //     inject: [ConfigService],
+        // },
     ],
 })
 export class StatisticModule { }
