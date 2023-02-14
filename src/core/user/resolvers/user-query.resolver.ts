@@ -26,7 +26,9 @@ export class UserQueryResolver extends UserRootResolver {
     @ResolveField(() => GetUserResultsType)
     @UseGuards(JwtAuthGuard)
     async getUser(@Context() context: any): Promise<GetUserResultsType> {
-        return await this.userService.getUser(context.req.user.account.user);
+        return await this.userService.getUser(
+            context.req.headers.authentication,
+        );
     }
 
     @ResolveField(() => GetListUserResultsType)

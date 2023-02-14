@@ -27,6 +27,7 @@ model User {
   user_profile         UserProfile?
   auth_sessions        AuthSession[]
   user_collection      UserFolder[]  @relation("user_collection")
+  is_social            Boolean
 
   @@map("users")
 }

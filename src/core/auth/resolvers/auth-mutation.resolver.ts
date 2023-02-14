@@ -7,11 +7,10 @@ import { LoginResultsType } from '../models/results/login-results.type';
 import { LogoutResultsType } from '../models/results/logout-results.type';
 import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
-import { ExecutionContext, Req, Res, UseGuards } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
 import { AuthType } from '../../../common/models/enums';
 import { Profile } from 'passport';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
-import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
@@ -49,16 +48,6 @@ export class AuthMutationResolver extends AuthRootResolver {
     })
     async logout(@AccessToken() user_id: string): Promise<LogoutResultsType> {
         return await this.authService.logout(user_id);
-    }
-
-    @ResolveField(() => LoginResultsType)
-    async loginSocial(
-        @Args() args: LoginSocialInputType,
-    ): Promise<LoginResultsType> {
-        return await this.authService.loginSocial(
-            args.access_token,
-            args.auth_type,
-        );
     }
 
     @ResolveField(() => RegisterResultsType)

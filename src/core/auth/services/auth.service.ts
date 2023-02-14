@@ -67,6 +67,7 @@ export class AuthService {
                 password: userData.password as any,
                 username: userData.username as any,
                 is_email_confirmed: true,
+                is_social: false,
                 ...userDefaults,
             },
             include: {
@@ -158,39 +159,6 @@ export class AuthService {
         };
     }
 
-    async loginSocial(
-        access_token: string,
-        auth_type: AuthType,
-    ): Promise<LoginResultsType> {
-        const auth = await this.prisma.auth.findFirst({
-            where: {
-                access_token,
-            },
-        });
-        if (!auth) {
-            return {
-                success: false,
-                errors: [
-                    {
-                        property: 'access_token',
-                        value: access_token,
-                        reason: 'No user matched by this token',
-                    },
-                ],
-                access_token: undefined,
-                user: null,
-            };
-        }
-        const { user, ...data } = await this.userService.findOneById(
-            auth!.user_id as string,
-        );
-        return {
-            success: true,
-            access_token: access_token,
-            user: user as any,
-        };
-    }
-
     async sendEmail(
         args: RegisterInputType,
         context: ExecutionContext,
@@ -240,13 +208,31 @@ export class AuthService {
         profile: any,
         auth_type: AuthType,
     ): Promise<RegisterResultsType> {
+        const alreadyCreated = await this.prisma.user.findUnique({
+            where: {
+                username: profile.account.username,
+            },
+        });
+        if (alreadyCreated?.is_social) {
+            const access_token = await this.tokenService.generateToken(
+                alreadyCreated.id as any,
+                null,
+                TokenType.ACCESS_TOKEN,
+            );
+            return {
+                success: true,
+                user: alreadyCreated as any,
+                access_token,
+            };
+        }
         const result = await this.prisma.user.create({
             data: {
-                username: profile.account.username || null,
+                username: profile.account.username,
                 email: profile.account.email || null,
                 password: '',
                 avatar: profile.account.avatar,
                 is_email_confirmed: true,
+                is_social: true,
             },
         });
         const id = result.id;

@@ -21,11 +21,6 @@ export class AuthMutationType {
     })
     login: LoginResultsType;
 
-    @Field(() => LoginResultsType, {
-        description: 'User login by OAuth',
-    })
-    loginSocial: LoginResultsType;
-
     @Field(() => LogoutResultsType, {
         description: 'User logout',
     })
