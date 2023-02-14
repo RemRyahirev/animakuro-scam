@@ -8,6 +8,7 @@ import { CoreModule } from './core/core.module';
 import { MailerModule } from './mailer/mailer.module';
 import { APP_GUARD } from '@nestjs/core';
 import { GqlThrottlerGuard } from './common/guards/throttle.guard';
+import { formatError } from 'common/utils/error-formatter.util';
 
 @Global()
 @Module({
@@ -16,6 +17,7 @@ import { GqlThrottlerGuard } from './common/guards/throttle.guard';
             isGlobal: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
+            formatError,
             context: ({ req, res }) => ({ req, res }),
             driver: ApolloDriver,
             autoSchemaFile: true,

@@ -15,7 +15,6 @@ import {
     DiscordStrategy,
     FacebookStrategy,
     GoogleStrategy,
-    ShikimoriStrategy,
     JwtStrategy,
 } from './strategies';
 import { AuthSessionModule } from '../auth-session/auth-session.module';
@@ -41,7 +40,6 @@ import { LocalStrategy } from './strategies/local.strategy';
         AppleStrategy,
         DiscordStrategy,
         FacebookStrategy,
-        // ShikimoriStrategy,
         GoogleStrategy,
         JwtStrategy,
         LocalStrategy,

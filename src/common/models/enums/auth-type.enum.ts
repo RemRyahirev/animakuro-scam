@@ -7,7 +7,6 @@ export enum AuthType {
     APPLE = 'apple',
     DISCORD = 'discord',
     FACEBOOK = 'facebook',
-    SHIKIMORI = 'shikimori',
 }
 
 registerEnumType(AuthType, {

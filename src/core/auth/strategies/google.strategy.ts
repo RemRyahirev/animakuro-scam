@@ -9,7 +9,7 @@ import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
 import { AuthType } from '../../../common/models/enums';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
-Injectable();
+@Injectable()
 export class GoogleStrategy extends PassportStrategy(
     Strategy,
     AuthType.GOOGLE,

@@ -24,6 +24,7 @@ import {
 } from '@nestjs/throttler';
 import { Reflector } from '@nestjs/core';
 import { HandleRequest } from './handleRequest';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {

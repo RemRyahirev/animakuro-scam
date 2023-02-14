@@ -23,7 +23,7 @@ export class FacebookStrategy extends PassportStrategy(
             clientSecret: strategyConfigService.config.FACEBOOK.clientSecret,
             callbackURL: strategyConfigService.config.FACEBOOK.callbackURL,
             scope: 'email',
-            profileFields: ['id', 'email', 'first_name', 'last_name']
+            profileFields: ['id', 'email', 'first_name', 'last_name'],
         });
     }
 
@@ -31,17 +31,17 @@ export class FacebookStrategy extends PassportStrategy(
         access_token: string,
         refresh_token: string,
         profile: Profile,
-        done: (err: any, user: any, info?: any) => void
+        done: (err: any, user: any, info?: any) => void,
     ): Promise<void> {
         const { id, emails, name } = profile;
         const account = {
             uuid: id,
             email: emails ? emails[0].value : null,
-            username: name?.givenName
+            username: name?.givenName,
         };
         const payload = {
             account,
-            access_token
+            access_token,
         };
         if (!account) {
             return done(new UnauthorizedException(), undefined);
