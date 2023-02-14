@@ -200,6 +200,18 @@ export class Anime {
     })
     opening_ending?: OpeningEnding
 
+    @Field(() => [OpeningEnding], {
+        nullable: true,
+        description: 'Opening list'
+    })
+    openings?: OpeningEnding
+
+    @Field(() => [OpeningEnding], {
+        nullable: true,
+        description: 'Ending list'
+    })
+    endings?: OpeningEnding
+
     @Field(() => Date, { description: 'When the anime data was created' })
     created_at: Date;
 

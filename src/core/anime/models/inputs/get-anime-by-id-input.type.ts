@@ -48,6 +48,7 @@ export class GetAnimeByIdInputType {
     @Field(() => Int, {
         nullable: true,
         description: 'Maximum amount of openings returned',
+        defaultValue: 10
     })
     max_openings_count?: number;
 
@@ -56,6 +57,24 @@ export class GetAnimeByIdInputType {
     @Field(() => Int, {
         nullable: true,
         description: 'Maximum amount of endings returned',
+        defaultValue: 10
     })
     max_endings_count?: number;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Minimum opening start',
+    })
+    min_opening_start?: number;
+
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Minimum ending start',
+    })
+    min_ending_start?: number;
+
 }
