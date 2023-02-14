@@ -305,6 +305,7 @@ model File {
   id          String   @id @default(uuid()) @db.Uuid
   file_id     String   @db.VarChar(100)
   bucket_name String   @db.VarChar(100)
+  url         String   @db.Text
   user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id     String   @db.Uuid
   created_at  DateTime @default(now()) @map("created_at")

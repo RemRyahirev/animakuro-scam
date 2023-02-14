@@ -16,11 +16,15 @@ import { FileUploadService } from 'common/services/file-upload.service';
 
 @Injectable()
 export class StudioService {
+    thumbnailFiles;
+
     constructor(
         private prisma: PrismaService,
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
-    ) {}
+    ) {
+        this.thumbnailFiles = this.fileUpload.getStorageForOne('studio', 'thumbnail_id', 'studio');
+    }
 
     async getStudio(id: string): Promise<GetStudioResultsType> {
         const studio = await this.prisma.studio.findUnique({
@@ -33,6 +37,11 @@ export class StudioService {
                         genres: true,
                         authors: true,
                         characters: true,
+                    },
+                },
+                thumbnail: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -63,6 +72,11 @@ export class StudioService {
                         characters: true,
                     },
                 },
+                thumbnail: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -79,21 +93,14 @@ export class StudioService {
 
     async createStudio(
         args: CreateStudioInputType,
+        user_id: string,
     ): Promise<CreateStudioResultsType> {
-        const fileReplaces = {
-            thumbnail: !args.thumbnail ? undefined : {
-                connect: {
-                    id: (await this.fileUpload.upload('studio', [await args.thumbnail]))[0],
-                },
-            },
-        };
-
         const studio = await this.prisma.studio.create({
             data: {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                ...fileReplaces,
+                thumbnail: await this.thumbnailFiles.tryCreate(args.thumbnail, user_id),
             },
             include: {
                 animes: {
@@ -112,18 +119,13 @@ export class StudioService {
         });
         return {
             success: true,
-            studio: {
-                ...studio,
-                thumbnail: {
-                    ...studio.thumbnail,
-                    url: '',
-                } as any,
-            } as any,
+            studio: studio as any,
         };
     }
 
     async updateStudio(
         args: UpdateStudioInputType,
+        user_id: string,
     ): Promise<UpdateStudioResultsType> {
         const studio = await this.prisma.studio.update({
             where: { id: args.id },
@@ -131,9 +133,7 @@ export class StudioService {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                // fixme
-                thumbnail: undefined,
-                thumbnail_id: undefined,
+                thumbnail: await this.thumbnailFiles.tryUpdate({ id: args.id }, args.thumbnail, undefined, user_id),
             },
             include: {
                 animes: {
@@ -141,6 +141,11 @@ export class StudioService {
                         genres: true,
                         authors: true,
                         characters: true,
+                    },
+                },
+                thumbnail: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -158,6 +163,7 @@ export class StudioService {
     }
 
     async deleteStudio(id: string): Promise<DeleteStudioResultsType> {
+        await this.thumbnailFiles.tryDeleteAll({ id });
         const studio = await this.prisma.studio.delete({
             where: { id },
             include: {
@@ -166,6 +172,11 @@ export class StudioService {
                         genres: true,
                         authors: true,
                         characters: true,
+                    },
+                },
+                thumbnail: {
+                    include: {
+                        user: true,
                     },
                 },
             },
