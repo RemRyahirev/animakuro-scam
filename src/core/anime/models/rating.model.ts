@@ -2,7 +2,7 @@ import { IsNumber, IsUUID, Max, Min } from '@nestjs/class-validator';
 import { Field, ID, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-export class Reyting {
+export class Rating {
     // @IsUUID()
     // @Field(() => ID, { description: 'parent anime id' })
     // id: string;
@@ -21,5 +21,5 @@ export class Reyting {
     @Field(() => Int, {
         description: 'relationStatus',
     })
-    reyting: number;
+    rating: number;
 }

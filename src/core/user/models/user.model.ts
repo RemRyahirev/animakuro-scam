@@ -20,6 +20,11 @@ export class User {
     })
     username: string;
 
+    @Field(() => Boolean, {
+        description: 'social',
+    })
+    is_social: boolean;
+
     @Field(() => String, { nullable: true, description: 'Email of the user' })
     email: string | null;
 

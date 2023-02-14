@@ -201,19 +201,19 @@ export class Anime {
 
     @Field(() => [OpeningEnding], {
         nullable: true,
-        description: 'Opening ending list'
+        description: 'Opening ending list',
     })
     opening_ending?: OpeningEnding
 
     @Field(() => [OpeningEnding], {
         nullable: true,
-        description: 'Opening list'
+        description: 'Opening list',
     })
     openings?: OpeningEnding
 
     @Field(() => [OpeningEnding], {
         nullable: true,
-        description: 'Ending list'
+        description: 'Ending list',
     })
     endings?: OpeningEnding
 

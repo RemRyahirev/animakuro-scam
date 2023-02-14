@@ -10,8 +10,8 @@ import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
-import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
-import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
+import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
+import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
 import { AccessToken } from '../../../common/decorators';
 
 @Resolver(AnimeMutationType)
@@ -144,14 +144,14 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         return await this.animeService.deleteAnime(id);
     }
 
-    @ResolveField(() => UpdateReytingAnimeResultsType, {
+    @ResolveField(() => UpdateRatingAnimeResultsType, {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)
-    async updateReytingAnime(
-        @Args() args: UpdateRyetingAnimeInputType,
+    async updateratingAnime(
+        @Args() args: UpdateRatingAnimeInputType,
         @AccessToken() user_id: string,
-    ): Promise<UpdateReytingAnimeResultsType> {
-        return await this.animeService.updateReytingAnime({ ...args, user_id });
+    ): Promise<UpdateRatingAnimeResultsType> {
+        return await this.animeService.updateRatingAnime({ ...args, user_id });
     }
 }

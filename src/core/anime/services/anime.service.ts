@@ -17,8 +17,8 @@ import { transformPaginationUtil } from '../../../common/utils/transform-paginat
 import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 import { CacheStatisticService } from '../../../common/cache/services';
-import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
-import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
+import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
+import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
 
 @Injectable()
 export class AnimeService {
@@ -75,18 +75,25 @@ export class AnimeService {
 
         if (max_openings_count) {
             openings = await this.prisma.openingEnding.findMany({
-                where: { anime_id: id, type: 'OPENING', episode_end: { gte: min_opening_start } },
+                where: {
+                    anime_id: id,
+                    type: 'OPENING',
+                    episode_end: { gte: min_opening_start },
+                },
                 orderBy: { episode_start: 'asc' },
-                take: max_openings_count
-            })
+                take: max_openings_count,
+            });
         }
         if (max_endings_count) {
             endings = await this.prisma.openingEnding.findMany({
-                where: { anime_id: id, type: 'ENDING', episode_end: { gte: min_ending_start } },
+                where: {
+                    anime_id: id,
+                    type: 'ENDING',
+                    episode_end: { gte: min_ending_start },
+                },
                 orderBy: { episode_start: 'asc' },
-                take: max_endings_count
-            })
-
+                take: max_endings_count,
+            });
         }
         const opening_ending = [];
         if (openings) opening_ending.push(...openings);
@@ -96,7 +103,6 @@ export class AnimeService {
             success: true,
             errors: [],
             anime: { ...anime, opening_ending, openings, endings } as any,
-
         };
     }
 
@@ -123,7 +129,7 @@ export class AnimeService {
                 airing_schedule: true,
                 opening_ending: {
                     orderBy: { episode_start: 'asc' },
-                    take: 2
+                    take: 2,
                 },
             },
         });
@@ -551,26 +557,20 @@ export class AnimeService {
         });
     }
 
-    async updateReytingAnime({
+    async updateRatingAnime({
         id,
         reyting,
         user_id,
-    }: UpdateRyetingAnimeInputType & {
+    }: UpdateRatingAnimeInputType & {
         user_id: string;
-    }): Promise<UpdateReytingAnimeResultsType> {
-        // const data = await this.cacheStatisticService.setCategoryReyting({
-        //     category: 'Anime',
-        //     reyting,
-        //     key: id,
-        // });
-        // this.cacheStatisticService.getCategoryStatistic('Anime');
+    }): Promise<UpdateRatingAnimeResultsType> {
         let data: any;
         try {
             data = await this.prisma.reytingAnime.create({
                 data: {
                     anime_id: id,
                     user_id,
-                    reyting,
+                    rating,
                 },
             });
         } catch (error) {
@@ -578,7 +578,7 @@ export class AnimeService {
                 data: {
                     anime_id: id,
                     user_id,
-                    reyting,
+                    rating,
                 },
                 where: {
                     anime_id_user_id: {
@@ -593,7 +593,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            reyting: data.reyting,
+            rating: data.reyting,
         };
     }
 }
