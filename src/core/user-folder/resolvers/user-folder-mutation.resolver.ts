@@ -12,6 +12,7 @@ import { UserFolderService } from '../services/user-folder.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
 import { AccessToken } from '../../../common/decorators';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 
 @Resolver(UserFolderMutationType)
 export class UserFolderMutationResolver extends UserFolderRootResolver {
@@ -19,7 +20,9 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateUserFolderResultsType)
+    @ResolveField(() => CreateUserFolderResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async createUserFolder(
         @AccessToken() user_id: string,
@@ -28,19 +31,21 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
         return await this.userFolderService.createUserFolder(args, user_id);
     }
 
-    @ResolveField(() => UpdateUserFolderResultsType)
+    @ResolveField(() => UpdateUserFolderResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async updateUserFolder(
-        @AccessToken() user_id: string,
         @Args() args: UpdateUserFolderInputType,
     ): Promise<UpdateUserFolderResultsType> {
         return await this.userFolderService.updateUserFolder(args);
     }
 
-    @ResolveField(() => DeleteUserFolderResultsType)
+    @ResolveField(() => DeleteUserFolderResultsType, {
+        middleware: [AuthMiddleware],
+    })
     @UseGuards(JwtAuthGuard)
     async deleteUserFolder(
-        @AccessToken() user_id: string,
         @Args('id') id: string,
     ): Promise<DeleteUserFolderResultsType> {
         return await this.userFolderService.deleteUserFolder(id);

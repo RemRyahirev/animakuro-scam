@@ -17,7 +17,7 @@ export class UserCollectionService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) {}
+    ) { }
 
     async getUserCollection(id: string): Promise<GetUserCollectionResultsType> {
         const userCollection = await this.prisma.userFolder.findMany({
@@ -150,12 +150,14 @@ export class UserCollectionService {
 
     async createUserCollection(
         args: CreateUserCollectionInputType,
+        user_id: string,
     ): Promise<CreateUserCollectionResultsType> {
         const userCollection = await this.prisma.userFolder.create({
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
                 is_collection: true,
+                user_id,
             },
             include: {
                 user: {

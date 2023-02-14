@@ -9,6 +9,10 @@ import { UpdateUserCollectionResultsType } from '../models/results/update-user-c
 import { UpdateUserCollectionInputType } from '../models/inputs/update-user-collection-input.type';
 import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
 import { UserCollectionService } from '../services/user-collection.service';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { UseGuards } from '@nestjs/common';
+import { AccessToken } from '../../../common/decorators';
+import { JwtAuthGuard } from '../../../common/guards';
 
 @Resolver(UserCollectionMutationType)
 export class UserCollectionMutationResolver extends UserCollectionRootResolver {
@@ -16,21 +20,34 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateUserCollectionResultsType)
+    @ResolveField(() => CreateUserCollectionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async createUserCollection(
         @Args() args: CreateUserCollectionInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateUserCollectionResultsType> {
-        return await this.userCollectionService.createUserCollection(args);
+        return await this.userCollectionService.createUserCollection(
+            args,
+            user_id,
+        );
     }
 
-    @ResolveField(() => UpdateUserCollectionResultsType)
+    @ResolveField(() => UpdateUserCollectionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateUserCollection(
         @Args() args: UpdateUserCollectionInputType,
     ): Promise<UpdateUserCollectionResultsType> {
         return await this.userCollectionService.updateUserCollection(args);
     }
 
-    @ResolveField(() => DeleteUserCollectionResultsType)
+    @ResolveField(() => DeleteUserCollectionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteUserCollection(
         @Args('id') id: string,
     ): Promise<DeleteUserCollectionResultsType> {

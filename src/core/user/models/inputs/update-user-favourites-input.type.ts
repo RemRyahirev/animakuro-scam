@@ -4,9 +4,10 @@ import { Media } from '../../../../common/models/enums';
 
 @ArgsType()
 export class UpdateUserFavouritesInputType {
+    @IsOptional()
     @IsUUID()
-    @Field(() => ID)
-    id: string;
+    @Field(() => ID, { nullable: true })
+    id?: string;
 
     @IsOptional()
     @IsUUID()

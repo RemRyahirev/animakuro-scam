@@ -35,11 +35,16 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateUserProfileResultsType)
+    @ResolveField(() => CreateUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async createUserProfile(
+        @AccessToken() user_id: string,
         @Args() args: CreateUserProfileInputType,
     ): Promise<CreateUserProfileResultsType> {
-        return await this.userProfileService.createUserProfile(args);
+        return await this.userProfileService.createUserProfile({
+            user_id: args.user_id ?? user_id,
+        });
     }
 
     @ResolveField(() => UpdateUserProfileResultsType, {
@@ -47,7 +52,6 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateUserProfile(
-        @AccessToken() user_id: string,
         @Args() args: UpdateUserProfileInputType,
     ): Promise<UpdateUserProfileResultsType> {
         return await this.userProfileService.updateUserProfile({
@@ -60,10 +64,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async deleteUserProfile(
-        @AccessToken() user_id: string,
-        // @Args('id') id: string,
+        @Args('id') id: string,
     ): Promise<DeleteUserProfileResultsType> {
-        return await this.userProfileService.deleteUserProfile(user_id);
+        return await this.userProfileService.deleteUserProfile(id);
     }
 
     @ResolveField(() => UpdateUserFavouriteAnimesResultType, {
@@ -116,7 +119,6 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         @AccessToken() user_id: string,
         @Args() args: UpdateUserFavouriteGenresInputType,
     ): Promise<UpdateUserFavouriteGenresResultType> {
-        console.log(user_id);
         return await this.userProfileService.updateFavouriteGenres(
             args,
             user_id,
