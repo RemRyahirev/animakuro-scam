@@ -17,7 +17,7 @@ export const userData = async () => [
             '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         is_email_confirmed: true,
         avatar: '',
-        is_social: true,
+        is_social: false,
     },
     {
         id: '71d46841-94f0-4310-88c3-662b7fd817ec',
@@ -27,7 +27,7 @@ export const userData = async () => [
             '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         is_email_confirmed: true,
         avatar: '',
-        is_social: true,
+        is_social: false,
     },
     {
         id: '03c6c54d-8597-43b8-a793-4fb36522cc61',
@@ -37,7 +37,7 @@ export const userData = async () => [
             '$2b$10$UTBzDrug3h9HvegQbhg6UuEqg8Be8hj8JS2WD3AJl9cg7RdfWjfHi', // another-password
         is_email_confirmed: false,
         avatar: '',
-        is_social: true,
+        is_social: false,
     },
     {
         id: '4c323fe8-d35a-4e84-9f75-92f20fcec028',
@@ -57,6 +57,6 @@ export const userData = async () => [
             '$2b$10$LfmYoVBbTMMaRfR4VZRUw.9UGRla.UDJ0icOkj4LrpUJomMFdzlXm', // some-password
         is_email_confirmed: false,
         avatar: '',
-        is_social: true,
+        is_social: false,
     },
 ];
