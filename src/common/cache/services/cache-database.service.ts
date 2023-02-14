@@ -13,10 +13,7 @@ export class CacheDatabaseService {
 
     getCaches() {}
 
-    async setCache(key: string, value: string | number | Buffer | Object) {
-        if (!(typeof value === 'object')) {
-            const data = await this.redis.set(key, value);
-        }
+    async setCache(key: string, value: string | number | Buffer) {
         return await this.redis.set(key, JSON.stringify(value));
     }
 

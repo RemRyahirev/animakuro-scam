@@ -6,7 +6,7 @@ import { GetListAnimeResultsType } from '../models/results/get-list-anime-result
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
-import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
+import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
 @ObjectType()
 export class AnimeMutationType {
     @Field(() => CreateAnimeResultsType, { description: 'Create anime' })
@@ -48,10 +48,10 @@ export class AnimeMutationType {
     })
     updateSimilarAnime: UpdateAnimeResultsType;
 
-    @Field(() => UpdateReytingAnimeResultsType, {
+    @Field(() => UpdateRatingAnimeResultsType, {
         description: 'update reyting by Anime',
     })
-    updateReytingAnime: UpdateReytingAnimeResultsType;
+    updateReytingAnime: UpdateRatingAnimeResultsType;
 }
 
 @ObjectType()
