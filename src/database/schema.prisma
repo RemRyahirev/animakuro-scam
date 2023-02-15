@@ -29,6 +29,7 @@ model User {
   user_collection      UserFolder[]  @relation("user_collection")
   rating_anime         RatingAnime[]
   social_service       AuthType      @default(JWT)
+  files                File[]
 
   @@map("users")
 }
@@ -66,7 +67,8 @@ model Studio {
   updated_at          DateTime @default(now()) @map("updated_at")
   name                String   @db.VarChar(64)
   rating              Float    @db.Real
-  thumbnail           String   @db.Text
+  thumbnail           File?    @relation(fields: [thumbnail_id], references: [id])
+  thumbnail_id        String?  @db.Uuid
   anime_count         Float    @default(0) @db.Real
   anime_starts        Float    @db.Real
   anime_ends          Float    @db.Real
@@ -113,6 +115,10 @@ model Anime {
   preview_link       String           @db.Text
   status_description String           @db.VarChar(30)
   release_status     ReleaseStatus    @default(COMPLETED)
+  banner             File?            @relation("banner", fields: [banner_id], references: [id])
+  banner_id          String?          @db.Uuid
+  cover              File?            @relation("cover", fields: [cover_id], references: [id])
+  cover_id           String?          @db.Uuid
   created_at         DateTime         @default(now()) @map("created_at")
   updated_at         DateTime         @default(now()) @map("updated_at")
   studios            Studio[]
@@ -180,6 +186,8 @@ model Author {
   language            String   @db.VarChar(30)
   gender              String   @db.VarChar(30)
   bio                 String   @db.Text
+  cover               File?    @relation(fields: [cover_id], references: [id])
+  cover_id            String?  @db.Uuid
   created_at          DateTime @default(now()) @map("created_at")
   updated_at          DateTime @default(now()) @map("updated_at")
   animes              Anime[]
@@ -230,6 +238,10 @@ model UserProfile {
   id               String           @id @default(uuid()) @db.Uuid
   user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id          String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  banner           File?            @relation("banner", fields: [banner_id], references: [id])
+  banner_id        String?          @db.Uuid
+  cover            File?            @relation("cover", fields: [cover_id], references: [id])
+  cover_id         String?          @db.Uuid
   profile_settings ProfileSettings?
   created_at       DateTime?        @default(now()) @db.Date
 
@@ -313,6 +325,25 @@ model RatingAnime {
 
   @@id([anime_id, user_id])
   @@map("rating_anime")
+}
+
+model File {
+  id                    String          @id @default(uuid()) @db.Uuid
+  file_id               String          @db.VarChar(100)
+  bucket_name           String          @db.VarChar(100)
+  url                   String          @db.Text
+  user                  User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id               String          @db.Uuid
+  created_at            DateTime        @default(now()) @map("created_at")
+
+  studio_thumbnails     Studio[]
+  anime_banners         Anime[]         @relation("banner")
+  anime_covers          Anime[]         @relation("cover")
+  profile_banners       UserProfile[]   @relation("banner")
+  profile_covers        UserProfile[]   @relation("cover")
+  author_covers         Author[]
+
+  @@map("file")
 }
 
 enum OpeningEndingType {

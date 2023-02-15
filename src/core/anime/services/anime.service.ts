@@ -16,6 +16,8 @@ import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
+import { Studio } from '../../studio/models/studio.model';
+import { FileUploadService } from 'common/services/file-upload.service';
 import { CacheStatisticService } from '../../../common/cache/services';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
 import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
@@ -23,11 +25,18 @@ import { Rating } from '../models/rating.model';
 
 @Injectable()
 export class AnimeService {
+    bannerFiles;
+    coverFiles;
+
     constructor(
         private prisma: PrismaService,
+        private fileUpload: FileUploadService,
         protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
-    ) { }
+    ) {
+        this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'anime');
+        this.coverFiles = this.fileUpload.getStorageForOne('anime', 'cover_id', 'anime');
+    }
 
     async getAnime(args: GetAnimeByIdInputType): Promise<GetAnimeResultsType> {
         const {
@@ -68,6 +77,16 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
 
@@ -96,6 +115,7 @@ export class AnimeService {
                 take: max_endings_count,
             });
         }
+
         const opening_ending = [];
         if (openings) opening_ending.push(...openings);
         if (endings) opening_ending.push(...endings);
@@ -131,6 +151,16 @@ export class AnimeService {
                 opening_ending: {
                     orderBy: { episode_start: 'asc' },
                     take: 2,
+                },
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
                 },
             },
         });
@@ -207,6 +237,7 @@ export class AnimeService {
 
     async createAnime(
         args: CreateAnimeInputType,
+        user_id: string,
     ): Promise<CreateAnimeResultsType> {
         const anime = await this.prisma.anime.create({
             data: {
@@ -217,6 +248,8 @@ export class AnimeService {
                 ...relationAnimeUpdateUtil('related_by_animes', args),
                 ...relationAnimeUpdateUtil('similar_by_animes', args),
                 ...args,
+                banner: await this.bannerFiles.tryCreate(args.banner, user_id),
+                cover: await this.coverFiles.tryCreate(args.cover, user_id),
             },
             include: {
                 genres: true,
@@ -238,6 +271,16 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             } as any,
         });
 
@@ -253,6 +296,7 @@ export class AnimeService {
 
     async updateAnime(
         args: UpdateAnimeInputType,
+        user_id: string,
     ): Promise<UpdateAnimeResultsType> {
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
@@ -264,6 +308,8 @@ export class AnimeService {
                 ...relationAnimeUpdateUtil('related_by_animes', args),
                 ...relationAnimeUpdateUtil('similar_by_animes', args),
                 ...args,
+                banner: await this.bannerFiles.tryUpdate({ id: args.id }, args.banner, undefined, user_id),
+                cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, user_id),
             },
             include: {
                 genres: true,
@@ -285,6 +331,16 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             } as any,
         });
 
@@ -491,6 +547,10 @@ export class AnimeService {
     }
 
     async deleteAnime(id: string): Promise<DeleteAnimeResultsType> {
+        await Promise.all([
+            this.bannerFiles.tryDeleteAll({ id }),
+            this.coverFiles.tryDeleteAll({ id }),
+        ]);
         const anime = (await this.prisma.anime.delete({
             where: { id },
             include: {
@@ -505,6 +565,16 @@ export class AnimeService {
                 relating_animes: true,
                 similar_animes: true,
                 airing_schedule: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         })) as any;
 

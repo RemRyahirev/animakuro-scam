@@ -1,3 +1,4 @@
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { ArgsType, Field, Float } from '@nestjs/graphql';
 import {
     IsArray,
@@ -21,9 +22,9 @@ export class CreateStudioInputType {
     @Field(() => Float)
     rating: number;
 
-    @IsUrl()
-    @Field(() => String)
-    thumbnail: string;
+    @IsOptional()
+    @Field(() => GraphQLUpload, { nullable: true })
+    thumbnail?: Promise<FileUpload>;
 
     @IsOptional()
     @IsUUID(4, { each: true })

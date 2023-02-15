@@ -1,3 +1,4 @@
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { ArgsType, Field, ID, Int } from '@nestjs/graphql';
 import {
     IsArray,
@@ -24,6 +25,10 @@ export class UpdateAuthorInputType {
     @IsString()
     @Field(() => String, { nullable: true })
     bio?: string;
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, { nullable: true })
+    cover?: Promise<FileUpload>;
 
     @IsOptional()
     @IsString()

@@ -1,3 +1,5 @@
+import { Type } from 'class-transformer';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { ArgsType, Field, Float, ID, Int } from '@nestjs/graphql';
 import {
     IsArray,
@@ -12,7 +14,6 @@ import {
     Length,
     ValidateNested,
 } from '@nestjs/class-validator';
-import { Type } from 'class-transformer';
 import {
     AnimeType,
     FilmRating,
@@ -170,4 +171,12 @@ export class CreateAnimeInputType {
         description: 'Add to the list of similar animes',
     })
     similar_by_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, { nullable: true })
+    banner?: Promise<FileUpload>;
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, { nullable: true })
+    cover?: Promise<FileUpload>;
 }

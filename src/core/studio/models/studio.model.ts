@@ -1,5 +1,6 @@
 import { Field, Float, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Anime } from '../../anime/models/anime.model';
+import { File } from 'common/models/results/file.model';
 
 @ObjectType()
 export class Studio {
@@ -18,8 +19,8 @@ export class Studio {
     })
     rating: number;
 
-    @Field(() => String)
-    thumbnail: string;
+    @Field(() => File, { nullable: true })
+    thumbnail?: File;
 
     @Field(() => [Anime], {
         nullable: true,

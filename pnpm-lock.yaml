@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@animakuro/animakuro-cdn': ^1.0.10
+  '@animakuro/animakuro-cdn': ^1.0.11
   '@apollo/federation': ^0.38.1
   '@apollo/gateway': ^2.2.2
   '@apollo/subgraph': ^2.2.2
@@ -115,7 +115,7 @@ specifiers:
   validator: ^13.7.0
 
 dependencies:
-  '@animakuro/animakuro-cdn': 1.0.10
+  '@animakuro/animakuro-cdn': 1.0.11
   '@apollo/federation': 0.38.1_graphql@16.6.0
   '@apollo/gateway': 2.2.2_graphql@16.6.0
   '@apollo/subgraph': 2.2.2_graphql@16.6.0
@@ -349,8 +349,8 @@ packages:
       - chokidar
     dev: true
 
-  /@animakuro/animakuro-cdn/1.0.10:
-    resolution: {integrity: sha512-CQsHS3ZWenZiWcCOXdyOq5dG2TipWssgqhH7H5zrBr4kP15AGpef9ZXI/4RHYIlMxm3zaYUetoS/zSOhBBKRjg==}
+  /@animakuro/animakuro-cdn/1.0.11:
+    resolution: {integrity: sha512-0Fwrv8pxS1F964+Zd9SjS+5ee6gMNgcrV/xZCQhMrXliLdgs12Xey3NSELZ3hl164SxSjA3lV26I8yUMv1bh5w==}
     dependencies:
       axios: 1.2.2
       form-data: 4.0.0
