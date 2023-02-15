@@ -9,26 +9,26 @@ datasource db {
 }
 
 model User {
-  id                   String         @id @default(uuid()) @db.Uuid
-  username             String         @unique @db.VarChar(64)
-  email                String         @db.VarChar(320)
-  avatar               String?        @db.Text
-  is_email_confirmed   Boolean        @default(false)
+  id                   String        @id @default(uuid()) @db.Uuid
+  username             String        @unique @db.VarChar(64)
+  email                String        @db.VarChar(320)
+  avatar               String?       @db.Text
+  is_email_confirmed   Boolean       @default(false)
   favourite_animes     Anime[]
   favourite_studios    Studio[]
   favourite_authors    Author[]
   favourite_characters Character[]
   favourite_genres     Genre[]
-  user_folders         UserFolder[]   @relation("user_folder")
-  password             String         @map("password")
-  created_at           DateTime       @default(now()) @map("created_at") @db.Date
-  deleted              Boolean        @default(false)
+  user_folders         UserFolder[]  @relation("user_folder")
+  password             String        @map("password")
+  created_at           DateTime      @default(now()) @map("created_at") @db.Date
+  deleted              Boolean       @default(false)
   auth                 Auth[]
   user_profile         UserProfile?
   auth_sessions        AuthSession[]
   user_collection      UserFolder[]  @relation("user_collection")
-  rating_anime        RatingAnime[]
-
+  rating_anime         RatingAnime[]
+  is_social            Boolean       @default(false)
 
   @@map("users")
 }
@@ -309,7 +309,7 @@ model RatingAnime {
   user_id  String @db.Uuid
   anime    Anime  @relation(fields: [anime_id], references: [id], onDelete: Cascade)
   anime_id String @db.Uuid
-  rating  Int
+  rating   Int
 
   @@id([anime_id, user_id])
   @@map("rating_anime")
