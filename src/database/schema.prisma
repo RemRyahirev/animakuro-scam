@@ -27,7 +27,7 @@ model User {
   user_profile         UserProfile?
   auth_sessions        AuthSession[]
   user_collection      UserFolder[]   @relation("user_collection")
-  reyting_anime        ReytingAnime[]
+  rating_anime        RatingAnime[]
 
   @@map("users")
 }
@@ -125,7 +125,7 @@ model Anime {
   airing_schedule    AiringSchedule[]
   favourite_by       User[]
   opening_ending     OpeningEnding[]
-  reytingAnime       ReytingAnime[]
+  ratingAnime       RatingAnime[]
 
   @@map("anime")
 }
@@ -303,15 +303,15 @@ model OpeningEnding {
   @@map("opening_ending")
 }
 
-model ReytingAnime {
+model RatingAnime {
   user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id  String @db.Uuid
   anime    Anime  @relation(fields: [anime_id], references: [id], onDelete: Cascade)
   anime_id String @db.Uuid
-  reyting  Int
+  rating  Int
 
   @@id([anime_id, user_id])
-  @@map("reyting_anime")
+  @@map("rating_anime")
 }
 
 enum OpeningEndingType {

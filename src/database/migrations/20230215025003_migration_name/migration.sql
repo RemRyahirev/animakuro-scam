@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "OpeningEndingType" AS ENUM ('OPENING', 'ENDING');
+
+-- CreateEnum
 CREATE TYPE "FriendshipStatus" AS ENUM ('AWAITING', 'REQUESTED', 'CONFIRMED');
 
 -- CreateEnum
@@ -57,6 +60,9 @@ CREATE TYPE "ProfileType" AS ENUM ('PUBLIC', 'PRIVATE');
 
 -- CreateEnum
 CREATE TYPE "Media" AS ENUM ('ANIMES', 'STUDIOS', 'CHARACTERS', 'AUTHORS', 'GENRES');
+
+-- CreateEnum
+CREATE TYPE "FolderType" AS ENUM ('LOOKING', 'ABANDONED', 'PLANNED', 'VIEWED', 'DEFAULT');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -128,6 +134,7 @@ CREATE TABLE "anime" (
     "id" UUID NOT NULL,
     "title" VARCHAR(100) NOT NULL,
     "score" REAL NOT NULL,
+    "evaluation" TEXT NOT NULL DEFAULT '5:0;4:0;3:0;2:0;1:0',
     "year" SMALLINT NOT NULL,
     "date_start" DATE,
     "date_end" DATE,
@@ -228,6 +235,7 @@ CREATE TABLE "character" (
 CREATE TABLE "genre" (
     "id" UUID NOT NULL,
     "name" VARCHAR(50) NOT NULL,
+    "description" TEXT,
 
     CONSTRAINT "genre_pkey" PRIMARY KEY ("id")
 );
@@ -279,14 +287,42 @@ CREATE TABLE "profile_settings" (
 CREATE TABLE "user_folder" (
     "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
+    "user_collection_id" UUID,
     "is_collection" BOOLEAN NOT NULL DEFAULT false,
     "is_public" BOOLEAN NOT NULL DEFAULT false,
+    "is_statistic_active" BOOLEAN NOT NULL DEFAULT false,
     "name" VARCHAR(25) NOT NULL,
     "description" TEXT NOT NULL,
+    "type" "FolderType" NOT NULL DEFAULT 'DEFAULT',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_folder_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "opening_ending" (
+    "id" UUID NOT NULL,
+    "anime_id" UUID NOT NULL,
+    "type" "OpeningEndingType" NOT NULL,
+    "url" VARCHAR(2048) NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "author_name" VARCHAR(100) NOT NULL,
+    "episode_start" SMALLINT NOT NULL,
+    "episode_end" SMALLINT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "opening_ending_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "rating_anime" (
+    "user_id" UUID NOT NULL,
+    "anime_id" UUID NOT NULL,
+    "rating" INTEGER NOT NULL,
+
+    CONSTRAINT "rating_anime_pkey" PRIMARY KEY ("anime_id","user_id")
 );
 
 -- CreateTable
@@ -458,7 +494,19 @@ ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KE
 ALTER TABLE "profile_settings" ADD CONSTRAINT "profile_settings_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_folder" ADD CONSTRAINT "user_folder_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "user_folder" ADD CONSTRAINT "user_folder_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_folder" ADD CONSTRAINT "user_folder_user_collection_id_fkey" FOREIGN KEY ("user_collection_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "opening_ending" ADD CONSTRAINT "opening_ending_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "rating_anime" ADD CONSTRAINT "rating_anime_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "rating_anime" ADD CONSTRAINT "rating_anime_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_StudioToUser" ADD CONSTRAINT "_StudioToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;

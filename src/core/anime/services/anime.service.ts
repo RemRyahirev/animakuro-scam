@@ -17,8 +17,8 @@ import { transformPaginationUtil } from '../../../common/utils/transform-paginat
 import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 import { CacheStatisticService } from '../../../common/cache/services';
-import { UpdateReytingAnimeResultsType } from '../models/results/update-reyting-anime-result.type';
-import { UpdateRyetingAnimeInputType } from '../models/inputs/update-reyting-anime-input.type';
+import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
+import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
 
 @Injectable()
 export class AnimeService {
@@ -542,34 +542,28 @@ export class AnimeService {
         });
     }
 
-    async updateReytingAnime({
+    async updateRatingAnime({
         id,
-        reyting,
+        rating,
         user_id,
-    }: UpdateRyetingAnimeInputType & {
+    }: UpdateRatingAnimeInputType & {
         user_id: string;
-    }): Promise<UpdateReytingAnimeResultsType> {
-        // const data = await this.cacheStatisticService.setCategoryReyting({
-        //     category: 'Anime',
-        //     reyting,
-        //     key: id,
-        // });
-        // this.cacheStatisticService.getCategoryStatistic('Anime');
+    }): Promise<UpdateRatingAnimeResultsType> {
         let data: any;
         try {
-            data = await this.prisma.reytingAnime.create({
+            data = await this.prisma.ratingAnime.create({
                 data: {
                     anime_id: id,
                     user_id,
-                    reyting,
+                    rating,
                 },
             });
         } catch (error) {
-            data = await this.prisma.reytingAnime.update({
+            data = await this.prisma.ratingAnime.update({
                 data: {
                     anime_id: id,
                     user_id,
-                    reyting,
+                    rating,
                 },
                 where: {
                     anime_id_user_id: {
@@ -584,7 +578,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            reyting: data.reyting,
+            rating: data.rating,
         };
     }
 }

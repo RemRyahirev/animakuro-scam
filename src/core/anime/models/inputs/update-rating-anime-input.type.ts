@@ -3,7 +3,7 @@ import { ArgsType, Field, Float, ID, Int } from '@nestjs/graphql';
 import { IsString, IsUUID, Max, Min } from 'class-validator';
 
 @ArgsType()
-export class UpdateRyetingAnimeInputType {
+export class UpdateRatingAnimeInputType {
     @IsUUID(4)
     @Field(() => ID)
     id: string;
@@ -12,5 +12,5 @@ export class UpdateRyetingAnimeInputType {
     @Max(5)
     @IsNumber()
     @Field(() => Int)
-    reyting: number;
+    rating: number;
 }

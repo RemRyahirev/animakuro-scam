@@ -21,5 +21,5 @@ export class Reyting {
     @Field(() => Int, {
         description: 'relationStatus',
     })
-    reyting: number;
+    rating: number;
 }
