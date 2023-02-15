@@ -19,6 +19,7 @@ import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.ty
 import { CacheStatisticService } from '../../../common/cache/services';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
 import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
+import { Rating } from '../models/rating.model';
 
 @Injectable()
 export class AnimeService {
@@ -557,43 +558,29 @@ export class AnimeService {
         });
     }
 
-    async updateRatingAnime({
-        id,
-        rating,
-        user_id,
-    }: UpdateRatingAnimeInputType & {
-        user_id: string;
-    }): Promise<UpdateRatingAnimeResultsType> {
-        let data: any;
+    async updateRatingAnime(
+        data: Rating,
+    ): Promise<UpdateRatingAnimeResultsType> {
+        let ratingResult: Rating;
         try {
-            data = await this.prisma.ratingAnime.create({
-                data: {
-                    anime_id: id,
-                    user_id,
-                    rating,
-                },
+            ratingResult = await this.prisma.ratingAnime.create({
+                data,
             });
         } catch (error) {
-            data = await this.prisma.ratingAnime.update({
-                data: {
-                    anime_id: id,
-                    user_id,
-                    rating,
-                },
+            ratingResult = await this.prisma.ratingAnime.update({
+                data,
                 where: {
                     anime_id_user_id: {
-                        anime_id: id,
-                        user_id,
+                        anime_id: data.anime_id,
+                        user_id: data.user_id,
                     },
                 },
             });
         }
-        console.log(data);
-
         return {
             success: true,
             errors: [],
-            rating: data.rating,
+            rating: ratingResult.rating,
         };
     }
 }

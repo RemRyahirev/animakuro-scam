@@ -6,7 +6,7 @@ import { IsString, IsUUID, Max, Min } from 'class-validator';
 export class UpdateRatingAnimeInputType {
     @IsUUID(4)
     @Field(() => ID)
-    id: string;
+    anime_id: string;
 
     @Min(1)
     @Max(5)

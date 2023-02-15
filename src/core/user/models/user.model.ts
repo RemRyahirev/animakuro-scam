@@ -7,6 +7,7 @@ import { Author } from '../../author/models/author.model';
 import { Genre } from '../../genre/models/genre.model';
 import { UserFolder } from '../../user-folder/models/user-folder.model';
 import { UserCollection } from '../../user-collection/models/user-collection.model';
+import { AuthType } from '../../../common/models/enums/auth-type.enum';
 
 @ObjectType()
 export class User {
@@ -19,11 +20,6 @@ export class User {
         description: 'Username',
     })
     username: string;
-
-    @Field(() => Boolean, {
-        description: 'social',
-    })
-    is_social: boolean;
 
     @Field(() => String, { nullable: true, description: 'Email of the user' })
     email: string | null;
