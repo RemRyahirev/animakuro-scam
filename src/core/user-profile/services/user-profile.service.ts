@@ -38,8 +38,8 @@ export class UserProfileService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.bannerFiles = this.fileUpload.getStorageForOne('userProfile', 'banner_id', 'profile');
-        this.coverFiles = this.fileUpload.getStorageForOne('userProfile', 'cover_id', 'profile');
+        this.bannerFiles = this.fileUpload.getStorageForOne('userProfile', 'banner_id', 'banner');
+        this.coverFiles = this.fileUpload.getStorageForOne('userProfile', 'cover_id', 'cover');
     }
 
     async getUserProfile(

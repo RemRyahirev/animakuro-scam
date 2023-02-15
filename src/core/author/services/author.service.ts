@@ -22,7 +22,7 @@ export class AuthorService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.coverFiles = this.fileUpload.getStorageForOne('author', 'cover_id', 'author');
+        this.coverFiles = this.fileUpload.getStorageForOne('author', 'cover_id', 'cover');
     }
 
     async getAuthor(id: string): Promise<GetAuthorResultsType> {

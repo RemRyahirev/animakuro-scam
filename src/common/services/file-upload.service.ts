@@ -1,18 +1,12 @@
 import { FileUpload } from 'graphql-upload';
 import { default as CdnClient, FormData } from '@animakuro/animakuro-cdn';
-import { Injectable } from '@nestjs/common';
+import {  Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { BUCKET_CONFIG } from 'common/config/cdn';
 import CustomError from 'common/utils/custom.error';
 import { PrismaService } from './prisma.service';
-
-type BucketConfigItem = {
-    maxFileSize?: number;
-    maxFileCount?: number;
-    bucket: string;
-    validation?: string;
-};
 
 type UploadResultOne = Promise<{ connect: { id: string; }; } | undefined>;
 type UploadResultMany = Promise<{ connect: { id: string[]; }; } | undefined>;
@@ -60,36 +54,6 @@ export type FileStorageForMany<E extends PrismaModelKeys> = {
     ) => UploadResultMany,
 };
 
-const VALIDATION = {
-    image: '.png/.jpg/.gif',
-};
-
-const BUCKET_CONFIG = {
-    studio: {
-        maxFileSize: 1000,
-        maxFileCount: 2,
-        bucket: 'images1',
-        validation: VALIDATION.image,
-    },
-    author: {
-        maxFileSize: 5000,
-        maxFileCount: 1,
-        bucket: 'images1',
-        validation: VALIDATION.image,
-    },
-    profile: {
-        maxFileSize: 5000,
-        maxFileCount: 1,
-        bucket: 'images1',
-        validation: VALIDATION.image,
-    },
-    anime: {
-        maxFileSize: 5000,
-        maxFileCount: 1,
-        bucket: 'images1',
-        validation: VALIDATION.image,
-    },
-} satisfies Record<string, BucketConfigItem>;
 type BucketNames = keyof typeof BUCKET_CONFIG;
 
 @Injectable()
@@ -102,6 +66,42 @@ export class FileUploadService {
         const url = this.configService.getOrThrow<string>('CDN_URL');
         const buckets = this.configService.getOrThrow<string>('CDN_BUCKET');
         this.cdnClient = new CdnClient(url, buckets);
+    }
+
+    protected getFileStream(file: FileUpload, bucket: BucketNames) {
+        let maxSize = BUCKET_CONFIG[bucket].maxFileSize;
+
+        const stream = file.createReadStream();
+        if (!maxSize || maxSize < 0) {
+            return stream;
+        }
+
+        maxSize *= 1024; // KB -> B
+        let size = 0;
+        stream.on('data', (data: Buffer) => {
+            size += data.byteLength;
+
+            if (size > maxSize) {
+                // XXX: this error is caught by axios inside cdn lib
+                //      however we can patch this error to pass details in response
+                const err = new Error();
+                // @ts-ignore
+                err.response = {
+                    data: {
+                        message: 'Uploading file exceeded size limit',
+                        size: maxSize,
+                        file: file.filename,
+                        description: `"${file.filename}" size is greater than ${Math.round(maxSize / 1024)}KB`,
+                    },
+                };
+
+                stream.destroy(
+                    err,
+                );
+            }
+        });
+
+        return stream;
     }
 
     async tryUploadOne(
@@ -136,7 +136,7 @@ export class FileUploadService {
         };
     }
 
-    async upload(
+    protected async upload(
         bucket: BucketNames,
         files: FileUpload[],
         user_id: string,
@@ -150,7 +150,7 @@ export class FileUploadService {
         files.forEach(file => {
             formData.append(
                 file.filename,
-                file.createReadStream(),
+                this.getFileStream(file, bucket),
                 {
                     contentType: file.mimetype,
                     filename: file.filename,
@@ -213,7 +213,7 @@ export class FileUploadService {
         return null;
     }
 
-    async delete(
+    protected async delete(
         bucket: BucketNames,
         fileIds: string[],
     ) {
@@ -264,7 +264,7 @@ export class FileUploadService {
         }
     }
 
-    async getExistingIds<E extends PrismaModelKeys, M extends PrismaModels = EntitiesMap[E]>(
+    protected async getExistingIds<E extends PrismaModelKeys, M extends PrismaModels = EntitiesMap[E]>(
         entity: E,
         uniqueWhere: any,
         fileField: any,
@@ -368,7 +368,7 @@ export class FileUploadService {
         };
     }
 
-    async update<E extends PrismaModelKeys>(
+    protected async update<E extends PrismaModelKeys>(
         entity: E,
         uniqueWhere: any,
         fileField: any,
