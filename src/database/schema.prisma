@@ -28,7 +28,7 @@ model User {
   auth_sessions        AuthSession[]
   user_collection      UserFolder[]  @relation("user_collection")
   rating_anime         RatingAnime[]
-  is_social            Boolean       @default(false)
+  social_service       AuthType      @default(JWT)
 
   @@map("users")
 }
