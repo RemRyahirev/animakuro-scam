@@ -559,14 +559,14 @@ export class AnimeService {
 
     async updateRatingAnime({
         id,
-        reyting,
+        rating,
         user_id,
     }: UpdateRatingAnimeInputType & {
         user_id: string;
     }): Promise<UpdateRatingAnimeResultsType> {
         let data: any;
         try {
-            data = await this.prisma.reytingAnime.create({
+            data = await this.prisma.ratingAnime.create({
                 data: {
                     anime_id: id,
                     user_id,
@@ -574,7 +574,7 @@ export class AnimeService {
                 },
             });
         } catch (error) {
-            data = await this.prisma.reytingAnime.update({
+            data = await this.prisma.ratingAnime.update({
                 data: {
                     anime_id: id,
                     user_id,
@@ -593,7 +593,7 @@ export class AnimeService {
         return {
             success: true,
             errors: [],
-            rating: data.reyting,
+            rating: data.rating,
         };
     }
 }

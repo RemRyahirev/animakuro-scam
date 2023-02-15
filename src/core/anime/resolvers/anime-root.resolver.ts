@@ -51,7 +51,7 @@ export class AnimeMutationType {
     @Field(() => UpdateRatingAnimeResultsType, {
         description: 'update reyting by Anime',
     })
-    updateReytingAnime: UpdateRatingAnimeResultsType;
+    updateRatingAnime: UpdateRatingAnimeResultsType;
 }
 
 @ObjectType()

@@ -31,6 +31,7 @@ model User {
   social_service       AuthType       @default(JWT)
 
 
+
   @@map("users")
 }
 
@@ -128,6 +129,7 @@ model Anime {
   studios            Studio[]         @relation("AnimeToStudio")
   favourite_by       User[]           @relation("AnimeToUser")
   user_folders       UserFolder[]     @relation("AnimeToUserFolder")
+
 
   @@map("anime")
 }
@@ -297,11 +299,11 @@ model OpeningEnding {
 }
 
 model RatingAnime {
+  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id  String @db.Uuid
   anime_id String @db.Uuid
   rating   Int
   anime    Anime  @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@id([anime_id, user_id])
   @@map("rating_anime")

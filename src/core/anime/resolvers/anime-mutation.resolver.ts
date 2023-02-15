@@ -148,7 +148,8 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)
-    async updateratingAnime(
+
+    async updateRatingAnime(
         @Args() args: UpdateRatingAnimeInputType,
         @AccessToken() user_id: string,
     ): Promise<UpdateRatingAnimeResultsType> {
