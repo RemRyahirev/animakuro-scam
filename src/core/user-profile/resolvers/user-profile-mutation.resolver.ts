@@ -26,8 +26,7 @@ import { UserProfileService } from '../services/user-profile.service';
 import { JwtAuthGuard } from '../../../common/guards';
 import { AccessToken } from '../../../common/decorators';
 import { UseGuards } from '@nestjs/common';
-import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
-
+import { AuthMiddleware } from 'common/middlewares/auth.middleware';
 
 @Resolver(UserProfileMutationType)
 export class UserProfileMutationResolver extends UserProfileRootResolver {
@@ -35,11 +34,14 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateUserProfileResultsType)
+    @ResolveField(() => CreateUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async createUserProfile(
         @Args() args: CreateUserProfileInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateUserProfileResultsType> {
-        return await this.userProfileService.createUserProfile(args);
+        return await this.userProfileService.createUserProfile(args, user_id);
     }
 
     @ResolveField(() => UpdateUserProfileResultsType, {
@@ -47,12 +49,10 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateUserProfile(
-        @AccessToken() user_id: string,
         @Args() args: UpdateUserProfileInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateUserProfileResultsType> {
-        return await this.userProfileService.updateUserProfile({
-            ...args,
-        });
+        return await this.userProfileService.updateUserProfile(args, user_id);
     }
 
     @ResolveField(() => DeleteUserProfileResultsType, {

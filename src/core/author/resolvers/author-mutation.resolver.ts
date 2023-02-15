@@ -1,4 +1,6 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { AuthMiddleware } from 'common/middlewares/auth.middleware';
+import { AccessToken } from 'common/decorators';
 import { CreateAuthorInputType } from '../models/inputs/create-author-input.type';
 import { AuthorMutationType, AuthorRootResolver } from './author-root.resolver';
 import { CreateAuthorResultsType } from '../models/results/create-author-results.type';
@@ -13,18 +15,24 @@ export class AuthorMutationResolver extends AuthorRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateAuthorResultsType)
+    @ResolveField(() => CreateAuthorResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async createAuthor(
         @Args() args: CreateAuthorInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateAuthorResultsType> {
-        return await this.authorService.createAuthor(args);
+        return await this.authorService.createAuthor(args, user_id);
     }
 
-    @ResolveField(() => UpdateAuthorResultsType)
+    @ResolveField(() => UpdateAuthorResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async updateAuthor(
         @Args() args: UpdateAuthorInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateAuthorResultsType> {
-        return await this.authorService.updateAuthor(args);
+        return await this.authorService.updateAuthor(args, user_id);
     }
 
     @ResolveField(() => DeleteAuthorResultsType)

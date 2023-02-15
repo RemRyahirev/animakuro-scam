@@ -1,4 +1,6 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { AuthMiddleware } from 'common/middlewares/auth.middleware';
+import { AccessToken } from 'common/decorators';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
@@ -14,18 +16,24 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateAnimeResultsType)
+    @ResolveField(() => CreateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async createAnime(
         @Args() args: CreateAnimeInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateAnimeResultsType> {
-        return await this.animeService.createAnime(args);
+        return await this.animeService.createAnime(args, user_id);
     }
 
-    @ResolveField(() => UpdateAnimeResultsType)
+    @ResolveField(() => UpdateAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async updateAnime(
         @Args() args: UpdateAnimeInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateAnimeResultsType> {
-        return await this.animeService.updateAnime(args);
+        return await this.animeService.updateAnime(args, user_id);
     }
 
     @ResolveField(() => UpdateAnimeResultsType)

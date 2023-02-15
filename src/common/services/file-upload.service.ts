@@ -35,7 +35,7 @@ type Model2EntityMap = { [K in PrismaModels]: Uncapitalize<K>; };
 type EntitiesMap = { [K in keyof Model2EntityMap as Model2EntityMap[K]]: K; };
 type PrismaModelMethod = 'findUniqueOrThrow';
 type ModelFields<T extends PrismaModels> = Required<Prisma.TypeMap['model'][T][PrismaModelMethod]['result']>;
-type ModelUnique<T extends PrismaModels> = Required<Prisma.TypeMap['model'][T][PrismaModelMethod]['args']['where']>;
+type ModelUnique<T extends PrismaModels> = Prisma.TypeMap['model'][T][PrismaModelMethod]['args']['where'];
 
 export type FileStorageForOne<E extends PrismaModelKeys> = {
     tryCreate: (file?: Promise<FileUpload>, user_id?: string) => UploadResultOne,
@@ -71,10 +71,22 @@ const BUCKET_CONFIG = {
         bucket: 'images1',
         validation: VALIDATION.image,
     },
-    animeBanner: {
+    author: {
         maxFileSize: 5000,
         maxFileCount: 1,
-        bucket: 'anime_banners',
+        bucket: 'images1',
+        validation: VALIDATION.image,
+    },
+    profile: {
+        maxFileSize: 5000,
+        maxFileCount: 1,
+        bucket: 'images1',
+        validation: VALIDATION.image,
+    },
+    anime: {
+        maxFileSize: 5000,
+        maxFileCount: 1,
+        bucket: 'images1',
         validation: VALIDATION.image,
     },
 } satisfies Record<string, BucketConfigItem>;

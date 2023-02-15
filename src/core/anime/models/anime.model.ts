@@ -207,9 +207,9 @@ export class Anime {
     @Field(() => Date, { description: 'When the anime data was last updated' })
     updated_at: Date;
 
-    @Field(() => File, {
-        description: 'File',
-        nullable: true,
-    })
-    file?: File;
+    @Field(() => File, { nullable: true })
+    banner?: File;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 }

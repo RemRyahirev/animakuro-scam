@@ -1,6 +1,6 @@
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { ArgsType, Field, Int } from '@nestjs/graphql';
 import { IsArray, IsInt, IsString, Length, IsOptional } from '@nestjs/class-validator';
-import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class CreateAuthorInputType {
@@ -12,6 +12,10 @@ export class CreateAuthorInputType {
     @IsString()
     @Field(() => String)
     bio: string;
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, { nullable: true })
+    cover?: Promise<FileUpload>;
 
     @IsString()
     @Field(() => String)
@@ -52,11 +56,4 @@ export class CreateAuthorInputType {
     @IsArray()
     @Field(() => [String])
     synonyms: string[];
-
-    @IsOptional()
-    @Field(() => GraphQLUpload, {
-        description: 'File to upload',
-        nullable: true
-    })
-    file?: Promise<FileUpload>;
 }

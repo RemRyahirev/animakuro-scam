@@ -26,13 +26,21 @@ import { transformPaginationUtil } from '../../../common/utils/transform-paginat
 import { Injectable } from '@nestjs/common';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
+import { FileUploadService } from 'common/services/file-upload.service';
 
 @Injectable()
 export class UserProfileService {
+    bannerFiles;
+    coverFiles;
+
     constructor(
         private prisma: PrismaService,
+        private fileUpload: FileUploadService,
         private paginationService: PaginationService,
-    ) {}
+    ) {
+        this.bannerFiles = this.fileUpload.getStorageForOne('userProfile', 'banner_id', 'profile');
+        this.coverFiles = this.fileUpload.getStorageForOne('userProfile', 'cover_id', 'profile');
+    }
 
     async getUserProfile(id: string): Promise<GetUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.findUnique({
@@ -42,6 +50,16 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         return {
@@ -59,6 +77,16 @@ export class UserProfileService {
             include: {
                 user: true,
                 profile_settings: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -76,6 +104,7 @@ export class UserProfileService {
 
     async createUserProfile(
         args: CreateUserProfileInputType,
+        authUserId: string,
     ): Promise<CreateUserProfileResultsType> {
         const { user_id, ...other } = args;
         const userProfile = await this.prisma.userProfile.create({
@@ -92,10 +121,22 @@ export class UserProfileService {
                         id: user_id,
                     },
                 },
+                banner: await this.bannerFiles.tryCreate(args.banner, authUserId),
+                cover: await this.coverFiles.tryCreate(args.cover, authUserId),
             },
             include: {
                 user: true,
                 profile_settings: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         console.log(userProfile);
@@ -109,13 +150,28 @@ export class UserProfileService {
 
     async updateUserProfile(
         args: UpdateUserProfileInputType,
+        authUserId: string,
     ): Promise<UpdateUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
-            data: args as any,
+            data: {
+                ...args as any,
+                banner: await this.bannerFiles.tryUpdate({ id: args.id }, args.banner, undefined, authUserId),
+                cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, authUserId),
+            },
             include: {
                 user: true,
                 profile_settings: true,
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         return {
@@ -126,8 +182,24 @@ export class UserProfileService {
     }
 
     async deleteUserProfile(id: string): Promise<DeleteUserProfileResultsType> {
+        await Promise.all([
+            this.bannerFiles.tryDeleteAll({ id }),
+            this.coverFiles.tryDeleteAll({ id }),
+        ]);
         const userProfile = await this.prisma.userProfile.delete({
             where: { id },
+            include: {
+                banner: {
+                    include: {
+                        user: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
+                    },
+                },
+            },
         });
         return {
             success: true,
