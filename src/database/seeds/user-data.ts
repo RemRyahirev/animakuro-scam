@@ -7,6 +7,7 @@ export const userData = async () => [
             '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         is_email_confirmed: true,
         avatar: '',
+        is_social: false,
     },
     {
         id: '5b594675-a3c6-4e1b-acaa-2e612419b9e2',
@@ -15,6 +16,7 @@ export const userData = async () => [
         password:
             '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
         is_email_confirmed: true,
+        is_social: false,
         avatar: '',
     },
     {
@@ -23,6 +25,7 @@ export const userData = async () => [
         username: 'Evgenii',
         password:
             '$2b$10$zfTmralcT619fZHCl0Tml.CzzvDm0tti6qcewAOWMBGBwylIBa/x2', // password
+        is_social: false,
         is_email_confirmed: true,
         avatar: '',
     },
@@ -32,6 +35,7 @@ export const userData = async () => [
         username: 'Oleg',
         password:
             '$2b$10$UTBzDrug3h9HvegQbhg6UuEqg8Be8hj8JS2WD3AJl9cg7RdfWjfHi', // another-password
+        is_social: false,
         is_email_confirmed: false,
         avatar: '',
     },
@@ -42,6 +46,7 @@ export const userData = async () => [
         password:
             '$2b$10$LfmYoVBbTMMaRfR4VZRUw.9UGRla.UDJ0icOkj4LrpUJomMFdzlXm', // some-password
         is_email_confirmed: false,
+        is_social: false,
         avatar: '',
     },
     {
@@ -51,6 +56,7 @@ export const userData = async () => [
         password:
             '$2b$10$LfmYoVBbTMMaRfR4VZRUw.9UGRla.UDJ0icOkj4LrpUJomMFdzlXm', // some-password
         is_email_confirmed: false,
+        is_social: false,
         avatar: '',
     },
 ];
