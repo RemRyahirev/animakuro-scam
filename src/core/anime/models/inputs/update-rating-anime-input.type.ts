@@ -12,5 +12,5 @@ export class UpdateRatingAnimeInputType {
     @Max(5)
     @IsNumber()
     @Field(() => Int)
-    reyting: number;
+    rating: number;
 }

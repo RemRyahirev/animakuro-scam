@@ -210,8 +210,8 @@ export class AuthService {
         const alreadyCreated = await this.prisma.user.findFirst({
             where: {
                 email: profile.account.email,
-                social_service:
-                    auth_type.toUpperCase() as keyof typeof AuthType,
+                // social_service:
+                //     auth_type.toUpperCase() as keyof typeof AuthType,
             },
         });
 
@@ -240,8 +240,8 @@ export class AuthService {
                     password: '',
                     avatar: profile.account.avatar,
                     is_email_confirmed: true,
-                    social_service:
-                        auth_type.toUpperCase() as keyof typeof AuthType,
+                    // social_service:
+                    //     auth_type.toUpperCase() as keyof typeof AuthType,
                 },
             });
             const id = result.id;
@@ -279,8 +279,8 @@ export class AuthService {
                     password: '',
                     avatar: profile.account.avatar,
                     is_email_confirmed: true,
-                    social_service:
-                        auth_type.toUpperCase() as keyof typeof AuthType,
+                    // social_service:
+                    //     auth_type.toUpperCase() as keyof typeof AuthType,
                 },
             });
 
