@@ -91,7 +91,7 @@ model Anime {
   id                 String           @id @default(uuid()) @db.Uuid
   title              String           @db.VarChar(100)
   score              Float            @db.Real
-  evaluation         String           @default("5:0;4:0;3:0;2:0;1:0")
+  evaluation         Json             @default("{ \"5\": 0 ,\"4\": 0 , \"3\": 0, \"2\": 0, \"1\": 0}")
   year               Int              @db.SmallInt
   date_start         DateTime?        @db.Date
   date_end           DateTime?        @db.Date

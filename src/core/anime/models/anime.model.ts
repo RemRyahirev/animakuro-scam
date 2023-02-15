@@ -33,10 +33,10 @@ export class Anime {
     })
     score: number;
 
-    @Field(() => String, {
-        description: 'User ratings',
-    })
-    evaluation: string;
+    // @Field(() => Object, {
+    //     description: 'User ratings',
+    // })
+    // evaluation: object;
 
     @Field(() => Int, {
         description: 'Year of production of the media',
