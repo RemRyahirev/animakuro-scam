@@ -12,11 +12,13 @@ import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Studio } from '../models/studio.model';
 import { Injectable } from '@nestjs/common';
+import { FileUploadService } from 'common/services/file-upload.service';
 
 @Injectable()
 export class StudioService {
     constructor(
         private prisma: PrismaService,
+        private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {}
 
@@ -78,11 +80,20 @@ export class StudioService {
     async createStudio(
         args: CreateStudioInputType,
     ): Promise<CreateStudioResultsType> {
+        const fileReplaces = {
+            thumbnail: !args.thumbnail ? undefined : {
+                connect: {
+                    id: (await this.fileUpload.upload('studio', [await args.thumbnail]))[0],
+                },
+            },
+        };
+
         const studio = await this.prisma.studio.create({
             data: {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
+                ...fileReplaces,
             },
             include: {
                 animes: {
@@ -92,11 +103,22 @@ export class StudioService {
                         characters: true,
                     },
                 },
+                thumbnail: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
         return {
             success: true,
-            studio: studio as any,
+            studio: {
+                ...studio,
+                thumbnail: {
+                    ...studio.thumbnail,
+                    url: '',
+                } as any,
+            } as any,
         };
     }
 
@@ -109,6 +131,9 @@ export class StudioService {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
+                // fixme
+                thumbnail: undefined,
+                thumbnail_id: undefined,
             },
             include: {
                 animes: {

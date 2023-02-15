@@ -23,6 +23,7 @@ import {
 } from '../../../../common/models/enums';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -170,4 +171,11 @@ export class CreateAnimeInputType {
         description: 'Add to the list of similar animes',
     })
     similar_by_animes_add: string[];
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, {
+        description: 'File to upload',
+        nullable: true
+    })
+    file?: Promise<FileUpload>;
 }

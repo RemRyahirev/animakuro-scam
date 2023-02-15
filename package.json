@@ -27,7 +27,7 @@
     ],
     "license": "ISC",
     "dependencies": {
-        "@animakuro/animakuro-cdn": "^1.0.10",
+        "@animakuro/animakuro-cdn": "^1.0.11",
         "@apollo/federation": "^0.38.1",
         "@apollo/gateway": "^2.2.2",
         "@apollo/subgraph": "^2.2.2",
