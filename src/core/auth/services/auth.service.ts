@@ -11,16 +11,24 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { Mailer } from '../../../mailer/mailer';
 import { Context } from 'vm';
 import { LoginResultsType } from '../models/results/login-results.type';
-import { Injectable, UseGuards } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { TokenService } from './token.service';
 import { AuthSessionService } from '../../auth-session/services/auth-session.service';
 import { userDefaults } from '../../../common/defaults/user-defaults';
 import { LogoutResultsType } from '../models/results/logout-results.type';
-import { GqlThrottlerGuard } from '../../../common/guards/throttle.guard';
-import { Throttle } from '@nestjs/throttler';
+import {
+    InjectThrottlerOptions,
+    InjectThrottlerStorage,
+    ThrottlerModuleOptions,
+    ThrottlerStorage,
+} from '@nestjs/throttler';
+import { Reflector } from '@nestjs/core';
+import { HandleRequest } from './handleRequest';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
+    throttler: HandleRequest;
     constructor(
         private prisma: PrismaService,
         private userService: UserService,
@@ -28,7 +36,15 @@ export class AuthService {
         private passwordService: PasswordService,
         private tokenService: TokenService,
         private authSessionService: AuthSessionService,
-    ) {}
+
+        @InjectThrottlerOptions()
+        protected readonly options: ThrottlerModuleOptions,
+        @InjectThrottlerStorage()
+        protected readonly storageService: ThrottlerStorage,
+        protected readonly reflector: Reflector,
+    ) {
+        this.throttler = new HandleRequest(options, storageService, reflector);
+    }
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeToken(token);
 
@@ -142,46 +158,21 @@ export class AuthService {
         };
     }
 
-    async loginSocial(
-        access_token: string,
-        auth_type: AuthType,
-    ): Promise<LoginResultsType> {
-        const auth = await this.prisma.auth.findFirst({
-            where: {
-                access_token,
-            },
-        });
-        if (!auth) {
+    async sendEmail(
+        args: RegisterInputType,
+        context: ExecutionContext,
+        req: any,
+        res: any,
+    ): Promise<LogoutResultsType> {
+        if (!args) {
             return {
                 success: false,
-                errors: [
-                    {
-                        property: 'access_token',
-                        value: access_token,
-                        reason: 'No user matched by this token',
-                    },
-                ],
-                access_token: undefined,
-                user: null,
             };
         }
-        const { user, ...data } = await this.userService.findOneById(
-            auth!.user_id as string,
-        );
-        return {
-            success: true,
-            access_token: access_token,
-            user: user as any,
-        };
-    }
-
-    async checkArgs(args: RegisterInputType): Promise<LogoutResultsType> {
-        if (!args) {
-            return { success: false };
+        if (await this.throttler._handleRequest(1, 120, req, res)) {
+            return await this.register(args, context);
         }
-        return {
-            success: true,
-        };
+        return { success: false };
     }
 
     async register(
@@ -189,7 +180,7 @@ export class AuthService {
         context: Context,
     ): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
-        const token = this.tokenService.generateEmailToken(
+        const token = await this.tokenService.generateEmailToken(
             args.email,
             args.password,
             args.username,
@@ -216,61 +207,108 @@ export class AuthService {
         profile: any,
         auth_type: AuthType,
     ): Promise<RegisterResultsType> {
-        const result = await this.prisma.user.create({
-            data: {
-                username: profile.account.username,
-                email: profile.account.email,
-                password: '',
-                avatar: profile.account.avatar,
-                is_email_confirmed: true,
-            },
-        });
-        const id = result.id;
-        const access_token = await this.tokenService.generateToken(
-            id as any,
-            null,
-            TokenType.ACCESS_TOKEN,
-        );
-        await this.prisma.auth.create({
-            data: {
-                // @ts-ignore
-                type: auth_type.toUpperCase() as keyof typeof AuthType,
-                access_token,
-                uuid: profile.account.uuid,
-                email: profile.account.email,
-                username: profile.account.username,
-                avatar: profile.account.avatar,
-                user_id: result!.id,
-            },
-        });
-        const user = await this.prisma.user.findFirst({
+        const alreadyCreated = await this.prisma.user.findFirst({
             where: {
-                id: result.id,
-            },
-            include: {
-                auth: true,
-                user_profile: {
-                    include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
+                email: profile.account.email,
+                social_service:
+                    auth_type.toUpperCase() as keyof typeof AuthType,
             },
         });
-        return {
-            success: true,
-            access_token,
-            user: user as any,
-        };
+
+        const byUsername = await this.prisma.user.findFirst({
+            where: {
+                username: profile.account.username,
+            },
+        });
+
+        if (alreadyCreated) {
+            const access_token = await this.tokenService.generateToken(
+                alreadyCreated.id as any,
+                null,
+                TokenType.ACCESS_TOKEN,
+            );
+            return {
+                success: true,
+                user: alreadyCreated as any,
+                access_token,
+            };
+        } else if (!alreadyCreated && !byUsername) {
+            const result = await this.prisma.user.create({
+                data: {
+                    username: profile.account.username,
+                    email: profile.account.email,
+                    password: '',
+                    avatar: profile.account.avatar,
+                    is_email_confirmed: true,
+                    social_service:
+                        auth_type.toUpperCase() as keyof typeof AuthType,
+                },
+            });
+            const id = result.id;
+            const access_token = await this.tokenService.generateToken(
+                id as any,
+                null,
+                TokenType.ACCESS_TOKEN,
+            );
+            await this.prisma.auth.create({
+                data: {
+                    // @ts-ignore
+                    type: auth_type.toUpperCase() as keyof typeof AuthType,
+                    access_token,
+                    uuid: profile.account.uuid,
+                    email: profile.account.email,
+                    username: profile.account.username,
+                    avatar: profile.account.avatar,
+                    user_id: result!.id,
+                },
+            });
+
+            return {
+                success: true,
+                user: result as any,
+                access_token,
+            };
+        } else {
+            const date = new Date().getTime();
+            const username = 'user_' + date;
+
+            const user = await this.prisma.user.create({
+                data: {
+                    username,
+                    email: profile.account.email,
+                    password: '',
+                    avatar: profile.account.avatar,
+                    is_email_confirmed: true,
+                    social_service:
+                        auth_type.toUpperCase() as keyof typeof AuthType,
+                },
+            });
+
+            const id = user.id;
+            const access_token = await this.tokenService.generateToken(
+                id as any,
+                null,
+                TokenType.ACCESS_TOKEN,
+            );
+            await this.prisma.auth.create({
+                data: {
+                    // @ts-ignore
+                    type: auth_type.toUpperCase() as keyof typeof AuthType,
+                    access_token,
+                    uuid: profile.account.uuid,
+                    email: profile.account.email,
+                    username,
+                    avatar: profile.account.avatar,
+                    user_id: user!.id,
+                },
+            });
+
+            return {
+                success: true,
+                user: user as any,
+                access_token,
+            };
+        }
     }
 
     async logout(user_id: string): Promise<LogoutResultsType> {

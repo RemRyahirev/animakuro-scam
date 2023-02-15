@@ -1,6 +1,11 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthType } from '../../../common/models/enums';
-import { forwardRef, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { Profile, Strategy } from 'passport-discord';
 import { StrategyConfigService } from '../services/strategy-config.service';
 

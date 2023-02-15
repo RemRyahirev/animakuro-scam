@@ -12,9 +12,10 @@ import { IUpload } from '../../../../common/models/interfaces';
 
 @ArgsType()
 export class UpdateUserInputType {
+    @IsOptional()
     @IsUUID()
-    @Field(() => ID)
-    id: string;
+    @Field(() => ID, { nullable: true })
+    id?: string;
 
     @IsOptional()
     @Field(() => String, { nullable: true })

@@ -1,6 +1,11 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthType } from '../../../common/models/enums';
-import { forwardRef, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { Profile, Strategy } from 'passport-apple';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
@@ -15,7 +20,8 @@ export class AppleStrategy extends PassportStrategy(Strategy, AuthType.APPLE) {
             teamID: strategyConfigService.config.APPLE.teamID,
             keyID: strategyConfigService.config.APPLE.keyID,
             callbackURL: strategyConfigService.config.APPLE.callbackURL,
-            privateKeyLocation: strategyConfigService.config.APPLE.privateKeyLocation,
+            privateKeyLocation:
+                strategyConfigService.config.APPLE.privateKeyLocation,
             scope: ['email', 'name'],
             profileFields: ['email', 'name'],
         });

@@ -42,7 +42,27 @@ export class UserProfileService {
         this.coverFiles = this.fileUpload.getStorageForOne('userProfile', 'cover_id', 'profile');
     }
 
-    async getUserProfile(id: string): Promise<GetUserProfileResultsType> {
+    async getUserProfile(
+        id: string,
+        token: string,
+    ): Promise<GetUserProfileResultsType> {
+        if (token == id) {
+            const userProfile = await this.prisma.userProfile.findUnique({
+                where: {
+                    id,
+                },
+                include: {
+                    user: true,
+                    profile_settings: true,
+                },
+            });
+
+            return {
+                success: true,
+                errors: [],
+                userProfile: userProfile as any,
+            };
+        }
         const userProfile = await this.prisma.userProfile.findUnique({
             where: {
                 id,
@@ -62,6 +82,19 @@ export class UserProfileService {
                 },
             },
         });
+        if (userProfile?.profile_settings?.profile_type == 'PRIVATE') {
+            return {
+                success: true,
+                errors: [
+                    {
+                        property: 'userProfile',
+                        value: null,
+                        reason: 'Профиль скрыт',
+                    },
+                ],
+                userProfile: null,
+            };
+        }
         return {
             success: true,
             errors: [],
@@ -73,6 +106,11 @@ export class UserProfileService {
         args: PaginationInputType,
     ): Promise<GetListUserProfileResultsType> {
         const userProfileList = await this.prisma.userProfile.findMany({
+            where: {
+                profile_settings: {
+                    profile_type: 'PUBLIC',
+                },
+            },
             ...transformPaginationUtil(args),
             include: {
                 user: true,

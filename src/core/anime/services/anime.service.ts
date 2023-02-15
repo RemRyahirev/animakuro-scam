@@ -18,6 +18,10 @@ import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 import { Studio } from '../../studio/models/studio.model';
 import { FileUploadService } from 'common/services/file-upload.service';
+import { CacheStatisticService } from '../../../common/cache/services';
+import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
+import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
+import { Rating } from '../models/rating.model';
 
 @Injectable()
 export class AnimeService {
@@ -27,6 +31,7 @@ export class AnimeService {
     constructor(
         private prisma: PrismaService,
         private fileUpload: FileUploadService,
+        protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
     ) {
         this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'anime');
@@ -41,7 +46,9 @@ export class AnimeService {
             max_similar_by_animes_count,
             max_related_by_animes_count,
             max_openings_count,
-            max_endings_count
+            max_endings_count,
+            min_opening_start,
+            min_ending_start,
         } = args;
 
         const anime = await this.prisma.anime.findUnique({
@@ -88,25 +95,35 @@ export class AnimeService {
 
         if (max_openings_count) {
             openings = await this.prisma.openingEnding.findMany({
-                where: { anime_id: id, type: 'OPENING' },
-                take: max_openings_count
-            })
+                where: {
+                    anime_id: id,
+                    type: 'OPENING',
+                    episode_end: { gte: min_opening_start },
+                },
+                orderBy: { episode_start: 'asc' },
+                take: max_openings_count,
+            });
         }
         if (max_endings_count) {
             endings = await this.prisma.openingEnding.findMany({
-                where: { anime_id: id, type: 'ENDING' },
-                take: max_endings_count
-            })
+                where: {
+                    anime_id: id,
+                    type: 'ENDING',
+                    episode_end: { gte: min_ending_start },
+                },
+                orderBy: { episode_start: 'asc' },
+                take: max_endings_count,
+            });
         }
 
         const opening_ending = [];
-        if (openings) opening_ending.push(...openings)
-        if (endings) opening_ending.push(...endings)
+        if (openings) opening_ending.push(...openings);
+        if (endings) opening_ending.push(...endings);
 
         return {
             success: true,
             errors: [],
-            anime: {...anime, opening_ending} as any,
+            anime: { ...anime, opening_ending, openings, endings } as any,
         };
     }
 
@@ -131,7 +148,10 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
-                opening_ending: true,
+                opening_ending: {
+                    orderBy: { episode_start: 'asc' },
+                    take: 2,
+                },
                 banner: {
                     include: {
                         user: true,
@@ -166,16 +186,17 @@ export class AnimeService {
             include: {
                 parent_anime: true,
                 child_anime: true,
-            } as any,
+            },
         });
+
         const pagination = await this.paginationService.getPagination(
             'relatingAnime',
             args,
-            {
-                nested_field: 'animes',
-                search_property: 'id',
-                search_value: id,
-            },
+            // {
+            //     nested_field: 'animes',
+            //     search_property: 'id',
+            //     search_value: id,
+            // },
         );
         return {
             success: true,
@@ -195,16 +216,16 @@ export class AnimeService {
             include: {
                 parent_anime: true,
                 child_anime: true,
-            } as any,
+            },
         });
         const pagination = await this.paginationService.getPagination(
             'similarAnime',
             args,
-            {
-                nested_field: 'animes',
-                search_property: 'id',
-                search_value: id,
-            },
+            // {
+            //     nested_field: 'animes',
+            //     search_property: 'id',
+            //     search_value: id,
+            // },
         );
         return {
             success: true,
@@ -605,5 +626,31 @@ export class AnimeService {
                 },
             });
         });
+    }
+
+    async updateRatingAnime(
+        data: Rating,
+    ): Promise<UpdateRatingAnimeResultsType> {
+        let ratingResult: Rating;
+        try {
+            ratingResult = await this.prisma.ratingAnime.create({
+                data,
+            });
+        } catch (error) {
+            ratingResult = await this.prisma.ratingAnime.update({
+                data,
+                where: {
+                    anime_id_user_id: {
+                        anime_id: data.anime_id,
+                        user_id: data.user_id,
+                    },
+                },
+            });
+        }
+        return {
+            success: true,
+            errors: [],
+            rating: ratingResult.rating,
+        };
     }
 }

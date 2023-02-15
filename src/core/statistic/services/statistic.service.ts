@@ -12,20 +12,20 @@ export class StatisticService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+    ) {}
 
     async getUserStatisticFolder({
-        id,
-        take = 5,
-        userFoldersId,
+        id = '',
+        max_count = 5,
+        user_folders_id,
     }: GetStatisticFolderInputType): Promise<GetUserStatisticFolderResultsType> {
         const folders: any = await this.prisma.userFolder.findMany({
             where: {
                 user: {
                     id,
                 },
-                is_statistic_active: true,
-                id: userFoldersId && { in: userFoldersId },
+                is_statistic_active: false, //Параметр false только для тестирования
+                id: user_folders_id && { in: user_folders_id },
             },
             include: {
                 _count: {
@@ -34,7 +34,7 @@ export class StatisticService {
                     },
                 },
             },
-            take,
+            take: max_count,
         });
         const statisticFolder: any = folders.map((el: any) => {
             return {

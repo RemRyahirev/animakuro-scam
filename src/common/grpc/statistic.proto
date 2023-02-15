@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package statistic;
+
+
+service StatisticService {
+    rpc ForceUpdateDocuments (Null) returns (Null) {}
+}
+
+message Null {}

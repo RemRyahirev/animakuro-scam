@@ -8,18 +8,19 @@ import { PrismaService } from '../../../common/services/prisma.service';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
 import { UpdateUserResultsType } from '../models/results/update-user-results.type';
 import { GetListUserResultsType } from '../models/results/get-list-user-results.type';
-import { User } from '../models/user.model';
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { mediaConnectUtil } from '../utils/media-connect.util';
 import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
 import { userDefaults } from '../../../common/defaults/user-defaults';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+        private jwtService: JwtService,
+    ) {}
 
     async getUserList(
         args: PaginationInputType,
@@ -65,10 +66,22 @@ export class UserService {
         };
     }
 
-    async getUser(user: User): Promise<GetUserResultsType> {
+    async getUser(token: string): Promise<GetUserResultsType> {
+        const decoded = this.jwtService.decode(token);
+        if (decoded == null || typeof decoded == 'string') {
+            return {
+                success: false,
+                user: null,
+            };
+        }
+        const user = this.prisma.user.findUnique({
+            where: {
+                id: decoded.uuid,
+            },
+        });
         return {
             success: true,
-            user,
+            user: user as any,
         };
     }
 

@@ -16,19 +16,19 @@ export class JwtStrategy extends PassportStrategy(Strategy, AuthType.JWT) {
     constructor(
         private userService: UserService,
         @Inject(forwardRef(() => StrategyConfigService))
-        private strategyConfigService: StrategyConfigService
+        private strategyConfigService: StrategyConfigService,
     ) {
         super({
-            jwtFromRequest: ExtractJwt.fromHeader("authentication"),
+            jwtFromRequest: ExtractJwt.fromHeader('authentication'),
             ignoreExpiration: true,
             secretOrKey:
-            strategyConfigService.config.JWT.accessToken.privateKey
+                strategyConfigService.config.JWT.accessToken.privateKey,
         });
     }
 
     async validate(
         jwtPayload: ICustomJwtPayload,
-        done: VerifiedCallback
+        done: VerifiedCallback,
     ): Promise<void> {
         const account = await this.userService.findOneById(jwtPayload.uuid);
         if (!account) {
@@ -36,7 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, AuthType.JWT) {
         }
         const payload = {
             account,
-            jwtPayload
+            jwtPayload,
         };
         done(null, payload);
         return done(null, account);

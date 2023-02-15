@@ -9,6 +9,7 @@ import { GetListProfileSettingsResultsType } from '../models/results/get-list-pr
 import { PaginationInputType } from '../../../common/models/inputs';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(ProfileSettingsQueryType)
@@ -17,14 +18,20 @@ export class ProfileSettingsQueryResolver extends ProfileSettingsRootResolver {
         super();
     }
 
-    @ResolveField(() => GetProfileSettingsByIdResultsType)
+    @ResolveField(() => GetProfileSettingsByIdResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async getProfileSettingsById(
         @Args('id') id: string,
     ): Promise<GetProfileSettingsByIdResultsType> {
         return await this.profileSettingsService.getProfileSettings(id);
     }
 
-    @ResolveField(() => GetListProfileSettingsResultsType)
+    @ResolveField(() => GetListProfileSettingsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async getProfileSettingsList(
         @Args() args: PaginationInputType,
     ): Promise<GetListProfileSettingsResultsType> {

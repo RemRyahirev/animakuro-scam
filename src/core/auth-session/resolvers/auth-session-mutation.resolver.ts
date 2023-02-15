@@ -9,28 +9,44 @@ import { DeleteAuthSessionResultsType } from '../models/results/delete-auth-sess
 import { UpdateAuthSessionInputType } from '../models/inputs/update-auth-session-input.type';
 import { CreateAuthSessionInputType } from '../models/inputs/create-auth-session-input.type';
 import { UpdateAuthSessionResultsType } from '../models/results/update-auth-session-results.type';
-
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { AccessToken } from '../../../common/decorators';
 @Resolver(AuthSessionMutationType)
 export class AuthSessionMutationResolver extends AuthSessionRootResolver {
     constructor(private authSessionService: AuthSessionService) {
         super();
     }
 
-    @ResolveField(() => CreateAuthSessionResultsType)
+    @ResolveField(() => CreateAuthSessionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async createAuthSession(
         @Args() args: CreateAuthSessionInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateAuthSessionResultsType> {
-        return await this.authSessionService.createAuthSession(args);
+        return await this.authSessionService.createAuthSession({
+            ...args,
+            user_id: args.user_id ?? user_id,
+        });
     }
 
-    @ResolveField(() => UpdateAuthSessionResultsType)
+    @ResolveField(() => UpdateAuthSessionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async updateAuthSession(
         @Args() args: UpdateAuthSessionInputType,
     ): Promise<UpdateAuthSessionResultsType> {
         return await this.authSessionService.updateAuthSession(args);
     }
 
-    @ResolveField(() => DeleteAuthSessionResultsType)
+    @ResolveField(() => DeleteAuthSessionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
     async deleteAuthSession(
         @Args('id') id: string,
     ): Promise<DeleteAuthSessionResultsType> {

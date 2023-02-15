@@ -19,6 +19,7 @@ export class PaginationService {
         C extends INestedPagination | undefined,
     >(entityName: N, args: A, condition?: C): Promise<PaginationResultsType> {
         this.entityName = entityName;
+        
         if (this.checkEntityExistence) {
             await this.calculateTotalCount(condition);
             return {
@@ -42,17 +43,17 @@ export class PaginationService {
             this.totalCount = await this.prisma[this.entityName].count();
         }
         if (condition) {
-            const whereFilters = Object.fromEntries(
-                Object.entries(condition?.where).filter(([, value]) => value !== undefined)
-            )
+            const whereFilters = condition?.where ? Object.fromEntries(
+                Object.entries(condition.where).filter(([, value]) => value !== undefined)
+            ) : {}
 
             if (condition.nested_field) {
                 whereFilters[condition.nested_field] = {
                     // @ts-ignore
-                    some: [condition.search_property] = condition.search_value
+                    some: {[condition.search_property]: condition.search_value}
                 }
             }
-
+            
             // @ts-ignore
             this.totalCount = await this.prisma[this.entityName].count({
                 where: {

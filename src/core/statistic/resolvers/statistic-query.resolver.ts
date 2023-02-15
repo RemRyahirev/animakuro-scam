@@ -7,7 +7,7 @@ import {
     GetUserStatisticFolderResultsType,
     GetUserStatisticFavouriteResultsType,
 } from '../models/results';
-import { StatisticService } from '../service/statistic.service';
+import { StatisticService } from '../services/statistic.service';
 import { AccessToken } from 'common/decorators';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';

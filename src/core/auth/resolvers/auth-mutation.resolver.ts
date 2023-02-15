@@ -7,13 +7,10 @@ import { LoginResultsType } from '../models/results/login-results.type';
 import { LogoutResultsType } from '../models/results/logout-results.type';
 import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 import { AuthService } from '../services/auth.service';
-import { ExecutionContext, UseGuards } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
 import { AuthType } from '../../../common/models/enums';
 import { Profile } from 'passport';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
-import { LoginSocialInputType } from '../models/inputs/login-social-input.type';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
-import { GqlThrottlerGuard } from '../../../common/guards/throttle.guard';
 
 @Resolver(AuthMutationType)
 export class AuthMutationResolver extends AuthRootResolver {
@@ -21,28 +18,22 @@ export class AuthMutationResolver extends AuthRootResolver {
         super();
     }
 
-    @SkipThrottle()
-    @ResolveField(() => LogoutResultsType)
-    @ValidateSchemas()
-    async checkArgs(
-        @Args() args: RegisterInputType,
-    ): Promise<LogoutResultsType> {
-        return await this.authService.checkArgs(args);
-    }
-
-    @UseGuards(GqlThrottlerGuard)
-    @Throttle(2, 120)
     @ResolveField(() => LogoutResultsType)
     @ValidateSchemas()
     async register(
         @Args() args: RegisterInputType,
         @Context() context: ExecutionContext,
     ): Promise<LogoutResultsType> {
-        return await this.authService.register(args, context);
+        return await this.authService.sendEmail(
+            args,
+            context,
+            //@ts-ignore
+            context.req,
+            //@ts-ignore
+            context.res,
+        );
     }
 
-    @UseGuards(GqlThrottlerGuard)
-    @Throttle(2, 120)
     @ResolveField(() => LoginResultsType)
     async login(
         @Args() args: LoginInputType,
@@ -59,20 +50,12 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.logout(user_id);
     }
 
-    @ResolveField(() => LoginResultsType)
-    async loginSocial(@Args() args: LoginSocialInputType) {
-        return await this.authService.loginSocial(
-            args.access_token,
-            args.auth_type,
-        );
-    }
-
     @ResolveField(() => RegisterResultsType)
     async registerSocial(
         @SocialProfile() profile: Profile,
         @Args('code') code: string,
-        @Args('auth_type') auth_type: AuthType,
-    ) {
+        @Args('auth_type', { type: () => AuthType }) auth_type: AuthType,
+    ): Promise<RegisterResultsType> {
         return await this.authService.registerSocial(code, auth_type);
     }
 

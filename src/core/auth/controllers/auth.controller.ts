@@ -3,7 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
 import { AuthType } from '../../../common/models/enums';
 import { Request } from 'express';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('oauth')
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -46,11 +48,5 @@ export class AuthController {
     @UseGuards(AuthGuard(AuthType.DISCORD))
     discordAuthRedirect(@Req() req: Request) {
         return this.authService.registerSocial(req?.user, AuthType.DISCORD);
-    }
-
-    @Get('shikimori/redirect')
-    @UseGuards(AuthGuard(AuthType.SHIKIMORI))
-    shikimoriAuthRedirect(@Req() req: Request) {
-        return this.authService.registerSocial(req?.user, AuthType.SHIKIMORI);
     }
 }

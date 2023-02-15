@@ -57,11 +57,15 @@ async function bootstrap(): Promise<void> {
                 'oauth/google',
                 'oauth/google/redirect',
                 'oauth/apple',
+                'oauth/discord',
+                'oauth/discord/redirect',
                 'oauth/apple/redirect',
                 'oauth/facebook',
                 'oauth/facebook/redirect',
                 'oauth/apple',
                 'oauth/apple/redirect',
+                'oauth/twitter',
+                'oauth/twitter/redirect',
             ],
         });
         app.use(graphqlUploadExpress({ maxFiles: 10, maxFileSize: 100000000 }))
