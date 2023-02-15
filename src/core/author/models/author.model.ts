@@ -1,5 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Anime } from '../../anime/models/anime.model';
+import { File } from 'common/models/results/file.model';
 
 @ObjectType()
 export class Author {
@@ -84,6 +85,9 @@ export class Author {
         description: 'Short biography of the author',
     })
     bio: string;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 
     @Field(() => Date, { description: 'When the author data was created' })
     created_at: Date;

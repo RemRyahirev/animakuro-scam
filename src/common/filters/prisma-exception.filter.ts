@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Prisma } from '@prisma/client';
+import { PrismaErrorCodesMap } from 'common/utils/error-formatter.util';
 import { Response } from 'express';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
@@ -16,14 +17,62 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
 
         switch (exception.code) {
             // TODO add custom exceptions
+            case 'P2000': {
+                const status = HttpStatus.CONFLICT;
+                response.status(status).json({
+                    statusCode: status,
+                    message: PrismaErrorCodesMap.P2000.replace(
+                        'column_name',
+                        (exception.meta as { target: string[] }).target.join(
+                            ',',
+                        ),
+                    ),
+                });
+                break;
+            }
+
             case 'P2002': {
                 const status = HttpStatus.CONFLICT;
                 response.status(status).json({
                     statusCode: status,
-                    message: message,
+                    message: PrismaErrorCodesMap.P2002.replace(
+                        'constraint',
+                        (exception.meta as { target: string[] }).target.join(
+                            ',',
+                        ),
+                    ),
                 });
                 break;
             }
+
+            case 'P2004': {
+                const status = HttpStatus.CONFLICT;
+                response.status(status).json({
+                    statusCode: status,
+                    message: PrismaErrorCodesMap.P2004.replace(
+                        'database_error',
+                        (exception.meta as { target: string[] }).target.join(
+                            ',',
+                        ),
+                    ),
+                });
+                break;
+            }
+
+            case 'P2007': {
+                const status = HttpStatus.CONFLICT;
+                response.status(status).json({
+                    statusCode: status,
+                    message: PrismaErrorCodesMap.P2007.replace(
+                        'database_error',
+                        (exception.meta as { target: string[] }).target.join(
+                            ',',
+                        ),
+                    ),
+                });
+                break;
+            }
+
             default:
                 super.catch(exception, host);
                 break;

@@ -26,8 +26,7 @@ import { UserProfileService } from '../services/user-profile.service';
 import { JwtAuthGuard } from '../../../common/guards';
 import { AccessToken } from '../../../common/decorators';
 import { UseGuards } from '@nestjs/common';
-import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
-
+import { AuthMiddleware } from 'common/middlewares/auth.middleware';
 
 @Resolver(UserProfileMutationType)
 export class UserProfileMutationResolver extends UserProfileRootResolver {
@@ -35,11 +34,16 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         super();
     }
 
-    @ResolveField(() => CreateUserProfileResultsType)
+    @ResolveField(() => CreateUserProfileResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async createUserProfile(
         @Args() args: CreateUserProfileInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateUserProfileResultsType> {
-        return await this.userProfileService.createUserProfile(args);
+        return await this.userProfileService.createUserProfile({
+            user_id: args.user_id ?? user_id,
+        }, user_id);
     }
 
     @ResolveField(() => UpdateUserProfileResultsType, {
@@ -47,12 +51,10 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateUserProfile(
-        @AccessToken() user_id: string,
         @Args() args: UpdateUserProfileInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateUserProfileResultsType> {
-        return await this.userProfileService.updateUserProfile({
-            ...args,
-        });
+        return await this.userProfileService.updateUserProfile(args, user_id);
     }
 
     @ResolveField(() => DeleteUserProfileResultsType, {
@@ -60,10 +62,9 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async deleteUserProfile(
-        @AccessToken() user_id: string,
-        // @Args('id') id: string,
+        @Args('id') id: string,
     ): Promise<DeleteUserProfileResultsType> {
-        return await this.userProfileService.deleteUserProfile(user_id);
+        return await this.userProfileService.deleteUserProfile(id);
     }
 
     @ResolveField(() => UpdateUserFavouriteAnimesResultType, {
@@ -116,7 +117,6 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         @AccessToken() user_id: string,
         @Args() args: UpdateUserFavouriteGenresInputType,
     ): Promise<UpdateUserFavouriteGenresResultType> {
-        console.log(user_id);
         return await this.userProfileService.updateFavouriteGenres(
             args,
             user_id,

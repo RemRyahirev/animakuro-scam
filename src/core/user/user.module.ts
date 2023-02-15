@@ -3,6 +3,7 @@ import { UserQueryResolver } from './resolvers/user-query.resolver';
 import { UserService } from './services/user.service';
 import { UserRootResolver } from './resolvers/user-root.resolver';
 import { UserMutationResolver } from './resolvers/user-mutation.resolver';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
     imports: [],
@@ -11,6 +12,7 @@ import { UserMutationResolver } from './resolvers/user-mutation.resolver';
         UserRootResolver,
         UserQueryResolver,
         UserMutationResolver,
+        JwtService,
     ],
     exports: [UserService],
 })

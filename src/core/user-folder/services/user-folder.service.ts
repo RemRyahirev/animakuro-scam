@@ -12,13 +12,14 @@ import { transformPaginationUtil } from '../../../common/utils/transform-paginat
 import { Injectable } from '@nestjs/common';
 import { entityUpdateUtil } from '../../../common/utils/entity-update.util';
 import { GetUserFolderByUserIdResultsType } from '../models/results/get-user-folder-by-user-id-results.type';
+import { FolderType } from '../../../common/models/enums';
 
 @Injectable()
 export class UserFolderService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+    ) {}
 
     async getUserFolderByUserId(
         id: string,
@@ -176,26 +177,8 @@ export class UserFolderService {
     }
 
     async deleteUserFolder(id: string): Promise<DeleteUserFolderResultsType> {
-        const userFolder = await this.prisma.userFolder.delete({
-            where: { id },
-            include: {
-                user: {
-                    include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
-                        auth: true,
-                        favourite_animes: true,
-                        favourite_authors: true,
-                        favourite_genres: true,
-                        favourite_characters: true,
-                        favourite_studios: true,
-                    },
-                },
-                animes: true,
-            },
+        const userFolder = await this.prisma.userFolder.deleteMany({
+            where: { id, type: FolderType.DEFAULT },
         });
         return {
             success: true,

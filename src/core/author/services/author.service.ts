@@ -11,13 +11,19 @@ import { UpdateAuthorResultsType } from '../models/results/update-author-results
 import { CreateAuthorResultsType } from '../models/results/create-author-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
+import { FileUploadService } from 'common/services/file-upload.service';
 
 @Injectable()
 export class AuthorService {
+    coverFiles;
+
     constructor(
         private prisma: PrismaService,
+        private fileUpload: FileUploadService,
         private paginationService: PaginationService,
-    ) {}
+    ) {
+        this.coverFiles = this.fileUpload.getStorageForOne('author', 'cover_id', 'author');
+    }
 
     async getAuthor(id: string): Promise<GetAuthorResultsType> {
         const author = await this.prisma.author.findUnique({
@@ -31,6 +37,11 @@ export class AuthorService {
                         characters: true,
                         authors: true,
                         studios: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -60,6 +71,11 @@ export class AuthorService {
                         characters: true,
                         authors: true,
                         studios: true,
+                        cover: {
+                            include: {
+                                user: true,
+                            },
+                        },
                     },
                 },
             },
@@ -106,9 +122,13 @@ export class AuthorService {
 
     async createAuthor(
         args: CreateAuthorInputType,
+        user_id: string,
     ): Promise<CreateAuthorResultsType> {
         const author = await this.prisma.author.create({
-            data: args,
+            data: {
+                ...args,
+                cover: await this.coverFiles.tryCreate(args.cover, user_id),
+            },
         });
         return {
             success: true,
@@ -118,10 +138,14 @@ export class AuthorService {
 
     async updateAuthor(
         args: UpdateAuthorInputType,
+        user_id: string,
     ): Promise<UpdateAuthorResultsType> {
         const author = await this.prisma.author.update({
             where: { id: args.id },
-            data: args,
+            data: {
+                ...args,
+                cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, user_id),
+            },
         });
         return {
             success: true,
@@ -132,6 +156,7 @@ export class AuthorService {
     async deleteAuthor(
         id: string,
     ): Promise<DeleteAuthorResultsType> {
+        await this.coverFiles.tryDeleteAll({ id });
         const author = await this.prisma.author.delete({
             where: { id },
         });

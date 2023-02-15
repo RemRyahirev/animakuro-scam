@@ -27,6 +27,8 @@ model User {
   user_profile         UserProfile?
   auth_sessions        AuthSession[]
   user_collection      UserFolder[]  @relation("user_collection")
+  rating_anime         RatingAnime[]
+  social_service       AuthType      @default(JWT)
   files                File[]
 
   @@map("users")
@@ -91,6 +93,7 @@ model Anime {
   id                 String           @id @default(uuid()) @db.Uuid
   title              String           @db.VarChar(100)
   score              Float            @db.Real
+  evaluation         String           @default("5:0;4:0;3:0;2:0;1:0")
   year               Int              @db.SmallInt
   date_start         DateTime?        @db.Date
   date_end           DateTime?        @db.Date
@@ -112,6 +115,10 @@ model Anime {
   preview_link       String           @db.Text
   status_description String           @db.VarChar(30)
   release_status     ReleaseStatus    @default(COMPLETED)
+  banner             File?            @relation("banner", fields: [banner_id], references: [id])
+  banner_id          String?          @db.Uuid
+  cover              File?            @relation("cover", fields: [cover_id], references: [id])
+  cover_id           String?          @db.Uuid
   created_at         DateTime         @default(now()) @map("created_at")
   updated_at         DateTime         @default(now()) @map("updated_at")
   studios            Studio[]
@@ -125,6 +132,7 @@ model Anime {
   airing_schedule    AiringSchedule[]
   favourite_by       User[]
   opening_ending     OpeningEnding[]
+  rating_anime       RatingAnime[]
 
   @@map("anime")
 }
@@ -178,6 +186,8 @@ model Author {
   language            String   @db.VarChar(30)
   gender              String   @db.VarChar(30)
   bio                 String   @db.Text
+  cover               File?    @relation(fields: [cover_id], references: [id])
+  cover_id            String?  @db.Uuid
   created_at          DateTime @default(now()) @map("created_at")
   updated_at          DateTime @default(now()) @map("updated_at")
   animes              Anime[]
@@ -228,6 +238,10 @@ model UserProfile {
   id               String           @id @default(uuid()) @db.Uuid
   user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id          String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  banner           File?            @relation("banner", fields: [banner_id], references: [id])
+  banner_id        String?          @db.Uuid
+  cover            File?            @relation("cover", fields: [cover_id], references: [id])
+  cover_id         String?          @db.Uuid
   profile_settings ProfileSettings?
   created_at       DateTime?        @default(now()) @db.Date
 
@@ -261,25 +275,26 @@ model ProfileSettings {
 
 model UserFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
-  id                  String   @id @default(uuid()) @db.Uuid
+  id                  String     @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user                User?    @relation(name: "user_folder", fields: [user_id], references: [id])
-  user_id             String   @db.Uuid // o-2-o relation
-  user_collection     User?    @relation(name: "user_collection", fields: [user_collection_id], references: [id])
-  user_collection_id  String?  @db.Uuid
+  user                User?      @relation(name: "user_folder", fields: [user_id], references: [id])
+  user_id             String     @db.Uuid // o-2-o relation
+  user_collection     User?      @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection_id  String?    @db.Uuid
   animes              Anime[]
   // информативный блок
-  is_collection       Boolean  @default(false) @db.Boolean()
-  is_public           Boolean  @default(false) @db.Boolean()
-  is_statistic_active Boolean  @default(false) @db.Boolean() //Активация вывода статистики
-  name                String   @db.VarChar(25)
+  is_collection       Boolean    @default(false) @db.Boolean()
+  is_public           Boolean    @default(false) @db.Boolean()
+  is_statistic_active Boolean    @default(false) @db.Boolean() //Активация вывода статистики
+  name                String     @db.VarChar(25)
   description         String
+  type                FolderType @default(DEFAULT)
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
   //watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
-  created_at          DateTime @default(now()) @map("created_at")
-  updated_at          DateTime @default(now()) @map("updated_at")
+  created_at          DateTime   @default(now()) @map("created_at")
+  updated_at          DateTime   @default(now()) @map("updated_at")
 
   // @@id([user_id, user_collection_id])
   @@map("user_folder")
@@ -301,14 +316,32 @@ model OpeningEnding {
   @@map("opening_ending")
 }
 
+model RatingAnime {
+  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id  String @db.Uuid
+  anime    Anime  @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  anime_id String @db.Uuid
+  rating   Int
+
+  @@id([anime_id, user_id])
+  @@map("rating_anime")
+}
+
 model File {
-  id          String   @id @default(uuid()) @db.Uuid
-  file_id     String   @db.VarChar(100)
-  bucket_name String   @db.VarChar(100)
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id     String   @db.Uuid
-  created_at  DateTime @default(now()) @map("created_at")
-  studios     Studio[]
+  id                    String          @id @default(uuid()) @db.Uuid
+  file_id               String          @db.VarChar(100)
+  bucket_name           String          @db.VarChar(100)
+  url                   String          @db.Text
+  user                  User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id               String          @db.Uuid
+  created_at            DateTime        @default(now()) @map("created_at")
+
+  studio_thumbnails     Studio[]
+  anime_banners         Anime[]         @relation("banner")
+  anime_covers          Anime[]         @relation("cover")
+  profile_banners       UserProfile[]   @relation("banner")
+  profile_covers        UserProfile[]   @relation("cover")
+  author_covers         Author[]
 
   @@map("file")
 }
@@ -482,4 +515,12 @@ enum Media {
   CHARACTERS
   AUTHORS
   GENRES
+}
+
+enum FolderType {
+  LOOKING //Смотрю
+  ABANDONED // Брошено
+  PLANNED // Запланированно
+  VIEWED // Просмотрено
+  DEFAULT // Стандарный Фолдер
 }

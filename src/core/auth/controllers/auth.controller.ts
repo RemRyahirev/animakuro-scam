@@ -49,14 +49,4 @@ export class AuthController {
     discordAuthRedirect(@Req() req: Request) {
         return this.authService.registerSocial(req?.user, AuthType.DISCORD);
     }
-
-    @Get('shikimori')
-    @UseGuards(AuthGuard(AuthType.SHIKIMORI))
-    redirectShikimoriAccounts(@Req() _req: Request) {}
-
-    @Get('shikimori/redirect')
-    @UseGuards(AuthGuard(AuthType.SHIKIMORI))
-    shikimoriAuthRedirect(@Req() req: Request) {
-        return this.authService.registerSocial(req?.user, AuthType.SHIKIMORI);
-    }
 }

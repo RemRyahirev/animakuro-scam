@@ -1,3 +1,6 @@
+import { Type } from 'class-transformer';
+import { IsNumber } from 'class-validator';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { ArgsType, Field, Float, ID, Int } from '@nestjs/graphql';
 import {
     IsArray,
@@ -19,11 +22,8 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '../../../../common/models/enums';
-import { IsNumber } from 'class-validator';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
-import { Type } from 'class-transformer';
-import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -236,9 +236,10 @@ export class UpdateAnimeInputType {
     similar_by_animes_remove?: string[];
 
     @IsOptional()
-    @Field(() => GraphQLUpload, {
-        description: 'File to upload',
-        nullable: true
-    })
-    file?: Promise<FileUpload>;
+    @Field(() => GraphQLUpload, { nullable: true })
+    banner?: Promise<FileUpload>;
+
+    @IsOptional()
+    @Field(() => GraphQLUpload, { nullable: true })
+    cover?: Promise<FileUpload>;
 }

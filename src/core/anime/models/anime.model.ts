@@ -34,6 +34,11 @@ export class Anime {
     })
     score: number;
 
+    @Field(() => String, {
+        description: 'User ratings',
+    })
+    evaluation: string;
+
     @Field(() => Int, {
         description: 'Year of production of the media',
     })
@@ -197,19 +202,19 @@ export class Anime {
 
     @Field(() => [OpeningEnding], {
         nullable: true,
-        description: 'Opening ending list'
+        description: 'Opening ending list',
     })
     opening_ending?: OpeningEnding
 
     @Field(() => [OpeningEnding], {
         nullable: true,
-        description: 'Opening list'
+        description: 'Opening list',
     })
     openings?: OpeningEnding
 
     @Field(() => [OpeningEnding], {
         nullable: true,
-        description: 'Ending list'
+        description: 'Ending list',
     })
     endings?: OpeningEnding
 
@@ -219,9 +224,9 @@ export class Anime {
     @Field(() => Date, { description: 'When the anime data was last updated' })
     updated_at: Date;
 
-    @Field(() => File, {
-        description: 'File',
-        nullable: true,
-    })
-    file?: File;
+    @Field(() => File, { nullable: true })
+    banner?: File;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 }

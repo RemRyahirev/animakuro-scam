@@ -19,8 +19,8 @@ export class Studio {
     })
     rating: number;
 
-    @Field(() => File)
-    thumbnail: File;
+    @Field(() => File, { nullable: true })
+    thumbnail?: File;
 
     @Field(() => [Anime], {
         nullable: true,

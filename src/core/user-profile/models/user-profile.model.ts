@@ -1,6 +1,7 @@
 import { ProfileSettings } from '../../profile-settings/models/profile-settings.model';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from '../../user/models/user.model';
+import { File } from 'common/models/results/file.model';
 
 @ObjectType()
 export class UserProfile {
@@ -23,4 +24,10 @@ export class UserProfile {
 
     @Field(() => ProfileSettings, { nullable: true })
     profile_settings: ProfileSettings | null;
+
+    @Field(() => File, { nullable: true })
+    banner?: File;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 }

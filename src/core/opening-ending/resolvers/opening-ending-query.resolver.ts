@@ -7,7 +7,10 @@ import { PaginationInputType } from "../../../common/models/inputs";
 import { GetOpeningEndingListResultsType } from "../models/results/get-opening-ending-list-results.type";
 import { GetOpeningEndingListInputType } from "../models/inputs/get-opening-ending-list-input.type"
 import { GetOpeningEndingListSortInputType } from "../models/inputs/get-opening-ending-list-sort-input.type";
-
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { AccessToken } from '../../../common/decorators';
 @Resolver(OpeningEndingQueryType)
 export class OpeningEndingQueryResolver extends OpeningEndingRootResolver {
     constructor(private opendingService: OpeningEndingService) {
