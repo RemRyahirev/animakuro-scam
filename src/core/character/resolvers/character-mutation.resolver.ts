@@ -12,7 +12,9 @@ import { CharacterService } from '../services/character.service';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { AccessToken } from "common/decorators";
 
+@UseGuards(JwtAuthGuard)
 @Resolver(CharacterMutationType)
 export class CharacterMutationResolver extends CharacterRootResolver {
     constructor(private characterService: CharacterService) {
@@ -22,27 +24,26 @@ export class CharacterMutationResolver extends CharacterRootResolver {
     @ResolveField(() => CreateCharacterResultsType, {
         middleware: [AuthMiddleware],
     })
-    @UseGuards(JwtAuthGuard)
     async createCharacter(
         @Args() args: CreateCharacterInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateCharacterResultsType> {
-        return await this.characterService.createCharacter(args);
+        return await this.characterService.createCharacter(args, user_id);
     }
 
     @ResolveField(() => UpdateCharacterResultsType, {
         middleware: [AuthMiddleware],
     })
-    @UseGuards(JwtAuthGuard)
     async updateCharacter(
         @Args() args: UpdateCharacterInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateCharacterResultsType> {
-        return await this.characterService.updateCharacter(args);
+        return await this.characterService.updateCharacter(args, user_id);
     }
 
     @ResolveField(() => DeleteCharacterResultsType, {
         middleware: [AuthMiddleware],
     })
-    @UseGuards(JwtAuthGuard)
     async deleteCharacter(
         @Args('id') id: string,
     ): Promise<DeleteCharacterResultsType> {
