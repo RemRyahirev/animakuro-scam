@@ -21,13 +21,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
                 config: {
-                    url: `redis://${configService.get(
-                        'REDIS_USER',
-                    )}:${configService.get(
-                        'REDIS_PASSWORD',
-                    )}@${configService.get('REDIS_HOST')}:${configService.get(
-                        'REDIS_PORT',
-                    )}`,
+                    url: configService.get('REDIS_URL'),
                 },
             }),
         }),
@@ -69,4 +63,4 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     ],
     exports: [],
 })
-export class AppModule {}
+export class AppModule { }

@@ -70,7 +70,7 @@ const PrismaErrorCodes = Object.keys(PrismaErrorCodesMap);
 // XXX: don't forget to adjust README.md and notify frontend team
 //      in case of changing these functions
 export function formatError(error: GraphQLError) {
-    console.log('formatError:', error, error.extensions);
+    // console.log('formatError:', error, error.extensions);
     let message = error.message.replace(/"/g, "'");
     let details = error.extensions.details;
 
