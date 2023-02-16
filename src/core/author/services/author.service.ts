@@ -19,7 +19,10 @@ export class AuthorService {
         private paginationService: PaginationService,
     ) {}
 
-    async getAuthor(id: string): Promise<GetAuthorResultsType> {
+    async getAuthor(
+        id: string,
+        user_id: string,
+    ): Promise<GetAuthorResultsType> {
         const author = await this.prisma.author.findUnique({
             where: {
                 id,
@@ -33,6 +36,11 @@ export class AuthorService {
                         studios: true,
                     },
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         if (!author) {
@@ -41,6 +49,16 @@ export class AuthorService {
                 author: null,
             };
         }
+
+        const favourite = author?.favourite_by.find((el) => el.id == user_id);
+        if (favourite) {
+            return {
+                success: true,
+                author: { ...author, is_favourite: true } as any,
+                errors: [],
+            };
+        }
+
         return {
             success: true,
             author: author as any,
@@ -50,8 +68,9 @@ export class AuthorService {
 
     async getAuthorList(
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListAuthorResultsType> {
-        const authorList = await this.prisma.author.findMany({
+        const authorList: any = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),
             include: {
                 animes: {
@@ -62,9 +81,27 @@ export class AuthorService {
                         studios: true,
                     },
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
-        const pagination = await this.paginationService.getPagination('author', args);
+        const pagination = await this.paginationService.getPagination(
+            'author',
+            args,
+        );
+
+        for await (const author of authorList) {
+            const favourite = author?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                author.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],
@@ -76,8 +113,9 @@ export class AuthorService {
     async getAuthorListByAnimeId(
         id: string,
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListAuthorByAnimeIdResultsType> {
-        const authorList = await this.prisma.author.findMany({
+        const authorList: any = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),
             where: {
                 animes: {
@@ -85,17 +123,32 @@ export class AuthorService {
                         id,
                     },
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
-            "author",
+            'author',
             args,
             {
-                nested_field: "animes",
-                search_property: "id",
-                search_value: id
-            }
+                nested_field: 'animes',
+                search_property: 'id',
+                search_value: id,
+            },
         );
+
+        for await (const author of authorList) {
+            const favourite = author?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                author.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],
@@ -129,9 +182,7 @@ export class AuthorService {
         };
     }
 
-    async deleteAuthor(
-        id: string,
-    ): Promise<DeleteAuthorResultsType> {
+    async deleteAuthor(id: string): Promise<DeleteAuthorResultsType> {
         const author = await this.prisma.author.delete({
             where: { id },
         });

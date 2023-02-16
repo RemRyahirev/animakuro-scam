@@ -7,6 +7,8 @@ import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-l
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { AnimeService } from '../services/anime.service';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
+import { AccessToken } from '../../../common/decorators';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 
 @Resolver(AnimeQueryType)
 export class AnimeQueryResolver extends AnimeRootResolver {
@@ -14,33 +16,51 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         super();
     }
 
-    @ResolveField(() => GetAnimeResultsType)
+    @ResolveField(() => GetAnimeResultsType, { middleware: [AuthMiddleware] })
     async getAnime(
         @Args() args: GetAnimeByIdInputType,
+        @AccessToken() userId: string,
     ): Promise<GetAnimeResultsType> {
-        return await this.animeService.getAnime(args);
+        return await this.animeService.getAnime(args, userId);
     }
 
-    @ResolveField(() => GetListAnimeResultsType)
+    @ResolveField(() => GetListAnimeResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getAnimeList(
         @Args() args: PaginationInputType,
+        @AccessToken() userId: string,
     ): Promise<GetListAnimeResultsType> {
-        return await this.animeService.getAnimeList(args);
+        return await this.animeService.getAnimeList(args, userId);
     }
 
-    @ResolveField(() => GetListRelatedAnimeByAnimeIdResultsType)
+    @ResolveField(() => GetListRelatedAnimeByAnimeIdResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getRelatedAnimeListByAnimeId(
         @Args('id') id: string,
         @Args() args: PaginationInputType,
+        @AccessToken() userId: string,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
-        return await this.animeService.getRelatedAnimeListByAnimeId(id, args);
+        return await this.animeService.getRelatedAnimeListByAnimeId(
+            id,
+            args,
+            userId,
+        );
     }
 
-    @ResolveField(() => GetListSimilarAnimeByAnimeIdResultsType)
+    @ResolveField(() => GetListSimilarAnimeByAnimeIdResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getSimilarAnimeListByAnimeId(
         @Args('id') id: string,
         @Args() args: PaginationInputType,
+        @AccessToken() userId: string,
     ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
-        return await this.animeService.getSimilarAnimeListByAnimeId(id, args);
+        return await this.animeService.getSimilarAnimeListByAnimeId(
+            id,
+            args,
+            userId,
+        );
     }
 }

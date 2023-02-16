@@ -19,7 +19,10 @@ export class CharacterService {
         private paginationService: PaginationService,
     ) {}
 
-    async getCharacter(id: string): Promise<GetCharacterResultsType> {
+    async getCharacter(
+        id: string,
+        user_id: string,
+    ): Promise<GetCharacterResultsType> {
         const character = await this.prisma.character.findUnique({
             where: {
                 id,
@@ -31,6 +34,16 @@ export class CharacterService {
                         characters: true,
                         authors: true,
                         studios: true,
+                        favourite_by: {
+                            select: {
+                                id: true,
+                            },
+                        },
+                    },
+                },
+                favourite_by: {
+                    select: {
+                        id: true,
                     },
                 },
             },
@@ -41,6 +54,29 @@ export class CharacterService {
                 character: null,
             };
         }
+
+        const favourite = character?.favourite_by.find(
+            (el) => el.id == user_id,
+        );
+
+        for await (const anime of character.animes) {
+            const favourite = anime?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                //@ts-ignore
+                anime.is_favourite = true;
+            }
+        }
+
+        if (favourite) {
+            return {
+                success: true,
+                character: { ...character, is_favourite: true } as any,
+                errors: [],
+            };
+        }
+
         return {
             success: true,
             character: character as any,
@@ -50,8 +86,9 @@ export class CharacterService {
 
     async getCharacterList(
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListCharacterResultsType> {
-        const characterList = await this.prisma.character.findMany({
+        const characterList: any = await this.prisma.character.findMany({
             ...transformPaginationUtil(args),
             include: {
                 animes: {
@@ -60,6 +97,16 @@ export class CharacterService {
                         characters: true,
                         authors: true,
                         studios: true,
+                        favourite_by: {
+                            select: {
+                                id: true,
+                            },
+                        },
+                    },
+                },
+                favourite_by: {
+                    select: {
+                        id: true,
                     },
                 },
             },
@@ -68,6 +115,25 @@ export class CharacterService {
             'character',
             args,
         );
+
+        for await (const character of characterList) {
+            for await (const anime of character.animes) {
+                const favourite = anime?.favourite_by.find(
+                    (el: any) => el.id == user_id,
+                );
+                if (favourite) {
+                    anime.is_favourite = true;
+                }
+            }
+
+            const favourite = character?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                character.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],
@@ -79,13 +145,21 @@ export class CharacterService {
     async getCharacterListByAnimeId(
         id: string,
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListCharacterByAnimeIdResultsType> {
-        const characterList = await this.prisma.character.findMany({
+        const characterList: any = await this.prisma.character.findMany({
             ...transformPaginationUtil(args),
             where: {
                 animes: {
                     some: {
                         id,
+                    },
+                },
+            },
+            include: {
+                favourite_by: {
+                    select: {
+                        id: true,
                     },
                 },
             },
@@ -99,6 +173,16 @@ export class CharacterService {
                 search_value: id,
             },
         );
+
+        for await (const character of characterList) {
+            const favourite = character?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                character.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],

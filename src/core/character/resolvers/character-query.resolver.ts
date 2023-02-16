@@ -8,6 +8,8 @@ import { GetListCharacterResultsType } from '../models/results/get-list-characte
 import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 import { CharacterService } from '../services/character.service';
+import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { AccessToken } from '../../../common/decorators';
 
 @Resolver(CharacterQueryType)
 export class CharacterQueryResolver extends CharacterRootResolver {
@@ -15,25 +17,34 @@ export class CharacterQueryResolver extends CharacterRootResolver {
         super();
     }
 
-    @ResolveField(() => GetCharacterResultsType)
+    @ResolveField(() => GetCharacterResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getCharacter(
-        @Args("id") id: string
+        @Args('id') id: string,
+        @AccessToken() userId: string,
     ): Promise<GetCharacterResultsType> {
-        return await this.characterService.getCharacter(id);
+        return await this.characterService.getCharacter(id, userId);
     }
 
-    @ResolveField(() => GetListCharacterResultsType)
+    @ResolveField(() => GetListCharacterResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getCharacterList(
         @Args() args: PaginationInputType,
+        @AccessToken() userId: string,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterList(args);
+        return await this.characterService.getCharacterList(args, userId);
     }
 
-    @ResolveField(() => GetListCharacterByAnimeIdResultsType)
+    @ResolveField(() => GetListCharacterByAnimeIdResultsType, {
+        middleware: [AuthMiddleware],
+    })
     async getCharacterListByAnimeId(
-        @Args("id") id: string,
-        @Args() args: PaginationInputType
+        @Args('id') id: string,
+        @Args() args: PaginationInputType,
+        @AccessToken() userId: string,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterListByAnimeId(id, args);
+        return await this.characterService.getCharacterListByAnimeId(id, args, userId);
     }
 }

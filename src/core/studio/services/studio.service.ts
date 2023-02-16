@@ -20,7 +20,10 @@ export class StudioService {
         private paginationService: PaginationService,
     ) {}
 
-    async getStudio(id: string): Promise<GetStudioResultsType> {
+    async getStudio(
+        id: string,
+        user_id: string,
+    ): Promise<GetStudioResultsType> {
         const studio = await this.prisma.studio.findUnique({
             where: {
                 id,
@@ -33,12 +36,25 @@ export class StudioService {
                         characters: true,
                     },
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         if (!studio) {
             return {
                 success: false,
                 studio: null,
+            };
+        }
+        const favourite = studio?.favourite_by.find((el) => el.id == user_id);
+        if (favourite) {
+            return {
+                success: true,
+                studio: { ...studio, is_favourite: true } as any,
+                errors: [],
             };
         }
         return {
@@ -50,8 +66,9 @@ export class StudioService {
 
     async getStudioList(
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListStudioResultsType> {
-        const studioList = await this.prisma.studio.findMany({
+        const studioList: any = await this.prisma.studio.findMany({
             ...transformPaginationUtil(args),
             include: {
                 animes: {
@@ -61,12 +78,27 @@ export class StudioService {
                         characters: true,
                     },
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
             'studio',
             args,
         );
+
+        for await (const studio of studioList) {
+            const favourite = studio?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                studio.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],

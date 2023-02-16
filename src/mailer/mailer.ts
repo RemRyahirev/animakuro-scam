@@ -1,8 +1,9 @@
 import * as nodemailer from 'nodemailer';
+import type { SendMailOptions } from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 import { MailPurpose } from '../common/models/enums';
-import SMTPTransport, { Options } from 'nodemailer/lib/smtp-transport';
+import SMTPTransport, { Options } from 'nodemailer/lib/smtp-pool';
 import * as handlebars from 'handlebars';
 import { ConfigService } from '@nestjs/config';
 import { Injectable, OnModuleInit } from '@nestjs/common';
@@ -15,39 +16,56 @@ export class Mailer implements OnModuleInit {
 
     onModuleInit(): void {
         const port = this.configService.get<number>('MAILER_PORT', 587);
-        this.nodemailer = nodemailer.createTransport(<SMTPTransport.Options>{
-            pool: true,
-            host: this.configService.get<string>('MAILER_HOST', 'smtp.mail.ru'),
-            port,
-            secure: false,
-            auth: {
-                user: this.configService.get<string>(
-                    'MAILER_EMAIL',
-                    'some@mail.ru',
+        this.nodemailer = nodemailer.createTransport(
+            <SMTPTransport.Options>{
+                pool: true,
+                host: this.configService.get<string>(
+                    'MAILER_HOST',
+                    'smtp.mail.ru',
                 ),
-                pass: this.configService.get<string>(
-                    'MAILER_PASSWORD',
-                    'password',
-                ),
+                port,
+                secure: false,
+                auth: {
+                    user: this.configService.get<string>(
+                        'MAILER_EMAIL',
+                        'some@mail.ru',
+                    ),
+                    pass: this.configService.get<string>(
+                        'MAILER_PASSWORD',
+                        'password',
+                    ),
+                },
+                tls: {
+                    rejectUnauthorized: false,
+                },
+                from: {
+                    name: this.configService.get<string>(
+                        'MAILER_SENDER_NAME',
+                        'somename',
+                    ),
+                    address: this.configService.get<string>(
+                        'MAILER_EMAIL',
+                        'somename@mail.ru',
+                    ),
+                },
             },
-            tls: {
-                rejectUnauthorized: false,
+            <SMTPTransport.Options>{
+                from: {
+                    name: this.configService.get<string>(
+                        'MAILER_SENDER_NAME',
+                        'somename',
+                    ),
+                    address: this.configService.get<string>(
+                        'MAILER_EMAIL',
+                        'somename@mail.ru',
+                    ),
+                },
             },
-            from: {
-                name: this.configService.get<string>(
-                    'MAILER_SENDER_NAME',
-                    'somename',
-                ),
-                address: this.configService.get<string>(
-                    'MAILER_EMAIL',
-                    'somename@mail.ru',
-                ),
-            },
-        });
+        );
     }
 
     public async sendMail(
-        options: Options,
+        options: SendMailOptions,
         purpose: MailPurpose,
         variables?: ReadonlyMap<string, string> | {},
     ): Promise<void> {

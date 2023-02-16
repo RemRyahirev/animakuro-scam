@@ -18,7 +18,6 @@ import { Injectable } from '@nestjs/common';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 import { CacheStatisticService } from '../../../common/cache/services';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
-import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
 import { Rating } from '../models/rating.model';
 
 @Injectable()
@@ -27,9 +26,12 @@ export class AnimeService {
         private prisma: PrismaService,
         protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
-    ) { }
+    ) {}
 
-    async getAnime(args: GetAnimeByIdInputType): Promise<GetAnimeResultsType> {
+    async getAnime(
+        args: GetAnimeByIdInputType,
+        user_id: string,
+    ): Promise<GetAnimeResultsType> {
         const {
             id,
             max_authors_count,
@@ -68,6 +70,11 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
 
@@ -100,17 +107,38 @@ export class AnimeService {
         if (openings) opening_ending.push(...openings);
         if (endings) opening_ending.push(...endings);
 
+        const favourite = anime?.favourite_by.find((el) => el.id == user_id);
+        if (favourite) {
+            return {
+                success: true,
+                errors: [],
+                anime: {
+                    ...anime,
+                    opening_ending,
+                    openings,
+                    endings,
+                    is_favourite: true,
+                } as any,
+            };
+        }
+
         return {
             success: true,
             errors: [],
-            anime: { ...anime, opening_ending, openings, endings } as any,
+            anime: {
+                ...anime,
+                opening_ending,
+                openings,
+                endings,
+            } as any,
         };
     }
 
     async getAnimeList(
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListAnimeResultsType> {
-        const animeList = await this.prisma.anime.findMany({
+        const animeList: any = await this.prisma.anime.findMany({
             ...transformPaginationUtil(args),
             include: {
                 genres: true,
@@ -132,12 +160,26 @@ export class AnimeService {
                     orderBy: { episode_start: 'asc' },
                     take: 2,
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
             'anime',
             args,
         );
+
+        for await (const anime of animeList) {
+            const favourite = anime?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                anime.is_favourite = true;
+            }
+        }
         return {
             success: true,
             errors: [],
@@ -149,13 +191,19 @@ export class AnimeService {
     async getRelatedAnimeListByAnimeId(
         id: string,
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
-        const animeList = await this.prisma.relatingAnime.findMany({
+        const animeList: any = await this.prisma.relatingAnime.findMany({
             where: { parent_anime_id: id },
             ...transformPaginationUtil(args),
             include: {
                 parent_anime: true,
                 child_anime: true,
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
 
@@ -168,6 +216,16 @@ export class AnimeService {
             //     search_value: id,
             // },
         );
+
+        for await (const anime of animeList) {
+            const favourite = anime?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                anime.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],
@@ -179,13 +237,19 @@ export class AnimeService {
     async getSimilarAnimeListByAnimeId(
         id: string,
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
-        const animeList = await this.prisma.similarAnime.findMany({
+        const animeList: any = await this.prisma.similarAnime.findMany({
             where: { parent_anime_id: id },
             ...transformPaginationUtil(args),
             include: {
                 parent_anime: true,
                 child_anime: true,
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -197,6 +261,16 @@ export class AnimeService {
             //     search_value: id,
             // },
         );
+
+        for await (const anime of animeList) {
+            const favourite = anime?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                anime.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],
