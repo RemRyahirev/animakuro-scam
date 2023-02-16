@@ -15,6 +15,7 @@ import { RelatingAnime } from '../../relating-anime/models/relating-anime.model'
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
 import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
+import { File } from 'common/models/results/file.model';
 
 @ObjectType()
 export class Anime {
@@ -39,10 +40,10 @@ export class Anime {
     })
     score: number;
 
-    @Field(() => String, {
-        description: 'User ratings',
-    })
-    evaluation: string;
+    // @Field(() => Object, {
+    //     description: 'User ratings',
+    // })
+    // evaluation: object;
 
     @Field(() => Int, {
         description: 'Year of production of the media',
@@ -228,4 +229,10 @@ export class Anime {
 
     @Field(() => Date, { description: 'When the anime data was last updated' })
     updated_at: Date;
+
+    @Field(() => File, { nullable: true })
+    banner?: File;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 }

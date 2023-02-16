@@ -1,6 +1,7 @@
 import { GraphQLError, GraphQLFormattedError } from 'graphql/error';
 import { ValidationError } from '@nestjs/class-validator';
 import { Logger } from '@nestjs/common';
+import CustomError from 'common/utils/custom.error';
 
 type PrismaErrorExceptionType = {
     code: string;
@@ -95,6 +96,18 @@ export function formatError(error: GraphQLError) {
             details = (error.extensions.exception as PrismaErrorExceptionType)
                 .meta;
         }
+    } else if (
+        isInternalError &&
+        (error.extensions?.exception as CustomError)?.isCustomError
+    ) {
+        details = (error.extensions.exception as CustomError).details;
+        Logger.error(message, {
+            location: error.locations?.[0],
+            path: error.path?.join('.'),
+            code: error.extensions.code,
+            details,
+        });
+        message = 'Something went wrong.';
     } else if (isInternalError) {
         Logger.error(message, {
             location: error.locations?.[0],
@@ -102,7 +115,7 @@ export function formatError(error: GraphQLError) {
             code: error.extensions.code,
             details,
         });
-        message = 'Something went wrong with DB communication.';
+        message = 'Something went wrong.';
     }
 
     return {

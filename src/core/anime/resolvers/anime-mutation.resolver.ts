@@ -1,4 +1,6 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { AuthMiddleware } from 'common/middlewares/auth.middleware';
+import { AccessToken } from 'common/decorators';
 import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
@@ -7,12 +9,10 @@ import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
 import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.type';
 import { AnimeService } from '../services/anime.service';
 import { AnimeApproval, AnimeRelation } from '../../../common/models/enums';
-import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
 import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
-import { AccessToken } from '../../../common/decorators';
 
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
@@ -26,8 +26,9 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @UseGuards(JwtAuthGuard)
     async createAnime(
         @Args() args: CreateAnimeInputType,
+        @AccessToken() user_id: string,
     ): Promise<CreateAnimeResultsType> {
-        return await this.animeService.createAnime(args);
+        return await this.animeService.createAnime(args, user_id);
     }
 
     @ResolveField(() => UpdateAnimeResultsType, {
@@ -36,8 +37,9 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateAnime(
         @Args() args: UpdateAnimeInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateAnimeResultsType> {
-        return await this.animeService.updateAnime(args);
+        return await this.animeService.updateAnime(args, user_id);
     }
 
     @ResolveField(() => UpdateAnimeResultsType, {
@@ -148,7 +150,6 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)
-
     async updateRatingAnime(
         @Args() args: UpdateRatingAnimeInputType,
         @AccessToken() user_id: string,

@@ -23,3 +23,26 @@ export class Rating {
     })
     rating: number;
 }
+
+@InputType()
+export class EvaluationType {
+    @IsNumber()
+    @Field(() => Int)
+    5: number;
+
+    @IsNumber()
+    @Field(() => Int)
+    4: number;
+
+    @IsNumber()
+    @Field(() => Int)
+    3: number;
+
+    @IsNumber()
+    @Field(() => Int)
+    2: number;
+
+    @IsNumber()
+    @Field(() => Int)
+    1: number;
+}

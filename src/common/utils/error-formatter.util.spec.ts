@@ -131,7 +131,7 @@ describe('Error formatter', () => {
             } as unknown as GraphQLError);
 
             expect(result).toEqual({
-                message: 'Something went wrong with DB communication.',
+                message: 'Something went wrong.',
                 location: { line: 9, column: 5 },
                 path: 'animeQueries.getAnimeList',
                 code: 'INTERNAL_SERVER_ERROR',

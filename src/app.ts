@@ -5,6 +5,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import session from 'express-session';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { useContainer } from '@nestjs/class-validator';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { CommonModule } from './common/common.module';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
 import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
@@ -12,6 +13,7 @@ import { SchemaService } from './common/services/schema.service';
 import { PrismaService } from './common/services/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { exceptionFactory } from './common/utils/error-formatter.util';
+import { getMaxFileSize } from 'common/config/cdn';
 
 async function bootstrap(): Promise<void> {
     try {
@@ -67,6 +69,7 @@ async function bootstrap(): Promise<void> {
                 'oauth/twitter/redirect',
             ],
         });
+        app.use(graphqlUploadExpress({ maxFiles: 50, maxFileSize: getMaxFileSize() }))
         app.useGlobalFilters(new PrismaClientExceptionFilter());
         app.useGlobalFilters(new ValidationExceptionFilter());
         app.useGlobalPipes(
