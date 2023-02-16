@@ -51,8 +51,8 @@ export const BUCKET_CONFIG = {
     },
 
     studioThumbnails: {
-        maxFileSize: 5,
-        bucket: 'studio_thumbnails',
+        maxFileSize: 15,
+        bucket: 'studios',
         validation: VALIDATION.JpegPngGifSvg,
     },
 } satisfies Record<string, BucketConfigItem>;
