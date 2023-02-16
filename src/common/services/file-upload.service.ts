@@ -69,19 +69,19 @@ export class FileUploadService {
     }
 
     protected getFileStream(file: FileUpload, bucket: BucketNames) {
-        let maxSize = BUCKET_CONFIG[bucket].maxFileSize;
+        const maxSize = BUCKET_CONFIG[bucket].maxFileSize;
 
         const stream = file.createReadStream();
         if (!maxSize || maxSize < 0) {
             return stream;
         }
 
-        maxSize *= 1024; // KB -> B
+        const maxSizeBytes = maxSize * 1024 * 1024; // MB -> B
         let size = 0;
         stream.on('data', (data: Buffer) => {
             size += data.byteLength;
 
-            if (size > maxSize) {
+            if (size > maxSizeBytes) {
                 // XXX: this error is caught by axios inside cdn lib
                 //      however we can patch this error to pass details in response
                 const err = new Error();
@@ -91,7 +91,7 @@ export class FileUploadService {
                         message: 'Uploading file exceeded size limit',
                         size: maxSize,
                         file: file.filename,
-                        description: `"${file.filename}" size is greater than ${Math.round(maxSize / 1024)}KB`,
+                        description: `"${file.filename}" size is greater than ${maxSize}MB`,
                     },
                 };
 

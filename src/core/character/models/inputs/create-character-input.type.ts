@@ -45,9 +45,6 @@ export class CreateCharacterInputType {
     synonyms: string[];
 
     @IsOptional()
-    @Field(() => GraphQLUpload, {
-        description: 'File to upload',
-        nullable: true
-    })
-    file?: Promise<FileUpload>;
+    @Field(() => GraphQLUpload, { nullable: true })
+    cover?: Promise<FileUpload>;
 }

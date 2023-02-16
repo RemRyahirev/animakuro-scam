@@ -23,7 +23,7 @@ export class StudioService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.thumbnailFiles = this.fileUpload.getStorageForOne('studio', 'thumbnail_id', 'thumbnail');
+        this.thumbnailFiles = this.fileUpload.getStorageForOne('studio', 'thumbnail_id', 'studioThumbnails');
     }
 
     async getStudio(id: string): Promise<GetStudioResultsType> {
