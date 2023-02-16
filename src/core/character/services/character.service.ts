@@ -11,13 +11,19 @@ import { UpdateCharacterResultsType } from '../models/results/update-character-r
 import { DeleteCharacterResultsType } from '../models/results/delete-character-results.type';
 import { transformPaginationUtil } from '../../../common/utils/transform-pagination.util';
 import { Injectable } from '@nestjs/common';
+import { FileUploadService } from 'common/services/file-upload.service';
 
 @Injectable()
 export class CharacterService {
+    coverFiles;
+
     constructor(
         private prisma: PrismaService,
+        private fileUpload: FileUploadService,
         private paginationService: PaginationService,
-    ) {}
+    ) {
+        this.coverFiles = this.fileUpload.getStorageForOne('character', 'cover_id', 'characters');
+    }
 
     async getCharacter(
         id: string,
@@ -44,6 +50,11 @@ export class CharacterService {
                 favourite_by: {
                     select: {
                         id: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -107,6 +118,11 @@ export class CharacterService {
                 favourite_by: {
                     select: {
                         id: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -193,9 +209,13 @@ export class CharacterService {
 
     async createCharacter(
         args: CreateCharacterInputType,
+        user_id: string,
     ): Promise<CreateCharacterResultsType> {
         const character = await this.prisma.character.create({
-            data: args,
+            data: {
+                ...args,
+                cover: await this.coverFiles.tryCreate(args.cover, user_id),
+            },
             include: {
                 animes: {
                     include: {
@@ -203,6 +223,11 @@ export class CharacterService {
                         characters: true,
                         authors: true,
                         studios: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -215,10 +240,14 @@ export class CharacterService {
 
     async updateCharacter(
         args: UpdateCharacterInputType,
+        user_id: string,
     ): Promise<UpdateCharacterResultsType> {
         const character = await this.prisma.character.update({
             where: { id: args.id },
-            data: args,
+            data: {
+                ...args,
+                cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, user_id),
+            },
             include: {
                 animes: {
                     include: {
@@ -226,6 +255,11 @@ export class CharacterService {
                         characters: true,
                         authors: true,
                         studios: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
                     },
                 },
             },
@@ -239,6 +273,7 @@ export class CharacterService {
     async deleteCharacter(
         id: string,
     ): Promise<DeleteCharacterResultsType> {
+        await this.coverFiles.tryDeleteAll({ id });
         const character = await this.prisma.character.delete({
             where: { id },
             include: {
@@ -248,6 +283,11 @@ export class CharacterService {
                         characters: true,
                         authors: true,
                         studios: true,
+                    },
+                },
+                cover: {
+                    include: {
+                        user: true,
                     },
                 },
             },

@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { CharacterRole, CharacterType } from '../../../common/models/enums';
 import { Anime } from '../../anime/models/anime.model';
+import { File } from 'common/models/results/file.model';
 
 @ObjectType()
 export class Character {
@@ -72,6 +73,9 @@ export class Character {
         nullable: true,
     })
     description: string;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 
     @Field(() => [Anime], {
         nullable: true,

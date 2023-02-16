@@ -33,8 +33,8 @@ export class AnimeService {
         protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
     ) {
-        this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'banner');
-        this.coverFiles = this.fileUpload.getStorageForOne('anime', 'cover_id', 'cover');
+        this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'animeBanners');
+        this.coverFiles = this.fileUpload.getStorageForOne('anime', 'cover_id', 'animeCovers');
     }
 
     async getAnime(

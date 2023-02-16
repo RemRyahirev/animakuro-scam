@@ -1,5 +1,5 @@
 type BucketConfigItem = {
-    // max single file size limit in KB
+    // max single file size limit in MB
     maxFileSize?: number;
     // bucket name from CDN_BUCKET env
     bucket: string;
@@ -8,29 +8,57 @@ type BucketConfigItem = {
 };
 
 const VALIDATION = {
-    image: '.png/.jpg/.gif',
+    JpegPngGif: '.png/.jpg/.jpeg/.gif',
+    JpegPngGifSvg: '.png/.jpg/.jpeg/.gif/.svg',
+    JpegPng: '.png/.jpg/.jpeg',
 };
 
 export const BUCKET_CONFIG = {
-    thumbnail: {
-        maxFileSize: 1024,
-        bucket: 'images1',
-        validation: VALIDATION.image,
+    userBanners: {
+        maxFileSize: 10,
+        bucket: 'user_banners',
+        validation: VALIDATION.JpegPngGif,
     },
-    banner: {
-        maxFileSize: 10 * 1024,
-        bucket: 'images1',
-        validation: VALIDATION.image,
+    userCovers: {
+        maxFileSize: 4,
+        bucket: 'user_covers',
+        validation: VALIDATION.JpegPngGif,
     },
-    cover: {
-        maxFileSize: 100 * 1024,
-        bucket: 'images1',
-        validation: VALIDATION.image,
+    animeBanners: {
+        maxFileSize: 30,
+        bucket: 'anime_banners',
+        validation: VALIDATION.JpegPngGifSvg,
+    },
+    animeStills: {
+        maxFileSize: 5,
+        bucket: 'anime_stills',
+        validation: VALIDATION.JpegPng,
+    },
+    animeCovers: {
+        maxFileSize: 20,
+        bucket: 'anime_covers',
+        validation: VALIDATION.JpegPngGifSvg,
+    },
+    characters: {
+        maxFileSize: 15,
+        bucket: 'characters',
+        validation: VALIDATION.JpegPngGifSvg,
+    },
+    authors: {
+        maxFileSize: 15,
+        bucket: 'authors',
+        validation: VALIDATION.JpegPngGifSvg,
+    },
+
+    studioThumbnails: {
+        maxFileSize: 15,
+        bucket: 'studios',
+        validation: VALIDATION.JpegPngGifSvg,
     },
 } satisfies Record<string, BucketConfigItem>;
 
 export function getMaxFileSize() {
     const cdnFileSizeLimit = 6 * 1024 * 1024;
     const maxFileSize = Object.values(BUCKET_CONFIG).reduce((max, { maxFileSize }) => Math.max(max, maxFileSize), 0);
-    return Math.min(maxFileSize, cdnFileSizeLimit) * 1024;
+    return Math.min(maxFileSize, cdnFileSizeLimit) * 1024 * 1024;
 }

@@ -207,6 +207,8 @@ model Character {
   importance    CharacterType @default(PROTAGONIST)
   role          CharacterRole @default(MAIN)
   description   String        @db.Text
+  cover         File?         @relation(fields: [cover_id], references: [id])
+  cover_id      String?       @db.Uuid
   created_at    DateTime      @default(now()) @map("created_at")
   updated_at    DateTime      @default(now()) @map("updated_at")
   animes        Anime[]
@@ -342,6 +344,7 @@ model File {
   profile_banners       UserProfile[]   @relation("banner")
   profile_covers        UserProfile[]   @relation("cover")
   author_covers         Author[]
+  character_covers      Character[]
 
   @@map("file")
 }
