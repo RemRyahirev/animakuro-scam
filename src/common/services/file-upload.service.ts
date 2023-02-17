@@ -9,7 +9,7 @@ import CustomError from 'common/utils/custom.error';
 import { PrismaService } from './prisma.service';
 
 type UploadResultOne = Promise<{ connect: { id: string; }; } | undefined>;
-type UploadResultMany = Promise<{ connect: { id: string[]; }; } | undefined>;
+type UploadResultMany = Promise<{ connect: Array<{ id: string; }>; } | undefined>;
 type DeleteResult = Promise<null | undefined>;
 
 type PrismaModelKeys = Exclude<keyof PrismaClient,
@@ -130,9 +130,10 @@ export class FileUploadService {
         }
 
         return {
-            connect: {
-                id: (await this.upload(bucket, await Promise.all(files), user_id)),
-            },
+            connect: (await this.upload(bucket, await Promise.all(files), user_id))
+                .map((e, i) => ({
+                    id: e,
+                })),
         };
     }
 
@@ -362,9 +363,7 @@ export class FileUploadService {
         );
 
         return {
-            connect: {
-                id: ids,
-            },
+            connect: ids.map(id => ({id})),
         };
     }
 

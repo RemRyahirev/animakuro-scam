@@ -13,7 +13,7 @@ const VALIDATION = {
 
 export const BUCKET_CONFIG = {
     thumbnail: {
-        maxFileSize: 1024,
+        maxFileSize: 20048,
         bucket: 'images1',
         validation: VALIDATION.image,
     },

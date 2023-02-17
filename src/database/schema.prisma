@@ -132,6 +132,7 @@ model Anime {
   airing_schedule    AiringSchedule[]
   favourite_by       User[]
   opening_ending     OpeningEnding[]
+  stills             AnimeStills[]
   rating_anime       RatingAnime[]
 
   @@map("anime")
@@ -327,6 +328,32 @@ model RatingAnime {
   @@map("rating_anime")
 }
 
+model AnimeStills {
+  id            String                    @id @default(uuid()) @db.Uuid
+  anime_id      String                    @db.Uuid
+  frame_id      String                    @db.Uuid @unique
+  type          AnimeStillsType
+  priority      AnimeStillsPriorityType?  
+  created_at    DateTime                  @default(now()) @map("created_at")
+  updated_at    DateTime                  @default(now()) @map("updated_at")
+  anime         Anime                     @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  frame         File                      @relation(fields: [frame_id], references: [id], onDelete: Cascade)
+
+
+  @@map("anime_stills")
+}
+
+enum AnimeStillsType {
+  IMAGE
+  VIDEO
+}
+
+enum AnimeStillsPriorityType {
+  TH1
+  TH2
+  TH3
+}
+
 model File {
   id                    String          @id @default(uuid()) @db.Uuid
   file_id               String          @db.VarChar(100)
@@ -342,6 +369,7 @@ model File {
   profile_banners       UserProfile[]   @relation("banner")
   profile_covers        UserProfile[]   @relation("cover")
   author_covers         Author[]
+  anime_still          AnimeStills?
 
   @@map("file")
 }
