@@ -1,46 +1,44 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "commonjs",
-        "lib": [
-          "dom",
-          "esnext.asynciterable",
-          "es2015.iterable"
-        ],
-        "typeRoots": [
-            "node_modules/@types",
-            "node_modules/.pnpm/@types+*"
-        ],
-        "skipLibCheck": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "strictPropertyInitialization": false,
-        "strict": true,
-        "esModuleInterop": true,
-        "sourceMap": true,
-        "pretty": true,
-        "baseUrl": "./",
-        "outDir": "./dist",
-        "allowJs": true,
-        "paths": {
-            "common/*": [
-                "src/common/*"
-            ],
-            "core/*": [
-                "src/core/*"
-            ],
-            "database/*": [
-                "src/database/*"
-            ],
-            "loaders/*": [
-                "src/loaders/*"
-            ]
-        }
-    },
-    "exclude": [
-        "node_modules"
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "esnext.asynciterable",
+      "es2015.iterable"
     ],
-    "include": [
-        "src/**/*.ts",
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/.pnpm/@types+*"
     ],
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "pretty": true,
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "allowJs": true,
+    "paths": {
+      "database/*": [
+        "database/*"
+      ],
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "apps/**/*.ts",
+    "libs/**/*.ts"
+  ]
 }
