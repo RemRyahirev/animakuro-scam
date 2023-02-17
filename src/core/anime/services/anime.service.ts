@@ -37,7 +37,7 @@ export class AnimeService {
     ) {
         this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'animeBanners');
         this.coverFiles = this.fileUpload.getStorageForOne('anime', 'cover_id', 'animeCovers');
-        this.stills = this.fileUpload.getStorageForMany('animeStills', 'frame_id', 'thumbnail', 50)
+        this.stills = this.fileUpload.getStorageForMany('animeStills', 'frame_id', 'animeStills', 50)
     }
 
     async getAnime(
