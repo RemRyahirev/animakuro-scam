@@ -339,7 +339,7 @@ model AnimeStills {
   anime         Anime                     @relation(fields: [anime_id], references: [id], onDelete: Cascade)
   frame         File                      @relation(fields: [frame_id], references: [id], onDelete: Cascade)
 
-
+  @@unique([anime_id, priority])
   @@map("anime_stills")
 }
 

@@ -92,7 +92,10 @@ export class AnimeService {
                     },
                 },
                 stills: {
-                    orderBy: { priority: 'asc', type: 'asc' },
+                    include: {
+                        frame: true
+                    },
+                    orderBy: { priority: 'asc' },
                     take: take_stills
                 }
             },
@@ -171,7 +174,10 @@ export class AnimeService {
                     },
                 },
                 stills: {
-                    orderBy: { priority: 'asc', type: 'asc' },
+                    include: {
+                        frame: true,
+                    },
+                    orderBy: { priority: 'asc' },
                     take: 3
                 }
             },
