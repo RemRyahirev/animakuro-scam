@@ -22,7 +22,11 @@ export class CharacterService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.coverFiles = this.fileUpload.getStorageForOne('character', 'cover_id', 'characters');
+        this.coverFiles = this.fileUpload.getStorageForOne(
+            'character',
+            'cover_id',
+            'characters',
+        );
     }
 
     async getCharacter(
@@ -99,7 +103,7 @@ export class CharacterService {
         args: PaginationInputType,
         user_id: string,
     ): Promise<GetListCharacterResultsType> {
-        const characterList: any = await this.prisma.character.findMany({
+        const characterList = await this.prisma.character.findMany({
             ...transformPaginationUtil(args),
             include: {
                 animes: {
@@ -132,28 +136,36 @@ export class CharacterService {
             args,
         );
 
-        for await (const character of characterList) {
-            for await (const anime of character.animes) {
-                const favourite = anime?.favourite_by.find(
-                    (el: any) => el.id == user_id,
-                );
-                if (favourite) {
-                    anime.is_favourite = true;
-                }
-            }
+        const animes = await this.prisma.anime.findMany({
+            where: {
+                favourite_by: {
+                    some: { id: user_id },
+                },
+            },
+        });
 
-            const favourite = character?.favourite_by.find(
-                (el: any) => el.id == user_id,
-            );
-            if (favourite) {
-                character.is_favourite = true;
-            }
-        }
+        const characters = await this.prisma.character.findMany({
+            where: {
+                favourite_by: {
+                    some: { id: user_id },
+                },
+            },
+        });
+
+        const favourite_animes = animes.map((el) => el.id);
+        const favourite_characters = characters.map((el) => el.id);
 
         return {
             success: true,
             errors: [],
-            character_list: characterList as any,
+            character_list: characterList.map((el) => ({
+                ...el,
+                is_favourite: favourite_characters.includes(el.id),
+                animes: animes.map((els) => ({
+                    ...els,
+                    is_favourite: favourite_animes.includes(els.id),
+                })),
+            })),
             pagination,
         };
     }

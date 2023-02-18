@@ -23,7 +23,11 @@ export class StudioService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.thumbnailFiles = this.fileUpload.getStorageForOne('studio', 'thumbnail_id', 'studioThumbnails');
+        this.thumbnailFiles = this.fileUpload.getStorageForOne(
+            'studio',
+            'thumbnail_id',
+            'studioThumbnails',
+        );
     }
 
     async getStudio(
@@ -61,16 +65,10 @@ export class StudioService {
             };
         }
         const favourite = studio?.favourite_by.find((el) => el.id == user_id);
-        if (favourite) {
-            return {
-                success: true,
-                studio: { ...studio, is_favourite: true } as any,
-                errors: [],
-            };
-        }
+
         return {
             success: true,
-            studio: studio as any,
+            studio: { ...studio, is_favourite: favourite ?? false } as any,
             errors: [],
         };
     }
@@ -79,7 +77,7 @@ export class StudioService {
         args: PaginationInputType,
         user_id: string,
     ): Promise<GetListStudioResultsType> {
-        const studioList: any = await this.prisma.studio.findMany({
+        const studioList = await this.prisma.studio.findMany({
             ...transformPaginationUtil(args),
             include: {
                 animes: {
@@ -96,19 +94,46 @@ export class StudioService {
             args,
         );
 
-        for await (const studio of studioList) {
-            const favourite = studio?.favourite_by.find(
-                (el: any) => el.id == user_id,
-            );
-            if (favourite) {
-                studio.is_favourite = true;
-            }
-        }
+        const liked_studios = await this.prisma.studio.findMany({
+            where: {
+                favourite_by: {
+                    some: { id: user_id },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const liked_animes = await this.prisma.studio.findMany({
+            where: {
+                animes: {
+                    some: {
+                        favourite_by: {
+                            some: { id: user_id },
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const favourite_studios = liked_studios.map((el) => el.id);
+        const favourite_animes = liked_animes.map((el) => el.id);
 
         return {
             success: true,
             errors: [],
-            studio_list: studioList as unknown as Array<Studio>,
+            studio_list: studioList.map((el) => ({
+                ...el,
+                is_favourite: favourite_studios.includes(el.id),
+                animes: liked_animes.map((els) => ({
+                    ...els,
+                    is_favourite: favourite_animes.includes(els.id),
+                })) as any,
+            })),
             pagination,
         };
     }

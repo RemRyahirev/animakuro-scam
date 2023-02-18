@@ -22,7 +22,11 @@ export class AuthorService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.coverFiles = this.fileUpload.getStorageForOne('author', 'cover_id', 'authors');
+        this.coverFiles = this.fileUpload.getStorageForOne(
+            'author',
+            'cover_id',
+            'authors',
+        );
     }
 
     async getAuthor(
@@ -61,18 +65,55 @@ export class AuthorService {
             };
         }
 
-        const favourite = author?.favourite_by.find((el) => el.id == user_id);
-        if (favourite) {
-            return {
-                success: true,
-                author: { ...author, is_favourite: true } as any,
-                errors: [],
-            };
-        }
+        const liked_animes = await this.prisma.author.findMany({
+            where: {
+                id,
+                animes: {
+                    some: {
+                        favourite_by: {
+                            some: {
+                                id: user_id,
+                            },
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+                animes: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
+        const is_liked = await this.prisma.author.findFirst({
+            where: {
+                id,
+                favourite_by: {
+                    some: {
+                        id: user_id,
+                    },
+                },
+            },
+        });
+
+        const favourite_animes: string[] = [];
+
+        liked_animes.map((el) =>
+            el.animes.map((els) => favourite_animes.push(els.id)),
+        );
 
         return {
             success: true,
-            author: author as any,
+            author: {
+                ...author,
+                is_favourite: !!is_liked ?? false,
+                animes: .map((els) => ({
+                    is_favourite: favourite_animes.includes(els.id),
+                })),
+            } as any,
             errors: [],
         };
     }
@@ -81,7 +122,7 @@ export class AuthorService {
         args: PaginationInputType,
         user_id: string,
     ): Promise<GetListAuthorResultsType> {
-        const authorList: any = await this.prisma.author.findMany({
+        const authorList = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),
             include: {
                 animes: {
@@ -97,11 +138,6 @@ export class AuthorService {
                         },
                     },
                 },
-                favourite_by: {
-                    select: {
-                        id: true,
-                    },
-                },
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -109,19 +145,57 @@ export class AuthorService {
             args,
         );
 
-        for await (const author of authorList) {
-            const favourite = author?.favourite_by.find(
-                (el: any) => el.id == user_id,
-            );
-            if (favourite) {
-                author.is_favourite = true;
-            }
-        }
+        const liked_authors = await this.prisma.author.findMany({
+            where: {
+                favourite_by: {
+                    some: { id: user_id },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const liked_animes = await this.prisma.author.findMany({
+            where: {
+                animes: {
+                    some: {
+                        favourite_by: {
+                            some: {
+                                id: user_id,
+                            },
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+                animes: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+        const favourite_animes: string[] = [];
+
+        const favourite_authors = liked_authors.map((el) => el.id);
+        liked_animes.map((el) =>
+            el.animes.map((els) => favourite_animes.push(els.id)),
+        );
 
         return {
             success: true,
             errors: [],
-            author_list: authorList as any,
+            author_list: authorList.map((el) => ({
+                ...el,
+                is_favourite: favourite_authors.includes(el.id),
+                //@ts-ignore
+                animes: el.animes.map((els) => ({
+                    ...els,
+                    is_favourite: favourite_animes.includes(els.id),
+                })),
+            })) as any,
             pagination,
         };
     }
@@ -131,17 +205,12 @@ export class AuthorService {
         args: PaginationInputType,
         user_id: string,
     ): Promise<GetListAuthorByAnimeIdResultsType> {
-        const authorList: any = await this.prisma.author.findMany({
+        const authorList = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),
             where: {
                 animes: {
                     some: {
                         id,
-                    },
-                },
-                favourite_by: {
-                    select: {
-                        id: true,
                     },
                 },
             },
@@ -156,19 +225,53 @@ export class AuthorService {
             },
         );
 
-        for await (const author of authorList) {
-            const favourite = author?.favourite_by.find(
-                (el: any) => el.id == user_id,
-            );
-            if (favourite) {
-                author.is_favourite = true;
-            }
-        }
+        const liked_authors = await this.prisma.author.findMany({
+            where: {
+                favourite_by: {
+                    some: { id: user_id },
+                },
+                animes: {
+                    some: {
+                        id,
+                    },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const liked_animes = await this.prisma.author.findMany({
+            where: {
+                animes: {
+                    some: {
+                        id,
+                        favourite_by: {
+                            some: {
+                                id: user_id,
+                            },
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const favourite_authors = liked_authors.map((el) => el.id);
+        const favourite_animes = liked_animes.map((el) => el.id);
 
         return {
             success: true,
             errors: [],
-            author_list: authorList as any,
+            author_list: authorList.map((el) => ({
+                ...el,
+                is_favourite: favourite_authors.includes(el.id),
+                animes: liked_animes.map((els) => ({
+                    is_favourite: favourite_animes.includes(els.id),
+                })),
+            })) as any,
             pagination,
         };
     }
@@ -197,7 +300,12 @@ export class AuthorService {
             where: { id: args.id },
             data: {
                 ...args,
-                cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, user_id),
+                cover: await this.coverFiles.tryUpdate(
+                    { id: args.id },
+                    args.cover,
+                    undefined,
+                    user_id,
+                ),
             },
         });
         return {
