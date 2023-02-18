@@ -15,7 +15,8 @@ import { RelatingAnime } from '../../relating-anime/models/relating-anime.model'
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
 import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
-import { File } from 'common/models/results/file.model';
+import { Stills } from './stills.model';
+import { File } from '../../../common/models/results/file.model';
 
 @ObjectType()
 export class Anime {
@@ -235,4 +236,10 @@ export class Anime {
 
     @Field(() => File, { nullable: true })
     cover?: File;
+
+    @Field(() => [Stills], {
+        nullable: true,
+        description: 'Anime stills'
+    })
+    stills?: Stills[];
 }
