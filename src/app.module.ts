@@ -48,7 +48,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
         }),
         ThrottlerModule.forRoot({
             ttl: 10,
-            limit: 10,
+            limit: 100,
         }),
         CommonModule,
         CoreModule,
