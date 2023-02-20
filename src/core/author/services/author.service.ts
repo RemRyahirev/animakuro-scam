@@ -88,7 +88,7 @@ export class AuthorService {
             },
         });
 
-        const is_liked = await this.prisma.author.findFirst({
+        const is_liked_author = await this.prisma.author.findFirst({
             where: {
                 id,
                 favourite_by: {
@@ -109,9 +109,10 @@ export class AuthorService {
             success: true,
             author: {
                 ...author,
-                is_favourite: !!is_liked ?? false,
-                animes: .map((els) => ({
-                    is_favourite: favourite_animes.includes(els.id),
+                is_favourite: !!is_liked_author ?? false,
+                animes: author.animes.map((el) => ({
+                    ...el,
+                    is_favourite: favourite_animes.includes(el.id),
                 })),
             } as any,
             errors: [],
@@ -195,7 +196,7 @@ export class AuthorService {
                     ...els,
                     is_favourite: favourite_animes.includes(els.id),
                 })),
-            })) as any,
+            })),
             pagination,
         };
     }
@@ -213,6 +214,9 @@ export class AuthorService {
                         id,
                     },
                 },
+            },
+            include: {
+                animes: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -256,11 +260,21 @@ export class AuthorService {
             },
             select: {
                 id: true,
+                animes: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
 
+        const favourite_animes: string[] = [];
+
         const favourite_authors = liked_authors.map((el) => el.id);
-        const favourite_animes = liked_animes.map((el) => el.id);
+
+        liked_animes.map((el) =>
+            el.animes.map((els) => favourite_animes.push(els.id)),
+        );
 
         return {
             success: true,
@@ -268,10 +282,12 @@ export class AuthorService {
             author_list: authorList.map((el) => ({
                 ...el,
                 is_favourite: favourite_authors.includes(el.id),
-                animes: liked_animes.map((els) => ({
+                //@ts-ignore
+                animes: el.animes.map((els) => ({
+                    ...els,
                     is_favourite: favourite_animes.includes(els.id),
                 })),
-            })) as any,
+            })),
             pagination,
         };
     }
