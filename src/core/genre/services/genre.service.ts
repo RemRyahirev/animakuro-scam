@@ -17,10 +17,17 @@ export class GenreService {
         private prisma: PrismaService,
         private paginationService: PaginationService,
     ) {}
-    async getGenre(id: string): Promise<GetGenreResultsType> {
+    async getGenre(id: string, user_id: string): Promise<GetGenreResultsType> {
         const genre = await this.prisma.genre.findUnique({
             where: {
                 id,
+            },
+            include: {
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         if (!genre) {
@@ -29,6 +36,17 @@ export class GenreService {
                 genre: null,
             };
         }
+
+        const favourite = genre.favourite_by.find((el) => el.id == user_id);
+
+        if (favourite) {
+            return {
+                success: true,
+                genre: { ...genre, is_favourite: true },
+                errors: [],
+            };
+        }
+
         return {
             success: true,
             genre,
@@ -38,14 +56,32 @@ export class GenreService {
 
     async getGenreList(
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListGenreResultsType> {
-        const genreList = await this.prisma.genre.findMany({
+        const genreList: any = await this.prisma.genre.findMany({
             ...transformPaginationUtil(args),
+            include: {
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
         });
         const pagination = await this.paginationService.getPagination(
             'genre',
             args,
         );
+
+        for await (const genre of genreList) {
+            const favourite = genre?.favourite_by.find(
+                (el: any) => el.id == user_id,
+            );
+            if (favourite) {
+                genre.is_favourite = true;
+            }
+        }
+
         return {
             success: true,
             errors: [],
@@ -79,9 +115,7 @@ export class GenreService {
         };
     }
 
-    async deleteGenre(
-        id: string,
-    ): Promise<DeleteGenreResultsType> {
+    async deleteGenre(id: string): Promise<DeleteGenreResultsType> {
         const genre = await this.prisma.genre.delete({
             where: { id },
         });

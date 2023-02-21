@@ -7,6 +7,12 @@ export class Genre {
     })
     id?: string;
 
+    @Field(() => Boolean, {
+        description: 'Favourite anime',
+        defaultValue: false,
+    })
+    is_favourite?: boolean;
+
     @Field(() => String, {
         description: 'Name of the genre',
     })

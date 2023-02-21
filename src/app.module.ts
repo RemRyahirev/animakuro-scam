@@ -29,7 +29,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
             isGlobal: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
-            // formatError,
+            formatError,
             context: ({ req, res }) => ({ req, res }),
             driver: ApolloDriver,
             autoSchemaFile: true,
@@ -48,7 +48,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
         }),
         ThrottlerModule.forRoot({
             ttl: 10,
-            limit: 10,
+            limit: 100,
         }),
         CommonModule,
         CoreModule,

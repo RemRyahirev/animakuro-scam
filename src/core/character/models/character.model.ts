@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { CharacterRole, CharacterType } from '../../../common/models/enums';
 import { Anime } from '../../anime/models/anime.model';
+import { File } from 'common/models/results/file.model';
 
 @ObjectType()
 export class Character {
@@ -8,6 +9,12 @@ export class Character {
         description: 'Unique ID of the character',
     })
     id: string;
+
+    @Field(() => Boolean, {
+        description: 'Favourite anime',
+        defaultValue: false,
+    })
+    is_favourite?: boolean;
 
     @Field(() => String, {
         description: 'The names of the character',
@@ -66,6 +73,9 @@ export class Character {
         nullable: true,
     })
     description: string;
+
+    @Field(() => File, { nullable: true })
+    cover?: File;
 
     @Field(() => [Anime], {
         nullable: true,

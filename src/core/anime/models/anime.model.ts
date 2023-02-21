@@ -25,6 +25,12 @@ export class Anime {
     })
     id?: string;
 
+    @Field(() => Boolean, {
+        description: 'Favourite anime',
+        defaultValue: false,
+    })
+    is_favourite?: boolean;
+
     @Field(() => String, {
         description: 'The official titles of the media in various languages',
     })

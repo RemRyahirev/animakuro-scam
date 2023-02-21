@@ -10,6 +10,12 @@ export class SimilarAnime {
     @HideField()
     parent_anime_id: string;
 
+    @Field(() => Boolean, {
+        description: 'Favourite anime',
+        defaultValue: false,
+    })
+    is_favourite?: boolean;
+
     @Field(() => Anime, {
         nullable: true,
         defaultValue: null,

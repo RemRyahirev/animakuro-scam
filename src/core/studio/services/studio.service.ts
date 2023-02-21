@@ -23,10 +23,17 @@ export class StudioService {
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
-        this.thumbnailFiles = this.fileUpload.getStorageForOne('studio', 'thumbnail_id', 'thumbnail');
+        this.thumbnailFiles = this.fileUpload.getStorageForOne(
+            'studio',
+            'thumbnail_id',
+            'studioThumbnails',
+        );
     }
 
-    async getStudio(id: string): Promise<GetStudioResultsType> {
+    async getStudio(
+        id: string,
+        user_id: string,
+    ): Promise<GetStudioResultsType> {
         const studio = await this.prisma.studio.findUnique({
             where: {
                 id,
@@ -44,6 +51,11 @@ export class StudioService {
                         user: true,
                     },
                 },
+                favourite_by: {
+                    select: {
+                        id: true,
+                    },
+                },
             },
         });
         if (!studio) {
@@ -52,15 +64,18 @@ export class StudioService {
                 studio: null,
             };
         }
+        const favourite = studio?.favourite_by.find((el) => el.id == user_id);
+
         return {
             success: true,
-            studio: studio as any,
+            studio: { ...studio, is_favourite: favourite ?? false } as any,
             errors: [],
         };
     }
 
     async getStudioList(
         args: PaginationInputType,
+        user_id: string,
     ): Promise<GetListStudioResultsType> {
         const studioList = await this.prisma.studio.findMany({
             ...transformPaginationUtil(args),
@@ -72,21 +87,53 @@ export class StudioService {
                         characters: true,
                     },
                 },
-                thumbnail: {
-                    include: {
-                        user: true,
-                    },
-                },
             },
         });
         const pagination = await this.paginationService.getPagination(
             'studio',
             args,
         );
+
+        const liked_studios = await this.prisma.studio.findMany({
+            where: {
+                favourite_by: {
+                    some: { id: user_id },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const liked_animes = await this.prisma.studio.findMany({
+            where: {
+                animes: {
+                    some: {
+                        favourite_by: {
+                            some: { id: user_id },
+                        },
+                    },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        const favourite_studios = liked_studios.map((el) => el.id);
+        const favourite_animes = liked_animes.map((el) => el.id);
+
         return {
             success: true,
             errors: [],
-            studio_list: studioList as unknown as Array<Studio>,
+            studio_list: studioList.map((el) => ({
+                ...el,
+                is_favourite: favourite_studios.includes(el.id),
+                animes: liked_animes.map((els) => ({
+                    ...els,
+                    is_favourite: favourite_animes.includes(els.id),
+                })) as any,
+            })),
             pagination,
         };
     }
@@ -100,7 +147,10 @@ export class StudioService {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                thumbnail: await this.thumbnailFiles.tryCreate(args.thumbnail, user_id),
+                thumbnail: await this.thumbnailFiles.tryCreate(
+                    args.thumbnail,
+                    user_id,
+                ),
             },
             include: {
                 animes: {
@@ -133,7 +183,12 @@ export class StudioService {
                 ...(await this.calculateAdditionalFields(args)),
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                thumbnail: await this.thumbnailFiles.tryUpdate({ id: args.id }, args.thumbnail, undefined, user_id),
+                thumbnail: await this.thumbnailFiles.tryUpdate(
+                    { id: args.id },
+                    args.thumbnail,
+                    undefined,
+                    user_id,
+                ),
             },
             include: {
                 animes: {

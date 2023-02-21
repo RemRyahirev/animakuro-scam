@@ -1,5 +1,5 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
-import { ValidateSchemas } from 'common/decorators';
+import { ValidateSchemas } from '../../../common/decorators';
 import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
 import { CreateUserInputType } from '../models/inputs/create-user-input.type';
 import { UserMutationType, UserRootResolver } from './user-root.resolver';
