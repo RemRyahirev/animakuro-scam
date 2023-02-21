@@ -331,13 +331,15 @@ model RatingAnime {
 model AnimeStills {
   id            String                    @id @default(uuid()) @db.Uuid
   anime_id      String                    @db.Uuid
-  frame_id      String                    @db.Uuid @unique
+  frame_id      String?                   @db.Uuid @unique
+  url_id        String?                   @db.VarChar(1000)
   type          AnimeStillsType
-  priority      AnimeStillsPriorityType?  
+  priority      Int?  
   created_at    DateTime                  @default(now()) @map("created_at")
   updated_at    DateTime                  @default(now()) @map("updated_at")
+
   anime         Anime                     @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-  frame         File                      @relation(fields: [frame_id], references: [id], onDelete: Cascade)
+  frame         File?                     @relation(fields: [frame_id], references: [id], onDelete: Cascade)
 
   @@unique([anime_id, priority])
   @@map("anime_stills")
@@ -346,12 +348,6 @@ model AnimeStills {
 enum AnimeStillsType {
   IMAGE
   VIDEO
-}
-
-enum AnimeStillsPriorityType {
-  TH1
-  TH2
-  TH3
 }
 
 model File {

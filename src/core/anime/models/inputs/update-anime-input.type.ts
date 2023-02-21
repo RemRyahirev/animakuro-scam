@@ -24,7 +24,6 @@ import {
 } from '../../../../common/models/enums';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
-import { AnimeStillsPriorityType } from '@prisma/client';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -253,12 +252,12 @@ export class UpdateAnimeInputType {
     stills: Promise<FileUpload>[]
 
     @IsOptional()
-    @Field(() => [AnimeStillsPriorityType], {
+    @Field(() => [Int], {
         nullable: true,
         defaultValue: [],
         description: 'Stills priority'
     })
-    stills_priority: AnimeStillsPriorityType[]
+    stills_priority: number[]
 
     @IsOptional()
     @Field(() => [String], {
