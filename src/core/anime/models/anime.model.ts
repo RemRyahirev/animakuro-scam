@@ -17,6 +17,7 @@ import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.mod
 import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
 import { Stills } from './stills.model';
 import { File } from '../../../common/models/results/file.model';
+import { User } from '../../../core/user/models/user.model';
 
 @ObjectType()
 export class Anime {
@@ -30,6 +31,12 @@ export class Anime {
         defaultValue: false,
     })
     is_favourite?: boolean;
+
+    @Field(() => [User], {
+        description: 'Favourite by',
+        nullable: true,
+    })
+    favourite_by?: User[];
 
     @Field(() => String, {
         description: 'The official titles of the media in various languages',

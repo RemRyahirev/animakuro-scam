@@ -9,6 +9,7 @@ import { AnimeService } from '../services/anime.service';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 import { AccessToken } from '../../../common/decorators';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { FavouriteInputType } from '../../../common/models/inputs/favourite-input.type';
 
 @Resolver(AnimeQueryType)
 export class AnimeQueryResolver extends AnimeRootResolver {
@@ -20,8 +21,9 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     async getAnime(
         @Args() args: GetAnimeByIdInputType,
         @AccessToken() userId: string,
+        @Args() favourites: FavouriteInputType,
     ): Promise<GetAnimeResultsType> {
-        return await this.animeService.getAnime(args, userId);
+        return await this.animeService.getAnime(args, userId, favourites);
     }
 
     @ResolveField(() => GetListAnimeResultsType, {
@@ -30,8 +32,9 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     async getAnimeList(
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @Args() favourites: FavouriteInputType,
     ): Promise<GetListAnimeResultsType> {
-        return await this.animeService.getAnimeList(args, userId);
+        return await this.animeService.getAnimeList(args, userId, favourites);
     }
 
     @ResolveField(() => GetListRelatedAnimeByAnimeIdResultsType, {
