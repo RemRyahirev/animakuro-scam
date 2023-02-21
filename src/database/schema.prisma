@@ -549,9 +549,11 @@ enum Media {
 }
 
 enum FolderType {
-  LOOKING //Смотрю
-  ABANDONED // Брошено
-  PLANNED // Запланированно
-  VIEWED // Просмотрено
+  WATCHING
+  PLAN_TO_WATCH
+  COMPLETED
+  REWATCHING
+  PAUSED
+  DROPPED
   DEFAULT // Стандарный Фолдер
 }
