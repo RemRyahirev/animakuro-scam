@@ -20,7 +20,7 @@ export class UserFolder {
         description: 'The media in folder',
         nullable: true,
     })
-    animes: Anime;
+    animes: Anime[];
 
     @Field(() => String, {
         description: 'Name of folder',
