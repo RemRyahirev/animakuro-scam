@@ -24,6 +24,7 @@ import {
 } from '../../../../common/models/enums';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
+import { UploadStills } from '../stills.model';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -243,27 +244,4 @@ export class UpdateAnimeInputType {
     @Field(() => GraphQLUpload, { nullable: true })
     cover?: Promise<FileUpload>;
 
-    @IsOptional()
-    @Field(() => [GraphQLUpload], {
-        nullable: true,
-        defaultValue: [],
-        description: 'Stills to upload'
-    })
-    stills: Promise<FileUpload>[]
-
-    @IsOptional()
-    @Field(() => [Int], {
-        nullable: true,
-        defaultValue: [],
-        description: 'Stills priority'
-    })
-    stills_priority: number[]
-
-    @IsOptional()
-    @Field(() => [String], {
-        nullable: true,
-        defaultValue: [],
-        description: 'Stills to delete'
-    })
-    stills_delete: string[]
 }

@@ -296,30 +296,7 @@ export class AnimeService {
         input: CreateAnimeInputType,
         user_id: string,
     ): Promise<CreateAnimeResultsType> {
-        const { stills, stills_files, ...args } = input;
-
-        const toCDN = stills
-            .filter(e => !e.url_id)
-            //@ts-ignore
-            .map(e => ({...e, still: stills_files[i]}));
-
-        const toLink = stills
-            .filter(e => e.url_id)
-
-        const fromCDN = await Promise.all((await this.stillsFiles.tryCreate(toCDN.map(e => e.still), user_id))
-            ?.connect.map(async (e, i) => ({
-                    frame_id: e.id, 
-                    type: toCDN[i].type, 
-                    priority: toCDN[i].priority
-                })
-            )
-        ?? []);
-
-        const fromLink = toLink.map((e) => ({
-            type: e.type,
-            url_id: e.url_id,
-            priority: e.priority
-        }))
+        const { ...args } = input;
 
         const anime = await this.prisma.anime.create({
             data: {
@@ -332,11 +309,6 @@ export class AnimeService {
                 ...args,
                 banner: await this.bannerFiles.tryCreate(args.banner, user_id),
                 cover: await this.coverFiles.tryCreate(args.cover, user_id),
-                stills: {
-                    createMany: {
-                        data: [...fromCDN, ...fromLink]
-                    }
-                }
             },
             include: {
                 genres: true,
@@ -390,7 +362,7 @@ export class AnimeService {
         input: UpdateAnimeInputType,
         user_id: string,
     ): Promise<UpdateAnimeResultsType> {
-        const {stills_priority, stills_delete, ...args} = input;
+        const {...args} = input;
 
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
@@ -404,20 +376,6 @@ export class AnimeService {
                 ...args,
                 banner: await this.bannerFiles.tryUpdate({ id: args.id }, args.banner, undefined, user_id),
                 cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, user_id),
-                stills: {
-                    deleteMany: { id: { in: stills_delete } },
-                    createMany: {
-                        data: await Promise.all((await this.stillsFiles.tryUpdate({ id: args.id }, args.stills, undefined, user_id))
-                        ?.connect.slice(-args.stills.length).map(async (e, i) => {
-                            return {
-                                frame_id: e.id, 
-                                // @ts-ignore
-                                type: AnimeStillsType[(await args.stills[i]).mimetype.split('/')[0].toUpperCase()], 
-                                priority: stills_priority[i]
-                            }
-                        }) ?? [])
-                    },
-                },
             },
             include: {
                 genres: true,
@@ -816,28 +774,16 @@ export class AnimeService {
         input: UpdateAnimeStillsInputType,
         user_id: string
     ): Promise<UpdateAnimeStillsResultsType> {
+        const stillsToUpdate = [];
 
-        const toCDN = input.stills.filter(e => !e.url_id && Number.isInteger(e.still_index));
-        const toLink = input.stills.filter(e => e.url_id && !Number.isInteger(e.still_index));
-
-        // data: await Promise.all((await this.stillsFiles.tryUpdate({ id: args.id }, args.stills, undefined, user_id))
-        //                 ?.connect.slice(-args.stills.length).map(async (e, i) => {
-        //                     return {
-        //                         frame_id: e.id, 
-        //                         // @ts-ignore
-        //                         type: AnimeStillsType[(await args.stills[i]).mimetype.split('/')[0].toUpperCase()], 
-        //                         priority: stills_priority[i]
-        //                     }
-        //                 }) ?? [])
-
-        // for (let i = 0; i < input.stills.length; i++) {
-        //     const upd = this.prisma.animeStills.update({
-        //         where: {id: input.stills[i].id},
-        //         data: {}
-        //     })
-        //     stillsToUpdate.push(upd);
-        // } 
-        // const updatedStills = await Promise.all(stillsToUpdate)
+        for (let i = 0; i < input.stills.length; i++) {
+            const upd = this.prisma.animeStills.update({
+                where: {id: input.stills[i].id},
+                data: {...input.stills[i]}
+            })
+            stillsToUpdate.push(upd);
+        } 
+        const updatedStills = await Promise.all(stillsToUpdate)
         
         return {success: true, stills: null as any};
     } 
