@@ -18,6 +18,7 @@ import { AddAnimeStillsInputType } from '../models/inputs/add-anime-stills-input
 import { DeleteAnimeStillsResultsType } from '../models/results/delete-anime-stills-results.type';
 import { DeleteAnimeStillsInputType } from '../models/inputs/delete-anime-stills-input.type';
 import { UpdateAnimeStillsInputType } from '../models/inputs/update-anime-stills-input.type';
+import { UpdateAnimeStillsResultsType } from '../models/results/update-anime-stills-results.type';
 
 @Resolver(AnimeMutationType)
 export class AnimeMutationResolver extends AnimeRootResolver {
@@ -173,7 +174,7 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         return await this.animeService.addAnimeStills(args, user_id);
     }
 
-    @ResolveField(() => DeleteAnimeStillsResultsType, {
+    @ResolveField(() => UpdateAnimeStillsResultsType, {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)

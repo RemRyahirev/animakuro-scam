@@ -816,7 +816,7 @@ export class AnimeService {
             .filter((stillItem) => !stillItem.url_id)
             // @ts-ignore
             .map(e => ({...e, still: input.stills_files[e.still_index]}));
-
+        
         // @ts-ignore
         const fromCDN = await Promise.all((await this.stillsFiles.tryCreate(toCDN.map(e => e.still), user_id))
         ?.connect.map(async (e, i) => ({
@@ -833,15 +833,13 @@ export class AnimeService {
             url_id: e.url_id,
             priority: e.priority
         }))
-        console.log(fromLink);
         
         const stills = await this.prisma.animeStills.createMany({
             data: [...fromCDN, ...fromLink]
         })
-        console.log(stills);
         
         return {
-            stills: stills as any,
+            count: stills.count,
             success: true, 
         }
     }
@@ -851,7 +849,7 @@ export class AnimeService {
         user_id: string
     ): Promise<UpdateAnimeStillsResultsType> {
         const stillsToUpdate = [];
-
+        
         for (let i = 0; i < input.stills.length; i++) {
             const upd = this.prisma.animeStills.update({
                 where: {id: input.stills[i].id},
@@ -861,16 +859,32 @@ export class AnimeService {
         } 
         const updatedStills = await Promise.all(stillsToUpdate)
         
-        return {success: true, stills: null as any};
+        return {success: true, stills: updatedStills as any};
     } 
 
     async deleteAnimeStills(
         input: DeleteAnimeStillsInputType,
         user_id: string
     ): Promise<DeleteAnimeStillsResultsType> {
-        const deletedStills = await this.prisma.animeStills.deleteMany({
-            where: { id: { in: input.id_list } }
+        const stills = await this.prisma.animeStills.findMany({
+            where: {
+                id: {
+                    in: input.id_list
+                }
+            }
         })
-        return {stills: deletedStills as any, success: true}
+        const withoutCDN = stills.filter(e => !e.frame_id)
+        const withCDN = stills.filter(e => e.frame_id)
+        
+        await this.stillsFiles.tryDelete(withCDN.map(e => e.frame_id) as any)
+        await this.prisma.animeStills.deleteMany({
+            where: {
+                id: {
+                    in: withoutCDN.map(e => e.id)
+                }
+            }
+        })
+        
+        return {success: true}
     }
 }

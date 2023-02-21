@@ -58,10 +58,16 @@ export class Stills {
         nullable: true,
         description: "ID of source"
     })
-    frameId?: string
+    frame_id?: string
+
+    @Field(() => String, {
+        nullable: true,
+        description: "ID of source"
+    })
+    url_id?: string
 
     @Field(() => AnimeStillsType, {
-        defaultValue: 'Data type of current still'
+        description: 'Data type of current still'
     })
     type: AnimeStillsType
 

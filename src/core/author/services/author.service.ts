@@ -110,9 +110,9 @@ export class AuthorService {
             author: {
                 ...author,
                 is_favourite: !!is_liked ?? false,
-                animes: .map((els) => ({
-                    is_favourite: favourite_animes.includes(els.id),
-                })),
+                // animes: .map((els) => ({
+                //     is_favourite: favourite_animes.includes(els.id),
+                // })),
             } as any,
             errors: [],
         };
