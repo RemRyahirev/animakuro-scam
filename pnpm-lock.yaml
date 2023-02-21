@@ -25,6 +25,7 @@ specifiers:
   '@nestjs/microservices': ^9.2.0
   '@nestjs/passport': ^9.0.0
   '@nestjs/platform-express': ^9.0.0
+  '@nestjs/schedule': ^2.2.0
   '@nestjs/schematics': ^9.0.0
   '@nestjs/serve-static': ^3.0.0
   '@nestjs/testing': ^9.0.0
@@ -34,6 +35,7 @@ specifiers:
   '@types/bcrypt': ^5.0.0
   '@types/cookie-parser': ^1.4.3
   '@types/cors': ^2.8.13
+  '@types/cron': ^2.0.0
   '@types/csurf': ^1.11.2
   '@types/express': ^4.17.15
   '@types/express-session': ^1.17.5
@@ -134,6 +136,7 @@ dependencies:
   '@nestjs/microservices': 9.2.1_dhtfvrattzco64avv7stv6mam4
   '@nestjs/passport': 9.0.0_6o47igfla2pj7yzh7agpvpttka
   '@nestjs/platform-express': 9.2.1_hjcqpoaebdr7gdo5hgc22hthbe
+  '@nestjs/schedule': 2.2.0_dntc3uqqknzoduyjojusds5kla
   '@nestjs/serve-static': 3.0.0_hjcqpoaebdr7gdo5hgc22hthbe
   '@nestjs/throttler': 3.1.0_dntc3uqqknzoduyjojusds5kla
   '@prisma/client': 4.8.1_prisma@4.8.1
@@ -190,6 +193,7 @@ devDependencies:
   '@types/bcrypt': 5.0.0
   '@types/cookie-parser': 1.4.3
   '@types/cors': 2.8.13
+  '@types/cron': 2.0.0
   '@types/csurf': 1.11.2
   '@types/express': 4.17.15
   '@types/express-session': 1.17.5
@@ -2554,6 +2558,7 @@ packages:
       - encoding
       - supports-color
     dev: false
+
   /@nestjs-modules/ioredis/1.0.1_th54hvuta66zgszknjur2akz3e:
     resolution: {integrity: sha512-UhIOqL5pXeJlCucHMkJONwqecvLFySW/95uw34Umh0ld7v+6tvYRK3JHQYcJqzlmNiq52bfNxf7CUpuHCSdA3A==}
     peerDependencies:
@@ -2874,6 +2879,20 @@ packages:
       tslib: 2.4.1
     transitivePeerDependencies:
       - supports-color
+
+  /@nestjs/schedule/2.2.0_dntc3uqqknzoduyjojusds5kla:
+    resolution: {integrity: sha512-wrDnUONTxBkD6lTWh9ecYk/kvJTbA3PylotjBoRsECmcS1SNvgInFXuL38UnHiFnXM3CHSFnzRLB259Bc1mOdQ==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 9.2.1_x6yqyveuahcdef4z4mxykmuv6a
+      '@nestjs/core': 9.2.1_eyxu3im2bohgvzk4ecbzkhty3q
+      cron: 2.2.0
+      reflect-metadata: 0.1.13
+      uuid: 9.0.0
+    dev: false
 
   /@nestjs/schematics/9.0.4_bpd7edbl7imd2lxcmdt57tn7ne:
     resolution: {integrity: sha512-egurCfAc4e5i1r2TmeAF0UrOKejFmT5oTdv4b7HcOVPupc3QGU7CbEfGleL3mkM5AjrixTQeMxU9bJ00ttAbGg==}
@@ -3423,6 +3442,13 @@ packages:
       '@types/node': 18.11.18
     dev: true
 
+  /@types/cron/2.0.0:
+    resolution: {integrity: sha512-xZM08fqvwIXgghtPVkSPKNgC+JoMQ2OHazEvyTKnNf7aWu1aB6/4lBbQFrb03Td2cUGG7ITzMv3mFYnMu6xRaQ==}
+    dependencies:
+      '@types/luxon': 3.2.0
+      '@types/node': 18.11.18
+    dev: true
+
   /@types/csurf/1.11.2:
     resolution: {integrity: sha512-9bc98EnwmC1S0aSJiA8rWwXtgXtXHHOQOsGHptImxFgqm6CeH+mIOunHRg6+/eg2tlmDMX3tY7XrWxo2M/nUNQ==}
     dependencies:
@@ -3584,6 +3610,10 @@ packages:
 
   /@types/long/4.0.2:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
+
+  /@types/luxon/3.2.0:
+    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
+    dev: true
 
   /@types/mime/3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
@@ -5346,6 +5376,12 @@ packages:
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
     dev: true
+
+  /cron/2.2.0:
+    resolution: {integrity: sha512-GPiI3OgMv83XRtEUc2gUdaLvJhO3XbLN288layOBkDTupg0RK5IECNGpkykIMHg+muVR2bxt29b0xvCAcBrjYQ==}
+    dependencies:
+      luxon: 3.2.1
+    dev: false
 
   /cross-spawn/7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -8471,6 +8507,11 @@ packages:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
     dev: true
 
+  /luxon/3.2.1:
+    resolution: {integrity: sha512-QrwPArQCNLAKGO/C+ZIilgIuDnEnKx5QYODdDtbFaxzsbZcc/a7WFq7MhsVYgRlwawLtvOUESTlfJ+hc/USqPg==}
+    engines: {node: '>=12'}
+    dev: false
+
   /macos-release/2.5.0:
     resolution: {integrity: sha512-EIgv+QZ9r+814gjJj0Bt5vSLJLzswGmSUbUpbi9AIr/fsN2IWFBl2NucV9PAiek+U1STK468tEkxmVYUtuAN3g==}
     engines: {node: '>=6'}
@@ -10556,7 +10597,6 @@ packages:
 
   /ts-jest/29.0.5_b6ud3wjfzxmze5tmlpgpdpo43e:
     resolution: {integrity: sha512-PL3UciSgIpQ7f6XjVOmbi96vmDHUqAyqDr8YxzopDqX3kfgYtX1cuNeBjP+L9sFXi6nzsGGA6R3fP3DDDJyrxA==}
-
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
     peerDependencies:

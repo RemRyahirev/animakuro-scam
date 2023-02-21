@@ -5,6 +5,7 @@ import { PaginationService } from './services/pagination.service';
 import { PasswordService } from './services/password.service';
 import { PrismaService } from './services/prisma.service';
 import { FileUploadService } from './services/file-upload.service';
+import { StatisticService } from './services/statistic.service';
 import {
     AccountLimitConstraint,
     ComparePasswordConstraint,
@@ -20,6 +21,7 @@ import {
         PrismaService,
         SchemaService,
         FileUploadService,
+        StatisticService,
         EntityExistsConstraint,
         ComparePasswordConstraint,
         AccountLimitConstraint,
@@ -31,6 +33,7 @@ import {
         PrismaService,
         SchemaService,
         FileUploadService,
+        StatisticService,
         EntityExistsConstraint,
         ComparePasswordConstraint,
         AccountLimitConstraint,

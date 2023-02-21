@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { CacheStatisticService } from '@app/common/cache/services';
 import { AnimeApproval, AnimeRelation } from '@app/common/models/enums';
 import { PaginationInputType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
@@ -32,7 +31,6 @@ export class AnimeService {
     constructor(
         private prisma: PrismaService,
         private fileUpload: FileUploadService,
-        protected cacheStatisticService: CacheStatisticService,
         private paginationService: PaginationService,
     ) {
         this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'animeBanners');
