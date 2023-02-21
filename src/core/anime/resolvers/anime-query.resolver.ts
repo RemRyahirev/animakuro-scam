@@ -21,7 +21,7 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     async getAnime(
         @Args() args: GetAnimeByIdInputType,
         @AccessToken() userId: string,
-        @Args() favourites: FavouriteInputType,
+        @Args('favourites', { nullable: true }) favourites: boolean,
     ): Promise<GetAnimeResultsType> {
         return await this.animeService.getAnime(args, userId, favourites);
     }
