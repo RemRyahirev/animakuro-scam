@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./dist/app.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --exit-child ./apps/api/src/app.ts",
+    "dev:stat": "ts-node-dev -r tsconfig-paths/register --exit-child ./apps/statistic/src/app.ts",
     "build": "npx nest build",
     "generate": "prisma generate",
     "seed": "ts-node src/database/seeds/index.ts",

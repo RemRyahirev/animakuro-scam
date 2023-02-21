@@ -255,8 +255,22 @@ export class StatisticService {
             events = await this.redis.zpopmax(STAT_REDIS_KEY);
         }
 
-        return events
-            .map(e => this.parseEvent(e))
-            .filter(e => e !== null);
+        if (!events?.length) {
+            return [];
+        }
+
+        const result: Array<ParsedEvent & { value: string }> = [];
+        for (let i = 0; i < events.length; i += 2) {
+            const event = events[i];
+            const value = events[i + 1];
+
+            const parsed = this.parseEvent(event);
+
+            if (parsed) {
+                result.push({ ...parsed, value });
+            }
+        }
+
+        return result;
     }
 }

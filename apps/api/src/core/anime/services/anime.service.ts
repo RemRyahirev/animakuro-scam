@@ -5,6 +5,7 @@ import { PaginationInputType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
+import { StatisticService } from '@app/common/services/statistic.service';
 import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
@@ -32,6 +33,7 @@ export class AnimeService {
         private prisma: PrismaService,
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
+        private statistics: StatisticService,
     ) {
         this.bannerFiles = this.fileUpload.getStorageForOne('anime', 'banner_id', 'animeBanners');
         this.coverFiles = this.fileUpload.getStorageForOne('anime', 'cover_id', 'animeCovers');
@@ -706,11 +708,17 @@ export class AnimeService {
         data: Rating,
     ): Promise<UpdateRatingAnimeResultsType> {
         let ratingResult: Rating;
-        try {
-            ratingResult = await this.prisma.ratingAnime.create({
-                data,
-            });
-        } catch (error) {
+
+        const existRating = await this.prisma.ratingAnime.findUnique({
+            where: {
+                anime_id_user_id: {
+                    anime_id: data.anime_id,
+                    user_id: data.user_id,
+                },
+            },
+        });
+
+        if (existRating) {
             ratingResult = await this.prisma.ratingAnime.update({
                 data,
                 where: {
@@ -720,7 +728,21 @@ export class AnimeService {
                     },
                 },
             });
+            this.statistics.fireEvent('animeRate', {
+                animeId: data.anime_id,
+                stars: existRating.rating,
+            }, -1);
+        } else {
+            ratingResult = await this.prisma.ratingAnime.create({
+                data,
+            });
         }
+
+        this.statistics.fireEvent('animeRate', {
+            animeId: data.anime_id,
+            stars: data.rating,
+        }, 1);
+
         return {
             success: true,
             errors: [],

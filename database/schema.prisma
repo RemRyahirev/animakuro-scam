@@ -23,6 +23,7 @@ model User {
   password             String        @map("password")
   created_at           DateTime      @default(now()) @map("created_at") @db.Date
   deleted              Boolean       @default(false)
+  statistics           Json?
   auth                 Auth[]
   user_profile         UserProfile?
   auth_sessions        AuthSession[]
@@ -119,6 +120,7 @@ model Anime {
   banner_id          String?          @db.Uuid
   cover              File?            @relation("cover", fields: [cover_id], references: [id])
   cover_id           String?          @db.Uuid
+  statistics         Json?
   created_at         DateTime         @default(now()) @map("created_at")
   updated_at         DateTime         @default(now()) @map("updated_at")
   studios            Studio[]
@@ -347,6 +349,19 @@ model File {
   character_covers      Character[]
 
   @@map("file")
+}
+
+model Statistic {
+  name    StatisticName   @id
+  data    Json
+
+  @@map("statistic")
+}
+
+enum StatisticName {
+    FAVORITES
+    ANIME_USER_RATING
+    ANIME_FOLDER
 }
 
 enum OpeningEndingType {

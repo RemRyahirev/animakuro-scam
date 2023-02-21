@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RedisModule } from '@nestjs-modules/ioredis';
 
-import { CacheModule } from '@app/common/cache/cache.module';
+import { PrismaService } from '@app/common/services/prisma.service';
+import { StatisticService } from '@app/common/services/statistic.service';
 
-import { StatisticService } from './statistic.service';
+import { CalculationService } from './calculation.service';
 
 import { StatisticController } from './statistic.controller';
 
@@ -15,7 +16,6 @@ import { StatisticController } from './statistic.controller';
             isGlobal: true,
         }),
         ScheduleModule.forRoot(),
-        CacheModule,
         RedisModule.forRootAsync({
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
@@ -27,6 +27,8 @@ import { StatisticController } from './statistic.controller';
     ],
     providers: [
         StatisticService,
+        PrismaService,
+        CalculationService,
     ],
     controllers: [
         StatisticController,

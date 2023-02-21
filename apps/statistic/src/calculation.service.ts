@@ -1,4 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Interval } from '@nestjs/schedule';
+import { StatisticName } from '@prisma/client';
+
+import { PrismaService } from '@app/common/services/prisma.service';
+import { StatisticService } from '@app/common/services/statistic.service';
 
 /*
 1. Статистика по папкам (Всех пользователей) к конкретному аниме (Ко всем)
@@ -23,7 +28,7 @@ actions:
 2. rate anime (+ change rate, remove rate)
     - anim_rate:<anime_id>:<star> = +1/-1
         > anime.userRating.<star>++
-        > statistics: stat_name=anime_user_rating, counter.<star>++
+        > statistics: stat_name=anime_user_rating, counters.<star>++
 3. add anime to folder (+ remove from folder, change is_statistic_active)
     - anim_fold:<anime_id>:<folder_type> = +1/-1
         > anime.folder.<folder_type>++
@@ -129,20 +134,124 @@ statistics table:
  */
 
 @Injectable()
-export class StatisticService {
-    getHello(): string {
-        return 'Hello World!';
+export class CalculationService {
+    constructor(
+        private readonly statistic: StatisticService,
+        private readonly prisma: PrismaService,
+    ) {}
+
+    async updateGlobalStatistic(
+        name: StatisticName,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        await this.prisma.$executeRaw`
+            UPDATE statistic
+               SET data = jsonb_set(
+                     data,
+                     ${pathStr}::text[],
+                     (COALESCE(data#>${pathStr}::text[], '0')::int + ${value})::text::jsonb
+                   )
+             WHERE name = ${name}::"StatisticName"`;
+    }
+
+    async updateAnimeStatistics(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        await this.prisma.$executeRaw`
+            UPDATE anime
+               SET statistics = jsonb_set(
+                     statistics,
+                     ${pathStr}::text[],
+                     (COALESCE(statistics#>${pathStr}::text[], '0')::int + ${value})::text::jsonb
+                   )
+             WHERE id = ${id}::uuid`;
+    }
+
+    async updateUserStatistics(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        await this.prisma.$executeRaw`
+            UPDATE user
+               SET statistics = jsonb_set(
+                     statistics,
+                     ${pathStr}::text[],
+                     (COALESCE(statistics#>${pathStr}::text[], '0')::int + ${value})::text::jsonb
+                   )
+             WHERE id = ${id}::uuid`;
     }
 
     /**
      * TODO:
-     *   - run on interval basis
+     *   + run on interval basis
      *   - ability to trigger handler on http request
-     *   - check redis queues
-     *   - recalculate statistic based on queue type & params
-     *   - save statistic into corresponding prisma model
+     *   + check redis queues
+     *   + recalculate statistic based on queue type & params
+     *   + save statistic into corresponding prisma model
      *   - logs
      *   - metrics
      *   - setup build & run (both dev & prod)
      */
+
+    @Interval(2000)
+    async checkQueue() {
+        const events = await this.statistic.getEvents();
+
+        if (!events?.length) {
+            return;
+        }
+
+        // console.log('Event:', events[0]);
+
+        for (const event of events) {
+            switch (event.event) {
+                case 'animeInFavorites':
+                    break;
+
+                case 'animeInUserFavorites':
+                    break;
+
+                case 'animeUserRate':
+                    await this.updateGlobalStatistic(
+                        StatisticName.ANIME_USER_RATING,
+                        [String(event.params.stars)],
+                        Number(event.value),
+                    );
+                    await this.updateAnimeStatistics(
+                        event.params.animeId,
+                        ['userRating', String(event.params.stars)],
+                        Number(event.value),
+                    );
+                    break;
+
+                case 'animeInFolder':
+                    break
+
+                case 'animeInUserFolder':
+                    break;
+
+                case 'statFolder':
+                    break;
+
+                case 'animeType':
+                    break;
+
+                case 'animeGenre':
+                    break;
+
+                default:
+                    console.error('Unknown event:', event);
+            }
+        }
+    }
 }
