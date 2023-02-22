@@ -27,7 +27,7 @@ class UpdStillsInput {
     @Field(() => String, {
         nullable: true
     })
-    url_id?: string;
+    url?: string;
 }
 
 @ArgsType()

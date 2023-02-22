@@ -31,7 +31,7 @@ export class UploadStills {
         nullable: true,
         description: 'Youtube id'
     })
-    url_id?: string;
+    url?: string;
 
     @Field(() => AnimeStillsType)
     type: AnimeStillsType
@@ -62,9 +62,9 @@ export class Stills {
 
     @Field(() => String, {
         nullable: true,
-        description: "ID of source"
+        description: "Foreign of source"
     })
-    url_id?: string
+    url?: string
 
     @Field(() => AnimeStillsType, {
         description: 'Data type of current still'

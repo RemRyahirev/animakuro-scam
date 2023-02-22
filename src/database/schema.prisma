@@ -334,7 +334,7 @@ model AnimeStills {
   id            String                    @id @default(uuid()) @db.Uuid
   anime_id      String                    @db.Uuid
   frame_id      String?                   @db.Uuid @unique
-  url_id        String?                   @db.VarChar(1000)
+  url           String?                   @db.VarChar(1000)
   type          AnimeStillsType
   priority      Int?  
   created_at    DateTime                  @default(now()) @map("created_at")

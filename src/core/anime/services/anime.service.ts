@@ -811,9 +811,9 @@ export class AnimeService {
         user_id: string
     ): Promise<AddAnimeStillsResultsType> {
         
-        const toLink = input.stills.filter((stillItem) => stillItem.url_id);
+        const toLink = input.stills.filter((stillItem) => stillItem.url);
         const toCDN = input.stills
-            .filter((stillItem) => !stillItem.url_id)
+            .filter((stillItem) => !stillItem.url)
             // @ts-ignore
             .map(e => ({...e, still: input.stills_files[e.still_index]}));
         
@@ -830,7 +830,7 @@ export class AnimeService {
         const fromLink = toLink.map((e) => ({
             anime_id: input.anime_id,
             type: AnimeStillsType[e.type],
-            url_id: e.url_id,
+            url: e.url,
             priority: e.priority
         }))
         
