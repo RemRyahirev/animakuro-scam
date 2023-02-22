@@ -1,15 +1,46 @@
-import { Field, ID, registerEnumType, ObjectType } from '@nestjs/graphql'
-import { AnimeStillsType, AnimeStillsPriorityType } from '@prisma/client'
+import { Field, ID, registerEnumType, ObjectType, Int, InputType } from '@nestjs/graphql'
+import { AnimeStillsType } from '@prisma/client'
+import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { File } from '../../../common/models/results/file.model'
 import { Anime } from './anime.model'
-export { AnimeStillsType, AnimeStillsPriorityType } from '@prisma/client'
+export { AnimeStillsType } from '@prisma/client'
 
-registerEnumType(AnimeStillsPriorityType, {
-    name: 'AnimeStillsPriorityType'
-}) 
+export enum AnimeStillsSortField {
+    PRIORITY = 'priority',
+    CREATED_AT = 'created_at',
+    UPDATED_AT = 'updated_at'
+}
+
+registerEnumType(AnimeStillsSortField, {
+    name: 'AnimeStillsSortField'
+})
+
 registerEnumType(AnimeStillsType, {
     name: 'AnimeStillsType'
 }) 
+
+@InputType()
+export class UploadStills {
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Index to Upload file in array'
+    })
+    still_index?: number;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'Youtube id'
+    })
+    url?: string;
+
+    @Field(() => AnimeStillsType)
+    type: AnimeStillsType
+
+    @Field(() => Int, {
+        nullable: true,
+    })
+    priority?: number;
+}
 
 @ObjectType()
 export class Stills {
@@ -24,20 +55,27 @@ export class Stills {
     anime_id: string
 
     @Field(() => ID, {
+        nullable: true,
         description: "ID of source"
     })
-    frameId: string
+    frame_id?: string
+
+    @Field(() => String, {
+        nullable: true,
+        description: "Foreign of source"
+    })
+    url?: string
 
     @Field(() => AnimeStillsType, {
-        defaultValue: 'Data type of current still'
+        description: 'Data type of current still'
     })
     type: AnimeStillsType
 
-    @Field(() => AnimeStillsPriorityType, {
+    @Field(() => Int, {
         nullable: true,
         defaultValue: 'Priority of stills 1, 2, 3 etc...'
     })
-    priority: AnimeStillsPriorityType
+    priority: number
 
     @Field(() => Date, {
         description: 'Created at Date'
@@ -50,9 +88,10 @@ export class Stills {
     updated_at: Date
 
     @Field(() => File, {
+        nullable: true,
         description: 'File\'s metadata'
     })
-    frame: File
+    frame?: File
 
     @Field(() => Anime, {
         description: 'Parrent anime'

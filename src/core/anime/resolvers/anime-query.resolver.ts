@@ -9,6 +9,9 @@ import { AnimeService } from '../services/anime.service';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
 import { AccessToken } from '../../../common/decorators';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
+import { GetStillsByAnimeIdResultsType } from '../models/results/get-stills-by-animeId-results.type';
+import { GetStillsByAnimeIdInputType } from '../models/inputs/get-stills-by-animeId-input.type';
+import { GetAnimeListInputType } from '../models/inputs/get-anime-list-input.type';
 import { FavouriteInputType } from '../../../common/models/inputs/favourite-input.type';
 
 @Resolver(AnimeQueryType)
@@ -30,11 +33,12 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         middleware: [AuthMiddleware],
     })
     async getAnimeList(
+        @Args() input: GetAnimeListInputType,
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
         @Args() favourites: FavouriteInputType,
     ): Promise<GetListAnimeResultsType> {
-        return await this.animeService.getAnimeList(args, userId, favourites);
+        return await this.animeService.getAnimeList(input, args, userId, favourites);
     }
 
     @ResolveField(() => GetListRelatedAnimeByAnimeIdResultsType, {
@@ -66,4 +70,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
             userId,
         );
     }
+
+    @ResolveField(() => GetStillsByAnimeIdResultsType)
+    async getStillsByAnimeId(
+        @Args() args: GetStillsByAnimeIdInputType,
+        @Args() pagination: PaginationInputType,
+    ) {
+        return await this.animeService.getStillsByAnimeId(args, pagination);
+    }
+
 }

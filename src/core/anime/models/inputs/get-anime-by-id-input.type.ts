@@ -84,5 +84,5 @@ export class GetAnimeByIdInputType {
         defaultValue: 10,
         description: 'Count of given stills'
     })
-    take_stills: number;
+    max_stills: number;
 }

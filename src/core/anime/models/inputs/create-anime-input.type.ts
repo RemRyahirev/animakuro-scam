@@ -24,7 +24,7 @@ import {
 } from '../../../../common/models/enums';
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
-import { AnimeStillsPriorityType } from '@prisma/client';
+import { UploadStills } from '../stills.model';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -172,22 +172,6 @@ export class CreateAnimeInputType {
         description: 'Add to the list of similar animes',
     })
     similar_by_animes_add: string[];
-
-    @IsOptional()
-    @Field(() => [GraphQLUpload], {
-        nullable: true,
-        defaultValue: [],
-        description: 'Stills to upload'
-    })
-    stills: Promise<FileUpload>[]
-    
-    @IsOptional()
-    @Field(() => [AnimeStillsPriorityType], {
-        nullable: true,
-        defaultValue: [],
-        description: 'Stills priority'
-    })
-    stills_priority: AnimeStillsPriorityType[]
 
     @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
