@@ -122,22 +122,12 @@ export class AnimeService {
             },
         });
 
-        let openings;
-        let endings;
-
-        if (max_openings_count) {
-            openings = await this.prisma.openingEnding.findMany({
-                where: {
-                    anime_id: id,
-                    type: 'OPENING',
-                    episode_end: { gte: min_opening_start },
-                },
-                orderBy: { episode_start: 'asc' },
-                take: max_openings_count,
-            });
-        }
-        if (max_endings_count) {
-            endings = await this.prisma.openingEnding.findMany({
+        const openings_endings_add = async (
+            type: 'OPENING' | 'ENDING',
+            take: number | undefined,
+            gte: number | undefined,
+        ) => {
+            return await this.prisma.openingEnding.findMany({
                 where: {
                     anime_id: id,
                     type,
