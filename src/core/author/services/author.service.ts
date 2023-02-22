@@ -37,18 +37,18 @@ export class AuthorService {
         const favourite_by_validation = {
             favourite_by: !user_id
                 ? {
-                    select: {
-                        id: true,
-                    },
-                }
+                      select: {
+                          id: true,
+                      },
+                  }
                 : {
-                    where: {
-                        id: user_id,
-                    },
-                    select: {
-                        id: true,
-                    },
-                },
+                      where: {
+                          id: user_id,
+                      },
+                      select: {
+                          id: true,
+                      },
+                  },
         };
         const author = await this.prisma.author.findUnique({
             where: {
@@ -81,12 +81,12 @@ export class AuthorService {
 
         const is_favourite_result = favourite &&
             user_id && {
-            animes: author.animes.map((el: any) => ({
-                ...el,
-                is_favourite: el.favourite_by.length > 0 ? true : false,
-            })),
-            is_favourite: author.favourite_by.length > 0 ? true : false,
-        };
+                animes: author.animes.map((el: any) => ({
+                    ...el,
+                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                })),
+                is_favourite: author.favourite_by.length > 0 ? true : false,
+            };
         return {
             success: true,
             author: {
@@ -105,18 +105,18 @@ export class AuthorService {
         const favourite_by_validation = {
             favourite_by: !user_id
                 ? {
-                    select: {
-                        id: true,
-                    },
-                }
+                      select: {
+                          id: true,
+                      },
+                  }
                 : {
-                    where: {
-                        id: user_id,
-                    },
-                    select: {
-                        id: true,
-                    },
-                },
+                      where: {
+                          id: user_id,
+                      },
+                      select: {
+                          id: true,
+                      },
+                  },
         };
         const authorList = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),
@@ -171,18 +171,18 @@ export class AuthorService {
         const favourite_by_validation = {
             favourite_by: !user_id
                 ? {
-                    select: {
-                        id: true,
-                    },
-                }
+                      select: {
+                          id: true,
+                      },
+                  }
                 : {
-                    where: {
-                        id: user_id,
-                    },
-                    select: {
-                        id: true,
-                    },
-                },
+                      where: {
+                          id: user_id,
+                      },
+                      select: {
+                          id: true,
+                      },
+                  },
         };
         const authorList = await this.prisma.author.findMany({
             ...transformPaginationUtil(args),

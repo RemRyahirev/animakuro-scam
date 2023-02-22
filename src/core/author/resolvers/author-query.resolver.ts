@@ -20,13 +20,11 @@ export class AuthorQueryResolver extends AuthorRootResolver {
         @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetAuthorResultsType> {
-        console.time('author');
-        const data = await this.authorService.getAuthor(
+        return await this.authorService.getAuthor(
             id,
             userId,
             JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
-        return data;
     }
 
     @ResolveField(() => GetListAuthorResultsType, {
@@ -37,14 +35,11 @@ export class AuthorQueryResolver extends AuthorRootResolver {
         @AccessToken() userId: string,
         @Info() info: any,
     ): Promise<GetListAuthorResultsType> {
-        console.time('author');
-        const data = await this.authorService.getAuthorList(
+        return await this.authorService.getAuthorList(
             args,
             userId,
             JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
-        console.timeEnd('author');
-        return data;
     }
 
     @ResolveField(() => GetListAuthorResultsType, {
