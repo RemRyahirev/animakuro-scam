@@ -1,4 +1,4 @@
-import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 import {
     CharacterQueryType,
     CharacterRootResolver,
@@ -10,6 +10,7 @@ import { GetCharacterResultsType } from '../models/results/get-character-results
 import { CharacterService } from '../services/character.service';
 import { AuthMiddleware } from '../../../common/middlewares/auth.middleware';
 import { AccessToken } from '../../../common/decorators';
+import { fieldsMap } from 'graphql-fields-list';
 
 @Resolver(CharacterQueryType)
 export class CharacterQueryResolver extends CharacterRootResolver {
@@ -23,8 +24,13 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacter(
         @Args('id') id: string,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetCharacterResultsType> {
-        return await this.characterService.getCharacter(id, userId);
+        return await this.characterService.getCharacter(
+            id,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListCharacterResultsType, {
@@ -33,8 +39,16 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacterList(
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterList(args, userId);
+        console.time('test1');
+        const data = await this.characterService.getCharacterList(
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
+        console.timeEnd('test1');
+        return data;
     }
 
     @ResolveField(() => GetListCharacterByAnimeIdResultsType, {
@@ -45,6 +59,10 @@ export class CharacterQueryResolver extends CharacterRootResolver {
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterListByAnimeId(id, args, userId);
+        return await this.characterService.getCharacterListByAnimeId(
+            id,
+            args,
+            userId,
+        );
     }
 }
