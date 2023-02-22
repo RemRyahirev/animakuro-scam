@@ -65,9 +65,8 @@ export class AnimeService {
             max_endings_count,
             min_opening_start,
             min_ending_start,
-            max_stills
+            max_stills,
         } = args;
-        console.time('start');
         const anime: any = await this.prisma.anime.findUnique({
             where: {
                 id,
@@ -94,14 +93,20 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
-                favourite_by: {
-                    where: {
-                        id: user_id,
-                    },
-                    select: {
-                        id: true,
-                    },
-                },
+                favourite_by: !user_id
+                    ? {
+                          select: {
+                              id: true,
+                          },
+                      }
+                    : {
+                          where: {
+                              id: user_id,
+                          },
+                          select: {
+                              id: true,
+                          },
+                      },
                 banner: {
                     include: {
                         user: true,
@@ -117,8 +122,8 @@ export class AnimeService {
                         frame: true,
                     },
                     orderBy: { priority: 'asc' },
-                    take: max_stills
-                }
+                    take: max_stills,
+                },
             },
         });
 
@@ -206,7 +211,6 @@ export class AnimeService {
                 ),
             })),
         };
-        console.timeEnd('start');
         return {
             success: true,
             errors: [],
@@ -526,8 +530,8 @@ export class AnimeService {
         );
 
         return {
-            stills: stills as any, 
-            success: true, 
+            stills: stills as any,
+            success: true,
             pagination
         };
     }
@@ -602,7 +606,7 @@ export class AnimeService {
         input: UpdateAnimeInputType,
         user_id: string,
     ): Promise<UpdateAnimeResultsType> {
-        const {...args} = input;
+        const { ...args } = input;
 
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
@@ -974,22 +978,23 @@ export class AnimeService {
         input: AddAnimeStillsInputType,
         user_id: string
     ): Promise<AddAnimeStillsResultsType> {
-        
+
         const toLink = input.stills.filter((stillItem) => stillItem.url);
         const toCDN = input.stills
             .filter((stillItem) => !stillItem.url)
             // @ts-ignore
-            .map(e => ({...e, still: input.stills_files[e.still_index]}));
-        
+            .map(e => ({ ...e, still: input.stills_files[e.still_index] }));
+
         // @ts-ignore
         const fromCDN = await Promise.all((await this.stillsFiles.tryCreate(toCDN.map(e => e.still), user_id))
-        ?.connect.map(async (e, i) => ({
-            anime_id: input.anime_id,
-            frame_id: e.id, 
-            type: AnimeStillsType[toCDN[i].type], 
-            priority: toCDN[i].priority})
-        )
-        ?? [])
+            ?.connect.map(async (e, i) => ({
+                anime_id: input.anime_id,
+                frame_id: e.id,
+                type: AnimeStillsType[toCDN[i].type],
+                priority: toCDN[i].priority
+            })
+            )
+            ?? [])
 
         const fromLink = toLink.map((e) => ({
             anime_id: input.anime_id,
@@ -997,14 +1002,14 @@ export class AnimeService {
             url: e.url,
             priority: e.priority
         }))
-        
+
         const stills = await this.prisma.animeStills.createMany({
             data: [...fromCDN, ...fromLink]
         })
-        
+
         return {
             count: stills.count,
-            success: true, 
+            success: true,
         }
     }
 
@@ -1013,18 +1018,18 @@ export class AnimeService {
         user_id: string
     ): Promise<UpdateAnimeStillsResultsType> {
         const stillsToUpdate = [];
-        
+
         for (let i = 0; i < input.stills.length; i++) {
             const upd = this.prisma.animeStills.update({
-                where: {id: input.stills[i].id},
-                data: {...input.stills[i]}
+                where: { id: input.stills[i].id },
+                data: { ...input.stills[i] }
             })
             stillsToUpdate.push(upd);
-        } 
+        }
         const updatedStills = await Promise.all(stillsToUpdate)
-        
-        return {success: true, stills: updatedStills as any};
-    } 
+
+        return { success: true, stills: updatedStills as any };
+    }
 
     async deleteAnimeStills(
         input: DeleteAnimeStillsInputType,
@@ -1039,7 +1044,7 @@ export class AnimeService {
         })
         const withoutCDN = stills.filter(e => !e.frame_id)
         const withCDN = stills.filter(e => e.frame_id)
-        
+
         await this.stillsFiles.tryDelete(withCDN.map(e => e.frame_id) as any)
         await this.prisma.animeStills.deleteMany({
             where: {
@@ -1048,7 +1053,7 @@ export class AnimeService {
                 }
             }
         })
-        
-        return {success: true}
+
+        return { success: true }
     }
 }
