@@ -41,14 +41,11 @@ export class CharacterQueryResolver extends CharacterRootResolver {
         @AccessToken() userId: string,
         @Info() info: any,
     ): Promise<GetListCharacterResultsType> {
-        console.time('test1');
-        const data = await this.characterService.getCharacterList(
+        return await this.characterService.getCharacterList(
             args,
             userId,
             JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
-        console.timeEnd('test1');
-        return data;
     }
 
     @ResolveField(() => GetListCharacterByAnimeIdResultsType, {
@@ -57,12 +54,14 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacterListByAnimeId(
         @Args('id') id: string,
         @Args() args: PaginationInputType,
+        @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetListCharacterResultsType> {
         return await this.characterService.getCharacterListByAnimeId(
             id,
             args,
             userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
     }
 }
