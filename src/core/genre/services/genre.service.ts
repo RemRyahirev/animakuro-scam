@@ -45,7 +45,6 @@ export class GenreService {
             include: {
                 animes: {
                     include: {
-                        genres: true,
                         characters: true,
                         authors: true,
                         studios: true,
@@ -82,12 +81,32 @@ export class GenreService {
         user_id: string,
         favourite: boolean,
     ): Promise<GetListGenreResultsType> {
+        const favourite_by_validation = {
+            favourite_by: !user_id
+                ? {
+                    select: {
+                        id: true,
+                    },
+                }
+                : {
+                    where: {
+                        id: user_id,
+                    },
+                    select: {
+                        id: true,
+                    },
+                },
+        };
         const genreList: any = await this.prisma.genre.findMany({
             ...transformPaginationUtil(args),
             include: {
-                favourite_by: {
-                    select: {
-                        id: true,
+                ...favourite_by_validation,
+                animes: {
+                    include: {
+                        characters: true,
+                        authors: true,
+                        studios: true,
+                        ...favourite_by_validation, 
                     },
                 },
             },
