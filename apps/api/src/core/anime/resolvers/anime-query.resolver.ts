@@ -1,4 +1,5 @@
-import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { fieldsMap } from 'graphql-fields-list';
+import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
@@ -10,6 +11,9 @@ import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-l
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { AnimeService } from '../services/anime.service';
 import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
+import { GetStillsByAnimeIdResultsType } from '../models/results/get-stills-by-animeId-results.type';
+import { GetStillsByAnimeIdInputType } from '../models/inputs/get-stills-by-animeId-input.type';
+import { GetAnimeListInputType } from '../models/inputs/get-anime-list-input.type';
 
 import { AnimeQueryType, AnimeRootResolver } from './anime-root.resolver';
 
@@ -23,18 +27,30 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     async getAnime(
         @Args() args: GetAnimeByIdInputType,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetAnimeResultsType> {
-        return await this.animeService.getAnime(args, userId);
+        return await this.animeService.getAnime(
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListAnimeResultsType, {
         middleware: [AuthMiddleware],
     })
     async getAnimeList(
+        @Args() input: GetAnimeListInputType,
         @Args() args: PaginationInputType,
+        @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetListAnimeResultsType> {
-        return await this.animeService.getAnimeList(args, userId);
+        return await this.animeService.getAnimeList(
+            input,
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListRelatedAnimeByAnimeIdResultsType, {
@@ -65,5 +81,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
             args,
             userId,
         );
+    }
+
+    @ResolveField(() => GetStillsByAnimeIdResultsType)
+    async getStillsByAnimeId(
+        @Args() args: GetStillsByAnimeIdInputType,
+        @Args() pagination: PaginationInputType,
+    ) {
+        return await this.animeService.getStillsByAnimeId(args, pagination);
     }
 }

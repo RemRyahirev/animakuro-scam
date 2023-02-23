@@ -1,4 +1,5 @@
-import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { fieldsMap } from 'graphql-fields-list';
+import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
@@ -19,9 +20,14 @@ export class GenreQueryResolver extends GenreRootResolver {
     @ResolveField(() => GetGenreResultsType, { middleware: [AuthMiddleware] })
     async getGenre(
         @Args('id') id: string,
+        @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetGenreResultsType> {
-        return await this.genreService.getGenre(id, userId);
+        return await this.genreService.getGenre(
+            id,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListGenreResultsType, {
@@ -29,8 +35,13 @@ export class GenreQueryResolver extends GenreRootResolver {
     })
     async getGenreList(
         @Args() args: PaginationInputType,
+        @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetListGenreResultsType> {
-        return await this.genreService.getGenreList(args, userId);
+        return await this.genreService.getGenreList(
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 }

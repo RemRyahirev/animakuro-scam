@@ -10,14 +10,15 @@ import {
 } from '@app/common/models/enums';
 import { File } from '@app/common/models/results/file.model';
 
-import { Genre } from '../../genre/models/genre.model';
+import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
 import { Author } from '../../author/models/author.model';
 import { Character } from '../../character/models/character.model';
-import { Studio } from '../../studio/models/studio.model';
+import { Genre } from '../../genre/models/genre.model';
+import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
 import { RelatingAnime } from '../../relating-anime/models/relating-anime.model';
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
-import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
-import { OpeningEnding } from '../../opening-ending/models/opening-ending.model';
+import { Studio } from '../../studio/models/studio.model';
+import { User } from '../../user/models/user.model';
 
 @ObjectType()
 export class Anime {
@@ -31,6 +32,12 @@ export class Anime {
         defaultValue: false,
     })
     is_favourite?: boolean;
+
+    @Field(() => [User], {
+        description: 'Favourite by',
+        nullable: true,
+    })
+    favourite_by?: User[];
 
     @Field(() => String, {
         description: 'The official titles of the media in various languages',
@@ -237,4 +244,10 @@ export class Anime {
 
     @Field(() => File, { nullable: true })
     cover?: File;
+
+    @Field(() => [Stills], {
+        nullable: true,
+        description: 'Anime stills'
+    })
+    stills?: Stills[];
 }

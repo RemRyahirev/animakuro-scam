@@ -19,10 +19,7 @@ export class UserQueryResolver extends UserRootResolver {
         super();
     }
 
-    @ResolveField(() => GetListUserByEmailResultsType, {
-        middleware: [AuthMiddleware],
-    })
-    @UseGuards(JwtAuthGuard)
+    @ResolveField()
     async getUsersByEmail(
         @Args('email') email: string,
         @Args() args: PaginationInputType,

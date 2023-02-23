@@ -19,17 +19,41 @@ export class GenreService {
         private prisma: PrismaService,
         private paginationService: PaginationService,
     ) {}
-    async getGenre(id: string, user_id: string): Promise<GetGenreResultsType> {
+    async getGenre(
+        id: string,
+        user_id: string,
+        favourite: boolean,
+    ): Promise<GetGenreResultsType> {
+        const favourite_by_validation = {
+            favourite_by: !user_id
+                ? {
+                      select: {
+                          id: true,
+                      },
+                  }
+                : {
+                      where: {
+                          id: user_id,
+                      },
+                      select: {
+                          id: true,
+                      },
+                  },
+        };
         const genre = await this.prisma.genre.findUnique({
             where: {
                 id,
             },
             include: {
-                favourite_by: {
-                    select: {
-                        id: true,
+                animes: {
+                    include: {
+                        characters: true,
+                        authors: true,
+                        studios: true,
+                        ...favourite_by_validation,
                     },
                 },
+                ...favourite_by_validation,
             },
         });
         if (!genre) {
@@ -38,20 +62,18 @@ export class GenreService {
                 genre: null,
             };
         }
-
-        const favourite = genre.favourite_by.find((el) => el.id == user_id);
-
-        if (favourite) {
-            return {
-                success: true,
-                genre: { ...genre, is_favourite: true },
-                errors: [],
+        const is_favourite_result = favourite &&
+            user_id && {
+                animes: genre.animes.map((el: any) => ({
+                    ...el,
+                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                })),
+                is_favourite: genre.favourite_by.length > 0 ? true : false,
             };
-        }
 
         return {
             success: true,
-            genre,
+            genre: { ...genre, ...is_favourite_result },
             errors: [],
         };
     }
@@ -59,13 +81,34 @@ export class GenreService {
     async getGenreList(
         args: PaginationInputType,
         user_id: string,
+        favourite: boolean,
     ): Promise<GetListGenreResultsType> {
+        const favourite_by_validation = {
+            favourite_by: !user_id
+                ? {
+                    select: {
+                        id: true,
+                    },
+                }
+                : {
+                    where: {
+                        id: user_id,
+                    },
+                    select: {
+                        id: true,
+                    },
+                },
+        };
         const genreList: any = await this.prisma.genre.findMany({
             ...transformPaginationUtil(args),
             include: {
-                favourite_by: {
-                    select: {
-                        id: true,
+                ...favourite_by_validation,
+                animes: {
+                    include: {
+                        characters: true,
+                        authors: true,
+                        studios: true,
+                        ...favourite_by_validation, 
                     },
                 },
             },
@@ -75,19 +118,23 @@ export class GenreService {
             args,
         );
 
-        for await (const genre of genreList) {
-            const favourite = genre?.favourite_by.find(
-                (el: any) => el.id == user_id,
-            );
-            if (favourite) {
-                genre.is_favourite = true;
-            }
-        }
+        const is_favourite_result = (el: any) =>
+            favourite &&
+            user_id && {
+                animes: el.animes.map((el: any) => ({
+                    ...el,
+                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                })),
+                is_favourite: el.favourite_by.length > 0 ? true : false,
+            };
 
         return {
             success: true,
             errors: [],
-            genre_list: genreList,
+            genre_list: genreList.map((el: any) => ({
+                ...el,
+                ...is_favourite_result(el),
+            })),
             pagination,
         };
     }

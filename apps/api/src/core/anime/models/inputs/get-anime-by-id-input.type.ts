@@ -77,4 +77,12 @@ export class GetAnimeByIdInputType {
     })
     min_ending_start?: number;
 
+    @IsOptional()
+    @IsInt()
+    @Field(() => Int, {
+        nullable: true,
+        defaultValue: 10,
+        description: 'Count of given stills'
+    })
+    max_stills: number;
 }

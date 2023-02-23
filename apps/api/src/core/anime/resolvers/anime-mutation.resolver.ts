@@ -14,6 +14,12 @@ import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.t
 import { AnimeService } from '../services/anime.service';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
 import { UpdateRatingAnimeInputType } from '../models/inputs/update-rating-anime-input.type';
+import { AddAnimeStillsResultsType } from '../models/results/add-anime-stills-results.type';
+import { AddAnimeStillsInputType } from '../models/inputs/add-anime-stills-input.type';
+import { DeleteAnimeStillsResultsType } from '../models/results/delete-anime-stills-results.type';
+import { DeleteAnimeStillsInputType } from '../models/inputs/delete-anime-stills-input.type';
+import { UpdateAnimeStillsInputType } from '../models/inputs/update-anime-stills-input.type';
+import { UpdateAnimeStillsResultsType } from '../models/results/update-anime-stills-results.type';
 
 import { AnimeMutationType, AnimeRootResolver } from './anime-root.resolver';
 
@@ -158,5 +164,38 @@ export class AnimeMutationResolver extends AnimeRootResolver {
         @AccessToken() user_id: string,
     ): Promise<UpdateRatingAnimeResultsType> {
         return await this.animeService.updateRatingAnime({ ...args, user_id });
+    }
+
+    @ResolveField(() => AddAnimeStillsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async addAnimeStills(
+        @Args() args: AddAnimeStillsInputType,
+        @AccessToken() user_id: string,
+    ) {
+        return await this.animeService.addAnimeStills(args, user_id);
+    }
+
+    @ResolveField(() => UpdateAnimeStillsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async updateAnimeStills(
+        @Args() args: UpdateAnimeStillsInputType,
+        @AccessToken() user_id: string,
+    ) {
+        return await this.animeService.updateAnimeStills(args, user_id);
+    }
+
+    @ResolveField(() => DeleteAnimeStillsResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async deleteAnimeStills(
+        @Args() args: DeleteAnimeStillsInputType,
+        @AccessToken() user_id: string,
+    ) {
+        return await this.animeService.deleteAnimeStills(args, user_id);
     }
 }

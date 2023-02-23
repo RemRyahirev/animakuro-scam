@@ -134,6 +134,7 @@ model Anime {
   airing_schedule    AiringSchedule[]
   favourite_by       User[]
   opening_ending     OpeningEnding[]
+  stills             AnimeStills[]
   rating_anime       RatingAnime[]
 
   @@map("anime")
@@ -331,6 +332,28 @@ model RatingAnime {
   @@map("rating_anime")
 }
 
+model AnimeStills {
+  id            String                    @id @default(uuid()) @db.Uuid
+  anime_id      String                    @db.Uuid
+  frame_id      String?                   @db.Uuid @unique
+  url           String?                   @db.VarChar(1000)
+  type          AnimeStillsType
+  priority      Int?  
+  created_at    DateTime                  @default(now()) @map("created_at")
+  updated_at    DateTime                  @default(now()) @map("updated_at")
+
+  anime         Anime                     @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  frame         File?                     @relation(fields: [frame_id], references: [id], onDelete: Cascade)
+
+  @@unique([anime_id, priority])
+  @@map("anime_stills")
+}
+
+enum AnimeStillsType {
+  IMAGE
+  VIDEO
+}
+
 model File {
   id                    String          @id @default(uuid()) @db.Uuid
   file_id               String          @db.VarChar(100)
@@ -347,6 +370,7 @@ model File {
   profile_covers        UserProfile[]   @relation("cover")
   author_covers         Author[]
   character_covers      Character[]
+  anime_still          AnimeStills?
 
   @@map("file")
 }
@@ -536,9 +560,11 @@ enum Media {
 }
 
 enum FolderType {
-  LOOKING //Смотрю
-  ABANDONED // Брошено
-  PLANNED // Запланированно
-  VIEWED // Просмотрено
+  WATCHING
+  PLAN_TO_WATCH
+  COMPLETED
+  REWATCHING
+  PAUSED
+  DROPPED
   DEFAULT // Стандарный Фолдер
 }

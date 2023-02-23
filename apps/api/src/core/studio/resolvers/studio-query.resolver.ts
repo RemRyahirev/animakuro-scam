@@ -1,4 +1,5 @@
-import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { fieldsMap } from 'graphql-fields-list';
+import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
@@ -20,8 +21,13 @@ export class StudioQueryResolver extends StudioRootResolver {
     async getStudio(
         @Args('id') id: string,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetStudioResultsType> {
-        return await this.studioService.getStudio(id, userId);
+        return await this.studioService.getStudio(
+            id,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListStudioResultsType, {
@@ -30,7 +36,12 @@ export class StudioQueryResolver extends StudioRootResolver {
     async getStudioList(
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetListStudioResultsType> {
-        return await this.studioService.getStudioList(args, userId);
+        return await this.studioService.getStudioList(
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 }

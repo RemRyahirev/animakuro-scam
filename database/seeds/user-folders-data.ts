@@ -24,6 +24,7 @@ export const userFoldersData = async () => {
             name: 'Запланировано',
             description: 'Запланировал я эти аниме!',
             is_statistic_active: true,
+            type: 'PLAN_TO_WATCH',
             // информативный блок
         },
         {
@@ -33,6 +34,7 @@ export const userFoldersData = async () => {
             animes: {
                 connect: { id: anime2.id },
             },
+            type: 'WATCHING',
             // информативный блок
             // блок для аниме со статусом WATCHING
             name: 'Смотрю',

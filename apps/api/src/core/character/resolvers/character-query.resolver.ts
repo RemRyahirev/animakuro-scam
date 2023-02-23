@@ -1,4 +1,5 @@
-import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { fieldsMap } from 'graphql-fields-list';
+import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
@@ -26,8 +27,13 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacter(
         @Args('id') id: string,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetCharacterResultsType> {
-        return await this.characterService.getCharacter(id, userId);
+        return await this.characterService.getCharacter(
+            id,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListCharacterResultsType, {
@@ -36,8 +42,13 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacterList(
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterList(args, userId);
+        return await this.characterService.getCharacterList(
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListCharacterByAnimeIdResultsType, {
@@ -46,8 +57,14 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     async getCharacterListByAnimeId(
         @Args('id') id: string,
         @Args() args: PaginationInputType,
+        @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetListCharacterResultsType> {
-        return await this.characterService.getCharacterListByAnimeId(id, args, userId);
+        return await this.characterService.getCharacterListByAnimeId(
+            id,
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 }

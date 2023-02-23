@@ -1,8 +1,9 @@
 import { Profile } from 'passport';
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, Req, UseGuards } from '@nestjs/common';
 import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken, SocialProfile, ValidateSchemas } from '@app/common/decorators';
+import { SocialAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { AuthType } from '@app/common/models/enums';
 
@@ -53,13 +54,20 @@ export class AuthMutationResolver extends AuthRootResolver {
         return await this.authService.logout(user_id);
     }
 
+    @UseGuards(SocialAuthGuard)
     @ResolveField(() => RegisterResultsType)
     async registerSocial(
-        @SocialProfile() profile: Profile,
+        @SocialProfile() profile: any,
         @Args('code') code: string,
         @Args('auth_type', { type: () => AuthType }) auth_type: AuthType,
-    ): Promise<RegisterResultsType> {
-        return await this.authService.registerSocial(code, auth_type);
+    ): Promise<RegisterResultsType | { location: string }> {
+        if (auth_type === 'jwt') {
+            return { success: false };
+        }
+        if (!profile?.account?.username) {
+            return { location: profile.location, success: true };
+        }
+        return await this.authService.registerSocial(profile, auth_type);
     }
 
     @ResolveField(() => RegisterResultsType, {

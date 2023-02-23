@@ -9,12 +9,6 @@ export class RelatingAnime {
     @HideField()
     parent_anime: Anime;
 
-    @Field(() => Boolean, {
-        description: 'Favourite anime',
-        defaultValue: false,
-    })
-    is_favourite?: boolean;
-
     @HideField()
     parent_anime_id: string;
 

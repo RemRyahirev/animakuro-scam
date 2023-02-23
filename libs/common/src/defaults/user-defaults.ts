@@ -8,22 +8,22 @@ export const userDefaults = {
             {
                 name: 'Смотрю',
                 description: 'Аниме, которые я смотрю',
-                type: FolderType.LOOKING,
+                type: FolderType.WATCHING,
             },
             {
                 name: 'Запланированно',
                 description: 'Запланированные аниме',
-                type: FolderType.PLANNED,
+                type: FolderType.PLAN_TO_WATCH,
             },
             {
                 name: 'Просмотрено',
                 description: 'Просмотренные аниме',
-                type: FolderType.VIEWED,
+                type: FolderType.COMPLETED,
             },
             {
                 name: 'Брошено',
                 description: 'Аниме, брошенные мною',
-                type: FolderType.ABANDONED,
+                type: FolderType.DROPPED,
             },
         ],
     },

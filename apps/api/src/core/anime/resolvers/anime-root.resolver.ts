@@ -8,6 +8,9 @@ import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
+import { GetStillsByAnimeIdResultsType } from '../models/results/get-stills-by-animeId-results.type';
+import { DeleteAnimeStillsResultsType } from '../models/results/delete-anime-stills-results.type';
+import { AddAnimeStillsResultsType } from '../models/results/add-anime-stills-results.type';
 
 @ObjectType()
 export class AnimeMutationType {
@@ -19,6 +22,16 @@ export class AnimeMutationType {
 
     @Field(() => DeleteAnimeResultsType, { description: 'Delete anime' })
     deleteAnime: DeleteAnimeResultsType;
+
+    @Field(() => DeleteAnimeStillsResultsType, {
+        description: 'Delete anime stills'
+    })
+    deleteAnimeStills: DeleteAnimeStillsResultsType
+
+    @Field(() => AddAnimeStillsResultsType, {
+        description: 'Add stils to anime'
+    })
+    addAnimeStills: AddAnimeStillsResultsType;
 
     @Field(() => UpdateAnimeResultsType, {
         description: 'Add to the list of relating animes',
@@ -73,6 +86,11 @@ export class AnimeQueryType {
         description: 'Get Similar anime list by anime ID',
     })
     getSimilarAnimeListByAnimeId: GetListSimilarAnimeByAnimeIdResultsType;
+
+    @Field(() => GetStillsByAnimeIdResultsType, {
+        description: 'Get stills by anime id'
+    })
+    getStillsByAnimeId: GetStillsByAnimeIdResultsType
 }
 
 @Resolver()

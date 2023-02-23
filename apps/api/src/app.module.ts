@@ -49,7 +49,7 @@ import { MailerModule } from './mailer/mailer.module';
         }),
         ThrottlerModule.forRoot({
             ttl: 10,
-            limit: 10,
+            limit: 100,
         }),
         CommonModule,
         CoreModule,

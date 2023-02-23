@@ -11,6 +11,7 @@ export enum ErrorType {
     UNAUTHORIZED = 'UNAUTHORIZED',
     NO_CONTENT = 'NO_CONTENT',
     TOKEN_NOT_FOUND = 'TOKEN_NOT_FOUND',
+    TOKEN_EXPIRED = 'TOKEN_EXPIRED',
 }
 
 registerEnumType(ErrorType, {

@@ -81,6 +81,7 @@ specifiers:
   geoip-lite: ^1.4.6
   googleapis: ^110.0.0
   graphql: ^16.6.0
+  graphql-fields-list: ^2.2.4
   graphql-jit: ^0.7.4
   graphql-upload: ^11.0.0
   handlebars: ^4.7.7
@@ -159,6 +160,7 @@ dependencies:
   geoip-lite: 1.4.6
   googleapis: 110.0.0
   graphql: 16.6.0
+  graphql-fields-list: 2.2.4
   graphql-jit: 0.7.4_graphql@16.6.0
   graphql-upload: 11.0.0_graphql@16.6.0
   handlebars: 4.7.7
@@ -6909,6 +6911,10 @@ packages:
   /grapheme-splitter/1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
     dev: true
+
+  /graphql-fields-list/2.2.4:
+    resolution: {integrity: sha512-dhsMajI/7FMeZ8UWJDiw7iZlwacW5eBM02IVJ6IldFNgmVSDeuS+0+wF3ZOB0zcpYl3Q1spuegPLAFKcriPOCw==}
+    dev: false
 
   /graphql-jit/0.7.4_graphql@16.6.0:
     resolution: {integrity: sha512-kWyHmsQtKMD6xcKDgf4dgPLyIZhviqA6IWGdnA0ElL9wgrIOTxf3eI4c0/U3tnoAU3t09zliVCfDkfIptzYjIA==}

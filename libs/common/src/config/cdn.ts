@@ -31,7 +31,7 @@ export const BUCKET_CONFIG = {
     },
     animeStills: {
         maxFileSize: 5,
-        bucket: 'anime_stills',
+        bucket: 'test1',
         validation: VALIDATION.JpegPng,
     },
     animeCovers: {

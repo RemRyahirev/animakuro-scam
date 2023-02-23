@@ -12,7 +12,6 @@ import { AuthQueryResolver } from './resolvers/auth-query.resolver';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
 import { StrategyConfigService } from './services/strategy-config.service';
-import { AuthController } from './controllers/auth.controller';
 import {
     AppleStrategy,
     DiscordStrategy,
@@ -47,6 +46,6 @@ import { LocalStrategy } from './strategies/local.strategy';
         LocalStrategy,
     ],
     exports: [AuthService, TokenService],
-    controllers: [AuthController],
+    controllers: [],
 })
 export class AuthModule {}

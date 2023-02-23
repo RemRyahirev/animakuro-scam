@@ -9,9 +9,6 @@ export const openingEndingData = async () =>{
         {
             id: '51630f1a-32d8-4e23-ace2-66ba69a4878a',
             anime_id: '02bfd954-3cf5-47a1-953b-daad7054c6d6',
-            // anime: {
-            //     connect: [{id: '02bfd954-3cf5-47a1-953b-daad7054c6d6'}]
-            // },
             type: OpeningEndingType.OPENING,
             url: 'https://www.youtube.com/watch?v=4s7uc_j1Sm0',
             name: 'I love jojo',
@@ -22,9 +19,6 @@ export const openingEndingData = async () =>{
         {
             id: '7362f7d3-7c4b-4f78-ab54-9a4b8462773b',
             anime_id: '02bfd954-3cf5-47a1-953b-daad7054c6d6',
-            // anime: {
-            //     connect: [{id: '02bfd954-3cf5-47a1-953b-daad7054c6d6'}]
-            // },
             type: OpeningEndingType.ENDING,
             url: 'https://www.youtube.com/watch?v=WOxNRbUYd1o',
             name: 'I still love jojo',

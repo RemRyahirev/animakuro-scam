@@ -1,4 +1,5 @@
-import { Args, ResolveField, Resolver } from '@nestjs/graphql';
+import { fieldsMap } from 'graphql-fields-list';
+import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
@@ -19,9 +20,14 @@ export class AuthorQueryResolver extends AuthorRootResolver {
     @ResolveField(() => GetAuthorResultsType, { middleware: [AuthMiddleware] })
     async getAuthor(
         @Args('id') id: string,
+        @Info() info: any,
         @AccessToken() userId: string,
     ): Promise<GetAuthorResultsType> {
-        return await this.authorService.getAuthor(id, userId);
+        return await this.authorService.getAuthor(
+            id,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListAuthorResultsType, {
@@ -30,8 +36,13 @@ export class AuthorQueryResolver extends AuthorRootResolver {
     async getAuthorList(
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetListAuthorResultsType> {
-        return await this.authorService.getAuthorList(args, userId);
+        return await this.authorService.getAuthorList(
+            args,
+            userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
+        );
     }
 
     @ResolveField(() => GetListAuthorResultsType, {
@@ -41,11 +52,13 @@ export class AuthorQueryResolver extends AuthorRootResolver {
         @Args('id') id: string,
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @Info() info: any,
     ): Promise<GetListAuthorResultsType> {
         return await this.authorService.getAuthorListByAnimeId(
             id,
             args,
             userId,
+            JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
     }
 }

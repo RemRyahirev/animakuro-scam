@@ -1005,7 +1005,51 @@ export const animeData = async () => {
                     //     id: '7362f7d3-7c4b-4f78-ab54-9a4b8462773b',
                     // }
                 ]
-            }
+            },
+        },
+        {
+            id: "59b92892-1258-43a9-8d68-3db4f3b076b5",
+            title: "Евангелион",
+            evaluation: { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 },
+            score: 12,
+            year: 25,
+            country_of_origin: "jp",
+            date_start: "2022-10-11T00:00:00.000Z",
+            date_end: "2022-10-11T00:00:00.000Z",
+            seasons_count: 1,
+            format: MediaFormat.TV,
+            source: MediaSource.MANGA,
+            rating: FilmRating.NC_17,
+            characters: {
+                connect: [
+                    {
+                        id: 'acdddc06-68cc-4765-a88d-a3f852738569',
+                    },
+                    {
+                        id: '6b2c741d-ed72-4c38-a0f6-53c9f0f69daf',
+                    },
+                ],
+            },
+            authors: {
+                connect: [
+                    {
+                        id: 'a22c040f-c228-43e0-a628-35e82ed293d3',
+                    },
+                    {
+                        id: '75f855d1-9148-434c-8552-07fdb1c277a4',
+                    },
+                ],
+            },
+            episodes: 1,
+            duration: 1,
+            next_episode: "2022-10-11T00:00:00.000Z",
+            description: "Насилие и жестокоть в вашем вкусе? Тогда смотрите с удовольствием, это аниме для детей с аутизмом и шизофренией :)",
+            preview_link: "ok.ru",
+            status_description: "string",
+            is_licensed: true,
+            hashtags: [],
+            synonyms: [],
+            release_status: ReleaseStatus.COMPLETED,
         }
     ];
 };

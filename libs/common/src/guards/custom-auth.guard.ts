@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import passport from 'passport';
 import { AuthenticateOptionsGoogle } from 'passport-google-oauth20';
 
@@ -86,17 +87,40 @@ const createPassportContext = (request: any, response: any) => {
         options: AuthenticateOptionsGoogle,
         callback: Function,
     ) => {
-        return new Promise<void>((resolve, reject) =>
+        return new Promise<void>((resolve, reject) => {
+            let location: string;
+            const res = {
+                setHeader: (key: string, value: string) => {
+                    if (key == 'Location') {
+                        location = value;
+                    }
+                },
+                end: (...args: any) => {
+                    return resolve(callback(null, { location }, null, null));
+                },
+            };
             passport.authenticate(type, options, (err, user, info, status) => {
                 try {
                     request.authInfo = info;
                     return resolve(callback(err, user, info, status));
-                } catch (err) {
+                } catch (err: any) {
+                    if (
+                        err.message === 'Malformed auth code.' ||
+                        err.message === 'Invalid "code" in request.'
+                    ) {
+                        reject(
+                            new GraphQLError('Code is invalid', {
+                                extensions: {
+                                    code: 'INVALID_CODE',
+                                },
+                            }),
+                        );
+                    }
                     reject(err);
                 }
-            })(request, response, (err: any) =>
+            })(request, request.body.code ? response : res, (err: any) =>
                 err ? reject(err) : resolve(),
-            ),
-        );
+            );
+        });
     };
 };

@@ -26,6 +26,7 @@ import {
 
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
+import { UploadStills } from '../stills.model';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -244,4 +245,5 @@ export class UpdateAnimeInputType {
     @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })
     cover?: Promise<FileUpload>;
+
 }
