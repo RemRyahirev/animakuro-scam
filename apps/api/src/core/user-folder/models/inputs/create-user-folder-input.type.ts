@@ -20,7 +20,7 @@ export class CreateUserFolderInputType {
     @IsOptional()
     @IsUUID(4, { each: true })
     @Field(() => [ID], { nullable: true })
-    animes_add: string;
+    animes_add?: string[];
 
     /*@IsOptional()
     @IsNumber()

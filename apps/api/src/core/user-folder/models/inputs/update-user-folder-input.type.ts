@@ -24,12 +24,12 @@ export class UpdateUserFolderInputType {
     @IsOptional()
     @IsUUID(4, { each: true })
     @Field(() => [ID], { nullable: true })
-    animes_add: string;
+    animes_add?: string[];
 
     @IsOptional()
     @IsUUID(4, { each: true })
     @Field(() => [ID], { nullable: true })
-    animes_remove: string;
+    animes_remove?: string[];
 
     @IsOptional()
     @Field(() => Boolean, { nullable: true })

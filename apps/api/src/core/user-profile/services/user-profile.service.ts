@@ -4,6 +4,7 @@ import { PaginationInputType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
+import { StatisticService } from '@app/common/services/statistic.service';
 import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
@@ -39,6 +40,7 @@ export class UserProfileService {
         private prisma: PrismaService,
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
+        private statistics: StatisticService,
     ) {
         this.bannerFiles = this.fileUpload.getStorageForOne('userProfile', 'banner_id', 'userBanners');
         this.coverFiles = this.fileUpload.getStorageForOne('userProfile', 'cover_id', 'userCovers');
@@ -179,7 +181,6 @@ export class UserProfileService {
                 },
             },
         });
-        console.log(userProfile);
 
         return {
             success: true,
@@ -241,6 +242,7 @@ export class UserProfileService {
                 },
             },
         });
+
         return {
             success: true,
             errors: [],
@@ -252,6 +254,21 @@ export class UserProfileService {
         args: UpdateUserFavouriteAnimeInputType,
         user_id: string,
     ): Promise<UpdateUserFavouriteAnimesResultType> {
+        const animeToAdd = (args.favourite_animes_add ?? []).slice();
+        const animeToRemove = (args.favourite_animes_remove ?? []).slice();
+        const oldFavoriteAnime = await this.prisma.user.findUnique({
+            where: {
+                id: user_id,
+            },
+            select: {
+                favourite_animes: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
         const userFavouriteAnimes = await this.prisma.user.update({
             where: {
                 id: user_id,
@@ -263,6 +280,31 @@ export class UserProfileService {
                 favourite_animes: true,
             },
         });
+
+        const oldFavoriteAnimeIds = oldFavoriteAnime?.favourite_animes.map(el => el.id) ?? [];
+        animeToAdd.forEach(animeId => {
+            if (oldFavoriteAnimeIds.includes(animeId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent('animeInFavorites', {
+                animeId,
+                userId: user_id,
+            }, 1);
+        });
+        animeToRemove.forEach(animeId => {
+            if (!oldFavoriteAnimeIds.includes(animeId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent('animeInFavorites', {
+                animeId,
+                userId: user_id,
+            }, -1);
+        });
+
         return {
             success: true,
             errors: [],

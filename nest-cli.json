@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "assets": [
-      "**/*.proto",
-      "**/*.handlebars"
+        "../../../libs/**/*.proto",
+        "../../../apps/**/*.handlebars"
     ],
     "watchAssets": true,
     "webpack": true,
@@ -38,15 +38,6 @@
       "sourceRoot": "libs/common/src",
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
-      }
-    },
-    "database": {
-      "type": "library",
-      "root": "libs/database",
-      "entryFile": "index",
-      "sourceRoot": "libs/database/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/database/tsconfig.lib.json"
       }
     }
   }

@@ -1,55 +1,57 @@
-import { Injectable } from '@nestjs/common';
-import { Interval } from '@nestjs/schedule';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { StatisticName } from '@prisma/client';
 
+import { AnimeType, FolderType } from '@app/common/models/enums';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { StatisticService } from '@app/common/services/statistic.service';
 
 /*
 1. Статистика по папкам (Всех пользователей) к конкретному аниме (Ко всем)
 2. Статистика по рейтингу (Всех пользователей) к конкретному аниме (Ко всем)
-4. Статистика по избранным  (Всех пользователей) к конкретному аниме (Ко всем)  (Количество в избранном) * все сущьности избранных
+4. Статистика по избранным (Всех пользователей) к конкретному аниме (Ко всем) (Количество в избранном) * все сущьности избранных
 4. Статистика пользователя
-   4.1 Статистика по папкам  (из папок учитывать в статистике)
+   4.1 Статистика по папкам (из папок учитывать в статистике)
    4.2 Статистика по избранным
-   4.3 Всего аниме в папках (всех)  (из папок учитывать в статистике)
-   4.4 Топ 4 самых просмотриваеммых типов аниме  (из папок учитывать в статистике)
+   4.3 Всего аниме в папках (всех) (из папок учитывать в статистике)
+   4.4 Топ 4 самых просмотриваеммых типов аниме (из папок учитывать в статистике)
    4.5 Топ 4 самых просмотриваеммых жанров аниме (из папок учитывать в статистике)
  */
 
 /*
 actions:
 1. add anime to favorites (+ remove)
-    - anim_fav:<anime_id> = +1/-1
+    - AFav:<anime_id> = +1/-1
         > anime.favorites++
         > statistics: stat_name=favorites, counters.anime++
-    - usr_anim_fav:<user_id> = +1/-1
+    - AUFav:<user_id> = +1/-1
         > user.favorites.anime++
 2. rate anime (+ change rate, remove rate)
-    - anim_rate:<anime_id>:<star> = +1/-1
+    - AUR:<anime_id>:<stars> = +1/-1
         > anime.userRating.<star>++
-        > statistics: stat_name=anime_user_rating, counters.<star>++
+        > statistics: stat_name=anime_user_rating, counters.<stars>++
 3. add anime to folder (+ remove from folder, change is_statistic_active)
-    - anim_fold:<anime_id>:<folder_type> = +1/-1
+    - AIF:<anime_id>:<folder_type> = +1/-1
         > anime.folder.<folder_type>++
         > statistics: stat_name=anime_folder, counter.<folder_type>++
-    - usr_fold:<user_id>:<folder_id>:<folder_type>:<anime_type>:<genre_id> = +1/-1
+    - AIUF:<user_id>:<folder_id>:<folder_type>:<anime_id> = +1/-1
         > user.folder.total++
         >            .type.<folder_type>++
         >            .id.<folder_id>++
         >     .viewedAnime.type.<anime_type>++ (only if viewed, check by <folder_type>)
         >                 .genre.<genre_id>++ (only if viewed, check by <folder_type>)
-    - active_fold:<user_id>:<folder_id>:<folder_type>:<anime_type>:<genre_id> = +1/-1 (with replace, not sum)
+    - SF:<user_id>:<folder_id>:<folder_type>:<is_statistic_active> = +1/-1 (with replace, not sum)
         > user.folder.total++ (on or off, find how much anime in folder)
         >            .type.<folder_type>++
         >            .id.<folder_id>++
         >     .viewedAnime.type.<anime_type>++ (on or off, find how much anime in folder by type & genre)
         >                 .genre.<genre_id>++
 4. change anime type
-    - anim_type:<anime_id> = <anime_type>
+    - AT:<anime_id>:<anime_type>
         > user.viewedAnime.type.<anime_type>++ (-- for old, ++ for new, only if viewed, for every user)
 5. add genre to anime (+ remove anime genre)
-    - anim_genre:<anime_id>:<genre_id> = +1/-1 (with replace, not sum)
+    - AG:<anime_id>:<genre_id> = +1/-1 (with replace, not sum)
         > user.viewedAnime.genre.<genre_id>++ (-- for old, ++ for new, only if viewed, for every user)
  */
 
@@ -59,9 +61,9 @@ store in redis:
 2. animeInUserFavorites (incr)  - AUFav:<user_id>
 3. animeUserRate (incr)         - AUR:<anime_id>:<stars>
 4. animeInFolder (incr)         - AIF:<anime_id>:<folder_type>
-5. animeInUserFolder (incr)     - AIUF:<user_id>:<folder_id>:<folder_type>:<anime_type>:<genre_id>
-6. statFolder (final)           - SF:<user_id>:<folder_id>:<folder_type>:<anime_type>:<genre_id>
-7. animeType (final)            - AT:<anime_id> => <anime_type>
+5. animeInUserFolder (incr)     - AIUF:<user_id>:<folder_id>:<folder_type>:<anime_id>
+6. statFolder (final)           - SF:<user_id>:<folder_id>:<folder_type>:<is_statistic_active>
+7. animeType (final)            - AT:<anime_id>:<anime_type>
 8. animeGenre (final)           - AG:<anime_id>:<genre_id>
 
 insert incr: zincrby
@@ -69,141 +71,106 @@ insert final: zadd
 get: zpopmax
  */
 
-/*
-where to store result statistics:
-1. amount of anime in all users' folders (by folder type) by anime/overall
-    - by anime - in anime (by folder type)
-    - overall - in statistics table (by folder type)
-2. total anime user rating (by stars) by anime/overall
-    - by anime - in anime (by stars)
-    - overall - in statistics table (by stars)
-3. amount of anime in favorites by anime/overall
-    - by anime - in anime
-    - overall - in statistics table
-4. amount of anime in user's folders by user & folder type
-    - in user
-5. amount of anime (and other) in user's favorites by user
-    - in user (we can't just use length because it's linked table, not a field)
-6. amount of anime in all user's folders by user
-    - in user (or can't we just use sum of #4 stats?)
-7. amount of anime in all user's folders by user & anime type
-    - in user (by anime type)
-8. amount of anime in all user's folders by user & genre
-    - in user (by genre)
+const buildJsonPath = (
+    jsonFieldName: string,
+    path: string[],
+) => {
+    let resultSql = '';
+    let wholeEmptyJson = '{';
+    let prevPath = path[0];
 
-TODO: check if it possible to increment amount inside json object (YES)
+    for (let i = 0, iLen = path.length; i < iLen - 1; ++i) {
+        const key = path[i];
+        wholeEmptyJson += `"${key}":{`;
 
-anime fields:
-    - statistics: JSON {
-        folder: {
-          <type>: <amount>,
-        },
-        userRating: {
-          <stars>: <amount>,
-        },
-        favorites: <amount>,
-      }
-user fields:
-    - statistics: JSON {
-        folder: {
-          total: <amount>,
-          type: {
-            <type>: <amount>,
-          },
-          id: {
-            <folder_id>: <amount>,
-          },
-        },
-        favorites: {
-          anime: <amount>,
-        },
-        viewedAnime: {
-            type: {
-              <type>: <amount>,
-            },
-            genre: {
-              <genre>: <amount>,
-            },
-        },
-      }
-statistics table:
-    - stat_name: enum PK
-    - counters: JSON
+        if (i >= 1) {
+            const nextPath = prevPath + ',' + key;
+            resultSql += ` WHEN ${jsonFieldName}#>'{${nextPath}}' IS NULL THEN jsonb_set(${jsonFieldName}, '{${prevPath}}', '{}')`;
+            prevPath = nextPath;
+        }
+    }
 
-    query: select counters from statistics where stat_name = $1 limit 1;
- */
+    wholeEmptyJson += '}'.repeat(path.length);
+    resultSql = `CASE WHEN ${jsonFieldName} IS NULL THEN '${wholeEmptyJson}' ${resultSql} ELSE ${jsonFieldName} END`;
+
+    return resultSql;
+};
 
 @Injectable()
-export class CalculationService {
+export class CalculationService implements OnModuleInit {
     constructor(
+        private readonly config: ConfigService,
+        private readonly schedulerRegistry: SchedulerRegistry,
         private readonly statistic: StatisticService,
         private readonly prisma: PrismaService,
     ) {}
 
-    async updateGlobalStatistic(
+    private async updateGlobalStatistic(
         name: StatisticName,
         path: string[],
         value: number,
     ) {
         const pathStr = '{' + path.join(',') + '}';
 
-        await this.prisma.$executeRaw`
-            UPDATE statistic
-               SET data = jsonb_set(
-                     data,
-                     ${pathStr}::text[],
-                     (COALESCE(data#>${pathStr}::text[], '0')::int + ${value})::text::jsonb
-                   )
-             WHERE name = ${name}::"StatisticName"`;
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE statistic
+                SET data = jsonb_set(
+                      ${buildJsonPath('data', path)},
+                      $1::text[],
+                      (COALESCE(data#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE name = $3::"StatisticName"`,
+            pathStr,
+            value,
+            name,
+        );
     }
 
-    async updateAnimeStatistics(
+    private async updateAnimeStatistics(
         id: string,
         path: string[],
         value: number,
     ) {
         const pathStr = '{' + path.join(',') + '}';
 
-        await this.prisma.$executeRaw`
-            UPDATE anime
-               SET statistics = jsonb_set(
-                     statistics,
-                     ${pathStr}::text[],
-                     (COALESCE(statistics#>${pathStr}::text[], '0')::int + ${value})::text::jsonb
-                   )
-             WHERE id = ${id}::uuid`;
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE anime
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
     }
 
-    async updateUserStatistics(
+    private async updateUserStatistics(
         id: string,
         path: string[],
         value: number,
     ) {
         const pathStr = '{' + path.join(',') + '}';
 
-        await this.prisma.$executeRaw`
-            UPDATE user
-               SET statistics = jsonb_set(
-                     statistics,
-                     ${pathStr}::text[],
-                     (COALESCE(statistics#>${pathStr}::text[], '0')::int + ${value})::text::jsonb
-                   )
-             WHERE id = ${id}::uuid`;
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE users
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
     }
 
-    /**
-     * TODO:
-     *   + run on interval basis
-     *   - ability to trigger handler on http request
-     *   + check redis queues
-     *   + recalculate statistic based on queue type & params
-     *   + save statistic into corresponding prisma model
-     *   - logs
-     *   - metrics
-     *   - setup build & run (both dev & prod)
-     */
-
-    @Interval(2000)
     async checkQueue() {
         const events = await this.statistic.getEvents();
 
@@ -211,36 +178,195 @@ export class CalculationService {
             return;
         }
 
+        const startTime = Date.now();
+
         // console.log('Event:', events[0]);
 
         for (const event of events) {
             switch (event.event) {
                 case 'animeInFavorites':
+                    await this.updateAnimeStatistics(
+                        event.params.animeId,
+                        ['favorites'],
+                        event.value,
+                    );
+                    await this.updateGlobalStatistic(
+                        StatisticName.FAVORITES,
+                        ['anime'],
+                        event.value,
+                    );
                     break;
 
                 case 'animeInUserFavorites':
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['favorites', 'anime'],
+                        event.value,
+                    );
                     break;
 
                 case 'animeUserRate':
                     await this.updateGlobalStatistic(
                         StatisticName.ANIME_USER_RATING,
                         [String(event.params.stars)],
-                        Number(event.value),
+                        event.value,
                     );
                     await this.updateAnimeStatistics(
                         event.params.animeId,
                         ['userRating', String(event.params.stars)],
-                        Number(event.value),
+                        event.value,
                     );
                     break;
 
                 case 'animeInFolder':
+                    await this.updateAnimeStatistics(
+                        event.params.animeId,
+                        ['folder', event.params.folderType],
+                        event.value,
+                    );
+                    await this.updateGlobalStatistic(
+                        StatisticName.ANIME_FOLDER,
+                        [event.params.folderType],
+                        event.value,
+                    );
                     break
 
                 case 'animeInUserFolder':
+                    const folder = await this.prisma.userFolder.findUnique({
+                        where: {
+                            id: event.params.folderId,
+                        },
+                        select: {
+                            is_statistic_active: true,
+                        },
+                    });
+
+                    if (!folder?.is_statistic_active) {
+                        break;
+                    }
+
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['folder', 'total'],
+                        event.value,
+                    );
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['folder', 'type', event.params.folderType],
+                        event.value,
+                    );
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['folder', 'id', event.params.folderId],
+                        event.value,
+                    );
+
+                    if (event.params.folderType === FolderType.VIEWED) {
+                        const anime = await this.prisma.anime.findUnique({
+                            where: {
+                                id: event.params.animeId,
+                            },
+                            select: {
+                                type: true,
+                                genres: {
+                                    select: {
+                                        id: true,
+                                    },
+                                }
+                            },
+                        });
+
+                        if (!anime?.type) {
+                            break;
+                        }
+
+                        await this.updateUserStatistics(
+                            event.params.userId,
+                            ['viewedAnime', 'type', anime.type],
+                            event.value,
+                        );
+
+                        for (const genre of anime.genres) {
+                            await this.updateUserStatistics(
+                                event.params.userId,
+                                ['viewedAnime', 'genre', genre.id],
+                                event.value,
+                            );
+                        }
+                    }
+
                     break;
 
                 case 'statFolder':
+                    if (event.value === 0) {
+                        break;
+                    }
+
+                    let animeFields = {};
+                    if (event.params.folderType === FolderType.VIEWED) {
+                        animeFields = {
+                            type: true,
+                            genres: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                        };
+                    }
+
+                    const statFolder = await this.prisma.userFolder.findUnique({
+                        where: {
+                            id: event.params.folderId,
+                        },
+                        select: {
+                            animes: {
+                                select: {
+                                    id: true,
+                                    ...animeFields,
+                                },
+                            }
+                        },
+                    });
+
+                    if (!statFolder?.animes?.length) {
+                        break;
+                    }
+                    const animeCount = statFolder.animes.length;
+                    const multiplier = event.value > 0 ? 1 : -1;
+                    const animeCountDiff = animeCount * multiplier;
+
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['folder', 'total'],
+                        animeCountDiff,
+                    );
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['folder', 'type', event.params.folderType],
+                        animeCountDiff,
+                    );
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['folder', 'id', event.params.folderId],
+                        animeCountDiff,
+                    );
+
+                    for (const anime of statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string}> }>) {
+                        await this.updateUserStatistics(
+                            event.params.userId,
+                            ['viewedAnime', 'type', anime.type],
+                            multiplier,
+                        );
+
+                        for (const genre of anime.genres) {
+                            await this.updateUserStatistics(
+                                event.params.userId,
+                                ['viewedAnime', 'genre', genre.id],
+                                multiplier,
+                            );
+                        }
+                    }
+
                     break;
 
                 case 'animeType':
@@ -253,5 +379,22 @@ export class CalculationService {
                     console.error('Unknown event:', event);
             }
         }
+
+        const duration = Date.now() - startTime;
+        console.log('Events processed:', {
+            chunk: events.length,
+            durationSec: duration / 1000,
+            durationSecPerEvent: Math.round(duration / events.length) / 1000
+        });
+    }
+
+    async onModuleInit() {
+        this.schedulerRegistry.addInterval(
+            'checkQueue',
+            setInterval(
+                () => this.checkQueue(),
+                this.config.get('STATISTIC_RUN_INTERVAL', 2000),
+            ),
+        );
     }
 }

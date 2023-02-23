@@ -42,7 +42,7 @@ describe('gql', () => {
 
         app = appModuleRef.createNestApplication();
 
-        // init part from app.ts
+        // init part from main.ts
         const globalPrefix = 'graphql';
         useContainer(app.select(CommonModule), {
             fallback: true,
@@ -81,7 +81,7 @@ describe('gql', () => {
     });
 
     beforeEach(async () => {
-        jest.spyOn(Logger, 'error').mockImplementation();
+        // jest.spyOn(Logger, 'error').mockImplementation();
     });
 
     afterEach(async () => {
@@ -272,7 +272,7 @@ describe('gql', () => {
                 .expectBody({
                     errors: [
                         {
-                            message: 'Something went wrong with DB communication.',
+                            message: 'Something went wrong.',
                             location: {
                                 line: 8,
                                 column: 41,

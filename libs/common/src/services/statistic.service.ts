@@ -19,15 +19,12 @@ type UserAction = {
         userId: string;
         folderId: string;
         folderType: FolderType;
-        animeType: AnimeType;
-        genreId: string;
     };
     statFolder: {
         userId: string;
         folderId: string;
         folderType: FolderType;
-        animeType: AnimeType;
-        genreId: string;
+        isStatisticActive: boolean;
     };
     animeType: {
         animeId: string;
@@ -77,14 +74,14 @@ const Key = {
         ({ animeId, folderType }: { animeId: string, folderType: FolderType }) =>
             `${EventCode.animeInFolder}:${animeId}:${folderType}`,
     animeInUserFolder:
-        ({ userId, folderId, folderType, animeType, genreId }: { userId: string, folderId: string, folderType: FolderType, animeType: AnimeType, genreId: string }) =>
-            `${EventCode.animeInUserFolder}:${userId}:${folderId}:${folderType}:${animeType}:${genreId}`,
+        ({ userId, folderId, folderType, animeId }: { userId: string, folderId: string, folderType: FolderType, animeId: string }) =>
+            `${EventCode.animeInUserFolder}:${userId}:${folderId}:${folderType}:${animeId}`,
     statFolder:
-        ({ userId, folderId, folderType, animeType, genreId }: { userId: string, folderId: string, folderType: FolderType, animeType: AnimeType, genreId: string }) =>
-            `${EventCode.statFolder}:${userId}:${folderId}:${folderType}:${animeType}:${genreId}`,
+        ({ userId, folderId, folderType, isStatisticActive }: { userId: string, folderId: string, folderType: FolderType, isStatisticActive: boolean }) =>
+            `${EventCode.statFolder}:${userId}:${folderId}:${folderType}:${isStatisticActive ? '1' : '0'}`,
     animeType:
-        ({ animeId }: { animeId: string }) =>
-            `${EventCode.animeType}:${animeId}`,
+        ({ animeId, animeType }: { animeId: string, animeType: AnimeType }) =>
+            `${EventCode.animeType}:${animeId}:${animeType}`,
     animeGenre:
         ({ animeId, genreId }: { animeId: string, genreId: string }) =>
             `${EventCode.animeGenre}:${animeId}:${genreId}`,
@@ -203,8 +200,7 @@ export class StatisticService {
                         userId: params[0],
                         folderId: params[1],
                         folderType: FolderType[params[2] as keyof typeof FolderType],
-                        animeType: AnimeType[params[3] as keyof typeof AnimeType],
-                        genreId: params[4],
+                        animeId: params[3],
                     },
                 };
 
@@ -215,8 +211,7 @@ export class StatisticService {
                         userId: params[0],
                         folderId: params[1],
                         folderType: FolderType[params[2] as keyof typeof FolderType],
-                        animeType: AnimeType[params[3] as keyof typeof AnimeType],
-                        genreId: params[4],
+                        isStatisticActive: !!Number(params[3]),
                     },
                 };
 
@@ -225,6 +220,7 @@ export class StatisticService {
                     event: StatAction.animeType,
                     params: {
                         animeId: params[0],
+                        animeType: AnimeType[params[1] as keyof typeof AnimeType],
                     },
                 };
 
@@ -259,7 +255,7 @@ export class StatisticService {
             return [];
         }
 
-        const result: Array<ParsedEvent & { value: string }> = [];
+        const result: Array<ParsedEvent & { value: number }> = [];
         for (let i = 0; i < events.length; i += 2) {
             const event = events[i];
             const value = events[i + 1];
@@ -267,7 +263,7 @@ export class StatisticService {
             const parsed = this.parseEvent(event);
 
             if (parsed) {
-                result.push({ ...parsed, value });
+                result.push({ ...parsed, value: Number(value) });
             }
         }
 

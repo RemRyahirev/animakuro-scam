@@ -4,6 +4,7 @@ import { FolderType } from '@app/common/models/enums';
 import { PaginationInputType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
+import { StatisticService } from '@app/common/services/statistic.service';
 import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
@@ -21,6 +22,7 @@ export class UserFolderService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
+        private statistics: StatisticService,
     ) {}
 
     async getUserFolderByUserId(
@@ -110,6 +112,8 @@ export class UserFolderService {
         args: CreateUserFolderInputType,
         user_id: string,
     ): Promise<CreateUserFolderResultsType> {
+        const animeToAdd = (args.animes_add ?? []).slice();
+
         const userFolder = await this.prisma.userFolder.create({
             data: {
                 ...entityUpdateUtil('animes', args),
@@ -136,6 +140,16 @@ export class UserFolderService {
                 animes: true,
             },
         });
+
+        animeToAdd.forEach(animeId => {
+            this.statistics.fireEvent('animeInFolder', {
+                animeId,
+                userId: user_id,
+                folderId: userFolder.id,
+                folderType: userFolder.type,
+            }, 1);
+        });
+
         return {
             success: true,
             errors: [],
@@ -145,7 +159,24 @@ export class UserFolderService {
 
     async updateUserFolder(
         args: UpdateUserFolderInputType,
+        user_id: string,
     ): Promise<UpdateUserFolderResultsType> {
+        const animeToAdd = (args.animes_add ?? []).slice();
+        const animeToRemove = (args.animes_remove ?? []).slice();
+        const oldUserFolder = await this.prisma.userFolder.findUnique({
+            where: {
+                id: args.id,
+            },
+            select: {
+                is_statistic_active: true,
+                animes: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
         const userFolder = await this.prisma.userFolder.update({
             where: { id: args.id },
             data: {
@@ -171,6 +202,53 @@ export class UserFolderService {
                 animes: true,
             },
         });
+
+        const oldFolderAnime = oldUserFolder?.animes.map(el => el.id) ?? [];
+        animeToAdd.forEach(animeId => {
+            if (oldFolderAnime.includes(animeId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent('animeInFolder', {
+                animeId,
+                userId: user_id,
+                folderId: userFolder.id,
+                folderType: userFolder.type,
+            }, 1);
+        });
+        animeToRemove.forEach(animeId => {
+            if (!oldFolderAnime.includes(animeId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent('animeInFolder', {
+                animeId,
+                userId: user_id,
+                folderId: userFolder.id,
+                folderType: userFolder.type,
+            }, -1);
+        });
+
+        if (
+            oldUserFolder?.is_statistic_active &&
+            oldUserFolder.is_statistic_active !== userFolder.is_statistic_active
+        ) {
+            this.statistics.fireEvent('statFolder', {
+                userId: user_id,
+                folderId: userFolder.id,
+                folderType: userFolder.type,
+                isStatisticActive: oldUserFolder.is_statistic_active,
+            }, -1);
+            this.statistics.fireEvent('statFolder', {
+                userId: user_id,
+                folderId: userFolder.id,
+                folderType: userFolder.type,
+                isStatisticActive: userFolder.is_statistic_active,
+            }, 1);
+        }
+
         return {
             success: true,
             errors: [],
@@ -178,10 +256,36 @@ export class UserFolderService {
         };
     }
 
-    async deleteUserFolder(id: string): Promise<DeleteUserFolderResultsType> {
+    async deleteUserFolder(
+        id: string,
+        user_id: string,
+    ): Promise<DeleteUserFolderResultsType> {
+        const oldUserFolder = await this.prisma.userFolder.findUnique({
+            where: { id },
+            select: {
+                type: true,
+                animes: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
         const userFolder = await this.prisma.userFolder.deleteMany({
+            // TODO: why DEFAULT?
             where: { id, type: FolderType.DEFAULT },
         });
+
+        oldUserFolder?.animes.forEach(anime => {
+            this.statistics.fireEvent('animeInFolder', {
+                animeId: anime.id,
+                userId: user_id,
+                folderId: id,
+                folderType: oldUserFolder.type,
+            }, -1);
+        });
+
         return {
             success: true,
             errors: [],

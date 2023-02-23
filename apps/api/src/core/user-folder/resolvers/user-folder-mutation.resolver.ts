@@ -40,8 +40,9 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateUserFolder(
         @Args() args: UpdateUserFolderInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateUserFolderResultsType> {
-        return await this.userFolderService.updateUserFolder(args);
+        return await this.userFolderService.updateUserFolder(args, user_id);
     }
 
     @ResolveField(() => DeleteUserFolderResultsType, {
@@ -50,7 +51,8 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     @UseGuards(JwtAuthGuard)
     async deleteUserFolder(
         @Args('id') id: string,
+        @AccessToken() user_id: string,
     ): Promise<DeleteUserFolderResultsType> {
-        return await this.userFolderService.deleteUserFolder(id);
+        return await this.userFolderService.deleteUserFolder(id, user_id);
     }
 }

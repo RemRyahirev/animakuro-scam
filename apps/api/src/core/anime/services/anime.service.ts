@@ -205,7 +205,7 @@ export class AnimeService {
         );
 
         for await (const anime of animeList) {
-            const favourite = anime?.favourite_by.find(
+            const favourite = anime?.favourite_by?.find(
                 (el: any) => el.id == user_id,
             );
             if (favourite) {
@@ -423,6 +423,8 @@ export class AnimeService {
         if (anime && anime.studios) {
             await this.updateStudioData(anime.studios);
         }
+
+        // TODO: [statistic] change of type and/or genres
 
         return {
             success: true,
