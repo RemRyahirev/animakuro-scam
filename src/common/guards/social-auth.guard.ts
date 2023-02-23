@@ -12,7 +12,18 @@ export class SocialAuthGuard extends CustomAuthGuard() {
             ...req.body,
             authentication: args.authentication,
             auth_type: args.auth_type,
+            code: args.code,
+        };
+        req.query = {
+            ...req.query,
+            code: args.code,
         };
         return req;
+    }
+
+    getResponse(context: GqlExecutionContext) {
+        const ctx = GqlExecutionContext.create(context);
+        const res = ctx.getContext().res;
+        return res;
     }
 }

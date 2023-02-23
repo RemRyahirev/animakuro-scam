@@ -2,6 +2,9 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../services/prisma.service';
 import { FieldMiddleware, MiddlewareContext, NextFn } from '@nestjs/graphql';
 import { ErrorType } from '../models/enums/error.enum';
+import { ConfigService } from '@nestjs/config';
+
+const configService = new ConfigService();
 export const AuthMiddleware: FieldMiddleware = async (
     ctx: MiddlewareContext,
     next: NextFn,
@@ -11,6 +14,15 @@ export const AuthMiddleware: FieldMiddleware = async (
         const prismaService = new PrismaService();
         const jwtService = new JwtService();
         if (!!auth) {
+            try {
+                await jwtService.verify(auth, {
+                    secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
+                });
+            } catch (err: any) {
+                if (err.name === 'TokenExpiredError') {
+                    ctx.context.req.error = ErrorType.TOKEN_EXPIRED;
+                }
+            }
             const token: any = jwtService.decode(auth);
             if (!!token && !ctx.context.req.user) {
                 const user = await prismaService.user.findUnique({

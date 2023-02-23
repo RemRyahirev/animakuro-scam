@@ -12,6 +12,7 @@ import { memoize } from '@nestjs/passport/dist/utils/memoize.util';
 import { AuthenticateOptionsGoogle } from 'passport-google-oauth20';
 import { AuthType } from '../models/enums';
 import passport from 'passport';
+import { GraphQLError } from 'graphql';
 
 export const CustomAuthGuard: (type?: string | string[]) => Type<IAuthGuard> =
     memoize(createAuthGuard);
@@ -84,17 +85,40 @@ const createPassportContext = (request: any, response: any) => {
         options: AuthenticateOptionsGoogle,
         callback: Function,
     ) => {
-        return new Promise<void>((resolve, reject) =>
+        return new Promise<void>((resolve, reject) => {
+            let location: string;
+            const res = {
+                setHeader: (key: string, value: string) => {
+                    if (key == 'Location') {
+                        location = value;
+                    }
+                },
+                end: (...args: any) => {
+                    return resolve(callback(null, { location }, null, null));
+                },
+            };
             passport.authenticate(type, options, (err, user, info, status) => {
                 try {
                     request.authInfo = info;
                     return resolve(callback(err, user, info, status));
-                } catch (err) {
+                } catch (err: any) {
+                    if (
+                        err.message === 'Malformed auth code.' ||
+                        err.message === 'Invalid "code" in request.'
+                    ) {
+                        reject(
+                            new GraphQLError('Code is invalid', {
+                                extensions: {
+                                    code: 'INVALID_CODE',
+                                },
+                            }),
+                        );
+                    }
                     reject(err);
                 }
-            })(request, response, (err: any) =>
+            })(request, request.body.code ? response : res, (err: any) =>
                 err ? reject(err) : resolve(),
-            ),
-        );
+            );
+        });
     };
 };

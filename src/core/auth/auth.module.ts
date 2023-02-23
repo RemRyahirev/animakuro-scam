@@ -9,7 +9,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { TokenService } from './services/token.service';
 import { StrategyConfigService } from './services/strategy-config.service';
 import { HttpModule } from '@nestjs/axios';
-import { AuthController } from './controllers/auth.controller';
 import {
     AppleStrategy,
     DiscordStrategy,
@@ -45,6 +44,6 @@ import { LocalStrategy } from './strategies/local.strategy';
         LocalStrategy,
     ],
     exports: [AuthService, TokenService],
-    controllers: [AuthController],
+    controllers: [],
 })
 export class AuthModule {}
