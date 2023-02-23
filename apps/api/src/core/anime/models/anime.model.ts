@@ -20,6 +20,8 @@ import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { Studio } from '../../studio/models/studio.model';
 import { User } from '../../user/models/user.model';
 
+import { Stills } from './stills.model';
+
 @ObjectType()
 export class Anime {
     @Field(() => ID, {

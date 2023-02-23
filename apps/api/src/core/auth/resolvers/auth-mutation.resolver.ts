@@ -61,7 +61,7 @@ export class AuthMutationResolver extends AuthRootResolver {
         @Args('code') code: string,
         @Args('auth_type', { type: () => AuthType }) auth_type: AuthType,
     ): Promise<RegisterResultsType | { location: string }> {
-        if (auth_type === 'jwt') {
+        if (String(auth_type)?.toLowerCase() === 'jwt') {
             return { success: false };
         }
         if (!profile?.account?.username) {

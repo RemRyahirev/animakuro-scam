@@ -338,7 +338,7 @@ model AnimeStills {
   frame_id      String?                   @db.Uuid @unique
   url           String?                   @db.VarChar(1000)
   type          AnimeStillsType
-  priority      Int?  
+  priority      Int?
   created_at    DateTime                  @default(now()) @map("created_at")
   updated_at    DateTime                  @default(now()) @map("updated_at")
 
@@ -383,9 +383,9 @@ model Statistic {
 }
 
 enum StatisticName {
-    FAVORITES
-    ANIME_USER_RATING
-    ANIME_FOLDER
+  FAVORITES
+  ANIME_USER_RATING
+  ANIME_FOLDER
 }
 
 enum OpeningEndingType {

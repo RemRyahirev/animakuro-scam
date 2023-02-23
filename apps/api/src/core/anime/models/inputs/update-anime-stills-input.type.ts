@@ -1,8 +1,6 @@
-import { IsArray, IsNotEmpty, IsOptional, IsUUID } from "@nestjs/class-validator";
-import { ArgsType, Field, ID, InputType, Int } from "@nestjs/graphql";
-import { AnimeStillsType } from "@prisma/client";
-import { FileUpload, GraphQLUpload } from "graphql-upload";
-
+import { IsArray, IsOptional, IsUUID } from '@nestjs/class-validator';
+import { ArgsType, Field, ID, InputType, Int } from '@nestjs/graphql';
+import { AnimeStillsType } from '@prisma/client';
 
 @InputType()
 class UpdStillsInput {
@@ -12,20 +10,20 @@ class UpdStillsInput {
 
     @IsOptional()
     @Field(() => Int, {
-        nullable: true
+        nullable: true,
     })
     priority?: number;
 
     @IsOptional()
     @Field(() => AnimeStillsType, {
         nullable: true,
-        description: 'Data type of current still'
+        description: 'Data type of current still',
     })
-    type?: AnimeStillsType
+    type?: AnimeStillsType;
 
     @IsOptional()
     @Field(() => String, {
-        nullable: true
+        nullable: true,
     })
     url?: string;
 }

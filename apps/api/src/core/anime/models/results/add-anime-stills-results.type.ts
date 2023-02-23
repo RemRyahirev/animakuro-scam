@@ -1,12 +1,11 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { BaseResultsType } from "../../../../common/models/results";
-import { Stills } from "../stills.model";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
+import { BaseResultsType } from '@app/common/models/results';
 
 @ObjectType()
 export class AddAnimeStillsResultsType extends BaseResultsType {
     @Field(() => Int, {
-        description: 'Added stills count'
+        description: 'Added stills count',
     })
     count: number;
 }

@@ -1,9 +1,11 @@
-import { Field, ID, registerEnumType, ObjectType, Int, InputType } from '@nestjs/graphql'
-import { AnimeStillsType } from '@prisma/client'
-import { FileUpload, GraphQLUpload } from 'graphql-upload'
-import { File } from '../../../common/models/results/file.model'
-import { Anime } from './anime.model'
-export { AnimeStillsType } from '@prisma/client'
+import { Field, ID, registerEnumType, ObjectType, Int, InputType } from '@nestjs/graphql';
+import { AnimeStillsType } from '@prisma/client';
+
+export { AnimeStillsType } from '@prisma/client';
+
+import { File } from '@app/common/models/results/file.model';
+
+import { Anime } from './anime.model';
 
 export enum AnimeStillsSortField {
     PRIORITY = 'priority',
@@ -12,29 +14,29 @@ export enum AnimeStillsSortField {
 }
 
 registerEnumType(AnimeStillsSortField, {
-    name: 'AnimeStillsSortField'
-})
+    name: 'AnimeStillsSortField',
+});
 
 registerEnumType(AnimeStillsType, {
-    name: 'AnimeStillsType'
-}) 
+    name: 'AnimeStillsType',
+});
 
 @InputType()
 export class UploadStills {
     @Field(() => Int, {
         nullable: true,
-        description: 'Index to Upload file in array'
+        description: 'Index to Upload file in array',
     })
     still_index?: number;
 
     @Field(() => String, {
         nullable: true,
-        description: 'Youtube id'
+        description: 'Youtube id',
     })
     url?: string;
 
     @Field(() => AnimeStillsType)
-    type: AnimeStillsType
+    type: AnimeStillsType;
 
     @Field(() => Int, {
         nullable: true,
@@ -45,56 +47,56 @@ export class UploadStills {
 @ObjectType()
 export class Stills {
     @Field(() => ID, {
-        description: 'ID of anime still'
+        description: 'ID of anime still',
     })
-    id: string
+    id: string;
 
     @Field(() => ID, {
-        description: 'ID of anime'
+        description: 'ID of anime',
     })
-    anime_id: string
+    anime_id: string;
 
     @Field(() => ID, {
         nullable: true,
-        description: "ID of source"
+        description: 'ID of source',
     })
-    frame_id?: string
+    frame_id?: string;
 
     @Field(() => String, {
         nullable: true,
-        description: "Foreign of source"
+        description: 'Foreign of source',
     })
-    url?: string
+    url?: string;
 
     @Field(() => AnimeStillsType, {
-        description: 'Data type of current still'
+        description: 'Data type of current still',
     })
-    type: AnimeStillsType
+    type: AnimeStillsType;
 
     @Field(() => Int, {
         nullable: true,
-        defaultValue: 'Priority of stills 1, 2, 3 etc...'
+        defaultValue: 'Priority of stills 1, 2, 3 etc...',
     })
-    priority: number
+    priority: number;
 
     @Field(() => Date, {
-        description: 'Created at Date'
+        description: 'Created at Date',
     })
-    created_at: Date
+    created_at: Date;
 
     @Field(() => Date, {
-        description: 'Updated at Date'
+        description: 'Updated at Date',
     })
-    updated_at: Date
+    updated_at: Date;
 
     @Field(() => File, {
         nullable: true,
-        description: 'File\'s metadata'
+        description: 'File\'s metadata',
     })
-    frame?: File
+    frame?: File;
 
     @Field(() => Anime, {
-        description: 'Parrent anime'
+        description: 'Parrent anime',
     })
-    anime: Anime
+    anime: Anime;
 }
