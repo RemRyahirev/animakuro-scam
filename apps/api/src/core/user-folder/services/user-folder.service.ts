@@ -231,22 +231,12 @@ export class UserFolderService {
             }, -1);
         });
 
-        if (
-            oldUserFolder?.is_statistic_active &&
-            oldUserFolder.is_statistic_active !== userFolder.is_statistic_active
-        ) {
+        if (oldUserFolder?.is_statistic_active !== userFolder.is_statistic_active) {
             this.statistics.fireEvent('statFolder', {
                 userId: user_id,
                 folderId: userFolder.id,
                 folderType: userFolder.type,
-                isStatisticActive: oldUserFolder.is_statistic_active,
-            }, -1);
-            this.statistics.fireEvent('statFolder', {
-                userId: user_id,
-                folderId: userFolder.id,
-                folderType: userFolder.type,
-                isStatisticActive: userFolder.is_statistic_active,
-            }, 1);
+            }, userFolder.is_statistic_active ? 1 : -1);
         }
 
         return {

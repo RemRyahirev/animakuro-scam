@@ -41,7 +41,7 @@ actions:
         >            .id.<folder_id>++
         >     .viewedAnime.type.<anime_type>++ (only if viewed, check by <folder_type>)
         >                 .genre.<genre_id>++ (only if viewed, check by <folder_type>)
-    - SF:<user_id>:<folder_id>:<folder_type>:<is_statistic_active> = +1/-1 (with replace, not sum)
+    - SF:<user_id>:<folder_id>:<folder_type> = +1/-1 (with replace, not sum)
         > user.folder.total++ (on or off, find how much anime in folder)
         >            .type.<folder_type>++
         >            .id.<folder_id>++
@@ -62,7 +62,7 @@ store in redis:
 3. animeUserRate (incr)         - AUR:<anime_id>:<stars>
 4. animeInFolder (incr)         - AIF:<anime_id>:<folder_type>
 5. animeInUserFolder (incr)     - AIUF:<user_id>:<folder_id>:<folder_type>:<anime_id>
-6. statFolder (final)           - SF:<user_id>:<folder_id>:<folder_type>:<is_statistic_active>
+6. statFolder (final)           - SF:<user_id>:<folder_id>:<folder_type>
 7. animeType (final)            - AT:<anime_id>:<anime_type>
 8. animeGenre (final)           - AG:<anime_id>:<genre_id>
 
@@ -77,17 +77,15 @@ const buildJsonPath = (
 ) => {
     let resultSql = '';
     let wholeEmptyJson = '{';
-    let prevPath = path[0];
+    let prevPath = '';
 
     for (let i = 0, iLen = path.length; i < iLen - 1; ++i) {
         const key = path[i];
         wholeEmptyJson += `"${key}":{`;
 
-        if (i >= 1) {
-            const nextPath = prevPath + ',' + key;
-            resultSql += ` WHEN ${jsonFieldName}#>'{${nextPath}}' IS NULL THEN jsonb_set(${jsonFieldName}, '{${prevPath}}', '{}')`;
-            prevPath = nextPath;
-        }
+        const nextPath = (prevPath.length ? prevPath + ',' : '') + key;
+        resultSql += ` WHEN ${jsonFieldName}#>'{${nextPath}}' IS NULL THEN jsonb_set(${jsonFieldName}, '{${nextPath}}', '{}')`;
+        prevPath = nextPath;
     }
 
     wholeEmptyJson += '}'.repeat(path.length);
@@ -296,13 +294,13 @@ export class CalculationService implements OnModuleInit {
                                 ['viewedAnime', 'type', anime.type],
                                 event.value,
                             ),
-                            ...anime.genres.map(genre =>
+                            ...(anime.genres?.map(genre =>
                                 this.updateUserStatistics(
                                     event.params.userId,
                                     ['viewedAnime', 'genre', genre.id],
                                     event.value,
                                 ),
-                            ),
+                            ) ?? []),
                         ]);
                     }
 
@@ -357,31 +355,39 @@ export class CalculationService implements OnModuleInit {
                             ['folder', 'type', event.params.folderType],
                             animeCountDiff,
                         ),
+                        // TODO:
+                        //   - remove key when multiplier=-1
+                        //   - or should I always store folder stat by id
                         this.updateUserStatistics(
                             event.params.userId,
                             ['folder', 'id', event.params.folderId],
                             animeCountDiff,
                         ),
-                        ...(statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string}> }>)
-                            .reduce((arr, anime) => {
-                                arr.push(
-                                    this.updateUserStatistics(
-                                        event.params.userId,
-                                        ['viewedAnime', 'type', anime.type],
-                                        multiplier,
-                                    ),
-                                    ...anime.genres.map(genre =>
+                    ]);
+
+                    if (event.params.folderType === FolderType.COMPLETED) {
+                        await Promise.all(
+                            (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string}> }>)
+                                .reduce((arr, anime) => {
+                                    arr.push(
                                         this.updateUserStatistics(
                                             event.params.userId,
-                                            ['viewedAnime', 'genre', genre.id],
+                                            ['viewedAnime', 'type', anime.type],
                                             multiplier,
                                         ),
-                                    ),
-                                );
+                                        ...(anime.genres?.map(genre =>
+                                            this.updateUserStatistics(
+                                                event.params.userId,
+                                                ['viewedAnime', 'genre', genre.id],
+                                                multiplier,
+                                            ),
+                                        ) ?? []),
+                                    );
 
-                                return arr;
-                            }, [] as Promise<number>[]),
-                    ]);
+                                    return arr;
+                                }, [] as Promise<number>[]),
+                        );
+                    }
                     break;
 
                 case 'animeType':

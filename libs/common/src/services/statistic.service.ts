@@ -24,7 +24,6 @@ type UserAction = {
         userId: string;
         folderId: string;
         folderType: FolderType;
-        isStatisticActive: boolean;
     };
     animeType: {
         animeId: string;
@@ -77,8 +76,8 @@ const Key = {
         ({ userId, folderId, folderType, animeId }: { userId: string, folderId: string, folderType: FolderType, animeId: string }) =>
             `${EventCode.animeInUserFolder}:${userId}:${folderId}:${folderType}:${animeId}`,
     statFolder:
-        ({ userId, folderId, folderType, isStatisticActive }: { userId: string, folderId: string, folderType: FolderType, isStatisticActive: boolean }) =>
-            `${EventCode.statFolder}:${userId}:${folderId}:${folderType}:${isStatisticActive ? '1' : '0'}`,
+        ({ userId, folderId, folderType }: { userId: string, folderId: string, folderType: FolderType }) =>
+            `${EventCode.statFolder}:${userId}:${folderId}:${folderType}`,
     animeType:
         ({ animeId, animeType }: { animeId: string, animeType: AnimeType }) =>
             `${EventCode.animeType}:${animeId}:${animeType}`,
@@ -211,7 +210,6 @@ export class StatisticService {
                         userId: params[0],
                         folderId: params[1],
                         folderType: FolderType[params[2] as keyof typeof FolderType],
-                        isStatisticActive: !!Number(params[3]),
                     },
                 };
 
