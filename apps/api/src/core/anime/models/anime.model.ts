@@ -8,6 +8,7 @@ import {
     ReleaseStatus,
     YearSeason,
 } from '@app/common/models/enums';
+import { AnimeStatistics } from '@app/common/models/results/anime-statistics.model';
 import { File } from '@app/common/models/results/file.model';
 
 import { AiringSchedule } from '../../airing-schedule/models/airing-schedule.model';
@@ -252,4 +253,10 @@ export class Anime {
         description: 'Anime stills'
     })
     stills?: Stills[];
+
+    @Field(() => AnimeStatistics, {
+        nullable: true,
+        description: 'Anime statistics',
+    })
+    statistics?: AnimeStatistics;
 }

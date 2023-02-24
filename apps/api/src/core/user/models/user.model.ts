@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { AuthType } from '@app/common/models/enums/auth-type.enum';
+import { UserStatistics } from '@app/common/models/results/user-statistics.model';
 
 import { UserProfile } from '../../user-profile/models/user-profile.model';
 import { Anime } from '../../anime/models/anime.model';
@@ -63,4 +64,10 @@ export class User {
 
     @Field(() => [UserCollection])
     user_collection: UserCollection[];
+
+    @Field(() => UserStatistics, {
+        nullable: true,
+        description: 'User statistics',
+    })
+    statistics?: UserStatistics;
 }

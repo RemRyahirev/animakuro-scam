@@ -46,7 +46,7 @@ export class OpeningEndingService {
             }
         }
 
-        return { success: true, opening_ending: openingEnding };
+        return { success: true, opening_ending: openingEnding as any };
     }
 
     async getOpeningEndingList(
