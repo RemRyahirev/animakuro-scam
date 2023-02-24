@@ -118,11 +118,16 @@ export class FileUploadService {
             return undefined;
         }
 
-        return {
+        let result = await this.upload(bucket, [await file], user_id);
+        if (result?.length) {
+            result = result.filter(id => id?.length);
+        }
+
+        return result?.length ? {
             connect: {
-                id: (await this.upload(bucket, [await file], user_id))[0],
+                id: result[0],
             },
-        };
+        }: undefined;
     }
 
     async tryUploadMany(
@@ -134,12 +139,14 @@ export class FileUploadService {
             return undefined;
         }
 
-        return {
-            connect: (await this.upload(bucket, await Promise.all(files), user_id))
-                .map((e, i) => ({
-                    id: e,
-                })),
-        };
+        let result = await this.upload(bucket, await Promise.all(files), user_id);
+        if (result?.length) {
+            result = result.filter(id => id?.length);
+        }
+
+        return result?.length ? {
+            connect: result.map(id => ({ id })),
+        } : undefined;
     }
 
     protected async upload(
@@ -325,7 +332,7 @@ export class FileUploadService {
         user_id?: string,
         maxCount = 0,
     ): UploadResultOne {
-        const ids: string[] = await this.update(
+        let ids: string[] = await this.update(
             entity,
             uniqueWhere,
             fileField,
@@ -336,11 +343,15 @@ export class FileUploadService {
             maxCount,
         );
 
-        return {
+        if (ids?.length) {
+            ids = ids.filter(id => id?.length);
+        }
+
+        return ids?.length ? {
             connect: {
                 id: ids[0],
             },
-        };
+        } : undefined;
     }
 
     async tryUpdateMany<E extends PrismaModelKeys>(
@@ -356,7 +367,7 @@ export class FileUploadService {
         user_id?: string,
         maxCount = 0,
     ): UploadResultMany {
-        const ids: string[] = await this.update(
+        let ids: string[] = await this.update(
             entity,
             uniqueWhere,
             fileField,
@@ -367,9 +378,13 @@ export class FileUploadService {
             maxCount,
         );
 
-        return {
-            connect: ids.map(id => ({id})),
-        };
+        if (ids?.length) {
+            ids = ids.filter(id => id?.length);
+        }
+
+        return ids?.length ? {
+            connect: ids.map(id => ({ id })),
+        } : undefined;
     }
 
     protected async update<E extends PrismaModelKeys>(
