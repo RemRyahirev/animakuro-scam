@@ -180,7 +180,7 @@ export class CalculationService implements OnModuleInit {
 
         const startTime = Date.now();
 
-        // console.log('Event:', events[0]);
+        // console.log('Events:', events);
 
         for (const event of events) {
             switch (event.event) {
@@ -391,9 +391,53 @@ export class CalculationService implements OnModuleInit {
                     break;
 
                 case 'animeType':
+                    const allFoldersAT = await this.prisma.userFolder.findMany({
+                        where: {
+                            type: FolderType.COMPLETED,
+                            is_statistic_active: true,
+                            animes: {
+                                some: {
+                                    id: event.params.animeId,
+                                },
+                            },
+                        },
+                        select: {
+                            user_id: true,
+                        },
+                    });
+
+                    await Promise.all(allFoldersAT?.map(folder =>
+                        this.updateUserStatistics(
+                            folder.user_id,
+                            ['viewedAnime', 'type', event.params.animeType],
+                            event.value,
+                        ),
+                    ) ?? []);
                     break;
 
                 case 'animeGenre':
+                    const allFoldersAG = await this.prisma.userFolder.findMany({
+                        where: {
+                            type: FolderType.COMPLETED,
+                            is_statistic_active: true,
+                            animes: {
+                                some: {
+                                    id: event.params.animeId,
+                                },
+                            },
+                        },
+                        select: {
+                            user_id: true,
+                        },
+                    });
+
+                    await Promise.all(allFoldersAG?.map(folder =>
+                        this.updateUserStatistics(
+                            folder.user_id,
+                            ['viewedAnime', 'genre', event.params.genreId],
+                            event.value,
+                        ),
+                    ) ?? []);
                     break;
 
                 default:

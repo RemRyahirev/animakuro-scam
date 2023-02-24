@@ -138,7 +138,7 @@ export class StatisticService {
             case 'animeType':
                 params = opts as UserAction['animeType'];
 
-                await this.redis.zadd(STAT_REDIS_KEY, params.animeType, Key.animeType(params));
+                await this.redis.zadd(STAT_REDIS_KEY, changedBy, Key.animeType(params));
                 break;
 
             case 'animeGenre':

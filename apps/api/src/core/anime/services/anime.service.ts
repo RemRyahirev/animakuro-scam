@@ -607,6 +607,20 @@ export class AnimeService {
     ): Promise<UpdateAnimeResultsType> {
         const { ...args } = input;
 
+        const genresToAdd = (args.genres_add ?? []).slice();
+        const genresToRemove = (args.genres_remove ?? []).slice();
+        const oldAnime = await this.prisma.anime.findUnique({
+            where: { id: args.id},
+            select: {
+                type: true,
+                genres: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+
         const anime = await this.prisma.anime.update({
             where: { id: args.id },
             data: {
@@ -672,7 +686,56 @@ export class AnimeService {
             await this.updateStudioData(anime.studios);
         }
 
-        // TODO: [statistic] change of type and/or genres
+        if (oldAnime && oldAnime?.type !== anime.type) {
+            this.statistics.fireEvent(
+                'animeType',
+                {
+                    animeId: anime.id,
+                    animeType: oldAnime.type,
+                },
+                -1,
+            );
+            this.statistics.fireEvent(
+                'animeType',
+                {
+                    animeId: anime.id,
+                    animeType: anime.type,
+                },
+                1,
+            );
+        }
+
+        const oldAnimeGenreIds = oldAnime?.genres.map(el => el.id) ?? [];
+        genresToAdd.forEach(genreId => {
+            if (oldAnimeGenreIds.includes(genreId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeGenre',
+                {
+                    animeId: anime.id,
+                    genreId,
+                },
+                1,
+            );
+        });
+        genresToRemove.forEach(genreId => {
+            if (!oldAnimeGenreIds.includes(genreId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeGenre',
+                {
+                    animeId: anime.id,
+                    genreId,
+                },
+                -1,
+            );
+        });
 
         return {
             success: true,
