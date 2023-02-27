@@ -53,20 +53,35 @@ export class UserProfileService {
     async getUserProfile({
         id,
         user_id,
+        username,
     }: {
         id: string;
         user_id: string;
+        username: string;
     }): Promise<GetUserProfileResultsType> {
-        if (!id && !user_id) {
+        if (!id && !user_id && !username) {
             throw new Error('UNAUTHORIZED');
         }
-        console.log(user_id, !user_id);
+        const selectUser = {
+            favourite_animes: true,
+            favourite_authors: true,
+            favourite_characters: true,
+            favourite_genres: true,
+            favourite_studios: true,
+            user_folders: true,
+            user_collection: true,
+        };
         const userProfile = await this.prisma.userProfile.findFirst({
             where:
-                !!id && id !== user_id
+                (!!id && id !== user_id) || !!username
                     ? {
                           AND: [
-                              { user_id: id ?? user_id },
+                              {
+                                  OR: [
+                                      { user_id: id ?? user_id },
+                                      { user: { username } },
+                                  ],
+                              },
                               {
                                   profile_settings: {
                                       profile_type: 'PUBLIC',
@@ -81,44 +96,30 @@ export class UserProfileService {
                     : undefined,
             include: {
                 profile_settings:
-                    (!!user_id && !id) || id === user_id ? true : false,
+                    (!!user_id && !id && !username) || id === user_id
+                        ? true
+                        : false,
                 user:
-                    id && id != user_id
+                    (id && id != user_id) || username
                         ? {
                               select: {
                                   is_email_confirmed: false,
                                   id: true,
                                   username: true,
                                   avatar: true,
-                                  favourite_animes: true,
-                                  favourite_authors: true,
-                                  favourite_characters: true,
-                                  favourite_genres: true,
-                                  favourite_studios: true,
-                                  user_folders: true,
-                                  user_collection: true,
+                                  ...selectUser,
                               },
                           }
                         : {
-                              include: {
-                                  favourite_animes: true,
-                                  favourite_authors: true,
-                                  favourite_characters: true,
-                                  favourite_genres: true,
-                                  favourite_studios: true,
-                                  user_folders: true,
-                                  user_collection: true,
-                              },
+                              include: selectUser,
                           },
             },
         });
-        console.log(userProfile);
         const errors = [];
         if (!userProfile) {
-            console.log('error');
             errors.push({
                 property: 'userProfileQueries.getUserProfile',
-                reason: 'The user has not been found or his profile is closed!',
+                reason: 'The user has been not found or his profile is closed!',
                 value: 401,
             });
         }
@@ -207,7 +208,6 @@ export class UserProfileService {
                 },
             },
         });
-        console.log(userProfile);
 
         return {
             success: true,

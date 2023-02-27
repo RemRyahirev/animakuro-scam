@@ -21,11 +21,13 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
     })
     async getUserProfile(
         @Args('id', { nullable: true }) id: string,
+        @Args('username', { nullable: true }) username: string,
         @AccessToken() user_id: string,
     ): Promise<GetUserProfileResultsType> {
         return await this.userProfileService.getUserProfile({
-            user_id: user_id,
-            id: id,
+            user_id,
+            id,
+            username,
         });
     }
 

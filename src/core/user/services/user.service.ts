@@ -66,19 +66,34 @@ export class UserService {
         };
     }
 
-    async getUser(token: string): Promise<GetUserResultsType> {
-        const decoded = this.jwtService.decode(token);
-        if (decoded == null || typeof decoded == 'string') {
+    async getUser({
+        user_id,
+        username,
+        id,
+    }: {
+        user_id: string;
+        username: string;
+        id: string;
+    }): Promise<GetUserResultsType> {
+        if (!username && !user_id && !id) {
             return {
                 success: false,
                 user: null,
             };
         }
-        const user = this.prisma.user.findUnique({
-            where: {
-                id: decoded.uuid,
-            },
-        });
+        const user =
+            (username || user_id || id) &&
+            this.prisma.user.findUnique({
+                where: !!username
+                    ? {
+                          username: username,
+                      }
+                    : !!user_id || id
+                    ? {
+                          id: id ?? user_id,
+                      }
+                    : {},
+            });
         return {
             success: true,
             user: user as any,
