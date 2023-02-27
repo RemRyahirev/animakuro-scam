@@ -8,6 +8,7 @@ import {
     GetListUserProfileResultsType,
     GetUserProfileResultsType,
 } from '../models/results';
+import { GetUserProfileInputType } from '../models/inputs';
 import { UserProfileService } from '../services/user-profile.service';
 
 import {
@@ -25,14 +26,12 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         middleware: [AuthMiddleware],
     })
     async getUserProfile(
-        @Args('id', { nullable: true }) id: string,
-        @Args('username', { nullable: true }) username: string,
+        @Args() args: GetUserProfileInputType,
         @AccessToken() user_id: string,
     ): Promise<GetUserProfileResultsType> {
         return await this.userProfileService.getUserProfile({
             user_id,
-            id,
-            username,
+            ...args,
         });
     }
 

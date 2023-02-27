@@ -5,3 +5,4 @@ export * from './update-user-favorites-authors-inpute.type';
 export * from './update-user-favorites-characters-inpute.type';
 export * from './update-user-favorites-genres-inpute.type';
 export * from './update-user-favorites-studios-inpute.type';
+export * from './get-user-profile-inpute.type';
