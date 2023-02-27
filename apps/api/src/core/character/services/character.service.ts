@@ -4,6 +4,7 @@ import { PaginationInputType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
+import { StatisticService } from '@app/common/services/statistic.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
 import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
@@ -23,6 +24,7 @@ export class CharacterService {
         private prisma: PrismaService,
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
+        private statistics: StatisticService,
     ) {
         this.coverFiles = this.fileUpload.getStorageForOne(
             'character',
@@ -88,6 +90,15 @@ export class CharacterService {
                 })),
                 is_favourite: character.favourite_by.length > 0 ? true : false,
             };
+
+        this.statistics.fireEvent(
+            'getCharacter',
+            {
+                characterId: character.id,
+            },
+            1,
+        );
+
         return {
             success: true,
             character: {

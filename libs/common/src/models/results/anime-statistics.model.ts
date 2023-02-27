@@ -2,8 +2,6 @@ import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { FolderType } from '@prisma/client';
 
-// {"folder": {"COMPLETED": 1}, "favorites": 1, "userRating": {"4": 0, "5": 1}}
-
 @ObjectType()
 export class AnimeStatistics {
     @Field(() => GraphQLJSONObject, {
@@ -17,6 +15,12 @@ export class AnimeStatistics {
         description: 'Amount of users that marked this anime as favorite',
     })
     favorites?: number;
+
+    @Field(() => Int, {
+        nullable: true,
+        description: 'Amount of requests to this anime',
+    })
+    requests?: number;
 
     @Field(() => GraphQLJSONObject, {
         nullable: true,

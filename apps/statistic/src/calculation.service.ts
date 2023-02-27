@@ -53,18 +53,34 @@ actions:
 5. add genre to anime (+ remove anime genre)
     - AG:<anime_id>:<genre_id> = +1/-1 (with replace, not sum)
         > user.viewedAnime.genre.<genre_id>++ (-- for old, ++ for new, only if viewed, for every user)
+6. get anime
+    - GAN:<anime_id> = +1
+        > anime.requests++
+7. get character
+    - GCH:<character_id> = +1
+        > character.requests++
+8. get author
+    - GAU:<author_id> = +1
+        > author.requests++
+9. get profile
+    - GPR:<profile_id> = +1
+        > profile.requests++
  */
 
 /*
 store in redis:
-1. animeInFavorites (incr)      - AFav:<anime_id>
-2. animeInUserFavorites (incr)  - AUFav:<user_id>
-3. animeUserRate (incr)         - AUR:<anime_id>:<stars>
-4. animeInFolder (incr)         - AIF:<anime_id>:<folder_type>
-5. animeInUserFolder (incr)     - AIUF:<user_id>:<folder_id>:<folder_type>:<anime_id>
-6. statFolder (final)           - SF:<user_id>:<folder_id>:<folder_type>
-7. animeType (final)            - AT:<anime_id>:<anime_type>
-8. animeGenre (final)           - AG:<anime_id>:<genre_id>
+1.  animeInFavorites (incr)     - AFav:<anime_id>
+2.  animeInUserFavorites (incr) - AUFav:<user_id>
+3.  animeUserRate (incr)        - AUR:<anime_id>:<stars>
+4.  animeInFolder (incr)        - AIF:<anime_id>:<folder_type>
+5.  animeInUserFolder (incr)    - AIUF:<user_id>:<folder_id>:<folder_type>:<anime_id>
+6.  statFolder (final)          - SF:<user_id>:<folder_id>:<folder_type>
+7.  animeType (final)           - AT:<anime_id>:<anime_type>
+8.  animeGenre (final)          - AG:<anime_id>:<genre_id>
+9.  getAnime (incr)             - GAN:<anime_id>
+10. getCharacter (incr)         - GCH:<character_id>
+11. getAuthor (incr)            - GAU:<author_id>
+12. getProfile (incr)           - GPR:<profile_id>
 
 insert incr: zincrby
 insert final: zadd
@@ -169,6 +185,73 @@ export class CalculationService implements OnModuleInit {
         );
     }
 
+    private async updateCharacterStatistics(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE character
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
+    }
+
+    private async updateAuthorStatistics(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE author
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
+    }
+
+    private async updateProfileStatistics(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE user_profile
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
+    }
+
+
     async checkQueue() {
         const events = await this.statistic.getEvents(
             this.config.get('STATISTIC_CHUNK_SIZE', 1),
@@ -238,19 +321,6 @@ export class CalculationService implements OnModuleInit {
                     break
 
                 case 'animeInUserFolder':
-                    const folder = await this.prisma.userFolder.findUnique({
-                        where: {
-                            id: event.params.folderId,
-                        },
-                        select: {
-                            is_statistic_active: true,
-                        },
-                    });
-
-                    if (!folder?.is_statistic_active) {
-                        break;
-                    }
-
                     await Promise.all([
                         this.updateUserStatistics(
                             event.params.userId,
@@ -269,40 +339,55 @@ export class CalculationService implements OnModuleInit {
                         ),
                     ]);
 
-                    if (event.params.folderType === FolderType.COMPLETED) {
-                        const anime = await this.prisma.anime.findUnique({
-                            where: {
-                                id: event.params.animeId,
-                            },
-                            select: {
-                                type: true,
-                                genres: {
-                                    select: {
-                                        id: true,
-                                    },
-                                }
-                            },
-                        });
+                    const folder = await this.prisma.userFolder.findUnique({
+                        where: {
+                            id: event.params.folderId,
+                        },
+                        select: {
+                            is_statistic_active: true,
+                        },
+                    });
 
-                        if (!anime?.type) {
-                            break;
-                        }
+                    if (!folder?.is_statistic_active) {
+                        break;
+                    }
 
-                        await Promise.all([
+                    if (event.params.folderType !== FolderType.COMPLETED) {
+                        break;
+                    }
+
+                    const anime = await this.prisma.anime.findUnique({
+                        where: {
+                            id: event.params.animeId,
+                        },
+                        select: {
+                            type: true,
+                            genres: {
+                                select: {
+                                    id: true,
+                                },
+                            }
+                        },
+                    });
+
+                    if (!anime?.type) {
+                        break;
+                    }
+
+                    await Promise.all([
+                        this.updateUserStatistics(
+                            event.params.userId,
+                            ['viewedAnime', 'type', anime.type],
+                            event.value,
+                        ),
+                        ...(anime.genres?.map(genre =>
                             this.updateUserStatistics(
                                 event.params.userId,
-                                ['viewedAnime', 'type', anime.type],
+                                ['viewedAnime', 'genre', genre.id],
                                 event.value,
                             ),
-                            ...(anime.genres?.map(genre =>
-                                this.updateUserStatistics(
-                                    event.params.userId,
-                                    ['viewedAnime', 'genre', genre.id],
-                                    event.value,
-                                ),
-                            ) ?? []),
-                        ]);
-                    }
+                        ) ?? []),
+                    ]);
 
                     break;
 
@@ -438,6 +523,38 @@ export class CalculationService implements OnModuleInit {
                             event.value,
                         ),
                     ) ?? []);
+                    break;
+
+                case 'getAnime':
+                    await this.updateAnimeStatistics(
+                        event.params.animeId,
+                        ['requests'],
+                        event.value,
+                    );
+                    break;
+
+                case 'getCharacter':
+                    await this.updateCharacterStatistics(
+                        event.params.characterId,
+                        ['requests'],
+                        event.value,
+                    );
+                    break;
+
+                case 'getAuthor':
+                    await this.updateAuthorStatistics(
+                        event.params.authorId,
+                        ['requests'],
+                        event.value,
+                    );
+                    break;
+
+                case 'getProfile':
+                    await this.updateProfileStatistics(
+                        event.params.profileId,
+                        ['requests'],
+                        event.value,
+                    );
                     break;
 
                 default:

@@ -1,5 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
+import { AuthorStatistics } from '@app/common/models/results/author-statistics.model';
 import { File } from '@app/common/models/results/file.model';
 
 import { Anime } from '../../anime/models/anime.model';
@@ -108,4 +109,10 @@ export class Author {
         description: 'List of the animes in which the character appears',
     })
     animes: Anime[];
+
+    @Field(() => AuthorStatistics, {
+        nullable: true,
+        description: 'Author statistics',
+    })
+    statistics?: AuthorStatistics;
 }

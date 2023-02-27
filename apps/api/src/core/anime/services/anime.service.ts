@@ -227,6 +227,15 @@ export class AnimeService {
                     ),
                 })),
             };
+
+        this.statistics.fireEvent(
+            'getAnime',
+            {
+                animeId: anime.id,
+            },
+            1,
+        );
+
         return {
             success: true,
             errors: [],

@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 import { CharacterRole, CharacterType } from '@app/common/models/enums';
+import { CharacterStatistics } from '@app/common/models/results/character-statistics.model';
 import { File } from '@app/common/models/results/file.model';
 
 import { Anime } from '../../anime/models/anime.model';
@@ -84,4 +85,10 @@ export class Character {
         description: 'List of the animes in which the character appears',
     })
     animes: Anime[];
+
+    @Field(() => CharacterStatistics, {
+        nullable: true,
+        description: 'Character statistics',
+    })
+    statistics?: CharacterStatistics;
 }

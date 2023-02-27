@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { File } from '@app/common/models/results/file.model';
+import { ProfileStatistics } from '@app/common/models/results/profile-statistics.model';
 
 import { ProfileSettings } from '../../profile-settings/models/profile-settings.model';
 import { User } from '../../user/models/user.model';
@@ -32,4 +33,10 @@ export class UserProfile {
 
     @Field(() => File, { nullable: true })
     cover?: File;
+
+    @Field(() => ProfileStatistics, {
+        nullable: true,
+        description: 'User profile statistics',
+    })
+    statistics?: ProfileStatistics;
 }

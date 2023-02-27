@@ -191,6 +191,7 @@ model Author {
   bio                 String   @db.Text
   cover               File?    @relation(fields: [cover_id], references: [id])
   cover_id            String?  @db.Uuid
+  statistics          Json?
   created_at          DateTime @default(now()) @map("created_at")
   updated_at          DateTime @default(now()) @map("updated_at")
   animes              Anime[]
@@ -212,6 +213,7 @@ model Character {
   description   String        @db.Text
   cover         File?         @relation(fields: [cover_id], references: [id])
   cover_id      String?       @db.Uuid
+  statistics    Json?
   created_at    DateTime      @default(now()) @map("created_at")
   updated_at    DateTime      @default(now()) @map("updated_at")
   animes        Anime[]
@@ -247,6 +249,7 @@ model UserProfile {
   banner_id        String?          @db.Uuid
   cover            File?            @relation("cover", fields: [cover_id], references: [id])
   cover_id         String?          @db.Uuid
+  statistics       Json?
   profile_settings ProfileSettings?
   created_at       DateTime?        @default(now()) @db.Date
 

@@ -33,6 +33,19 @@ type UserAction = {
         animeId: string;
         genreId: string;
     };
+
+    getAnime: {
+        animeId: string;
+    };
+    getCharacter: {
+        characterId: string;
+    };
+    getAuthor: {
+        authorId: string;
+    };
+    getProfile: {
+        profileId: string;
+    };
 };
 enum StatAction {
     animeInFavorites = 'animeInFavorites',
@@ -43,6 +56,10 @@ enum StatAction {
     statFolder = 'statFolder',
     animeType = 'animeType',
     animeGenre = 'animeGenre',
+    getAnime = 'getAnime',
+    getCharacter = 'getCharacter',
+    getAuthor = 'getAuthor',
+    getProfile = 'getProfile',
 }
 
 const STAT_REDIS_KEY = 'statistic';
@@ -56,6 +73,10 @@ const EventCode = {
     statFolder: 'SF',
     animeType: 'AT',
     animeGenre: 'AG',
+    getAnime: 'GAN',
+    getCharacter: 'GCH',
+    getAuthor: 'GAU',
+    getProfile: 'GPR',
 } as const satisfies Record<StatAction, string>;
 type EventCodes = typeof EventCode[keyof typeof EventCode];
 
@@ -84,6 +105,18 @@ const Key = {
     animeGenre:
         ({ animeId, genreId }: { animeId: string, genreId: string }) =>
             `${EventCode.animeGenre}:${animeId}:${genreId}`,
+    getAnime:
+        ({ animeId }: { animeId: string }) =>
+            `${EventCode.getAnime}:${animeId}`,
+    getCharacter:
+        ({ characterId }: { characterId: string }) =>
+            `${EventCode.getCharacter}:${characterId}`,
+    getAuthor:
+        ({ authorId }: { authorId: string }) =>
+            `${EventCode.getAuthor}:${authorId}`,
+    getProfile:
+        ({ profileId }: { profileId: string }) =>
+            `${EventCode.getProfile}:${profileId}`,
 } satisfies Record<StatAction, (...args: any[]) => string>;
 type ParsedEvent = ({
     [P in StatAction]: {
@@ -145,6 +178,30 @@ export class StatisticService {
                 params = opts as UserAction['animeGenre'];
 
                 await this.redis.zadd(STAT_REDIS_KEY, changedBy, Key.animeGenre(params));
+                break;
+
+            case 'getAnime':
+                params = opts as UserAction['getAnime'];
+
+                await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.getAnime(params));
+                break;
+
+            case 'getCharacter':
+                params = opts as UserAction['getCharacter'];
+
+                await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.getCharacter(params));
+                break;
+
+            case 'getAuthor':
+                params = opts as UserAction['getAuthor'];
+
+                await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.getAuthor(params));
+                break;
+
+            case 'getProfile':
+                params = opts as UserAction['getProfile'];
+
+                await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.getProfile(params));
                 break;
 
             default:
@@ -228,6 +285,38 @@ export class StatisticService {
                     params: {
                         animeId: params[0],
                         genreId: params[1],
+                    },
+                };
+
+            case EventCode.getAnime:
+                return {
+                    event: StatAction.getAnime,
+                    params: {
+                        animeId: params[0],
+                    },
+                };
+
+            case EventCode.getCharacter:
+                return {
+                    event: StatAction.getCharacter,
+                    params: {
+                        characterId: params[0],
+                    },
+                };
+
+            case EventCode.getAuthor:
+                return {
+                    event: StatAction.getAuthor,
+                    params: {
+                        authorId: params[0],
+                    },
+                };
+
+            case EventCode.getProfile:
+                return {
+                    event: StatAction.getProfile,
+                    params: {
+                        profileId: params[0],
                     },
                 };
 

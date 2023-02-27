@@ -99,6 +99,17 @@ export class UserProfileService {
                 userProfile: null,
             };
         }
+
+        if (token !== id && userProfile) {
+            this.statistics.fireEvent(
+                'getProfile',
+                {
+                    profileId: userProfile.id,
+                },
+                1,
+            );
+        }
+
         return {
             success: true,
             errors: [],
