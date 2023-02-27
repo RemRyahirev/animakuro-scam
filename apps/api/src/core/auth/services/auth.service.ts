@@ -2,6 +2,7 @@ import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { Context } from 'vm';
 import { ExecutionContext, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import {
     InjectThrottlerOptions,
@@ -34,6 +35,7 @@ export class AuthService {
     constructor(
         private prisma: PrismaService,
         private userService: UserService,
+        private configService: ConfigService,
         private mailer: Mailer,
         private passwordService: PasswordService,
         private tokenService: TokenService,
@@ -134,7 +136,9 @@ export class AuthService {
             {
                 username: args.username,
                 reset_link:
-                    'https://' + context.req.headers.host + '/auth/recovery',
+                    'https://' +
+                    this.configService.get<string>('MAILER_REDIRECT_HOST') +
+                    '/auth/recovery',
                 ip: userIp,
                 agent: context.req.headers['user-agent'] || '',
                 platform: context.req.headers['sec-ch-ua-platform'],
@@ -196,7 +200,10 @@ export class AuthService {
             {
                 username: args.username,
                 confirm_link:
-                    'https://' + context.req.headers.host + '/' + token,
+                    'https://' +
+                    this.configService.get<string>('MAILER_REDIRECT_HOST') +
+                    '/' +
+                    token,
             },
         );
         console.log(token);
@@ -209,6 +216,9 @@ export class AuthService {
         profile: any,
         auth_type: AuthType,
     ): Promise<RegisterResultsType> {
+        // if (await this.throttler._handleRequest(1, 120, req, res)) {
+        // Код сюда
+        // }
         const alreadyCreated = await this.prisma.user.findFirst({
             where: {
                 email: profile.account.email,
@@ -311,6 +321,11 @@ export class AuthService {
                 access_token,
             };
         }
+        // return {
+        //     success: false,
+        //     user: null as any,
+        //     access_token: '',
+        // };
     }
 
     async logout(user_id: string): Promise<LogoutResultsType> {

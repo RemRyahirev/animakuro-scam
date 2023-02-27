@@ -31,10 +31,12 @@ export class UserQueryResolver extends UserRootResolver {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)
-    async getUser(@Context() context: any): Promise<GetUserResultsType> {
-        return await this.userService.getUser(
-            context.req.headers.authentication,
-        );
+    async getUser(
+        @AccessToken() user_id: string,
+        @Args('id', { nullable: true }) id: string,
+        @Args('username', { nullable: true }) username: string,
+    ): Promise<GetUserResultsType> {
+        return await this.userService.getUser({ user_id, username, id });
     }
 
     @ResolveField(() => GetListUserResultsType, {

@@ -42,65 +42,93 @@ export class UserProfileService {
         private paginationService: PaginationService,
         private statistics: StatisticService,
     ) {
-        this.bannerFiles = this.fileUpload.getStorageForOne('userProfile', 'banner_id', 'userBanners');
-        this.coverFiles = this.fileUpload.getStorageForOne('userProfile', 'cover_id', 'userCovers');
+        this.bannerFiles = this.fileUpload.getStorageForOne(
+            'userProfile',
+            'banner_id',
+            'userBanners',
+        );
+        this.coverFiles = this.fileUpload.getStorageForOne(
+            'userProfile',
+            'cover_id',
+            'userCovers',
+        );
     }
 
-    async getUserProfile(
-        id: string,
-        token: string,
-    ): Promise<GetUserProfileResultsType> {
-        if (token == id) {
-            const userProfile = await this.prisma.userProfile.findUnique({
-                where: {
-                    id,
-                },
-                include: {
-                    user: true,
-                    profile_settings: true,
-                },
-            });
-
-            return {
-                success: true,
-                errors: [],
-                userProfile: userProfile as any,
-            };
+    async getUserProfile({
+        id,
+        user_id,
+        username,
+    }: {
+        id: string;
+        user_id: string;
+        username: string;
+    }): Promise<GetUserProfileResultsType> {
+        if (!id && !user_id && !username) {
+            throw new Error('UNAUTHORIZED');
         }
-        const userProfile = await this.prisma.userProfile.findUnique({
-            where: {
-                id,
-            },
+        const selectUser = {
+            favourite_animes: true,
+            favourite_authors: true,
+            favourite_characters: true,
+            favourite_genres: true,
+            favourite_studios: true,
+            user_folders: true,
+            user_collection: true,
+        };
+        const userProfile = await this.prisma.userProfile.findFirst({
+            where:
+                (!!id && id !== user_id) || !!username
+                    ? {
+                          AND: [
+                              {
+                                  OR: [
+                                      { user_id: id ?? user_id },
+                                      { user: { username } },
+                                  ],
+                              },
+                              {
+                                  profile_settings: {
+                                      profile_type: 'PUBLIC',
+                                  },
+                              },
+                          ],
+                      }
+                    : user_id
+                    ? {
+                          user_id,
+                      }
+                    : undefined,
             include: {
-                user: true,
-                profile_settings: true,
-                banner: {
-                    include: {
-                        user: true,
-                    },
-                },
-                cover: {
-                    include: {
-                        user: true,
-                    },
-                },
+                profile_settings:
+                    (!!user_id && !id && !username) || id === user_id
+                        ? true
+                        : false,
+                user:
+                    (id && id != user_id) || username
+                        ? {
+                              select: {
+                                  is_email_confirmed: false,
+                                  id: true,
+                                  username: true,
+                                  avatar: true,
+                                  ...selectUser,
+                              },
+                          }
+                        : {
+                              include: selectUser,
+                          },
             },
         });
-        if (userProfile?.profile_settings?.profile_type == 'PRIVATE') {
-            return {
-                success: true,
-                errors: [
-                    {
-                        property: 'userProfile',
-                        value: null,
-                        reason: 'Профиль скрыт',
-                    },
-                ],
-                userProfile: null,
-            };
+        const errors = [];
+        if (!userProfile) {
+            errors.push({
+                property: 'userProfileQueries.getUserProfile',
+                reason: 'The user has been not found or his profile is closed!',
+                value: 401,
+            });
         }
 
-        if (token !== id && userProfile) {
+        if (user_id !== id && userProfile) {
             this.statistics.fireEvent(
                 'getProfile',
                 {
@@ -112,7 +140,7 @@ export class UserProfileService {
 
         return {
             success: true,
-            errors: [],
+            errors: errors,
             userProfile: userProfile as any,
         };
     }
@@ -174,7 +202,10 @@ export class UserProfileService {
                         id: user_id,
                     },
                 },
-                banner: await this.bannerFiles.tryCreate(args.banner, authUserId),
+                banner: await this.bannerFiles.tryCreate(
+                    args.banner,
+                    authUserId,
+                ),
                 cover: await this.coverFiles.tryCreate(args.cover, authUserId),
             },
             include: {
@@ -207,9 +238,19 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.update({
             where: { id: args.id },
             data: {
-                ...args as any,
-                banner: await this.bannerFiles.tryUpdate({ id: args.id }, args.banner, undefined, authUserId),
-                cover: await this.coverFiles.tryUpdate({ id: args.id }, args.cover, undefined, authUserId),
+                ...(args as any),
+                banner: await this.bannerFiles.tryUpdate(
+                    { id: args.id },
+                    args.banner,
+                    undefined,
+                    authUserId,
+                ),
+                cover: await this.coverFiles.tryUpdate(
+                    { id: args.id },
+                    args.cover,
+                    undefined,
+                    authUserId,
+                ),
             },
             include: {
                 user: true,
