@@ -6,9 +6,11 @@
         ]
     },
     "include": [
-        "src/**/*.ts"
+        "apps/**/*.ts",
+        "libs/**/*.ts"
     ],
     "exclude": [
-        "src/**/*.spec.ts"
+        "apps/**/*.spec.ts",
+        "libs/**/*.spec.ts"
     ]
 }

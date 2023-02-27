@@ -1,0 +1,573 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String        @id @default(uuid()) @db.Uuid
+  username             String        @unique @db.VarChar(64)
+  email                String        @db.VarChar(320)
+  avatar               String?       @db.Text
+  is_email_confirmed   Boolean       @default(false)
+  favourite_animes     Anime[]
+  favourite_studios    Studio[]
+  favourite_authors    Author[]
+  favourite_characters Character[]
+  favourite_genres     Genre[]
+  user_folders         UserFolder[]  @relation("user_folder")
+  password             String        @map("password")
+  created_at           DateTime      @default(now()) @map("created_at") @db.Date
+  deleted              Boolean       @default(false)
+  statistics           Json?
+  auth                 Auth[]
+  user_profile         UserProfile?
+  auth_sessions        AuthSession[]
+  user_collection      UserFolder[]  @relation("user_collection")
+  rating_anime         RatingAnime[]
+  social_service       AuthType      @default(JWT)
+  files                File[]
+
+  @@map("users")
+}
+
+model Auth {
+  id           String   @id @default(uuid())
+  type         AuthType
+  uuid         String   @db.VarChar(64)
+  access_token String   @db.VarChar(320)
+  username     String   @unique @db.VarChar(64)
+  email        String?  @db.VarChar(320)
+  avatar       String?  @db.Text
+  updated_at   DateTime @default(now()) @map("updated_at")
+  created_at   DateTime @default(now()) @map("created_at")
+  user         User     @relation(fields: [user_id], references: [id])
+  user_id      String   @db.Uuid
+
+  @@map("auth")
+}
+
+model AuthSession {
+  id      String  @id @default(uuid())
+  agent   String  @db.Text
+  ip      String  @db.VarChar(64)
+  active  Boolean @default(true)
+  user    User    @relation(fields: [user_id], references: [id])
+  user_id String  @db.Uuid
+
+  @@map("auth_session")
+}
+
+model Studio {
+  id                  String   @id @default(uuid()) @db.Uuid
+  created_at          DateTime @default(now()) @map("created_at")
+  updated_at          DateTime @default(now()) @map("updated_at")
+  name                String   @db.VarChar(64)
+  rating              Float    @db.Real
+  thumbnail           File?    @relation(fields: [thumbnail_id], references: [id])
+  thumbnail_id        String?  @db.Uuid
+  anime_count         Float    @default(0) @db.Real
+  anime_starts        Float    @db.Real
+  anime_ends          Float    @db.Real
+  is_animation_studio Boolean  @default(true)
+  animes              Anime[]
+  favourite_by        User[]
+
+  @@map("studio")
+}
+
+model Friendship {
+  friend_one String           @db.Uuid
+  friend_two String           @db.Uuid
+  status     FriendshipStatus @default(AWAITING)
+  start_date DateTime         @default(now()) @db.Date
+
+  @@unique([friend_one, friend_two])
+  @@map("friendship")
+}
+
+model Anime {
+  id                 String           @id @default(uuid()) @db.Uuid
+  title              String           @db.VarChar(100)
+  score              Float            @db.Real
+  evaluation         Json             @default("{ \"5\": 0 ,\"4\": 0 , \"3\": 0, \"2\": 0, \"1\": 0}")
+  year               Int              @db.SmallInt
+  date_start         DateTime?        @db.Date
+  date_end           DateTime?        @db.Date
+  country_of_origin  String           @db.VarChar(2)
+  genres             Genre[]
+  format             MediaFormat      @default(OTHER)
+  source             MediaSource      @default(OTHER)
+  season             YearSeason       @default(FALL)
+  type               AnimeType        @default(ANIME)
+  hashtags           String[]
+  synonyms           String[]
+  is_licensed        Boolean
+  seasons_count      Int              @db.SmallInt
+  episodes           Int              @db.SmallInt
+  duration           Int              @db.Integer
+  next_episode       DateTime
+  rating             FilmRating       @default(G)
+  description        String           @db.Text
+  preview_link       String           @db.Text
+  status_description String           @db.VarChar(30)
+  release_status     ReleaseStatus    @default(COMPLETED)
+  banner             File?            @relation("banner", fields: [banner_id], references: [id])
+  banner_id          String?          @db.Uuid
+  cover              File?            @relation("cover", fields: [cover_id], references: [id])
+  cover_id           String?          @db.Uuid
+  statistics         Json?
+  created_at         DateTime         @default(now()) @map("created_at")
+  updated_at         DateTime         @default(now()) @map("updated_at")
+  studios            Studio[]
+  characters         Character[]
+  authors            Author[]
+  relating_animes    RelatingAnime[]  @relation("relating")
+  related_by_animes  RelatingAnime[]  @relation("related")
+  similar_animes     SimilarAnime[]   @relation("similar")
+  similar_by_animes  SimilarAnime[]   @relation("similar_by")
+  user_folders       UserFolder[]
+  airing_schedule    AiringSchedule[]
+  favourite_by       User[]
+  opening_ending     OpeningEnding[]
+  stills             AnimeStills[]
+  rating_anime       RatingAnime[]
+
+  @@map("anime")
+}
+
+model RelatingAnime {
+  child_anime     Anime         @relation("relating", fields: [child_anime_id], references: [id], onDelete: Cascade)
+  child_anime_id  String        @db.Uuid
+  parent_anime    Anime         @relation("related", fields: [parent_anime_id], references: [id], onDelete: Cascade)
+  parent_anime_id String        @db.Uuid
+  status          AnimeRelation @default(NULL)
+
+  @@id([child_anime_id, parent_anime_id])
+  @@map("relating_anime")
+}
+
+model SimilarAnime {
+  child_anime     Anime         @relation("similar", fields: [child_anime_id], references: [id], onDelete: Cascade)
+  child_anime_id  String        @db.Uuid
+  parent_anime    Anime         @relation("similar_by", fields: [parent_anime_id], references: [id], onDelete: Cascade)
+  parent_anime_id String        @db.Uuid
+  status          AnimeApproval @default(PENDING)
+
+  @@id([child_anime_id, parent_anime_id])
+  @@map("similar_anime")
+}
+
+model AiringSchedule {
+  id         String   @id @default(uuid()) @db.Uuid
+  airing_at  DateTime
+  name       String   @db.VarChar(100)
+  episode    Int      @db.SmallInt
+  anime_id   String   @db.Uuid
+  anime      Anime    @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @default(now()) @map("updated_at")
+
+  @@map("airing_schedule")
+}
+
+model Author {
+  id                  String   @id @default(uuid()) @db.Uuid
+  name                String   @db.VarChar(50)
+  primary_occupations String[]
+  age                 Int
+  date_of_birth       String   @db.VarChar(30)
+  date_of_death       String   @db.VarChar(30)
+  synonyms            String[]
+  years_active        String[]
+  home_town           String   @db.VarChar(30)
+  blood_type          String   @db.VarChar(30)
+  language            String   @db.VarChar(30)
+  gender              String   @db.VarChar(30)
+  bio                 String   @db.Text
+  cover               File?    @relation(fields: [cover_id], references: [id])
+  cover_id            String?  @db.Uuid
+  statistics          Json?
+  created_at          DateTime @default(now()) @map("created_at")
+  updated_at          DateTime @default(now()) @map("updated_at")
+  animes              Anime[]
+  favourite_by        User[]
+
+  @@map("author")
+}
+
+model Character {
+  id            String        @id @default(uuid()) @db.Uuid
+  name          String        @db.VarChar(50)
+  gender        String        @db.VarChar(30)
+  blood_type    String        @db.VarChar(30)
+  date_of_birth String        @db.VarChar(30)
+  age           Int
+  synonyms      String[]
+  importance    CharacterType @default(PROTAGONIST)
+  role          CharacterRole @default(MAIN)
+  description   String        @db.Text
+  cover         File?         @relation(fields: [cover_id], references: [id])
+  cover_id      String?       @db.Uuid
+  statistics    Json?
+  created_at    DateTime      @default(now()) @map("created_at")
+  updated_at    DateTime      @default(now()) @map("updated_at")
+  animes        Anime[]
+  favourite_by  User[]
+
+  @@map("character")
+}
+
+model Genre {
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String  @db.VarChar(50)
+  description  String? @db.Text
+  animes       Anime[]
+  favourite_by User[]
+
+  @@map("genre")
+}
+
+model Translation {
+  id          String @id @default(uuid()) @db.Uuid
+  language    String @db.VarChar(20)
+  translation String @db.Text
+
+  @@map("translation")
+}
+
+// Модели частных индивидуальных баз
+model UserProfile {
+  id               String           @id @default(uuid()) @db.Uuid
+  user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id          String           @unique @db.Uuid //Field name changed 28/12 from user_id
+  banner           File?            @relation("banner", fields: [banner_id], references: [id])
+  banner_id        String?          @db.Uuid
+  cover            File?            @relation("cover", fields: [cover_id], references: [id])
+  cover_id         String?          @db.Uuid
+  statistics       Json?
+  profile_settings ProfileSettings?
+  created_at       DateTime?        @default(now()) @db.Date
+
+  @@map("user_profile")
+}
+
+model ProfileSettings {
+  id             String           @id @default(uuid()) @db.Uuid
+  profile        UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
+  profile_id     String           @unique @db.Uuid
+  displayed_name String?          @db.VarChar(30)
+  gender         Gender           @default(UNSPECIFIED)
+  birthday       DateTime?        @db.Date
+  site_theme     SiteTheme        @default(AUTO)
+  avatar_id      String?          @unique @db.Uuid
+  cover_id       String?          @unique @db.Uuid
+  country        ProfileCountries @default(UNSPECIFIED)
+  language       ProfileLanguages @default(ENGLISH)
+  about          String?          @db.Text
+  timezone       String?          @db.VarChar(7)
+  moderator_role ModeratorRoles   @default(VIEWER)
+  is_blocked     Boolean          @default(false)
+  profile_type   ProfileType      @default(PUBLIC)
+  integrations   Json             @db.Json
+  notifications  Json             @db.Json
+  subscribe_tier SubscribeTier    @default(FREE_ACCOUNT)
+  updated_at     DateTime         @default(now()) @map("updated_at")
+
+  @@map("profile_settings")
+}
+
+model UserFolder {
+  // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
+  id                  String     @id @default(uuid()) @db.Uuid
+  //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
+  user                User?      @relation(name: "user_folder", fields: [user_id], references: [id])
+  user_id             String     @db.Uuid // o-2-o relation
+  user_collection     User?      @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection_id  String?    @db.Uuid
+  animes              Anime[]
+  // информативный блок
+  is_collection       Boolean    @default(false) @db.Boolean()
+  is_public           Boolean    @default(false) @db.Boolean()
+  is_statistic_active Boolean    @default(false) @db.Boolean() //Активация вывода статистики
+  name                String     @db.VarChar(25)
+  description         String
+  type                FolderType @default(DEFAULT)
+  // блок для аниме со статусом WATCHING
+  //episode          Int?         @db.SmallInt // какой эпизод(серию)
+  //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
+  //watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
+  created_at          DateTime   @default(now()) @map("created_at")
+  updated_at          DateTime   @default(now()) @map("updated_at")
+
+  // @@id([user_id, user_collection_id])
+  @@map("user_folder")
+}
+
+model OpeningEnding {
+  id            String            @id @default(uuid()) @db.Uuid
+  anime_id      String            @db.Uuid
+  type          OpeningEndingType
+  url           String            @db.VarChar(2048)
+  name          String            @db.VarChar(100)
+  author_name   String            @db.VarChar(100)
+  episode_start Int               @db.SmallInt
+  episode_end   Int               @db.SmallInt
+  created_at    DateTime          @default(now()) @map("created_at")
+  updated_at    DateTime          @default(now()) @map("updated_at")
+  anime         Anime             @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+
+  @@map("opening_ending")
+}
+
+model RatingAnime {
+  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id  String @db.Uuid
+  anime    Anime  @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  anime_id String @db.Uuid
+  rating   Int
+
+  @@id([anime_id, user_id])
+  @@map("rating_anime")
+}
+
+model AnimeStills {
+  id            String                    @id @default(uuid()) @db.Uuid
+  anime_id      String                    @db.Uuid
+  frame_id      String?                   @db.Uuid @unique
+  url           String?                   @db.VarChar(1000)
+  type          AnimeStillsType
+  priority      Int?
+  created_at    DateTime                  @default(now()) @map("created_at")
+  updated_at    DateTime                  @default(now()) @map("updated_at")
+
+  anime         Anime                     @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  frame         File?                     @relation(fields: [frame_id], references: [id], onDelete: Cascade)
+
+  @@unique([anime_id, priority])
+  @@map("anime_stills")
+}
+
+enum AnimeStillsType {
+  IMAGE
+  VIDEO
+}
+
+model File {
+  id                    String          @id @default(uuid()) @db.Uuid
+  file_id               String          @db.VarChar(100)
+  bucket_name           String          @db.VarChar(100)
+  url                   String          @db.Text
+  user                  User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id               String          @db.Uuid
+  created_at            DateTime        @default(now()) @map("created_at")
+
+  studio_thumbnails     Studio[]
+  anime_banners         Anime[]         @relation("banner")
+  anime_covers          Anime[]         @relation("cover")
+  profile_banners       UserProfile[]   @relation("banner")
+  profile_covers        UserProfile[]   @relation("cover")
+  author_covers         Author[]
+  character_covers      Character[]
+  anime_still          AnimeStills?
+
+  @@map("file")
+}
+
+model Statistic {
+  name    StatisticName   @id
+  data    Json
+
+  @@map("statistic")
+}
+
+enum StatisticName {
+  FAVORITES
+  ANIME_USER_RATING
+  ANIME_FOLDER
+}
+
+enum OpeningEndingType {
+  OPENING
+  ENDING
+}
+
+enum FriendshipStatus {
+  AWAITING
+  REQUESTED
+  CONFIRMED
+}
+
+enum AnimeRelation {
+  DIRECT
+  CHRONOLOGY
+  FRANCHISE
+  NULL
+}
+
+enum Gender {
+  UNSPECIFIED
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AnimeApproval {
+  PENDING
+  APPROVED
+}
+
+enum FilmRating {
+  G
+  PG
+  PG_13
+  R
+  R_17
+  NC_17
+  NC_21
+}
+
+enum MediaSource {
+  ORIGINAL // An original production not based of another work
+  MANGA // Asian comic book
+  LIGHT_NOVEL // Written work published in volumes
+  VISUAL_NOVEL // Video game driven primary by text and narrative
+  VIDEO_GAME // Video game
+  OTHER // Other
+  NOVEL // Written works not published in volumes
+  DOUJINSHI // Self-published works
+  ANIME // Japanese Anime
+  WEB_NOVEL // Written works published online
+  LIVE_ACTION // Live action media such as movies or TV show
+  GAME // Games excluding video games
+  COMIC // Comics excluding manga
+  MULTIMEDIA_PROJECT // Multimedia project
+  PICTURE_BOOK // Picture book
+}
+
+enum ReleaseStatus {
+  COMPLETED // Has completed and is no longer being released
+  ANNOUNCEMENT
+  RELEASING // Currently releasing
+  AIRING
+  NOT_YET_RELEASED // To be released at a later date
+  CANCELLED // Ended before the work could be finished
+  HIATUS // Is currently paused from releasing and will resume at a later date
+}
+
+enum MediaFormat {
+  TV
+  TV_SHORT
+  MOVIE
+  SPECIAL
+  OVA
+  ONA
+  MUSIC
+  MANGA
+  NOVEL
+  ONE_SHOT
+  OTHER
+}
+
+enum YearSeason {
+  FALL
+  SUMMER
+  SPRING
+  WINTER
+}
+
+enum AnimeType {
+  ANIME
+  MANGA
+}
+
+enum CharacterType {
+  PROTAGONIST
+  ANTAGONIST
+  SIDEKICK
+  ORBITAL_CHARACTER
+  LOVE_INTEREST
+  CONFIDANTE
+  EXTRAS
+  FOIL
+  OTHER
+}
+
+enum CharacterRole {
+  MAIN // Primary role
+  SUPPORTING // Supporting role
+  BACKGROUND // Background role
+}
+
+enum AuthType {
+  JWT
+  DISCORD
+  GOOGLE
+  APPLE
+  FACEBOOK
+}
+
+enum ModeratorRoles {
+  ADMIN // admin
+  MODERATOR // moderator
+  CONTENT_FILLER // content maker
+  OTHER_STAFF // other worker
+  VIEWER // user
+}
+
+enum SubscribeTier {
+  FREE_ACCOUNT // free
+  BASIC // base subscription
+  SILVER // silver subscription
+  GOLD // gold subscription
+  PLATINUM // platinum subscription
+}
+
+enum ProfileLanguages {
+  ENGLISH
+  RUSSIAN
+  JAPANESE
+  UKRAINIAN
+}
+
+enum ProfileCountries {
+  USA
+  RUSSIA
+  JAPAN
+  UKRAINE
+  UNSPECIFIED
+}
+
+enum SiteTheme {
+  LIGHT
+  DARK
+  AUTO
+}
+
+enum ProfileType {
+  PUBLIC
+  //FOR_FRIENDS Пока не реализуем
+  PRIVATE
+}
+
+enum Media {
+  ANIMES
+  STUDIOS
+  CHARACTERS
+  AUTHORS
+  GENRES
+}
+
+enum FolderType {
+  WATCHING
+  PLAN_TO_WATCH
+  COMPLETED
+  REWATCHING
+  PAUSED
+  DROPPED
+  DEFAULT // Стандарный Фолдер
+}
