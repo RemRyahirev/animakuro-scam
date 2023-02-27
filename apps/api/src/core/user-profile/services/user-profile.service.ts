@@ -16,6 +16,7 @@ import {
     UpdateUserFavouriteAuthorsInputType,
     UpdateUserFavouriteGenresInputType,
     UpdateUserFavouriteCharactersInputType,
+    GetUserProfileInputType,
 } from '../models/inputs';
 import {
     GetListUserProfileResultsType,
@@ -58,10 +59,8 @@ export class UserProfileService {
         id,
         user_id,
         username,
-    }: {
-        id: string;
+    }: GetUserProfileInputType & {
         user_id: string;
-        username: string;
     }): Promise<GetUserProfileResultsType> {
         if (!id && !user_id && !username) {
             throw new Error('UNAUTHORIZED');
@@ -81,10 +80,7 @@ export class UserProfileService {
                     ? {
                           AND: [
                               {
-                                  OR: [
-                                      { user_id: id ?? user_id },
-                                      { user: { username } },
-                                  ],
+                                  OR: [{ user_id: id }, { user: { username } }],
                               },
                               {
                                   profile_settings: {
@@ -139,7 +135,7 @@ export class UserProfileService {
         }
 
         return {
-            success: true,
+            success: errors.length > 0 ? false : true,
             errors: errors,
             userProfile: userProfile as any,
         };
@@ -333,28 +329,37 @@ export class UserProfileService {
             },
         });
 
-        const oldFavoriteAnimeIds = oldFavoriteAnime?.favourite_animes.map(el => el.id) ?? [];
-        animeToAdd.forEach(animeId => {
+        const oldFavoriteAnimeIds =
+            oldFavoriteAnime?.favourite_animes.map((el) => el.id) ?? [];
+        animeToAdd.forEach((animeId) => {
             if (oldFavoriteAnimeIds.includes(animeId)) {
                 // already exists
                 return;
             }
 
-            this.statistics.fireEvent('animeInFavorites', {
-                animeId,
-                userId: user_id,
-            }, 1);
+            this.statistics.fireEvent(
+                'animeInFavorites',
+                {
+                    animeId,
+                    userId: user_id,
+                },
+                1,
+            );
         });
-        animeToRemove.forEach(animeId => {
+        animeToRemove.forEach((animeId) => {
             if (!oldFavoriteAnimeIds.includes(animeId)) {
                 // never exists
                 return;
             }
 
-            this.statistics.fireEvent('animeInFavorites', {
-                animeId,
-                userId: user_id,
-            }, -1);
+            this.statistics.fireEvent(
+                'animeInFavorites',
+                {
+                    animeId,
+                    userId: user_id,
+                },
+                -1,
+            );
         });
 
         return {
