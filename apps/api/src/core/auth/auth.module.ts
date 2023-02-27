@@ -43,7 +43,7 @@ import { LocalStrategy } from './strategies/local.strategy';
         DiscordStrategy,
         FacebookStrategy,
         GoogleStrategy,
-        TwitterStrategy,
+        // TwitterStrategy,
         JwtStrategy,
         LocalStrategy,
     ],
