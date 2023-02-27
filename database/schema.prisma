@@ -509,6 +509,7 @@ enum AuthType {
   GOOGLE
   APPLE
   FACEBOOK
+  TWITTER
 }
 
 enum ModeratorRoles {

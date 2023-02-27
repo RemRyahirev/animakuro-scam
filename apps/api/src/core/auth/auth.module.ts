@@ -18,6 +18,7 @@ import {
     FacebookStrategy,
     GoogleStrategy,
     JwtStrategy,
+    TwitterStrategy,
 } from './strategies';
 import { LocalStrategy } from './strategies/local.strategy';
 
@@ -42,6 +43,7 @@ import { LocalStrategy } from './strategies/local.strategy';
         DiscordStrategy,
         FacebookStrategy,
         GoogleStrategy,
+        // TwitterStrategy,
         JwtStrategy,
         LocalStrategy,
     ],

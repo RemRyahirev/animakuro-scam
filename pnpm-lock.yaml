@@ -56,6 +56,7 @@ specifiers:
   '@types/passport-google-oauth20': ^2.0.11
   '@types/passport-jwt': ^3.0.7
   '@types/passport-local': ^1.0.34
+  '@types/passport-twitter': ^1.0.37
   '@types/passport-vkontakte': ^1.3.1
   '@types/request-ip': ^0.0.37
   '@types/speakeasy': ^2.0.7
@@ -103,6 +104,7 @@ specifiers:
   passport-http-bearer: ^1.0.1
   passport-jwt: ^4.0.1
   passport-local: ^1.0.0
+  passport-twitter: ^1.0.4
   passport-vkontakte: ^0.5.0
   prettier: ^2.8.1
   prisma: ^4.8.1
@@ -220,6 +222,7 @@ devDependencies:
   '@types/passport-google-oauth20': 2.0.11
   '@types/passport-jwt': 3.0.8
   '@types/passport-local': 1.0.35
+  '@types/passport-twitter': 1.0.37
   '@types/passport-vkontakte': 1.3.1
   '@types/request-ip': 0.0.37
   '@types/speakeasy': 2.0.7
@@ -233,6 +236,7 @@ devDependencies:
   jest: 29.3.1_zfha7dvnw4nti6zkbsmhmn6xo4
   jest-junit: 15.0.0
   pactum: 3.3.2
+  passport-twitter: 1.0.4
   prettier: 2.8.1
   prisma: 4.8.1
   ts-jest: 29.0.5_b6ud3wjfzxmze5tmlpgpdpo43e
@@ -3734,6 +3738,13 @@ packages:
 
   /@types/passport-strategy/0.2.35:
     resolution: {integrity: sha512-o5D19Jy2XPFoX2rKApykY15et3Apgax00RRLf0RUotPDUsYrQa7x4howLYr9El2mlUApHmCMv5CZ1IXqKFQ2+g==}
+    dependencies:
+      '@types/express': 4.17.15
+      '@types/passport': 1.0.11
+    dev: true
+
+  /@types/passport-twitter/1.0.37:
+    resolution: {integrity: sha512-/FHODUP6ExYpRFdhVOtbHwVZRmni0kFyOFhOwqg61SoSwcED4c5tkhYu5cJElyhD5jbevRTmgInLFFI5s2hBag==}
     dependencies:
       '@types/express': 4.17.15
       '@types/passport': 1.0.11
@@ -8967,7 +8978,6 @@ packages:
 
   /oauth/0.9.15:
     resolution: {integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==}
-    dev: false
 
   /object-assign/4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -9318,6 +9328,15 @@ packages:
       passport-strategy: 1.0.0
     dev: false
 
+  /passport-oauth1/1.2.0:
+    resolution: {integrity: sha512-Sv2YWodC6jN12M/OXwmR4BIXeeIHjjbwYTQw4kS6tHK4zYzSEpxBgSJJnknBjICA5cj0ju3FSnG1XmHgIhYnLg==}
+    engines: {node: '>= 0.4.0'}
+    dependencies:
+      oauth: 0.9.15
+      passport-strategy: 1.0.0
+      utils-merge: 1.0.1
+    dev: true
+
   /passport-oauth2/1.6.1:
     resolution: {integrity: sha512-ZbV43Hq9d/SBSYQ22GOiglFsjsD1YY/qdiptA+8ej+9C1dL1TVB+mBE5kDH/D4AJo50+2i8f4bx0vg4/yDDZCQ==}
     engines: {node: '>= 0.4.0'}
@@ -9332,7 +9351,14 @@ packages:
   /passport-strategy/1.0.0:
     resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
     engines: {node: '>= 0.4.0'}
-    dev: false
+
+  /passport-twitter/1.0.4:
+    resolution: {integrity: sha512-qvdauqCqCJJci82mJ9hZZQ6nAv7aSHV31svL8+9H7mRlDdXCdfU6AARQrmmJu3DRmv9fvIebM7zzxR7mVufN3A==}
+    engines: {node: '>= 0.4.0'}
+    dependencies:
+      passport-oauth1: 1.2.0
+      xtraverse: 0.1.0
+    dev: true
 
   /passport-vkontakte/0.5.0:
     resolution: {integrity: sha512-9VgT2sJdlbpl6GHn12fXLE2rw1nWh5v6xWp/D6nB+/EB4yA+LtiKWttCEDc5IpSDTdRzZlS9pahkNQuu43N4oQ==}
@@ -11317,6 +11343,12 @@ packages:
       sax: 1.2.4
     dev: true
 
+  /xmldom/0.1.31:
+    resolution: {integrity: sha512-yS2uJflVQs6n+CyjHoaBmVSqIDevTAWrzMmjG1Gc7h1qQ7uVozNhEPJAwZXWyGQ/Gafo3fCwrcaokezLPupVyQ==}
+    engines: {node: '>=0.1'}
+    deprecated: Deprecated due to CVE-2021-21366 resolved in 0.5.0
+    dev: true
+
   /xss/1.0.14:
     resolution: {integrity: sha512-og7TEJhXvn1a7kzZGQ7ETjdQVS2UfZyTlsEdDOqvQF7GoxNfY+0YLCzBy1kPdsDDx4QuNAonQPddpsn6Xl/7sw==}
     engines: {node: '>= 0.10.0'}
@@ -11329,6 +11361,13 @@ packages:
   /xtend/4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
+
+  /xtraverse/0.1.0:
+    resolution: {integrity: sha512-MANQdlG2hl1nQobxz1Rv8hsS1RuBS0C1N6qTOupv+9vmfrReePdxhmB2ecYjvsp4stJ80HD7erjkoF1Hd/FK9A==}
+    engines: {node: '>= 0.4.0'}
+    dependencies:
+      xmldom: 0.1.31
+    dev: true
 
   /y18n/5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
