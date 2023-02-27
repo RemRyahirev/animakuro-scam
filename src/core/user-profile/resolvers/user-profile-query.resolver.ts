@@ -20,10 +20,13 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         middleware: [AuthMiddleware],
     })
     async getUserProfile(
-        @Args('id') id: string,
-        @AccessToken() token: string,
+        @Args('id', { nullable: true }) id: string,
+        @AccessToken() user_id: string,
     ): Promise<GetUserProfileResultsType> {
-        return await this.userProfileService.getUserProfile(id, token);
+        return await this.userProfileService.getUserProfile({
+            user_id: user_id,
+            id: id,
+        });
     }
 
     @ResolveField(() => GetListUserProfileResultsType, {

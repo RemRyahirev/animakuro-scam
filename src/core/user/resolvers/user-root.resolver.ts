@@ -30,6 +30,7 @@ export class UserQueryType {
 
     @Field(() => GetUserResultsType, { description: 'Get user by ID' })
     getUserById: GetUserResultsType;
+
 }
 
 @Resolver()

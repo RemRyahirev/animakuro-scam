@@ -17,23 +17,25 @@ export class User {
     id: string;
 
     @Field(() => String, {
+        nullable: true,
         description: 'Username',
     })
-    username: string;
+    username?: string;
 
     @Field(() => String, { nullable: true, description: 'Email of the user' })
-    email: string | null;
+    email?: string | null;
 
     @Field(() => Boolean, {
+        nullable: true,
         description: 'Email verified status of the user',
     })
-    is_email_confirmed: boolean | null;
+    is_email_confirmed?: boolean | null;
 
     @Field(() => String, {
         nullable: true,
         description: 'Avatar (image) of the user',
     })
-    avatar: string | null;
+    avatar?: string | null;
 
     @Field(() => UserProfile, {
         description: 'User Profile',

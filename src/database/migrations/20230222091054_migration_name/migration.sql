@@ -1,4 +1,10 @@
 -- CreateEnum
+CREATE TYPE "AnimeStillsType" AS ENUM ('IMAGE', 'VIDEO');
+
+-- CreateEnum
+CREATE TYPE "AnimeStillsPriorityType" AS ENUM ('TH1', 'TH2', 'TH3');
+
+-- CreateEnum
 CREATE TYPE "OpeningEndingType" AS ENUM ('OPENING', 'ENDING');
 
 -- CreateEnum
@@ -62,7 +68,7 @@ CREATE TYPE "ProfileType" AS ENUM ('PUBLIC', 'PRIVATE');
 CREATE TYPE "Media" AS ENUM ('ANIMES', 'STUDIOS', 'CHARACTERS', 'AUTHORS', 'GENRES');
 
 -- CreateEnum
-CREATE TYPE "FolderType" AS ENUM ('LOOKING', 'ABANDONED', 'PLANNED', 'VIEWED', 'DEFAULT');
+CREATE TYPE "FolderType" AS ENUM ('WATCHING', 'PLAN_TO_WATCH', 'COMPLETED', 'REWATCHING', 'PAUSED', 'DROPPED', 'DEFAULT');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -74,7 +80,7 @@ CREATE TABLE "users" (
     "password" TEXT NOT NULL,
     "created_at" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "deleted" BOOLEAN NOT NULL DEFAULT false,
-    "is_social" BOOLEAN NOT NULL,
+    "social_service" "AuthType" NOT NULL DEFAULT 'JWT',
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -113,7 +119,7 @@ CREATE TABLE "studio" (
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "name" VARCHAR(64) NOT NULL,
     "rating" REAL NOT NULL,
-    "thumbnail" TEXT NOT NULL,
+    "thumbnail_id" UUID,
     "anime_count" REAL NOT NULL DEFAULT 0,
     "anime_starts" REAL NOT NULL,
     "anime_ends" REAL NOT NULL,
@@ -135,7 +141,7 @@ CREATE TABLE "anime" (
     "id" UUID NOT NULL,
     "title" VARCHAR(100) NOT NULL,
     "score" REAL NOT NULL,
-    "evaluation" TEXT NOT NULL DEFAULT '5:0;4:0;3:0;2:0;1:0',
+    "evaluation" JSONB NOT NULL DEFAULT '{ "5": 0 ,"4": 0 , "3": 0, "2": 0, "1": 0}',
     "year" SMALLINT NOT NULL,
     "date_start" DATE,
     "date_end" DATE,
@@ -156,6 +162,8 @@ CREATE TABLE "anime" (
     "preview_link" TEXT NOT NULL,
     "status_description" VARCHAR(30) NOT NULL,
     "release_status" "ReleaseStatus" NOT NULL DEFAULT 'COMPLETED',
+    "banner_id" UUID,
+    "cover_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -208,6 +216,7 @@ CREATE TABLE "author" (
     "language" VARCHAR(30) NOT NULL,
     "gender" VARCHAR(30) NOT NULL,
     "bio" TEXT NOT NULL,
+    "cover_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -226,6 +235,7 @@ CREATE TABLE "character" (
     "importance" "CharacterType" NOT NULL DEFAULT 'PROTAGONIST',
     "role" "CharacterRole" NOT NULL DEFAULT 'MAIN',
     "description" TEXT NOT NULL,
+    "cover_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -254,6 +264,8 @@ CREATE TABLE "translation" (
 CREATE TABLE "user_profile" (
     "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
+    "banner_id" UUID,
+    "cover_id" UUID,
     "created_at" DATE DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "user_profile_pkey" PRIMARY KEY ("id")
@@ -318,12 +330,37 @@ CREATE TABLE "opening_ending" (
 );
 
 -- CreateTable
-CREATE TABLE "reyting_anime" (
+CREATE TABLE "rating_anime" (
     "user_id" UUID NOT NULL,
     "anime_id" UUID NOT NULL,
-    "reyting" INTEGER NOT NULL,
+    "rating" INTEGER NOT NULL,
 
-    CONSTRAINT "reyting_anime_pkey" PRIMARY KEY ("anime_id","user_id")
+    CONSTRAINT "rating_anime_pkey" PRIMARY KEY ("anime_id","user_id")
+);
+
+-- CreateTable
+CREATE TABLE "anime_stills" (
+    "id" UUID NOT NULL,
+    "anime_id" UUID NOT NULL,
+    "frame_id" UUID NOT NULL,
+    "type" "AnimeStillsType" NOT NULL,
+    "priority" "AnimeStillsPriorityType",
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "anime_stills_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "file" (
+    "id" UUID NOT NULL,
+    "file_id" VARCHAR(100) NOT NULL,
+    "bucket_name" VARCHAR(100) NOT NULL,
+    "url" TEXT NOT NULL,
+    "user_id" UUID NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "file_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -408,6 +445,12 @@ CREATE UNIQUE INDEX "profile_settings_avatar_id_key" ON "profile_settings"("avat
 CREATE UNIQUE INDEX "profile_settings_cover_id_key" ON "profile_settings"("cover_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "anime_stills_frame_id_key" ON "anime_stills"("frame_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "anime_stills_anime_id_priority_key" ON "anime_stills"("anime_id", "priority");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_StudioToUser_AB_unique" ON "_StudioToUser"("A", "B");
 
 -- CreateIndex
@@ -474,6 +517,15 @@ ALTER TABLE "auth" ADD CONSTRAINT "auth_user_id_fkey" FOREIGN KEY ("user_id") RE
 ALTER TABLE "auth_session" ADD CONSTRAINT "auth_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "studio" ADD CONSTRAINT "studio_thumbnail_id_fkey" FOREIGN KEY ("thumbnail_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "anime" ADD CONSTRAINT "anime_banner_id_fkey" FOREIGN KEY ("banner_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "anime" ADD CONSTRAINT "anime_cover_id_fkey" FOREIGN KEY ("cover_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "relating_anime" ADD CONSTRAINT "relating_anime_child_anime_id_fkey" FOREIGN KEY ("child_anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -489,7 +541,19 @@ ALTER TABLE "similar_anime" ADD CONSTRAINT "similar_anime_parent_anime_id_fkey" 
 ALTER TABLE "airing_schedule" ADD CONSTRAINT "airing_schedule_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "author" ADD CONSTRAINT "author_cover_id_fkey" FOREIGN KEY ("cover_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "character" ADD CONSTRAINT "character_cover_id_fkey" FOREIGN KEY ("cover_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_banner_id_fkey" FOREIGN KEY ("banner_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "user_profile" ADD CONSTRAINT "user_profile_cover_id_fkey" FOREIGN KEY ("cover_id") REFERENCES "file"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "profile_settings" ADD CONSTRAINT "profile_settings_profile_id_fkey" FOREIGN KEY ("profile_id") REFERENCES "user_profile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -504,10 +568,19 @@ ALTER TABLE "user_folder" ADD CONSTRAINT "user_folder_user_collection_id_fkey" F
 ALTER TABLE "opening_ending" ADD CONSTRAINT "opening_ending_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reyting_anime" ADD CONSTRAINT "reyting_anime_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rating_anime" ADD CONSTRAINT "rating_anime_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reyting_anime" ADD CONSTRAINT "reyting_anime_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rating_anime" ADD CONSTRAINT "rating_anime_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "anime_stills" ADD CONSTRAINT "anime_stills_anime_id_fkey" FOREIGN KEY ("anime_id") REFERENCES "anime"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "anime_stills" ADD CONSTRAINT "anime_stills_frame_id_fkey" FOREIGN KEY ("frame_id") REFERENCES "file"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "file" ADD CONSTRAINT "file_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_StudioToUser" ADD CONSTRAINT "_StudioToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "studio"("id") ON DELETE CASCADE ON UPDATE CASCADE;
