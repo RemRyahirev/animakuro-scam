@@ -39,6 +39,7 @@ export class GoogleStrategy extends PassportStrategy(
             username: name?.givenName,
             avatar: photos?.length ? photos[0].value : null,
         };
+        //выводить оба имени
         const payload = {
             account,
             access_token,
