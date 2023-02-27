@@ -39,7 +39,7 @@ import { LocalStrategy } from './strategies/local.strategy';
         AuthRootResolver,
         AuthQueryResolver,
         AuthMutationResolver,
-        AppleStrategy,
+        // AppleStrategy,
         DiscordStrategy,
         FacebookStrategy,
         GoogleStrategy,
