@@ -21,8 +21,8 @@ export class TwitterStrategy extends PassportStrategy(
         private strategyConfigService: StrategyConfigService,
     ) {
         super({
-            clientID: strategyConfigService.config.FACEBOOK.clientID,
-            clientSecret: strategyConfigService.config.FACEBOOK.clientSecret,
+            consumerKey: strategyConfigService.config.FACEBOOK.clientID,
+            consumerSecret: strategyConfigService.config.FACEBOOK.clientSecret,
             callbackURL: strategyConfigService.config.FACEBOOK.callbackURL,
             scope: ['email', 'profile'],
         });
