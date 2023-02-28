@@ -31,6 +31,9 @@ model User {
   rating_anime         RatingAnime[]
   social_service       AuthType      @default(JWT)
   files                File[]
+  anime_history        AnimeHistory[]
+  author_history       AuthorHistory[]
+  character_history    CharacterHistory[]
 
   @@map("users")
 }
@@ -136,6 +139,7 @@ model Anime {
   opening_ending     OpeningEnding[]
   stills             AnimeStills[]
   rating_anime       RatingAnime[]
+  anime_history      AnimeHistory[]
 
   @@map("anime")
 }
@@ -196,28 +200,30 @@ model Author {
   updated_at          DateTime @default(now()) @map("updated_at")
   animes              Anime[]
   favourite_by        User[]
+  author_history      AuthorHistory[]
 
   @@map("author")
 }
 
 model Character {
-  id            String        @id @default(uuid()) @db.Uuid
-  name          String        @db.VarChar(50)
-  gender        String        @db.VarChar(30)
-  blood_type    String        @db.VarChar(30)
-  date_of_birth String        @db.VarChar(30)
-  age           Int
-  synonyms      String[]
-  importance    CharacterType @default(PROTAGONIST)
-  role          CharacterRole @default(MAIN)
-  description   String        @db.Text
-  cover         File?         @relation(fields: [cover_id], references: [id])
-  cover_id      String?       @db.Uuid
-  statistics    Json?
-  created_at    DateTime      @default(now()) @map("created_at")
-  updated_at    DateTime      @default(now()) @map("updated_at")
-  animes        Anime[]
-  favourite_by  User[]
+  id                    String        @id @default(uuid()) @db.Uuid
+  name                  String        @db.VarChar(50)
+  gender                String        @db.VarChar(30)
+  blood_type            String        @db.VarChar(30)
+  date_of_birth         String        @db.VarChar(30)
+  age                   Int
+  synonyms              String[]
+  importance            CharacterType @default(PROTAGONIST)
+  role                  CharacterRole @default(MAIN)
+  description           String        @db.Text
+  cover                 File?         @relation(fields: [cover_id], references: [id])
+  cover_id              String?       @db.Uuid
+  statistics            Json?
+  created_at            DateTime      @default(now()) @map("created_at")
+  updated_at            DateTime      @default(now()) @map("updated_at")
+  animes                Anime[]
+  favourite_by          User[]
+  character_history     CharacterHistory[]
 
   @@map("character")
 }
@@ -376,6 +382,48 @@ model File {
   anime_still          AnimeStills?
 
   @@map("file")
+}
+
+model AnimeHistory {
+  id                  String              @id @default(uuid()) @db.Uuid
+  anime_id            String              @db.Uuid
+  user_id             String              @db.Uuid
+  spent_time          Int                 @db.Integer                       //seconds
+  created_at          DateTime            @default(now()) @map("created_at")
+  updated_at          DateTime            @updatedAt @map("updated_at")
+
+  anime               Anime               @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("anime_history")
+}
+
+model AuthorHistory {
+  id                  String              @id @default(uuid()) @db.Uuid
+  author_id           String              @db.Uuid
+  user_id             String              @db.Uuid
+  spent_time          Int                 @db.Integer                       //seconds
+  created_at          DateTime            @default(now()) @map("created_at")
+  updated_at          DateTime            @updatedAt @map("updated_at")
+
+  author              Author               @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("author_history")
+}
+
+model CharacterHistory {
+  id                  String              @id @default(uuid()) @db.Uuid
+  character_id        String              @db.Uuid
+  user_id             String              @db.Uuid
+  spent_time          Int                 @db.Integer                       //seconds
+  created_at          DateTime            @default(now()) @map("created_at")
+  updated_at          DateTime            @updatedAt @map("updated_at")
+
+  character           Character           @relation(fields: [character_id], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("character_history")
 }
 
 model Statistic {

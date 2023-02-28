@@ -108,7 +108,7 @@ export class Author {
         nullable: true,
         description: 'List of the animes in which the character appears',
     })
-    animes: Anime[];
+    animes?: Anime[];
 
     @Field(() => AuthorStatistics, {
         nullable: true,

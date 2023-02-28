@@ -22,6 +22,7 @@ import { Studio } from '../../studio/models/studio.model';
 import { User } from '../../user/models/user.model';
 
 import { Stills } from './stills.model';
+import { AnimeHistory } from './history.model';
 
 @ObjectType()
 export class Anime {
@@ -259,4 +260,10 @@ export class Anime {
         description: 'Anime statistics',
     })
     statistics?: AnimeStatistics;
+
+    @Field(() => AnimeHistory, {
+        nullable: true,
+        description: 'Browsing history'
+    })
+    anime_history?: AnimeHistory[];
 }

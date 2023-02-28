@@ -30,6 +30,12 @@ import {
     UserProfileMutationType,
     UserProfileRootResolver,
 } from './user-profile-root.resolver';
+import { AddHistoryAnimeResultsType } from '../models/results/add-history-anime-results.type';
+import { AddHistoryAnimeInputType } from '../models/inputs/add-history-anime-input.type';
+import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
+import { AddHistoryCharacterInputType } from '../models/inputs/add-history-character-input.type';
+import { AddHistoryAuthorInputType } from '../models/inputs/add-history-author-input.type';
+import { AddHistoryAuthorResultsType } from '../models/results/add-history-author-results.type';
 
 @Resolver(UserProfileMutationType)
 export class UserProfileMutationResolver extends UserProfileRootResolver {
@@ -138,5 +144,38 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
             args,
             user_id,
         );
+    }
+
+    @ResolveField(() => AddHistoryAnimeResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    @UseGuards(JwtAuthGuard)
+    async addHistoryAnime(
+        @Args() args: AddHistoryAnimeInputType,
+        @AccessToken() user_id: string,
+    ): Promise<AddHistoryAnimeResultsType> {
+        return await this.userProfileService.addHistoryAnime(args, user_id);
+    }
+
+    @ResolveField(() => AddHistoryCharacterResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    @UseGuards(JwtAuthGuard)
+    async addHistoryCharacter(
+        @Args() args: AddHistoryCharacterInputType,
+        @AccessToken() user_id: string,
+    ): Promise<AddHistoryCharacterResultsType> {
+        return await this.userProfileService.addHistoryCharacter(args, user_id);
+    }
+
+    @ResolveField(() => AddHistoryAuthorResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    @UseGuards(JwtAuthGuard)
+    async addHistoryAuthor(
+        @Args() args: AddHistoryAuthorInputType,
+        @AccessToken() user_id: string,
+    ): Promise<AddHistoryAuthorResultsType> { 
+        return await this.userProfileService.addHistoryAuthor(args, user_id);
     }
 }
