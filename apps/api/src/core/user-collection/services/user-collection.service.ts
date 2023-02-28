@@ -13,13 +13,18 @@ import { GetListUserCollectionResultsType } from '../models/results/get-list-use
 import { CreateUserCollectionResultsType } from '../models/results/create-user-collection-results.type';
 import { UpdateUserCollectionResultsType } from '../models/results/update-user-collection-results.type';
 import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
+import { UpdateRatingUserCollectionInputType } from '../models/inputs';
+import { UpdateRatingUserCollectionResultsType } from '../models/results';
+import { RatingUserCollection } from '../models/rating-user-collection.model';
+import { StatisticService } from '@app/common/services/statistic.service';
 
 @Injectable()
 export class UserCollectionService {
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
-    ) { }
+        private statistics: StatisticService,
+    ) {}
 
     async getUserCollection(id: string): Promise<GetUserCollectionResultsType> {
         const userCollection = await this.prisma.userFolder.findMany({
@@ -268,6 +273,61 @@ export class UserCollectionService {
             success: true,
             errors: [],
             userCollection: userCollection as any,
+        };
+    }
+    async updateRatingUserCollection(
+        args: RatingUserCollection,
+    ): Promise<UpdateRatingUserCollectionResultsType> {
+        let ratingUserCollection: RatingUserCollection;
+
+        const existRating = await this.prisma.ratingUserCollection.findUnique({
+            where: {
+                user_id_collection_id: {
+                    collection_id: args.collection_id,
+                    user_id: args.user_id,
+                },
+            },
+        });
+        if (existRating) {
+            ratingUserCollection =
+                await this.prisma.ratingUserCollection.update({
+                    data: args,
+                    where: {
+                        user_id_collection_id: {
+                            collection_id: args.collection_id,
+                            user_id: args.user_id,
+                        },
+                    },
+                });
+            // Добавление статистики по оценкам Коллекций
+            // this.statistics.fireEvent(
+            //     'userCollectionRate',
+            //     {
+            //         collection_id: args.collection_id,
+            //         stars: existRating.rating,
+            //     },
+            //     -1,
+            // );
+        } else {
+            ratingUserCollection =
+                await this.prisma.ratingUserCollection.create({
+                    data: args,
+                });
+        }
+        // Добавление статистики по оценкам Коллекций
+        // this.statistics.fireEvent(
+        //     'userCollectionRate',
+        //     {
+        //         collection_id: args.collection_id,
+        //         stars: args.rating,
+        //     },
+        //     1,
+        // );
+
+        return {
+            success: true,
+            errors: [],
+            rating: ratingUserCollection.rating,
         };
     }
 }

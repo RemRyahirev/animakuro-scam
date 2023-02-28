@@ -3,10 +3,6 @@ import { Field, ID, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class Rating {
-    // @IsUUID()
-    // @Field(() => ID, { description: 'parent anime id' })
-    // id: string;
-
     @IsUUID()
     @Field(() => ID)
     user_id: string;

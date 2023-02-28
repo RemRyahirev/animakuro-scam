@@ -321,8 +321,8 @@ model UserFolder {
   thumbnail_id                  String?                @db.Uuid
   rating_collection             RatingUserCollection[]
   hashtags                      String[]
-  is_spoiler                    Boolean                @default(false) @db.Boolean()
-  score                         Float                  @db.Real
+  is_spoiler                    Boolean?                @default(false) @db.Boolean()
+  score                         Float?                  @db.Real
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
