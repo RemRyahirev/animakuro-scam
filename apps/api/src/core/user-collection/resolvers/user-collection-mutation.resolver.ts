@@ -51,8 +51,12 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateUserCollection(
         @Args() args: UpdateUserCollectionInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateUserCollectionResultsType> {
-        return await this.userCollectionService.updateUserCollection(args);
+        return await this.userCollectionService.updateUserCollection(
+            args,
+            user_id,
+        );
     }
 
     @ResolveField(() => DeleteUserCollectionResultsType, {

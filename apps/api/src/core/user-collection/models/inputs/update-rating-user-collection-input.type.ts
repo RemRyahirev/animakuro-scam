@@ -6,7 +6,7 @@ import { ArgsType, Field, Float, ID, Int } from '@nestjs/graphql';
 export class UpdateRatingUserCollectionInputType {
     @IsUUID(4)
     @Field(() => ID)
-    anime_id: string;
+    collection_id: string;
 
     @Min(1)
     @Max(5)

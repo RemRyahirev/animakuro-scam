@@ -17,14 +17,23 @@ import { UpdateRatingUserCollectionInputType } from '../models/inputs';
 import { UpdateRatingUserCollectionResultsType } from '../models/results';
 import { RatingUserCollection } from '../models/rating-user-collection.model';
 import { StatisticService } from '@app/common/services/statistic.service';
+import { FileUploadService } from '@app/common/services/file-upload.service';
 
 @Injectable()
 export class UserCollectionService {
+    thumbnailFiles;
     constructor(
         private prisma: PrismaService,
         private paginationService: PaginationService,
+        private fileUpload: FileUploadService,
         private statistics: StatisticService,
-    ) {}
+    ) {
+        this.thumbnailFiles = this.fileUpload.getStorageForOne(
+            'userFolder',
+            'thumbnail_id',
+            'userCollectionThumbnails',
+        );
+    }
 
     async getUserCollection(id: string): Promise<GetUserCollectionResultsType> {
         const userCollection = await this.prisma.userFolder.findMany({
@@ -164,7 +173,15 @@ export class UserCollectionService {
                 ...entityUpdateUtil('animes', args),
                 ...args,
                 is_collection: true,
-                user_id,
+                user: {
+                    connect: {
+                        id: user_id,
+                    },
+                },
+                thumbnail: await this.thumbnailFiles.tryCreate(
+                    args.thumbnail,
+                    user_id,
+                ),
             },
             include: {
                 user: {
@@ -188,6 +205,11 @@ export class UserCollectionService {
                     },
                 },
                 animes: true,
+                thumbnail: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
 
@@ -200,12 +222,24 @@ export class UserCollectionService {
 
     async updateUserCollection(
         args: UpdateUserCollectionInputType,
+        user_id: string,
     ): Promise<UpdateUserCollectionResultsType> {
         const userCollection = await this.prisma.userFolder.update({
             where: { id: args.id },
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
+                user: {
+                    connect: {
+                        id: user_id,
+                    },
+                },
+                thumbnail: await this.thumbnailFiles.tryUpdate(
+                    { id: args.id },
+                    args.thumbnail,
+                    undefined,
+                    user_id,
+                ),
             },
             include: {
                 user: {
@@ -229,6 +263,11 @@ export class UserCollectionService {
                     },
                 },
                 animes: true,
+                thumbnail: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
 
@@ -242,6 +281,7 @@ export class UserCollectionService {
     async deleteUserCollection(
         id: string,
     ): Promise<DeleteUserCollectionResultsType> {
+        await this.thumbnailFiles.tryDeleteAll({ id });
         const userCollection = await this.prisma.userFolder.delete({
             where: { id },
             include: {
@@ -266,6 +306,11 @@ export class UserCollectionService {
                     },
                 },
                 animes: true,
+                thumbnail: {
+                    include: {
+                        user: true,
+                    },
+                },
             },
         });
 

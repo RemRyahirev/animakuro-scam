@@ -33,7 +33,6 @@ model User {
   social_service        AuthType               @default(JWT)
   files                 File[]
   RatingUserCollection  RatingUserCollection[]
-  UserFolder            UserFolder[]
 
   @@map("users")
 }
@@ -300,14 +299,12 @@ model UserFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
   id                            String                 @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user                          User?                  @relation(name: "user_folder", fields: [user_id], references: [id])
+  user                          User                   @relation(name: "user_folder", fields: [user_id], references: [id], onDelete: Cascade)
   user_id                       String                 @db.Uuid // o-2-o relation
-  user_collection               User?                  @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection               User?                  @relation(name: "user_collection", fields: [user_collection_id], references: [id], onDelete: Cascade)
   user_collection_id            String?                @db.Uuid
-  User                          User?                  @relation(fields: [userId], references: [id])
-  userId                        String?                @db.Uuid
   animes                        Anime[]
-  user_favourite_collections    User?                  @relation(name: "user_favourite_collections", fields: [user_favourite_collections_id], references: [id])
+  user_favourite_collections    User?                  @relation(name: "user_favourite_collections", fields: [user_favourite_collections_id], references: [id], onDelete: Cascade)
   user_favourite_collections_id String?                @db.Uuid
   // информативный блок
   is_public                     Boolean                @default(false) @db.Boolean()
@@ -321,8 +318,8 @@ model UserFolder {
   thumbnail_id                  String?                @db.Uuid
   rating_collection             RatingUserCollection[]
   hashtags                      String[]
-  is_spoiler                    Boolean?                @default(false) @db.Boolean()
-  score                         Float?                  @db.Real
+  is_spoiler                    Boolean?               @default(false) @db.Boolean()
+  score                         Float?                 @db.Real
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
@@ -403,15 +400,15 @@ model File {
   user_id     String   @db.Uuid
   created_at  DateTime @default(now()) @map("created_at")
 
-  studio_thumbnails Studio[]
-  anime_banners     Anime[]       @relation("banner")
-  anime_covers      Anime[]       @relation("cover")
-  profile_banners   UserProfile[] @relation("banner")
-  profile_covers    UserProfile[] @relation("cover")
-  author_covers     Author[]
-  character_covers  Character[]
-  anime_still       AnimeStills?
-  user_collection   UserFolder[]  @relation("file_collection")
+  studio_thumbnails          Studio[]
+  anime_banners              Anime[]       @relation("banner")
+  anime_covers               Anime[]       @relation("cover")
+  profile_banners            UserProfile[] @relation("banner")
+  profile_covers             UserProfile[] @relation("cover")
+  author_covers              Author[]
+  character_covers           Character[]
+  anime_still                AnimeStills?
+  user_collection_thumbnails UserFolder[]  @relation("file_collection")
 
   @@map("file")
 }
