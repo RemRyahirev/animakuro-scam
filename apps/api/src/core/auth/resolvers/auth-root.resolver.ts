@@ -31,6 +31,16 @@ export class AuthMutationType {
         description: 'Confirm Email',
     })
     emailConfirmation: RegisterResultsType;
+
+    @Field(() => LogoutResultsType, {
+        description: 'Send email for reser password',
+    })
+    resetPassFirstStep: LogoutResultsType;
+
+    @Field(() => LoginResultsType, {
+        description: 'change password by code',
+    })
+    resetPassSecondStep: LoginResultsType;
 }
 
 @ObjectType()

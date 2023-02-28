@@ -58,7 +58,7 @@ export class AuthService {
                 errors: [
                     {
                         property: 'token',
-                        value: token,
+                        value: '401',
                         reason: 'No user matched by this token',
                     },
                 ],
@@ -328,7 +328,7 @@ export class AuthService {
                 errors: [
                     {
                         property: 'access_token',
-                        value: user_id,
+                        value: '401',
                         reason: 'Token is invalid',
                     },
                 ],
@@ -348,5 +348,93 @@ export class AuthService {
             },
         });
         return { success: true };
+    }
+
+    async resetPasswordFirstStep(name: string): Promise<LogoutResultsType> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                username: name,
+            },
+        });
+
+        if (!user) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'username',
+                        value: '404',
+                        reason: 'User is not find',
+                    },
+                ],
+            };
+        }
+
+        const token = await this.tokenService.generateResetToken(name, user.id);
+
+        await this.mailer.sendMail(
+            {
+                to: user.email,
+                subject: 'Reset password',
+            },
+            MailPurpose.RESET_PASSWORD,
+            {
+                username: name,
+                confirm_link:
+                    'https://' +
+                    this.configService.get<string>('RESET_PASS_REDIRECT_HOST') +
+                    '/' +
+                    token,
+            },
+        );
+        console.log(token);
+
+        return {
+            success: true,
+        };
+    }
+
+    async resetPasswordSecondStep(
+        newPassword: string,
+        code: string,
+    ): Promise<LoginResultsType> {
+        const decoded = await this.tokenService.decodeResetPassToken(code);
+
+        if (newPassword.length < 2) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'password',
+                        value: '400',
+                        reason: 'Password is invalid',
+                    },
+                ],
+                user: null as any,
+                access_token: '',
+            };
+        }
+        const password = await this.passwordService.encrypt(newPassword);
+
+        const user = await this.prisma.user.update({
+            where: {
+                username: decoded.username,
+            },
+            data: {
+                password,
+            },
+        });
+
+        const access_token = await this.tokenService.generateToken(
+            user.id as any,
+            null,
+            TokenType.ACCESS_TOKEN,
+        );
+
+        return {
+            user: user as any,
+            access_token,
+            success: true,
+        };
     }
 }
