@@ -15,6 +15,10 @@ import {
     UserProfileQueryType,
     UserProfileRootResolver,
 } from './user-profile-root.resolver';
+import { GetHistoryAnimeResultsType } from '../models/results/get-history-anime-results.type';
+import { GetHistoryBaseInputType } from '../models/inputs/get-history-base-input.type';
+import { GetHistoryAuthorResultsType } from '../models/results/get-history-author-results.type';
+import { GetHistoryCharacterResultsType } from '../models/results/get-history-character-results.type';
 
 @Resolver(UserProfileQueryType)
 export class UserProfileQueryResolver extends UserProfileRootResolver {
@@ -42,5 +46,38 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         @Args() args: PaginationInputType,
     ): Promise<GetListUserProfileResultsType> {
         return await this.userProfileService.getUserProfileList(args);
+    }
+
+    @ResolveField(() => GetHistoryAnimeResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    async getHistoryAnime(
+        @Args() args: GetHistoryBaseInputType,
+        @Args() pagination: PaginationInputType,
+        @AccessToken() user_id: string
+    ): Promise<GetHistoryAnimeResultsType> {
+        return await this.userProfileService.getHistoryAnime(args, pagination)
+    }
+
+    @ResolveField(() => GetHistoryAuthorResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    async getHistoryAuthor(
+        @Args() args: GetHistoryBaseInputType,
+        @Args() pagination: PaginationInputType,
+        @AccessToken() user_id: string
+    ): Promise<GetHistoryAuthorResultsType> {
+        return await this.userProfileService.getHistoryAuthor(args, pagination)
+    }
+
+    @ResolveField(() => GetHistoryCharacterResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    async getHistoryCharacter(
+        @Args() args: GetHistoryBaseInputType,
+        @Args() pagination: PaginationInputType,
+        @AccessToken() user_id: string
+    ): Promise<GetHistoryCharacterResultsType> {
+        return await this.userProfileService.getHistoryCharacter(args, pagination)
     }
 }

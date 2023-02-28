@@ -31,6 +31,16 @@ import {
     UpdateUserFavouriteStudiosResultType,
 } from '../models/results';
 import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
+import { GetHistoryBaseInputType } from '../models/inputs/get-history-base-input.type';
+import { AddHistoryAnimeInputType } from '../models/inputs/add-history-anime-input.type';
+import { GetHistoryAnimeResultsType } from '../models/results/get-history-anime-results.type';
+import { AddHistoryAnimeResultsType } from '../models/results/add-history-anime-results.type';
+import { GetHistoryAuthorResultsType } from '../models/results/get-history-author-results.type';
+import { GetHistoryCharacterResultsType } from '../models/results/get-history-character-results.type';
+import { AddHistoryAuthorInputType } from '../models/inputs/add-history-author-input.type';
+import { AddHistoryAuthorResultsType } from '../models/results/add-history-author-results.type';
+import { AddHistoryCharacterInputType } from '../models/inputs/add-history-character-input.type';
+import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
 
 @Injectable()
 export class UserProfileService {
@@ -177,6 +187,207 @@ export class UserProfileService {
             userProfileList: userProfileList as any,
             pagination,
         };
+    }
+
+    async getHistoryCharacter(
+        args: GetHistoryBaseInputType,
+        pagination: PaginationInputType
+    ): Promise<GetHistoryCharacterResultsType> {
+        
+        const character_history_list = await this.prisma.characterHistory.findMany({
+            where: {
+                spent_time: { 
+                    gte: args.min_spent_time, 
+                    lte: args.max_spent_time 
+                }
+            },
+            orderBy: {
+                [args.sort_field]: args.sort_order 
+            },
+            ...transformPaginationUtil(pagination),
+            include: {
+                character: true,
+                user: true
+            }
+        })
+        
+        return { success: true, character_history_list: character_history_list as any }
+    }
+
+    async addHistoryCharacter(
+        args: AddHistoryCharacterInputType,
+        user_id: string
+    ): Promise<AddHistoryCharacterResultsType> {
+        const exists_history = await this.prisma.characterHistory.findFirst({
+            where: {
+                user_id,
+                character_id: args.character_id
+            }
+        })
+
+        if (exists_history) {
+            await this.prisma.characterHistory.update({
+                where: { id: exists_history.id },
+                data: {
+                    spent_time: exists_history.spent_time + args.spent_time
+                }
+            })
+        } else {
+            await this.prisma.characterHistory.create({
+                data: {
+                    character_id: args.character_id,
+                    spent_time: args.spent_time,
+                    user_id
+                }
+            })
+        }
+
+        const character_history = await this.prisma.characterHistory.findFirst({
+            where: {
+                user_id,
+                character_id: args.character_id
+            },
+            include: {
+                character: true,
+                user: true
+            }
+        })
+        
+
+        return { success: true, character_history: character_history as any }
+    }
+
+    async getHistoryAuthor(
+        args: GetHistoryBaseInputType,
+        pagination: PaginationInputType
+    ): Promise<GetHistoryAuthorResultsType> {
+        const author_history_list = await this.prisma.authorHistory.findMany({
+            where: {
+                spent_time: { 
+                    gte: args.min_spent_time, 
+                    lte: args.max_spent_time 
+                }
+            },
+            orderBy: {
+                [args.sort_field]: args.sort_order 
+            },
+            ...transformPaginationUtil(pagination),
+            include: {
+                author: true,
+                user: true
+            }
+        })
+        return {success: true, author_history_list: author_history_list as any}
+    }
+
+    async addHistoryAuthor(
+        args: AddHistoryAuthorInputType,
+        user_id: string
+    ): Promise<AddHistoryAuthorResultsType> {
+        const exists_history = await this.prisma.authorHistory.findFirst({
+            where: {
+                user_id,
+                author_id: args.author_id
+            }
+        })
+
+        if (exists_history) {
+            await this.prisma.authorHistory.update({
+                where: { id: exists_history.id },
+                data: {
+                    spent_time: exists_history.spent_time + args.spent_time
+                }
+            })
+        } else {
+            await this.prisma.authorHistory.create({
+                data: {
+                    author_id: args.author_id,
+                    spent_time: args.spent_time,
+                    user_id
+                }
+            })
+        }
+
+        const author_history = await this.prisma.authorHistory.findFirst({
+            where: {
+                user_id,
+                author_id: args.author_id
+            },
+            include: {
+                author: true,
+                user: true
+            }
+        })
+        
+
+        return { success: true, author_history: author_history as any }
+    }
+
+    async getHistoryAnime(
+        args: GetHistoryBaseInputType,
+        pagination: PaginationInputType
+    ): Promise<GetHistoryAnimeResultsType> {
+        const anime_history_list = await this.prisma.animeHistory.findMany({
+            where: {
+                spent_time: { 
+                    gte: args.min_spent_time, 
+                    lte: args.max_spent_time 
+                }
+            },
+            orderBy: {
+                [args.sort_field]: args.sort_order 
+            },
+            ...transformPaginationUtil(pagination),
+            include: {
+                anime: true,
+                user: true
+            }
+        })
+
+        return { success: true, anime_history_list: anime_history_list }
+    }
+
+    async addHistoryAnime(
+        args: AddHistoryAnimeInputType,
+        user_id: string
+    ): Promise<AddHistoryAnimeResultsType> {
+        
+        const exists_history = await this.prisma.animeHistory.findFirst({
+            where: {
+                user_id,
+                anime_id: args.anime_id
+            }
+        })
+        
+        if (exists_history) {
+            await this.prisma.animeHistory.update({
+                where: { id: exists_history.id },
+                data: {
+                    spent_time: exists_history.spent_time + args.spent_time
+                }
+            })       
+        } else {
+            await this.prisma.animeHistory.create({
+                data: {
+                    anime_id: args.anime_id,
+                    spent_time: args.spent_time,
+                    user_id
+                }
+            })     
+        }
+
+        const anime_history = await this.prisma.animeHistory.findFirst({
+            where: {
+                user_id,
+                anime_id: args.anime_id
+            },
+            include: {
+                anime: true,
+                user: true
+            }
+        })     
+
+        return { success: true, anime_history: anime_history as any}
     }
 
     async createUserProfile(
