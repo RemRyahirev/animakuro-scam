@@ -176,28 +176,40 @@ model AiringSchedule {
 }
 
 model Author {
-  id                  String   @id @default(uuid()) @db.Uuid
-  name                String   @db.VarChar(50)
+  id                  String         @id @default(uuid()) @db.Uuid
+  name                String         @db.VarChar(50)
   primary_occupations String[]
   age                 Int
-  date_of_birth       String   @db.VarChar(30)
-  date_of_death       String   @db.VarChar(30)
+  date_of_birth       String         @db.VarChar(30)
+  date_of_death       String         @db.VarChar(30)
   synonyms            String[]
   years_active        String[]
-  home_town           String   @db.VarChar(30)
-  blood_type          String   @db.VarChar(30)
-  language            String   @db.VarChar(30)
-  gender              String   @db.VarChar(30)
-  bio                 String   @db.Text
-  cover               File?    @relation(fields: [cover_id], references: [id])
-  cover_id            String?  @db.Uuid
+  home_town           String         @db.VarChar(30)
+  blood_type          String         @db.VarChar(30)
+  language            String         @db.VarChar(30)
+  gender              String         @db.VarChar(30)
+  bio                 String         @db.Text
+  cover               File?          @relation(fields: [cover_id], references: [id])
+  cover_id            String?        @db.Uuid
   statistics          Json?
-  created_at          DateTime @default(now()) @map("created_at")
-  updated_at          DateTime @default(now()) @map("updated_at")
+  created_at          DateTime       @default(now()) @map("created_at")
+  updated_at          DateTime       @default(now()) @map("updated_at")
   animes              Anime[]
   favourite_by        User[]
+  roles               AuthorsRoles[]
 
   @@map("author")
+}
+
+model AuthorsRoles {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @default(now()) @map("updated_at")
+  author      Author[]
+
+  @@map("authors_roles")
 }
 
 model Character {
@@ -336,17 +348,17 @@ model RatingAnime {
 }
 
 model AnimeStills {
-  id            String                    @id @default(uuid()) @db.Uuid
-  anime_id      String                    @db.Uuid
-  frame_id      String?                   @db.Uuid @unique
-  url           String?                   @db.VarChar(1000)
-  type          AnimeStillsType
-  priority      Int?
-  created_at    DateTime                  @default(now()) @map("created_at")
-  updated_at    DateTime                  @default(now()) @map("updated_at")
+  id         String          @id @default(uuid()) @db.Uuid
+  anime_id   String          @db.Uuid
+  frame_id   String?         @unique @db.Uuid
+  url        String?         @db.VarChar(1000)
+  type       AnimeStillsType
+  priority   Int?
+  created_at DateTime        @default(now()) @map("created_at")
+  updated_at DateTime        @default(now()) @map("updated_at")
 
-  anime         Anime                     @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-  frame         File?                     @relation(fields: [frame_id], references: [id], onDelete: Cascade)
+  anime Anime @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  frame File? @relation(fields: [frame_id], references: [id], onDelete: Cascade)
 
   @@unique([anime_id, priority])
   @@map("anime_stills")
@@ -358,29 +370,29 @@ enum AnimeStillsType {
 }
 
 model File {
-  id                    String          @id @default(uuid()) @db.Uuid
-  file_id               String          @db.VarChar(100)
-  bucket_name           String          @db.VarChar(100)
-  url                   String          @db.Text
-  user                  User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id               String          @db.Uuid
-  created_at            DateTime        @default(now()) @map("created_at")
+  id          String   @id @default(uuid()) @db.Uuid
+  file_id     String   @db.VarChar(100)
+  bucket_name String   @db.VarChar(100)
+  url         String   @db.Text
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id     String   @db.Uuid
+  created_at  DateTime @default(now()) @map("created_at")
 
-  studio_thumbnails     Studio[]
-  anime_banners         Anime[]         @relation("banner")
-  anime_covers          Anime[]         @relation("cover")
-  profile_banners       UserProfile[]   @relation("banner")
-  profile_covers        UserProfile[]   @relation("cover")
-  author_covers         Author[]
-  character_covers      Character[]
-  anime_still          AnimeStills?
+  studio_thumbnails Studio[]
+  anime_banners     Anime[]       @relation("banner")
+  anime_covers      Anime[]       @relation("cover")
+  profile_banners   UserProfile[] @relation("banner")
+  profile_covers    UserProfile[] @relation("cover")
+  author_covers     Author[]
+  character_covers  Character[]
+  anime_still       AnimeStills?
 
   @@map("file")
 }
 
 model Statistic {
-  name    StatisticName   @id
-  data    Json
+  name StatisticName @id
+  data Json
 
   @@map("statistic")
 }

@@ -27,6 +27,7 @@ import {
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
 import { UploadStills } from '../stills.model';
+import { Author } from '../author.model';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -149,13 +150,12 @@ export class CreateAnimeInputType {
     characters_add: string[];
 
     @IsOptional()
-    @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], {
-        description: "Array of author id's to add",
+    @Field(() => [Author], {
+        description: "Array of author id's and roles id's to add ",
         nullable: true,
     })
-    authors_add: string[];
+    authors_add: Author[];
 
     @IsOptional()
     @ValidateNested()

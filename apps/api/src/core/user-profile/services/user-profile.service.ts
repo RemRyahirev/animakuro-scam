@@ -119,7 +119,7 @@ export class UserProfileService {
         if (!userProfile) {
             errors.push({
                 property: 'userProfileQueries.getUserProfile',
-                reason: 'The user has been not found or his profile is closed!',
+                reason: 'ACCES_DENIDED_PROFILE_PRIVATE',
                 value: 401,
             });
         }
