@@ -80,4 +80,22 @@ export class AuthMutationResolver extends AuthRootResolver {
     ): Promise<RegisterResultsType> {
         return await this.authService.emailConfirmation(token);
     }
+
+    @ResolveField(() => LogoutResultsType)
+    async resetPassFirstStep(
+        @Args('username') username: string,
+    ): Promise<LogoutResultsType> {
+        return await this.authService.resetPasswordFirstStep(username);
+    }
+
+    @ResolveField(() => LoginResultsType)
+    async resetPassSecondStep(
+        @Args('newPassword') newPassword: string,
+        @Args('code') code: string,
+    ): Promise<LoginResultsType> {
+        return await this.authService.resetPasswordSecondStep(
+            newPassword,
+            code,
+        );
+    }
 }
