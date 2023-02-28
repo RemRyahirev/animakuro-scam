@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import {
-    AnimeType,
-    FolderType,
-} from '@prisma/client';
+import { AnimeType, FolderType } from '@prisma/client';
 
 type UserAction = {
     animeInFavorites: {
@@ -46,6 +43,10 @@ type UserAction = {
     getProfile: {
         profileId: string;
     };
+    userCollectionRate: {
+        collectionId: string;
+        stars: number;
+    };
 };
 enum StatAction {
     animeInFavorites = 'animeInFavorites',
@@ -60,6 +61,7 @@ enum StatAction {
     getCharacter = 'getCharacter',
     getAuthor = 'getAuthor',
     getProfile = 'getProfile',
+    userCollectionRate = 'userCollectionRate',
 }
 
 const STAT_REDIS_KEY = 'statistic';
@@ -77,46 +79,37 @@ const EventCode = {
     getCharacter: 'GCH',
     getAuthor: 'GAU',
     getProfile: 'GPR',
+    userCollectionRate: 'UCOR',
 } as const satisfies Record<StatAction, string>;
 type EventCodes = typeof EventCode[keyof typeof EventCode];
 
 const Key = {
-    animeInFavorites:
-        ({ animeId }: { animeId: string }) =>
-            `${EventCode.animeInFavorites}:${animeId}`,
-    animeInUserFavorites:
-        ({ userId }: { userId: string }) =>
-            `${EventCode.animeInUserFavorites}:${userId}`,
-    animeUserRate:
-        ({ animeId, stars }: { animeId: string, stars: number }) =>
-            `${EventCode.animeUserRate}:${animeId}:${stars}`,
-    animeInFolder:
-        ({ animeId, folderType }: { animeId: string, folderType: FolderType }) =>
-            `${EventCode.animeInFolder}:${animeId}:${folderType}`,
-    animeInUserFolder:
-        ({ userId, folderId, folderType, animeId }: { userId: string, folderId: string, folderType: FolderType, animeId: string }) =>
-            `${EventCode.animeInUserFolder}:${userId}:${folderId}:${folderType}:${animeId}`,
-    statFolder:
-        ({ userId, folderId, folderType }: { userId: string, folderId: string, folderType: FolderType }) =>
-            `${EventCode.statFolder}:${userId}:${folderId}:${folderType}`,
-    animeType:
-        ({ animeId, animeType }: { animeId: string, animeType: AnimeType }) =>
-            `${EventCode.animeType}:${animeId}:${animeType}`,
-    animeGenre:
-        ({ animeId, genreId }: { animeId: string, genreId: string }) =>
-            `${EventCode.animeGenre}:${animeId}:${genreId}`,
-    getAnime:
-        ({ animeId }: { animeId: string }) =>
-            `${EventCode.getAnime}:${animeId}`,
-    getCharacter:
-        ({ characterId }: { characterId: string }) =>
-            `${EventCode.getCharacter}:${characterId}`,
-    getAuthor:
-        ({ authorId }: { authorId: string }) =>
-            `${EventCode.getAuthor}:${authorId}`,
-    getProfile:
-        ({ profileId }: { profileId: string }) =>
-            `${EventCode.getProfile}:${profileId}`,
+    animeInFavorites: ({ animeId }: { animeId: string }) =>
+        `${EventCode.animeInFavorites}:${animeId}`,
+    animeInUserFavorites: ({ userId }: { userId: string }) =>
+        `${EventCode.animeInUserFavorites}:${userId}`,
+    animeUserRate: ({ animeId, stars }: { animeId: string; stars: number }) =>
+        `${EventCode.animeUserRate}:${animeId}:${stars}`,
+    animeInFolder: ({ animeId, folderType }: { animeId: string, folderType: FolderType }) =>
+        `${EventCode.animeInFolder}:${animeId}:${folderType}`,
+    animeInUserFolder: ({ userId, folderId, folderType, animeId }: { userId: string, folderId: string, folderType: FolderType, animeId: string }) =>
+        `${EventCode.animeInUserFolder}:${userId}:${folderId}:${folderType}:${animeId}`,
+    statFolder: ({ userId, folderId, folderType }: { userId: string, folderId: string, folderType: FolderType }) =>
+        `${EventCode.statFolder}:${userId}:${folderId}:${folderType}`,
+    animeType: ({ animeId, animeType }: { animeId: string, animeType: AnimeType }) =>
+        `${EventCode.animeType}:${animeId}:${animeType}`,
+    animeGenre: ({ animeId, genreId }: { animeId: string, genreId: string }) =>
+        `${EventCode.animeGenre}:${animeId}:${genreId}`,
+    getAnime: ({ animeId }: { animeId: string }) =>
+        `${EventCode.getAnime}:${animeId}`,
+    getCharacter: ({ characterId }: { characterId: string }) =>
+        `${EventCode.getCharacter}:${characterId}`,
+    getAuthor: ({ authorId }: { authorId: string }) =>
+        `${EventCode.getAuthor}:${authorId}`,
+    getProfile: ({ profileId }: { profileId: string }) =>
+        `${EventCode.getProfile}:${profileId}`,
+    userCollectionRate: ({ collectionId, stars }: { collectionId: string, stars: number }) =>
+        `${EventCode.userCollectionRate}:${collectionId}:${stars}`,
 } satisfies Record<StatAction, (...args: any[]) => string>;
 type ParsedEvent = ({
     [P in StatAction]: {
@@ -127,9 +120,7 @@ type ParsedEvent = ({
 
 @Injectable()
 export class StatisticService {
-    constructor(
-        @InjectRedis() protected readonly redis: Redis,
-    ) {}
+    constructor(@InjectRedis() protected readonly redis: Redis) { }
 
     async fireEvent<K extends keyof UserAction>(
         event: K,
@@ -204,14 +195,17 @@ export class StatisticService {
                 await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.getProfile(params));
                 break;
 
+            case 'userCollectionRate':
+                params = opts as UserAction['userCollectionRate'];
+                await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.userCollectionRate(params));
+                break;
+
             default:
                 console.error('Unknown stat event:', event, opts);
         }
     }
 
-    private parseEvent(
-        event: string,
-    ): ParsedEvent | null {
+    private parseEvent(event: string): ParsedEvent | null {
         const [code, ...params] = event.split(':');
 
         switch (code as EventCodes) {
@@ -319,6 +313,14 @@ export class StatisticService {
                         profileId: params[0],
                     },
                 };
+            case EventCode.userCollectionRate:
+                return {
+                    event: StatAction.userCollectionRate,
+                    params: {
+                        collectionId: params[0],
+                        stars: Number(params[1]),
+                    },
+                };
 
             default:
                 console.error('Unknown stat event:', code, params);
@@ -327,9 +329,7 @@ export class StatisticService {
         return null;
     }
 
-    async getEvents(
-        count = 1,
-    ) {
+    async getEvents(count = 1) {
         let events: string[];
 
         if (count > 1) {

@@ -344,30 +344,28 @@ export class UserCollectionService {
                         },
                     },
                 });
-            // Добавление статистики по оценкам Коллекций
-            // this.statistics.fireEvent(
-            //     'userCollectionRate',
-            //     {
-            //         collection_id: args.collection_id,
-            //         stars: existRating.rating,
-            //     },
-            //     -1,
-            // );
+            this.statistics.fireEvent(
+                'userCollectionRate',
+                {
+                    collectionId: args.collection_id,
+                    stars: existRating.rating,
+                },
+                -1,
+            );
         } else {
             ratingUserCollection =
                 await this.prisma.ratingUserCollection.create({
                     data: args,
                 });
         }
-        // Добавление статистики по оценкам Коллекций
-        // this.statistics.fireEvent(
-        //     'userCollectionRate',
-        //     {
-        //         collection_id: args.collection_id,
-        //         stars: args.rating,
-        //     },
-        //     1,
-        // );
+        this.statistics.fireEvent(
+            'userCollectionRate',
+            {
+                collectionId: args.collection_id,
+                stars: args.rating,
+            },
+            1,
+        );
 
         return {
             success: true,
