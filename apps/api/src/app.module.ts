@@ -30,7 +30,7 @@ import { MailerModule } from './mailer/mailer.module';
             isGlobal: true,
         }),
         GraphQLModule.forRoot<ApolloDriverConfig>({
-            formatError,
+            // formatError,
             context: ({ req, res }) => ({ req, res }),
             driver: ApolloDriver,
             autoSchemaFile: true,
