@@ -1,4 +1,4 @@
-import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
+import { Profile, Strategy } from 'passport-twitter';
 import {
     forwardRef,
     Inject,
@@ -12,18 +12,18 @@ import { AuthType } from '@app/common/models/enums';
 import { StrategyConfigService } from '../services/strategy-config.service';
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(
+export class TwitterStrategy extends PassportStrategy(
     Strategy,
-    AuthType.GOOGLE,
+    AuthType.TWITTER,
 ) {
     constructor(
         @Inject(forwardRef(() => StrategyConfigService))
         private strategyConfigService: StrategyConfigService,
     ) {
         super({
-            clientID: strategyConfigService.config.GOOGLE.clientID,
-            clientSecret: strategyConfigService.config.GOOGLE.clientSecret,
-            callbackURL: strategyConfigService.config.GOOGLE.callbackURL,
+            consumerKey: strategyConfigService.config.FACEBOOK.clientID,
+            consumerSecret: strategyConfigService.config.FACEBOOK.clientSecret,
+            callbackURL: strategyConfigService.config.FACEBOOK.callbackURL,
             scope: ['email', 'profile'],
         });
     }
@@ -32,17 +32,14 @@ export class GoogleStrategy extends PassportStrategy(
         access_token: string,
         refresh_token: string,
         profile: Profile,
-        done: VerifyCallback,
+        done: (err: any, user: any, info?: any) => void,
     ): Promise<void> {
-        const { id, displayName, emails, photos } = profile;
-
+        const { id, emails, name } = profile;
         const account = {
             uuid: id,
             email: emails ? emails[0].value : null,
-            username: displayName,
-            avatar: photos?.length ? photos[0].value : null,
+            username: name?.givenName,
         };
-
         const payload = {
             account,
             access_token,

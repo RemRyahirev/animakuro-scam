@@ -18,6 +18,7 @@ import {
     FacebookStrategy,
     GoogleStrategy,
     JwtStrategy,
+    TwitterStrategy,
 } from './strategies';
 import { LocalStrategy } from './strategies/local.strategy';
 
@@ -38,10 +39,11 @@ import { LocalStrategy } from './strategies/local.strategy';
         AuthRootResolver,
         AuthQueryResolver,
         AuthMutationResolver,
-        AppleStrategy,
+        // AppleStrategy,
         DiscordStrategy,
         FacebookStrategy,
         GoogleStrategy,
+        // TwitterStrategy,
         JwtStrategy,
         LocalStrategy,
     ],

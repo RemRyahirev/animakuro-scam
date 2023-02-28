@@ -21,7 +21,10 @@ npx prisma db seed
 
 ### Start 
 ```shell
+# api service
 pnpm dev
+# statistic service
+pnpm dev:stat
 ```
 
 ### Tests
@@ -35,6 +38,19 @@ pnpm test:cov
 # e2e tests single run
 pnpm test:e2e
 ```
+
+### Build
+```shell
+# api service
+pnpm build # or pnpm build api
+# statistic service
+pnpm build statistic
+```
+
+For build docker image is needed to pass build arg `SERVICE`.
+Possible values:
+- `api` [default]
+- `statistic`
 
 ## Errors
 

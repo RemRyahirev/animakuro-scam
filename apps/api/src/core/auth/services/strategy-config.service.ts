@@ -52,84 +52,37 @@ export class StrategyConfigService implements JwtOptionsFactory {
                 },
             },
             APPLE: {
-                clientID: this.configService.get(
-                    'APPLE_CLIENT_ID',
-                    'apple-test-client-id',
-                ),
-                teamID: this.configService.get(
-                    'APPLE_TEAM_ID',
-                    'apple-test-team-id',
-                ),
-                keyID: this.configService.get(
-                    'APPLE_KEY_ID',
-                    'apple-test-key-id',
-                ),
-                callbackURL: this.configService.get(
-                    'APPLE_CALLBACK_URL',
-                    'apple-test-callback-url',
-                ),
+                clientID: this.configService.get('APPLE_CLIENT_ID'),
+                teamID: this.configService.get('APPLE_TEAM_ID'),
+                keyID: this.configService.get('APPLE_KEY_ID'),
+                callbackURL: this.configService.get('APPLE_CALLBACK_URL'),
                 privateKeyLocation: this.configService.get(
                     'APPLE_PRIVATE_KEY_LOCATION',
-                    'apple-test-private-key-location',
                 ),
-                redirectURL: this.configService.get(
-                    'APPLE_ENDPOINT',
-                    'apple-test-redirect-uri',
-                ),
+                redirectURL: this.configService.get('APPLE_ENDPOINT'),
             },
             FACEBOOK: {
-                clientID: this.configService.get(
-                    'FACEBOOK_CLIENT_ID',
-                    'facebook-test-client-id',
-                ),
-                clientSecret: this.configService.get(
-                    'FACEBOOK_CLIENT_SECRET',
-                    'facebook-test-client-secret',
-                ),
-                callbackURL: this.configService.get(
-                    'FACEBOOK_CALLBACK_URL',
-                    'facebook-test-callback-url',
-                ),
-                redirectURL: this.configService.get(
-                    'FACEBOOK_ENDPOINT',
-                    'facebook-test-redirect-uri',
-                ),
+                clientID: this.configService.get('FACEBOOK_CLIENT_ID'),
+                clientSecret: this.configService.get('FACEBOOK_CLIENT_SECRET'),
+                callbackURL: this.configService.get('FACEBOOK_CALLBACK_URL'),
+                redirectURL: this.configService.get('FACEBOOK_ENDPOINT'),
             },
             GOOGLE: {
-                clientID: this.configService.get(
-                    'GOOGLE_CLIENT_ID',
-                    'google-test-client-id',
-                ),
-                clientSecret: this.configService.get(
-                    'GOOGLE_CLIENT_SECRET',
-                    'google-test-client-secret',
-                ),
-                callbackURL: this.configService.get(
-                    'GOOGLE_CALLBACK_URL',
-                    'google-test-callback-url',
-                ),
-                redirectURL: this.configService.get(
-                    'GOOGLE_ENDPOINT',
-                    'google-test-redirect-uri',
-                ),
+                clientID: this.configService.get('GOOGLE_CLIENT_ID'),
+                clientSecret: this.configService.get('GOOGLE_CLIENT_SECRET'),
+                callbackURL: this.configService.get('GOOGLE_CALLBACK_URL'),
+                redirectURL: this.configService.get('GOOGLE_ENDPOINT'),
             },
             DISCORD: {
-                clientID: this.configService.get(
-                    'DISCORD_CLIENT_ID',
-                    'discord-test-client-id',
-                ),
-                clientSecret: this.configService.get(
-                    'DISCORD_CLIENT_SECRET',
-                    'discord-test-client-secret',
-                ),
-                callbackURL: this.configService.get(
-                    'DISCORD_CALLBACK_URL',
-                    'discord-test-callback-url',
-                ),
-                redirectURL: this.configService.get(
-                    'DISCORD_ENDPOINT',
-                    'discord-test-redirect-uri',
-                ),
+                clientID: this.configService.get('DISCORD_CLIENT_ID'),
+                clientSecret: this.configService.get('DISCORD_CLIENT_SECRET'),
+                callbackURL: this.configService.get('DISCORD_CALLBACK_URL'),
+                redirectURL: this.configService.get('DISCORD_ENDPOINT'),
+            },
+            TWITTER: {
+                clientID: this.configService.get('TWITTER_CLIENT_ID'),
+                clientSecret: this.configService.get('TWITTER_CLIENT_SECRET'),
+                callbackURL: this.configService.get('TWITTER_CALLBACK_URL'),
             },
         };
     }

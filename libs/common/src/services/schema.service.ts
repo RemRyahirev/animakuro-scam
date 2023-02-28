@@ -94,8 +94,14 @@ export class SchemaService {
             AiringScheduleQueryResolver,
             AiringScheduleMutationResolver,
         ]);
+
         fs.writeFile(
-            path.resolve(__dirname + '../../../../../schema.gql'),
+            path.join(
+                __dirname.includes('dist')
+                    ? __dirname.substring(0, __dirname.indexOf('dist/'))
+                    : path.join(__dirname, '../../../..'),
+                'schema.gql',
+            ),
             printSchema(schema),
             {},
             (err: NodeJS.ErrnoException | null) => {

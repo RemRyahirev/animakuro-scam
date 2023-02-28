@@ -1,7 +1,7 @@
 import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { Context } from 'vm';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import {
@@ -110,7 +110,6 @@ export class AuthService {
         args: LoginInputType,
         context: Context,
     ): Promise<LoginResultsType> {
-        // TODO made setup mail notification
         const user = (await this.userService.findUserByUsername(
             args.username,
         )) as unknown as NonNullable<User>;
@@ -122,7 +121,7 @@ export class AuthService {
         });
         const access_token = await this.tokenService.generateToken(
             user.id,
-            session.auth_session!.id ?? null,
+            session.auth_session?.id ?? null,
             TokenType.ACCESS_TOKEN,
         );
         const userIp = requestIp.getClientIp(context.req) || 1;
@@ -166,7 +165,6 @@ export class AuthService {
 
     async sendEmail(
         args: RegisterInputType,
-        context: ExecutionContext,
         req: any,
         res: any,
     ): Promise<LogoutResultsType> {
@@ -176,15 +174,12 @@ export class AuthService {
             };
         }
         if (await this.throttler._handleRequest(1, 120, req, res)) {
-            return await this.register(args, context);
+            return await this.register(args);
         }
         return { success: false };
     }
 
-    async register(
-        args: RegisterInputType,
-        context: Context,
-    ): Promise<LogoutResultsType> {
+    async register(args: RegisterInputType): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
         const token = await this.tokenService.generateEmailToken(
             args.email,
@@ -264,14 +259,13 @@ export class AuthService {
             );
             await this.prisma.auth.create({
                 data: {
-                    // @ts-ignore
                     type: auth_type.toUpperCase() as keyof typeof AuthType,
                     access_token,
                     uuid: profile.account.uuid,
                     email: profile.account.email,
                     username: profile.account.username,
                     avatar: profile.account.avatar,
-                    user_id: result!.id,
+                    user_id: result?.id,
                 },
             });
 
@@ -304,14 +298,13 @@ export class AuthService {
             );
             await this.prisma.auth.create({
                 data: {
-                    // @ts-ignore
                     type: auth_type.toUpperCase() as keyof typeof AuthType,
                     access_token,
                     uuid: profile.account.uuid,
                     email: profile.account.email,
                     username,
                     avatar: profile.account.avatar,
-                    user_id: user!.id,
+                    user_id: user?.id,
                 },
             });
 
@@ -348,7 +341,7 @@ export class AuthService {
         });
         await this.prisma.authSession.update({
             where: {
-                id: authorizedSession!.id,
+                id: authorizedSession?.id,
             },
             data: {
                 active: false,
