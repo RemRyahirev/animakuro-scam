@@ -4,7 +4,7 @@ import { Field, ID, InputType } from '@nestjs/graphql';
 import { AnimeRelation } from '@app/common/models/enums';
 
 @InputType()
-export class Author {
+export class AnimeAuthorAddType {
     @IsUUID(4, { each: true })
     @Field(() => ID, { description: 'author_id' })
     id: string;

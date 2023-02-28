@@ -9,28 +9,31 @@ datasource db {
 }
 
 model User {
-  id                   String        @id @default(uuid()) @db.Uuid
-  username             String        @unique @db.VarChar(64)
-  email                String        @db.VarChar(320)
-  avatar               String?       @db.Text
-  is_email_confirmed   Boolean       @default(false)
-  favourite_animes     Anime[]
-  favourite_studios    Studio[]
-  favourite_authors    Author[]
-  favourite_characters Character[]
-  favourite_genres     Genre[]
-  user_folders         UserFolder[]  @relation("user_folder")
-  password             String        @map("password")
-  created_at           DateTime      @default(now()) @map("created_at") @db.Date
-  deleted              Boolean       @default(false)
-  statistics           Json?
-  auth                 Auth[]
-  user_profile         UserProfile?
-  auth_sessions        AuthSession[]
-  user_collection      UserFolder[]  @relation("user_collection")
-  rating_anime         RatingAnime[]
-  social_service       AuthType      @default(JWT)
-  files                File[]
+  id                    String                 @id @default(uuid()) @db.Uuid
+  username              String                 @unique @db.VarChar(64)
+  email                 String                 @db.VarChar(320)
+  avatar                String?                @db.Text
+  is_email_confirmed    Boolean                @default(false)
+  favourite_animes      Anime[]
+  favourite_studios     Studio[]
+  favourite_authors     Author[]
+  favourite_characters  Character[]
+  favourite_genres      Genre[]
+  favourite_collections UserFolder[]           @relation("user_favourite_collections")
+  user_folders          UserFolder[]           @relation("user_folder")
+  password              String                 @map("password")
+  created_at            DateTime               @default(now()) @map("created_at") @db.Date
+  deleted               Boolean                @default(false)
+  statistics            Json?
+  auth                  Auth[]
+  user_profile          UserProfile?
+  auth_sessions         AuthSession[]
+  user_collection       UserFolder[]           @relation("user_collection")
+  rating_anime          RatingAnime[]
+  social_service        AuthType               @default(JWT)
+  files                 File[]
+  RatingUserCollection  RatingUserCollection[]
+  UserFolder            UserFolder[]
 
   @@map("users")
 }
@@ -94,7 +97,7 @@ model Anime {
   id                 String           @id @default(uuid()) @db.Uuid
   title              String           @db.VarChar(100)
   score              Float            @db.Real
-  evaluation         Json             @default("{ \"5\": 0 ,\"4\": 0 , \"3\": 0, \"2\": 0, \"1\": 0}")
+  evaluation         Json             @default("{ \"five\": 0 ,\"four\": 0 , \"three\": 0, \"two\": 0, \"one\": 0}")
   year               Int              @db.SmallInt
   date_start         DateTime?        @db.Date
   date_end           DateTime?        @db.Date
@@ -295,26 +298,37 @@ model ProfileSettings {
 
 model UserFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
-  id                  String     @id @default(uuid()) @db.Uuid
+  id                            String                 @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user                User?      @relation(name: "user_folder", fields: [user_id], references: [id])
-  user_id             String     @db.Uuid // o-2-o relation
-  user_collection     User?      @relation(name: "user_collection", fields: [user_collection_id], references: [id])
-  user_collection_id  String?    @db.Uuid
-  animes              Anime[]
+  user                          User?                  @relation(name: "user_folder", fields: [user_id], references: [id])
+  user_id                       String                 @db.Uuid // o-2-o relation
+  user_collection               User?                  @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection_id            String?                @db.Uuid
+  User                          User?                  @relation(fields: [userId], references: [id])
+  userId                        String?                @db.Uuid
+  animes                        Anime[]
+  user_favourite_collections    User?                  @relation(name: "user_favourite_collections", fields: [user_favourite_collections_id], references: [id])
+  user_favourite_collections_id String?                @db.Uuid
   // информативный блок
-  is_collection       Boolean    @default(false) @db.Boolean()
-  is_public           Boolean    @default(false) @db.Boolean()
-  is_statistic_active Boolean    @default(false) @db.Boolean() //Активация вывода статистики
-  name                String     @db.VarChar(25)
-  description         String
-  type                FolderType @default(DEFAULT)
+  is_public                     Boolean                @default(false) @db.Boolean()
+  is_statistic_active           Boolean                @default(false) @db.Boolean() //Активация вывода статистики
+  name                          String                 @db.VarChar(25)
+  description                   String
+  type                          FolderType             @default(DEFAULT)
+  // Блок для коллекций
+  is_collection                 Boolean                @default(false) @db.Boolean()
+  thumbnail                     File?                  @relation(name: "file_collection", fields: [thumbnail_id], references: [id])
+  thumbnail_id                  String?                @db.Uuid
+  rating_collection             RatingUserCollection[]
+  hashtags                      String[]
+  is_spoiler                    Boolean                @default(false) @db.Boolean()
+  score                         Float                  @db.Real
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
   //watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
-  created_at          DateTime   @default(now()) @map("created_at")
-  updated_at          DateTime   @default(now()) @map("updated_at")
+  created_at                    DateTime               @default(now()) @map("created_at")
+  updated_at                    DateTime               @default(now()) @map("updated_at")
 
   // @@id([user_id, user_collection_id])
   @@map("user_folder")
@@ -345,6 +359,17 @@ model RatingAnime {
 
   @@id([anime_id, user_id])
   @@map("rating_anime")
+}
+
+model RatingUserCollection {
+  user          User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id       String     @db.Uuid
+  collection    UserFolder @relation(fields: [collection_id], references: [id], onDelete: Cascade)
+  collection_id String     @db.Uuid
+  rating        Int
+
+  @@id([user_id, collection_id])
+  @@map("rating_user_collection")
 }
 
 model AnimeStills {
@@ -386,6 +411,7 @@ model File {
   author_covers     Author[]
   character_covers  Character[]
   anime_still       AnimeStills?
+  user_collection   UserFolder[]  @relation("file_collection")
 
   @@map("file")
 }

@@ -27,7 +27,7 @@ import {
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
 import { UploadStills } from '../stills.model';
-import { Author } from '../author.model';
+import { AnimeAuthorAddType } from '../anime-author-add.model';
 
 @ArgsType()
 export class CreateAnimeInputType {
@@ -151,11 +151,11 @@ export class CreateAnimeInputType {
 
     @IsOptional()
     @IsArray()
-    @Field(() => [Author], {
+    @Field(() => [AnimeAuthorAddType], {
         description: "Array of author id's and roles id's to add ",
         nullable: true,
     })
-    authors_add: Author[];
+    authors_add: AnimeAuthorAddType[];
 
     @IsOptional()
     @ValidateNested()
