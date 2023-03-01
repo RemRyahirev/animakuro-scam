@@ -343,6 +343,21 @@ export class StatisticService {
                     },
                 };
 
+            case EventCode.collectionInFavorites:
+                return {
+                    event: StatAction.collectionInFavorites,
+                    params: {
+                        collectionId: params[0],
+                    },
+                };
+
+            case EventCode.collectionInUserFavorites:
+                return {
+                    event: StatAction.collectionInUserFavorites,
+                    params: {
+                        userId: params[0],
+                    },
+                };
             default:
                 console.error('Unknown stat event:', code, params);
         }
