@@ -142,7 +142,6 @@ export class AnimeService {
                     ? {
                           select: {
                               id: true,
-                              ...favouriteSelect,
                           },
                       }
                     : {
@@ -207,33 +206,36 @@ export class AnimeService {
                 characters: anime?.characters.map((el: { id: string }) => ({
                     ...el,
                     is_favourite:
-                        anime?.favourite_by?.favourite_characters.some(
+                        anime?.favourite_by[0]?.favourite_characters.some(
                             (item: { id: string }) => item.id === el.id,
                         ),
                 })),
                 genres: anime?.genres.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: anime?.favourite_by?.favourite_genres.some(
+                    is_favourite: anime?.favourite_by[0]?.favourite_genres.some(
                         (item: { id: string }) => item.id === el.id,
                     ),
                 })),
                 studios: anime?.studios.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: anime?.favourite_by?.favourite_studios.some(
-                        (item: { id: string }) => item.id === el.id,
-                    ),
+                    is_favourite:
+                        anime?.favourite_by[0]?.favourite_studios.some(
+                            (item: { id: string }) => item.id === el.id,
+                        ),
                 })),
                 authors: anime?.authors.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: anime?.favourite_by?.favourite_authors.some(
-                        (item: { id: string }) => item.id === el.id,
-                    ),
+                    is_favourite:
+                        anime?.favourite_by[0]?.favourite_authors.some(
+                            (item: { id: string }) => item.id === el.id,
+                        ),
                 })),
                 user_folders: anime?.user_folders.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: anime?.favourite_by?.favourite_collections.some(
-                        (item: { id: string }) => item.id === el.id,
-                    ),
+                    is_favourite:
+                        anime?.favourite_by[0]?.favourite_collections.some(
+                            (item: { id: string }) => item.id === el.id,
+                        ),
                 })),
             };
 
@@ -264,7 +266,6 @@ export class AnimeService {
         user_id: string,
         favourites: boolean,
     ): Promise<GetListAnimeResultsType> {
-        console.time('start');
         const animeList: any = await this.prisma.anime.findMany({
             ...transformPaginationUtil(args),
             include: {
