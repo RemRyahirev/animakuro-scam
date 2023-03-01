@@ -81,6 +81,8 @@ store in redis:
 10. getCharacter (incr)         - GCH:<character_id>
 11. getAuthor (incr)            - GAU:<author_id>
 12. getProfile (incr)           - GPR:<profile_id>
+13. userCollectionRate (incr)   - UCOR:<collection_id>:<stars>
+14. collectionInFavorites (incr)- CFav:<collection_id>
 
 insert incr: zincrby
 insert final: zadd

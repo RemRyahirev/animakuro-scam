@@ -47,6 +47,10 @@ type UserAction = {
         collectionId: string;
         stars: number;
     };
+    collectionInFavorites: {
+        collectionId: string;
+        userId: string;
+    };
 };
 enum StatAction {
     animeInFavorites = 'animeInFavorites',
@@ -62,6 +66,8 @@ enum StatAction {
     getAuthor = 'getAuthor',
     getProfile = 'getProfile',
     userCollectionRate = 'userCollectionRate',
+    collectionInFavorites = 'collectionInFavorites',
+    collectionInUserFavorites = 'collectionInUserFavorites',
 }
 
 const STAT_REDIS_KEY = 'statistic';
@@ -80,6 +86,8 @@ const EventCode = {
     getAuthor: 'GAU',
     getProfile: 'GPR',
     userCollectionRate: 'UCOR',
+    collectionInFavorites: 'CFav',
+    collectionInUserFavorites: 'CUFav',
 } as const satisfies Record<StatAction, string>;
 type EventCodes = typeof EventCode[keyof typeof EventCode];
 
@@ -110,6 +118,10 @@ const Key = {
         `${EventCode.getProfile}:${profileId}`,
     userCollectionRate: ({ collectionId, stars }: { collectionId: string, stars: number }) =>
         `${EventCode.userCollectionRate}:${collectionId}:${stars}`,
+    collectionInFavorites: ({ collectionId }: { collectionId: string }) => 
+        `${EventCode.collectionInFavorites}:${collectionId}`,
+    collectionInUserFavorites: ({ userId }: { userId: string }) =>
+        `${EventCode.collectionInUserFavorites}:${userId}`,
 } satisfies Record<StatAction, (...args: any[]) => string>;
 type ParsedEvent = ({
     [P in StatAction]: {
@@ -200,6 +212,15 @@ export class StatisticService {
                 await this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.userCollectionRate(params));
                 break;
 
+            case 'collectionInFavorites':
+                params = opts as UserAction['collectionInFavorites'];
+
+                await Promise.all([
+                    this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.collectionInFavorites(params)),
+                    this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.collectionInUserFavorites(params)),
+                ]);
+                break;
+    
             default:
                 console.error('Unknown stat event:', event, opts);
         }
