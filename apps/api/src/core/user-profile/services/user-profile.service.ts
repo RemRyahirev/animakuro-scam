@@ -17,6 +17,7 @@ import {
     UpdateUserFavouriteGenresInputType,
     UpdateUserFavouriteCharactersInputType,
     GetUserProfileInputType,
+    UpdateUserFavouriteCollectionsInputType,
 } from '../models/inputs';
 import {
     GetListUserProfileResultsType,
@@ -29,8 +30,10 @@ import {
     UpdateUserFavouriteCharactersResultType,
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
+    UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
 import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
+import { UserCollection } from '../../user-collection/models/user-collection.model';
 
 @Injectable()
 export class UserProfileService {
@@ -461,6 +464,29 @@ export class UserProfileService {
             success: true,
             errors: [],
             userFavouriteGenres: userFavouriteGenres['favourite_genres'] as any,
+        };
+    }
+    async updateFavouriteCollections(
+        args: UpdateUserFavouriteCollectionsInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteCollectionsResultType> {
+        const userFavouriteCollections = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_collections', args),
+            },
+            select: {
+                favourite_collections: true,
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFavouriteCollections: userFavouriteCollections[
+                'favourite_collections'
+            ] as any,
         };
     }
 }

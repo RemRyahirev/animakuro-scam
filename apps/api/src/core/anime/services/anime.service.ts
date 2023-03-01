@@ -360,27 +360,38 @@ export class AnimeService {
                 is_favourite: el?.favourite_by.length > 0 ? true : false,
                 characters: el?.characters?.map((els: any) => ({
                     ...els,
-                    is_favourite: animeList?.favourite_by[0]?.favourite_characters.some(
-                        (item: { id: string }) => item.id === els.id,
-                    ),
+                    is_favourite:
+                        animeList?.favourite_by[0]?.favourite_characters.some(
+                            (item: { id: string }) => item.id === els.id,
+                        ),
                 })),
                 genres: el?.genres?.map((els: any) => ({
                     ...els,
-                    is_favourite: animeList?.favourite_by[0]?.favourite_genres.some(
-                        (item: { id: string }) => item.id === els.id,
-                    ),
+                    is_favourite:
+                        animeList?.favourite_by[0]?.favourite_genres.some(
+                            (item: { id: string }) => item.id === els.id,
+                        ),
                 })),
                 studios: el?.studios?.map((els: any) => ({
                     ...els,
-                    is_favourite: animeList?.favourite_by[0]?.favourite_studios.some(
-                        (item: { id: string }) => item.id === els.id,
-                    ),
+                    is_favourite:
+                        animeList?.favourite_by[0]?.favourite_studios.some(
+                            (item: { id: string }) => item.id === els.id,
+                        ),
                 })),
                 authors: el?.authors?.map((els: any) => ({
                     ...els,
-                    is_favourite: animeList?.favourite_by[0]?.favourite_authors.some(
-                        (item: { id: string }) => item.id === els.id,
-                    ),
+                    is_favourite:
+                        animeList?.favourite_by[0]?.favourite_authors.some(
+                            (item: { id: string }) => item.id === els.id,
+                        ),
+                })),
+                user_folders: el?.user_folders.map((el: { id: string }) => ({
+                    ...el,
+                    is_favourite:
+                        animeList?.favourite_by[0]?.favourite_collections.some(
+                            (item: { id: string }) => item.id === el.id,
+                        ),
                 })),
             };
         return {

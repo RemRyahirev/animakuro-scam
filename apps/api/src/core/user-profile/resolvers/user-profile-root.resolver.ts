@@ -14,6 +14,7 @@ import {
     UpdateUserFavouriteCharactersResultType,
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
+    UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
 
 @ObjectType()
@@ -57,6 +58,11 @@ export class UserProfileMutationType {
         description: 'Update user Favourites by Studios',
     })
     updateFavouriteStudios: UpdateUserFavouriteStudiosResultType;
+
+    @Field(() => UpdateUserFavouriteCollectionsResultType, {
+        description: 'Update user Favourites by Collections',
+    })
+    updateFavouriteCollections: UpdateUserFavouriteCollectionsResultType;
 }
 
 @ObjectType()
