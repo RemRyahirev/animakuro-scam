@@ -22,6 +22,6 @@ export class CreateUserCollectionInputType extends CreateUserFolderInputType {
 
     @IsOptional()
     @IsBoolean()
-    @Field(()=> Boolean, {nullable:true})
-    is_spoiler?: boolean
+    @Field(() => Boolean, { nullable: true })
+    is_spoiler?: boolean;
 }

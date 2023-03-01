@@ -8,8 +8,8 @@ import { FileUpload, GraphQLUpload } from 'graphql-upload';
 export class UpdateUserCollectionInputType extends UpdateUserFolderInputType {
     @IsOptional()
     @IsBoolean()
-    @Field(() => Boolean)
-    is_public: boolean;
+    @Field(() => Boolean, { nullable: true })
+    is_public?: boolean;
 
     @IsOptional()
     @Field(() => GraphQLUpload, { nullable: true })

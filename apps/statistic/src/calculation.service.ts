@@ -328,42 +328,6 @@ export class CalculationService implements OnModuleInit {
                         ),
                     ]);
                     break;
-                case 'userCollectionRate':
-                    await Promise.all([
-                        this.updateGlobalStatistic(
-                            StatisticName.COLLECTION_USER_RATING,
-                            [String(event.params.stars)],
-                            event.value,
-                        ),
-                        this.updateCollectionStatistic(
-                            event.params.collectionId,
-                            ['userRating', String(event.params.stars)],
-                            event.value,
-                        ),
-                    ]);
-                    break;
-                case 'collectionInFavorites':
-                    await Promise.all([
-                        this.updateCollectionStatistic(
-                            event.params.collectionId,
-                            ['favorites'],
-                            event.value,
-                        ),
-                        this.updateGlobalStatistic(
-                            StatisticName.FAVORITES,
-                            ['collection'],
-                            event.value,
-                        ),
-                    ]);
-                    break;
-
-                case 'collectionInUserFavorites':
-                    await this.updateUserStatistics(
-                        event.params.userId,
-                        ['favorites', 'collection'],
-                        event.value,
-                    );
-                    break;
 
                 case 'animeInFolder':
                     await Promise.all([
@@ -613,6 +577,43 @@ export class CalculationService implements OnModuleInit {
                     await this.updateProfileStatistics(
                         event.params.profileId,
                         ['requests'],
+                        event.value,
+                    );
+                    break;
+
+                case 'userCollectionRate':
+                    await Promise.all([
+                        this.updateGlobalStatistic(
+                            StatisticName.COLLECTION_USER_RATING,
+                            [String(event.params.stars)],
+                            event.value,
+                        ),
+                        this.updateCollectionStatistic(
+                            event.params.collectionId,
+                            ['userRating', String(event.params.stars)],
+                            event.value,
+                        ),
+                    ]);
+                    break;
+                case 'collectionInFavorites':
+                    await Promise.all([
+                        this.updateCollectionStatistic(
+                            event.params.collectionId,
+                            ['favorites'],
+                            event.value,
+                        ),
+                        this.updateGlobalStatistic(
+                            StatisticName.FAVORITES,
+                            ['collection'],
+                            event.value,
+                        ),
+                    ]);
+                    break;
+
+                case 'collectionInUserFavorites':
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['favorites', 'collection'],
                         event.value,
                     );
                     break;

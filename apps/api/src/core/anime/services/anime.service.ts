@@ -150,7 +150,6 @@ export class AnimeService {
                           },
                           select: {
                               id: true,
-                              ...favouriteSelect,
                           },
                       },
                 banner: {
@@ -199,43 +198,46 @@ export class AnimeService {
             min_ending_start,
         );
         const opening_ending = [...openings, ...endings];
-
+        const favorites_by: any = await this.prisma.user.findFirst({
+            where: {
+                id: user_id,
+            },
+            select: {
+                ...favouriteSelect,
+            },
+        });
         const user_favourites_result = !!favourites &&
             user_id && {
                 is_favourite: anime?.favourite_by.length > 0 ? true : false,
                 characters: anime?.characters.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite:
-                        anime?.favourite_by[0]?.favourite_characters.some(
-                            (item: { id: string }) => item.id === el.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_characters.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
                 genres: anime?.genres.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: anime?.favourite_by[0]?.favourite_genres.some(
+                    is_favourite: favorites_by?.favourite_genres.some(
                         (item: { id: string }) => item.id === el.id,
                     ),
                 })),
                 studios: anime?.studios.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite:
-                        anime?.favourite_by[0]?.favourite_studios.some(
-                            (item: { id: string }) => item.id === el.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_studios.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
                 authors: anime?.authors.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite:
-                        anime?.favourite_by[0]?.favourite_authors.some(
-                            (item: { id: string }) => item.id === el.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_authors.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
                 user_folders: anime?.user_folders.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite:
-                        anime?.favourite_by[0]?.favourite_collections.some(
-                            (item: { id: string }) => item.id === el.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_collections.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
             };
 
@@ -327,7 +329,6 @@ export class AnimeService {
                           },
                           select: {
                               id: true,
-                              ...favouriteSelect,
                           },
                       },
                 banner: {
@@ -353,45 +354,47 @@ export class AnimeService {
             'anime',
             args,
         );
-
+        const favorites_by: any = await this.prisma.user.findFirst({
+            where: {
+                id: user_id,
+            },
+            select: {
+                ...favouriteSelect,
+            },
+        });
         const user_favourites_result = (el: any) =>
             !!favourites &&
             user_id && {
                 is_favourite: el?.favourite_by.length > 0 ? true : false,
                 characters: el?.characters?.map((els: any) => ({
                     ...els,
-                    is_favourite:
-                        animeList?.favourite_by[0]?.favourite_characters.some(
-                            (item: { id: string }) => item.id === els.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_characters.some(
+                        (item: { id: string }) => item.id === els.id,
+                    ),
                 })),
                 genres: el?.genres?.map((els: any) => ({
                     ...els,
-                    is_favourite:
-                        animeList?.favourite_by[0]?.favourite_genres.some(
-                            (item: { id: string }) => item.id === els.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_genres.some(
+                        (item: { id: string }) => item.id === els.id,
+                    ),
                 })),
                 studios: el?.studios?.map((els: any) => ({
                     ...els,
-                    is_favourite:
-                        animeList?.favourite_by[0]?.favourite_studios.some(
-                            (item: { id: string }) => item.id === els.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_studios.some(
+                        (item: { id: string }) => item.id === els.id,
+                    ),
                 })),
                 authors: el?.authors?.map((els: any) => ({
                     ...els,
-                    is_favourite:
-                        animeList?.favourite_by[0]?.favourite_authors.some(
-                            (item: { id: string }) => item.id === els.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_authors.some(
+                        (item: { id: string }) => item.id === els.id,
+                    ),
                 })),
                 user_folders: el?.user_folders.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite:
-                        animeList?.favourite_by[0]?.favourite_collections.some(
-                            (item: { id: string }) => item.id === el.id,
-                        ),
+                    is_favourite: favorites_by?.favourite_collections.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
             };
         return {

@@ -22,7 +22,7 @@ export class UserService {
         private prisma: PrismaService,
         private paginationService: PaginationService,
         private jwtService: JwtService,
-    ) {}
+    ) { }
 
     async getUserList(
         args: PaginationInputType,
@@ -86,17 +86,44 @@ export class UserService {
         }
         const user =
             (username || user_id || id) &&
-            this.prisma.user.findUnique({
+            (await this.prisma.user.findUnique({
                 where: !!username
                     ? {
-                          username: username,
-                      }
+                        username: username,
+                    }
                     : !!user_id || id
-                    ? {
-                          id: id ?? user_id,
-                      }
-                    : {},
-            });
+                        ? {
+                            id: id ?? user_id,
+                        }
+                        : {},
+                include: {
+                    auth: true,
+                    user_profile: {
+                        include: {
+                            profile_settings: true,
+                        },
+                    },
+                    favourite_animes: true,
+                    favourite_authors: true,
+                    favourite_characters: true,
+                    favourite_genres: true,
+                    favourite_collections: true,
+                    favourite_studios: true,
+                    user_folders: {
+                        include: {
+                            animes: true,
+                        },
+                    },
+                    user_collection: {
+                        where: {
+                            is_collection: true,
+                        },
+                        include: {
+                            animes: true,
+                        },
+                    },
+                },
+            }));
         return {
             success: true,
             user: user as any,

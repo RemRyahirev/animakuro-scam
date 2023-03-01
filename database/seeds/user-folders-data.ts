@@ -10,8 +10,8 @@ export const userFoldersData = async () => {
         throw new Error('Either User or Anime table is empty or not available');
     }
 
-    const [anime1, anime2] = animeList;
-    const [user1, user2] = userList;
+    const [anime1, anime2, anime3, anime4] = animeList;
+    const [user1, user2, user3, user4] = userList;
 
     return [
         {
@@ -42,6 +42,26 @@ export const userFoldersData = async () => {
             // episode: 2,
             //episode_duration: 1200,
             //watched_duration: 400,
+        },
+        {
+            id: 'c892938b-ac27-4ae2-ac4f-2aacfb9a2f32',
+            description: 'Сборник моих любимых аниме',
+            user_collection_id: user1.id,
+            user_id: user1.id,
+            user_favourite_collections_id: user1.id,
+            hashtags: ['ANIME'],
+            name: 'Любимые аниме',
+            type: 'DEFAULT',
+            is_public: true,
+            is_collection: true,
+            animes: [
+                {
+                    id: 'f2d82632-d15d-496f-a45b-dd57b1297f6e',
+                },
+                {
+                    id: '1033dd1c-2401-402a-afd2-858e78eb7475',
+                },
+            ],
         },
     ];
 };

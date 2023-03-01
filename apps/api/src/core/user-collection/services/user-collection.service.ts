@@ -102,13 +102,12 @@ export class UserCollectionService {
                 },
                 animes: true,
             },
-            orderBy: { created_at: 'desc', name: 'asc' }, // сотртировка по дате от свежих и имени от а до я
+            // orderBy: { created_at: 'desc', name: 'asc' }, // сотртировка по дате от свежих и имени от а до я
             where: {
                 is_collection: true,
                 user_id,
             },
         });
-
         const pagination = await this.paginationService.getPagination(
             'userFolder',
             args,
@@ -213,7 +212,6 @@ export class UserCollectionService {
                 },
             },
         });
-
         return {
             success: true,
             errors: [],

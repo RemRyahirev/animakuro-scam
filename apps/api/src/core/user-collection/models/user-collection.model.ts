@@ -2,6 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { File } from '@app/common/models/results/file.model';
 import { UserFolder } from '../../user-folder/models/user-folder.model';
 import { ArrayMaxSize } from 'class-validator';
+import { CollectionStatistics } from '@app/common/models/results/collection-statistics.model';
 
 @ObjectType()
 export class UserCollection extends UserFolder {
@@ -15,6 +16,12 @@ export class UserCollection extends UserFolder {
     @Field(() => [String], { nullable: true })
     hashtags?: string[];
 
-    @Field(()=> Boolean, {nullable:true})
-    is_spoiler?: boolean
+    @Field(() => Boolean, { nullable: true })
+    is_spoiler?: boolean;
+
+    @Field(() => CollectionStatistics, {
+        nullable: true,
+        description: 'Collection statistics',
+    })
+    statistics?: CollectionStatistics;
 }

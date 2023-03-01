@@ -470,6 +470,20 @@ export class UserProfileService {
         args: UpdateUserFavouriteCollectionsInputType,
         user_id: string,
     ): Promise<UpdateUserFavouriteCollectionsResultType> {
+        const collectionToAdd = (args.favourite_collections_add ?? []).slice();
+        const collectionToRemove = (args.favourite_collections_remove ?? []).slice();
+        const oldFavoriteCollection = await this.prisma.user.findUnique({
+            where: {
+                id: user_id,
+            },
+            select: {
+                favourite_collections: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
         const userFavouriteCollections = await this.prisma.user.update({
             where: {
                 id: user_id,
@@ -481,6 +495,40 @@ export class UserProfileService {
                 favourite_collections: true,
             },
         });
+
+        const oldFavoriteCollectionIds =
+            oldFavoriteCollection?.favourite_collections.map((el) => el.id) ?? [];
+        collectionToAdd.forEach((collectionId) => {
+            if (oldFavoriteCollectionIds.includes(collectionId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'collectionInFavorites',
+                {
+                    collectionId,
+                    userId: user_id,
+                },
+                1,
+            );
+        });
+        collectionToRemove.forEach((collectionId) => {
+            if (!oldFavoriteCollectionIds.includes(collectionId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'collectionInFavorites',
+                {
+                    collectionId,
+                    userId: user_id,
+                },
+                -1,
+            );
+        });
+
         return {
             success: true,
             errors: [],

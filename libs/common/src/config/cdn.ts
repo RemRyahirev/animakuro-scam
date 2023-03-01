@@ -58,7 +58,7 @@ export const BUCKET_CONFIG = {
 
     userCollectionThumbnails: {
         maxFileSize: 3,
-        bucket: 'user_collection',
+        bucket: 'collections_thumbnails',
         validation: VALIDATION.JpegPng,
     },
 } satisfies Record<string, BucketConfigItem>;

@@ -220,7 +220,6 @@ export class StatisticService {
                     this.redis.zincrby(STAT_REDIS_KEY, changedBy, Key.collectionInUserFavorites(params)),
                 ]);
                 break;
-    
             default:
                 console.error('Unknown stat event:', event, opts);
         }
