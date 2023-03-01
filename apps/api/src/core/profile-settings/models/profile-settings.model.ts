@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Extensions, Field, ID, ObjectType } from '@nestjs/graphql';
 
 import {
     Gender,
@@ -104,13 +104,16 @@ export class ProfileSettings {
     })
     integrations: Integration[];
 
+    @Extensions({ userIdFilter: { userIdField: '@profile.user_id' } })
     @Field(() => Notifications, { nullable: true })
-    notifications: Notifications;
+    notifications?: Notifications;
 
+    @Extensions({ userIdFilter: { userIdField: '@profile.user_id' } })
     @Field(() => SubscribeTier, {
         description: 'Type of profile subscription',
+        nullable: true,
     })
-    subscribe_tier: SubscribeTier;
+    subscribe_tier?: SubscribeTier;
 
     @Field(() => Date, {
         description: 'Setting updated at',

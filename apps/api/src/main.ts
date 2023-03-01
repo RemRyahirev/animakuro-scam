@@ -10,6 +10,7 @@ import { NestFactory } from '@nestjs/core';
 import { getMaxFileSize } from '@app/common/config/cdn';
 import { MyLogger } from '@app/common/config/logger';
 import { CommonModule } from '@app/common/common.module';
+import { GraphqlFilterInterceptor } from '@app/common/interceptors/graphql-filter.interceptor';
 import { PrismaClientExceptionFilter } from '@app/common/filters/prisma-exception.filter';
 import { ValidationExceptionFilter } from '@app/common/filters/validation-exception.filter';
 import { SchemaService } from '@app/common/services/schema.service';
@@ -82,6 +83,7 @@ async function bootstrap(): Promise<void> {
                 exceptionFactory,
             }),
         );
+        app.useGlobalInterceptors(new GraphqlFilterInterceptor());
         const port = configService.get('APP_PORT', 8080);
         await app.listen(port);
         Logger.log(

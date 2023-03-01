@@ -16,8 +16,9 @@ export class File {
 
     @Field(() => User, {
         description: 'User who uploaded this file',
+        nullable: true,
     })
-    user: User;
+    user?: User;
 
     @Field(() => String, {
         description: 'Full url to resource',

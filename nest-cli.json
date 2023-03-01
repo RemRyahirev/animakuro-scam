@@ -6,7 +6,8 @@
     ],
     "watchAssets": true,
     "webpack": true,
-    "tsConfigPath": "apps/api/tsconfig.app.json"
+    "tsConfigPath": "apps/api/tsconfig.app.json",
+    "plugins": ["@nestjs/graphql"]
   },
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/api/src",

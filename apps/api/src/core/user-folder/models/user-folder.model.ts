@@ -12,8 +12,10 @@ export class UserFolder {
     })
     id: string;
 
-    @Field(() => User)
-    user: User;
+    @Field(() => User, {
+        nullable: true,
+    })
+    user?: User;
 
     @Field(() => ID)
     user_id: string;

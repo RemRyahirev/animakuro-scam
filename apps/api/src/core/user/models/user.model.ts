@@ -1,6 +1,5 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Extensions, Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { AuthType } from '@app/common/models/enums/auth-type.enum';
 import { UserStatistics } from '@app/common/models/results/user-statistics.model';
 
 import { UserProfile } from '../../user-profile/models/user-profile.model';
@@ -12,6 +11,7 @@ import { Genre } from '../../genre/models/genre.model';
 import { UserFolder } from '../../user-folder/models/user-folder.model';
 import { UserCollection } from '../../user-collection/models/user-collection.model';
 
+@Extensions({ userIdFilter: { userIdField: 'id' } })
 @ObjectType()
 export class User {
     @Field(() => ID, {
@@ -25,7 +25,10 @@ export class User {
     })
     username?: string;
 
-    @Field(() => String, { nullable: true, description: 'Email of the user' })
+    @Field(() => String, {
+        nullable: true,
+        description: 'Email of the user',
+    })
     email?: string | null;
 
     @Field(() => Boolean, {

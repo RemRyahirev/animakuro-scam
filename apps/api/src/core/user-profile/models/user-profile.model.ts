@@ -14,8 +14,10 @@ export class UserProfile {
     id?: string;
 
     // это поле - для вложенной выдачи связанного User!
-    @Field(() => User)
-    user: User;
+    @Field(() => User, {
+        nullable: true,
+    })
+    user?: User;
 
     // это поле - на общем уровне, показывает просто id подключенного Юзера
     @Field()
