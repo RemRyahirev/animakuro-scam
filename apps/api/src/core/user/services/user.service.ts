@@ -40,6 +40,7 @@ export class UserService {
                 favourite_authors: true,
                 favourite_characters: true,
                 favourite_genres: true,
+                favourite_collections: true,
                 favourite_studios: true,
                 user_folders: {
                     include: {
@@ -122,6 +123,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -164,6 +166,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -206,6 +209,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -248,6 +252,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -282,6 +287,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -320,6 +326,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -359,6 +366,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,

@@ -71,6 +71,7 @@ export class UserProfileService {
             favourite_characters: true,
             favourite_genres: true,
             favourite_studios: true,
+            favourite_collections: true,
             user_folders: true,
             user_collection: true,
         };
