@@ -47,7 +47,7 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async getUserCollectionListByUserId(
         @AccessToken() user_id: string,
-        @Args('user_id') id: string,
+        @Args('id', {nullable: true, description: "By user id"}) id: string,
         @Args() args: PaginationInputType,
     ): Promise<GetListUserCollectionResultsType> {
         return this.userCollectionService.getUserCollectionListByUserId(

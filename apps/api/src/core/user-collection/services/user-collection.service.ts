@@ -102,6 +102,7 @@ export class UserCollectionService {
                 },
                 animes: true,
             },
+            orderBy: { created_at: 'desc', name: 'asc' }, // сотртировка по дате от свежих и имени от а до я
             where: {
                 is_collection: true,
                 user_id,
@@ -122,15 +123,12 @@ export class UserCollectionService {
 
     async getUserCollectionList(
         args: PaginationInputType,
-        user_id: string,
     ): Promise<GetListUserCollectionResultsType> {
         const userCollectionList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
             where: {
-                user_id,
                 is_collection: true,
             },
-            orderBy: { created_at: 'desc', name: 'asc' }, // сотртировка по дате от свежих и имени от а до я
             include: {
                 user: {
                     include: {
