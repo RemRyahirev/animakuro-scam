@@ -266,6 +266,33 @@ export class AnimeService {
         user_id: string,
         favourites: boolean,
     ): Promise<GetListAnimeResultsType> {
+        const favouriteSelect = !!favourites && {
+            favourite_authors: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_characters: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_studios: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_genres: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_collections: {
+                select: {
+                    id: true,
+                },
+            },
+        };
         const animeList: any = await this.prisma.anime.findMany({
             ...transformPaginationUtil(args),
             include: {
@@ -300,6 +327,7 @@ export class AnimeService {
                           },
                           select: {
                               id: true,
+                              ...favouriteSelect,
                           },
                       },
                 banner: {
@@ -325,41 +353,6 @@ export class AnimeService {
             'anime',
             args,
         );
-        const liked: any =
-            !!favourites &&
-            user_id &&
-            (await this.prisma.user.findUnique({
-                where: {
-                    id: user_id,
-                },
-                select: {
-                    favourite_animes: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_authors: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_characters: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_genres: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_studios: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                },
-            }));
 
         const user_favourites_result = (el: any) =>
             !!favourites &&
@@ -367,30 +360,29 @@ export class AnimeService {
                 is_favourite: el?.favourite_by.length > 0 ? true : false,
                 characters: el?.characters?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_characters.some(
+                    is_favourite: animeList?.favourite_by[0]?.favourite_characters.some(
                         (item: { id: string }) => item.id === els.id,
                     ),
                 })),
                 genres: el?.genres?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_genres.some(
+                    is_favourite: animeList?.favourite_by[0]?.favourite_genres.some(
                         (item: { id: string }) => item.id === els.id,
                     ),
                 })),
                 studios: el?.studios?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_studios.some(
+                    is_favourite: animeList?.favourite_by[0]?.favourite_studios.some(
                         (item: { id: string }) => item.id === els.id,
                     ),
                 })),
                 authors: el?.authors?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_authors.some(
+                    is_favourite: animeList?.favourite_by[0]?.favourite_authors.some(
                         (item: { id: string }) => item.id === els.id,
                     ),
                 })),
             };
-        console.timeEnd('start');
         return {
             success: true,
             errors: [],
