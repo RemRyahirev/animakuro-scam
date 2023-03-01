@@ -119,7 +119,7 @@ export class CalculationService implements OnModuleInit {
         private readonly schedulerRegistry: SchedulerRegistry,
         private readonly statistic: StatisticService,
         private readonly prisma: PrismaService,
-    ) {}
+    ) { }
 
     private async updateGlobalStatistic(
         name: StatisticName,
@@ -175,6 +175,28 @@ export class CalculationService implements OnModuleInit {
         // XXX: there is no other way to make atomic updates on json field with prisma
         return await this.prisma.$executeRawUnsafe(
             `UPDATE users
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
+    }
+
+    private async updateCollectionStatistic(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE user_folder
                 SET statistics = jsonb_set(
                       ${buildJsonPath('statistics', path)},
                       $1::text[],
@@ -305,6 +327,42 @@ export class CalculationService implements OnModuleInit {
                             event.value,
                         ),
                     ]);
+                    break;
+                case 'userCollectionRate':
+                    await Promise.all([
+                        this.updateGlobalStatistic(
+                            StatisticName.COLLECTION_USER_RATING,
+                            [String(event.params.stars)],
+                            event.value,
+                        ),
+                        this.updateCollectionStatistic(
+                            event.params.collectionId,
+                            ['userRating', String(event.params.stars)],
+                            event.value,
+                        ),
+                    ]);
+                    break;
+                case 'collectionInFavorites':
+                    await Promise.all([
+                        this.updateCollectionStatistic(
+                            event.params.collectionId,
+                            ['favorites'],
+                            event.value,
+                        ),
+                        this.updateGlobalStatistic(
+                            StatisticName.FAVORITES,
+                            ['collection'],
+                            event.value,
+                        ),
+                    ]);
+                    break;
+
+                case 'collectionInUserFavorites':
+                    await this.updateUserStatistics(
+                        event.params.userId,
+                        ['favorites', 'collection'],
+                        event.value,
+                    );
                     break;
 
                 case 'animeInFolder':
@@ -454,7 +512,7 @@ export class CalculationService implements OnModuleInit {
 
                     if (event.params.folderType === FolderType.COMPLETED) {
                         await Promise.all(
-                            (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string}> }>)
+                            (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string }> }>)
                                 .reduce((arr, anime) => {
                                     arr.push(
                                         this.updateUserStatistics(

@@ -24,7 +24,7 @@ model User {
   password              String                 @map("password")
   created_at            DateTime               @default(now()) @map("created_at") @db.Date
   deleted               Boolean                @default(false)
-  statistics            Json?
+  statistics            Json? //favorites.collection
   auth                  Auth[]
   user_profile          UserProfile?
   auth_sessions         AuthSession[]
@@ -320,6 +320,7 @@ model UserFolder {
   hashtags                      String[]
   is_spoiler                    Boolean?               @default(false) @db.Boolean()
   score                         Float?                 @db.Real
+  statistics                    Json?
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)
   //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
@@ -424,6 +425,7 @@ enum StatisticName {
   FAVORITES
   ANIME_USER_RATING
   ANIME_FOLDER
+  COLLECTION_USER_RATING
 }
 
 enum OpeningEndingType {
