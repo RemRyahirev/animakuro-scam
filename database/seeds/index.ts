@@ -15,7 +15,6 @@ import { userFoldersData } from './user-folders-data';
 import { relatingAnimeData } from './relating-anime';
 import { similarAnimeData } from './similar-anime';
 import { airingScheduleData } from './airing-schedule';
-import { profileSettingsData } from './profile-settings-data';
 import { openingEndingData } from './opening-ending';
 import { animeStillsData } from './anime-stills-data';
 import { fileData } from './file-data';
@@ -39,9 +38,6 @@ async function seedAll() {
     );
     await userProfileData().then((array) =>
         createEntities(array, 'userProfile'),
-    );
-    await profileSettingsData().then((array) =>
-        createEntities(array, 'profileSettings'),
     );
     await userFoldersData().then((array) =>
         createEntities(array, 'userFolder'),
@@ -76,7 +72,7 @@ async function createEntities<
     Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
         if (!entity.id) {
-            if (entity.parent_anime_id) {
+            if (entity.parent_anime_id || entityName === 'statistic') {
                 continue;
             } else {
                 Logger.log(
@@ -92,12 +88,23 @@ async function createEntities<
                 continue;
             }
         }
-        // @ts-ignore
-        const existenceEntity = await prisma[entityName].findUnique({
-            where: {
-                id: entity.id,
-            },
-        });
+
+        let existenceEntity;
+        if (entityName === 'statistic') {
+            // @ts-ignore
+            existenceEntity = await prisma[entityName].findUnique({
+                where: {
+                    name: entity.name,
+                },
+            });
+        } else {
+            // @ts-ignore
+            existenceEntity = await prisma[entityName].findUnique({
+                where: {
+                    id: entity.id,
+                },
+            });
+        }
 
         if (deepEqual(existenceEntity, entity)) {
             Logger.log(

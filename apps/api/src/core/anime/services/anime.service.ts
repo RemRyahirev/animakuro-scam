@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AnimeStillsType, OpeningEndingType } from '@prisma/client';
+import { AnimeStillsType, OpeningEndingType, RatingAnime } from '@prisma/client';
 
 import { AnimeApproval, AnimeRelation } from '@app/common/models/enums';
 import { PaginationInputType, FavouriteInputType } from '@app/common/models/inputs';
@@ -67,6 +67,7 @@ export class AnimeService {
     async getAnime(
         args: GetAnimeByIdInputType,
         user_id: string,
+        profile_id: string,
         favourites: boolean,
     ): Promise<GetAnimeResultsType> {
         const {
@@ -107,7 +108,7 @@ export class AnimeService {
                     },
                 },
                 airing_schedule: true,
-                favourite_by: !user_id
+                favourite_by: !profile_id
                     ? {
                           select: {
                               id: true,
@@ -115,7 +116,7 @@ export class AnimeService {
                       }
                     : {
                           where: {
-                              id: user_id,
+                              id: profile_id,
                           },
                           select: {
                               id: true,
@@ -168,7 +169,7 @@ export class AnimeService {
         );
         const opening_ending = [...openings, ...endings];
 
-        const user_favourites: any =
+        const user_favourites =
             !!favourites &&
             user_id &&
             (await this.prisma.user.findUnique({
@@ -176,24 +177,28 @@ export class AnimeService {
                     id: user_id,
                 },
                 include: {
-                    favourite_authors: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_characters: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_studios: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_genres: {
-                        select: {
-                            id: true,
+                    user_profile: {
+                        include: {
+                            favourite_authors: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_characters: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_studios: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_genres: {
+                                select: {
+                                    id: true,
+                                },
+                            },
                         },
                     },
                 },
@@ -204,27 +209,27 @@ export class AnimeService {
                 is_favourite: anime?.favourite_by.length > 0 ? true : false,
                 characters: anime?.characters.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites?.favourite_characters.some(
+                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_characters.some(
                         (item: { id: string }) => item.id === el.id,
-                    ),
+                    ) : false,
                 })),
                 genres: anime?.genres.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites?.favourite_genres.some(
+                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_genres.some(
                         (item: { id: string }) => item.id === el.id,
-                    ),
+                    ) : false,
                 })),
                 studios: anime?.studios.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites?.favourite_studios.some(
+                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_studios.some(
                         (item: { id: string }) => item.id === el.id,
-                    ),
+                    ) : false,
                 })),
                 authors: anime?.authors.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites?.favourite_authors.some(
+                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_authors.some(
                         (item: { id: string }) => item.id === el.id,
-                    ),
+                    ) : false,
                 })),
             };
 
@@ -253,6 +258,7 @@ export class AnimeService {
         input: GetAnimeListInputType,
         args: PaginationInputType,
         user_id: string,
+        profile_id: string,
         favourites: boolean,
     ): Promise<GetListAnimeResultsType> {
         console.time('start');
@@ -278,7 +284,7 @@ export class AnimeService {
                     orderBy: { episode_start: 'asc' },
                     take: 2,
                 },
-                favourite_by: !user_id
+                favourite_by: !profile_id
                     ? {
                           select: {
                               id: true,
@@ -286,7 +292,7 @@ export class AnimeService {
                       }
                     : {
                           where: {
-                              id: user_id,
+                              id: profile_id,
                           },
                           select: {
                               id: true,
@@ -315,7 +321,7 @@ export class AnimeService {
             'anime',
             args,
         );
-        const liked: any =
+        const liked =
             !!favourites &&
             user_id &&
             (await this.prisma.user.findUnique({
@@ -323,29 +329,33 @@ export class AnimeService {
                     id: user_id,
                 },
                 select: {
-                    favourite_animes: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_authors: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_characters: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_genres: {
-                        select: {
-                            id: true,
-                        },
-                    },
-                    favourite_studios: {
-                        select: {
-                            id: true,
+                    user_profile: {
+                        include: {
+                            favourite_animes: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_authors: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_characters: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_genres: {
+                                select: {
+                                    id: true,
+                                },
+                            },
+                            favourite_studios: {
+                                select: {
+                                    id: true,
+                                },
+                            },
                         },
                     },
                 },
@@ -354,33 +364,33 @@ export class AnimeService {
         const user_favourites_result = (el: any) =>
             !!favourites &&
             user_id && {
-                is_favourite: el?.favourite_by.length > 0 ? true : false,
+                is_favourite: el?.favourite_by.length > 0,
                 characters: el?.characters?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_characters.some(
+                    is_favourite: liked ? liked.user_profile?.favourite_characters.some(
                         (item: { id: string }) => item.id === els.id,
-                    ),
+                    ) : false,
                 })),
                 genres: el?.genres?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_genres.some(
+                    is_favourite: liked ? liked.user_profile?.favourite_genres.some(
                         (item: { id: string }) => item.id === els.id,
-                    ),
+                    ) : false,
                 })),
                 studios: el?.studios?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_studios.some(
+                    is_favourite: liked ? liked.user_profile?.favourite_studios.some(
                         (item: { id: string }) => item.id === els.id,
-                    ),
+                    ) : false,
                 })),
                 authors: el?.authors?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked?.favourite_authors.some(
+                    is_favourite: liked ? liked.user_profile?.favourite_authors.some(
                         (item: { id: string }) => item.id === els.id,
-                    ),
+                    ) : false,
                 })),
             };
-        console.timeEnd('start');
+
         return {
             success: true,
             errors: [],
@@ -396,6 +406,7 @@ export class AnimeService {
         id: string,
         args: PaginationInputType,
         user_id: string,
+        profile_id: string,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
         const animeList = await this.prisma.relatingAnime.findMany({
             where: { parent_anime_id: id },
@@ -422,7 +433,7 @@ export class AnimeService {
                 child_anime: {
                     favourite_by: {
                         some: {
-                            id: user_id,
+                            id: profile_id,
                         },
                     },
                 },
@@ -458,6 +469,7 @@ export class AnimeService {
         id: string,
         args: PaginationInputType,
         user_id: string,
+        profile_id: string,
     ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
         const animeList = await this.prisma.similarAnime.findMany({
             where: { parent_anime_id: id },
@@ -483,7 +495,7 @@ export class AnimeService {
                 child_anime: {
                     favourite_by: {
                         some: {
-                            id: user_id,
+                            id: profile_id,
                         },
                     },
                 },
@@ -1034,14 +1046,11 @@ export class AnimeService {
     async updateRatingAnime(
         data: Rating,
     ): Promise<UpdateRatingAnimeResultsType> {
-        let ratingResult: Rating;
+        let ratingResult: RatingAnime;
 
         const existRating = await this.prisma.ratingAnime.findUnique({
             where: {
-                anime_id_user_id: {
-                    anime_id: data.anime_id,
-                    user_id: data.user_id,
-                },
+                anime_id_user_profile_id: data,
             },
         });
 
@@ -1049,10 +1058,7 @@ export class AnimeService {
             ratingResult = await this.prisma.ratingAnime.update({
                 data,
                 where: {
-                    anime_id_user_id: {
-                        anime_id: data.anime_id,
-                        user_id: data.user_id,
-                    },
+                    anime_id_user_profile_id: data,
                 },
             });
             this.statistics.fireEvent('animeRate', {

@@ -163,28 +163,6 @@ export class CalculationService implements OnModuleInit {
         );
     }
 
-    private async updateUserStatistics(
-        id: string,
-        path: string[],
-        value: number,
-    ) {
-        const pathStr = '{' + path.join(',') + '}';
-
-        // XXX: there is no other way to make atomic updates on json field with prisma
-        return await this.prisma.$executeRawUnsafe(
-            `UPDATE users
-                SET statistics = jsonb_set(
-                      ${buildJsonPath('statistics', path)},
-                      $1::text[],
-                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
-                    )
-              WHERE id = $3::uuid`,
-            pathStr,
-            value,
-            id,
-        );
-    }
-
     private async updateCharacterStatistics(
         id: string,
         path: string[],
@@ -283,8 +261,8 @@ export class CalculationService implements OnModuleInit {
                     break;
 
                 case 'animeInUserFavorites':
-                    await this.updateUserStatistics(
-                        event.params.userId,
+                    await this.updateProfileStatistics(
+                        event.params.profileId,
                         ['favorites', 'anime'],
                         event.value,
                     );
@@ -321,24 +299,6 @@ export class CalculationService implements OnModuleInit {
                     break
 
                 case 'animeInUserFolder':
-                    await Promise.all([
-                        this.updateUserStatistics(
-                            event.params.userId,
-                            ['folder', 'total'],
-                            event.value,
-                        ),
-                        this.updateUserStatistics(
-                            event.params.userId,
-                            ['folder', 'type', event.params.folderType],
-                            event.value,
-                        ),
-                        this.updateUserStatistics(
-                            event.params.userId,
-                            ['folder', 'id', event.params.folderId],
-                            event.value,
-                        ),
-                    ]);
-
                     const folder = await this.prisma.userFolder.findUnique({
                         where: {
                             id: event.params.folderId,
@@ -351,6 +311,24 @@ export class CalculationService implements OnModuleInit {
                     if (!folder?.is_statistic_active) {
                         break;
                     }
+
+                    await Promise.all([
+                        this.updateProfileStatistics(
+                            event.params.profileId,
+                            ['folder', 'total'],
+                            event.value,
+                        ),
+                        this.updateProfileStatistics(
+                            event.params.profileId,
+                            ['folder', 'type', event.params.folderType],
+                            event.value,
+                        ),
+                        this.updateProfileStatistics(
+                            event.params.profileId,
+                            ['folder', 'id', event.params.folderId],
+                            event.value,
+                        ),
+                    ]);
 
                     if (event.params.folderType !== FolderType.COMPLETED) {
                         break;
@@ -375,14 +353,14 @@ export class CalculationService implements OnModuleInit {
                     }
 
                     await Promise.all([
-                        this.updateUserStatistics(
-                            event.params.userId,
+                        this.updateProfileStatistics(
+                            event.params.profileId,
                             ['viewedAnime', 'type', anime.type],
                             event.value,
                         ),
                         ...(anime.genres?.map(genre =>
-                            this.updateUserStatistics(
-                                event.params.userId,
+                            this.updateProfileStatistics(
+                                event.params.profileId,
                                 ['viewedAnime', 'genre', genre.id],
                                 event.value,
                             ),
@@ -430,21 +408,18 @@ export class CalculationService implements OnModuleInit {
                     const animeCountDiff = animeCount * multiplier;
 
                     await Promise.all([
-                        this.updateUserStatistics(
-                            event.params.userId,
+                        this.updateProfileStatistics(
+                            event.params.profileId,
                             ['folder', 'total'],
                             animeCountDiff,
                         ),
-                        this.updateUserStatistics(
-                            event.params.userId,
+                        this.updateProfileStatistics(
+                            event.params.profileId,
                             ['folder', 'type', event.params.folderType],
                             animeCountDiff,
                         ),
-                        // TODO:
-                        //   - remove key when multiplier=-1
-                        //   - or should I always store folder stat by id
-                        this.updateUserStatistics(
-                            event.params.userId,
+                        this.updateProfileStatistics(
+                            event.params.profileId,
                             ['folder', 'id', event.params.folderId],
                             animeCountDiff,
                         ),
@@ -455,14 +430,14 @@ export class CalculationService implements OnModuleInit {
                             (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string}> }>)
                                 .reduce((arr, anime) => {
                                     arr.push(
-                                        this.updateUserStatistics(
-                                            event.params.userId,
+                                        this.updateProfileStatistics(
+                                            event.params.profileId,
                                             ['viewedAnime', 'type', anime.type],
                                             multiplier,
                                         ),
                                         ...(anime.genres?.map(genre =>
-                                            this.updateUserStatistics(
-                                                event.params.userId,
+                                            this.updateProfileStatistics(
+                                                event.params.profileId,
                                                 ['viewedAnime', 'genre', genre.id],
                                                 multiplier,
                                             ),
@@ -487,13 +462,13 @@ export class CalculationService implements OnModuleInit {
                             },
                         },
                         select: {
-                            user_id: true,
+                            user_profile_id: true,
                         },
                     });
 
                     await Promise.all(allFoldersAT?.map(folder =>
-                        this.updateUserStatistics(
-                            folder.user_id,
+                        this.updateProfileStatistics(
+                            folder.user_profile_id,
                             ['viewedAnime', 'type', event.params.animeType],
                             event.value,
                         ),
@@ -512,13 +487,13 @@ export class CalculationService implements OnModuleInit {
                             },
                         },
                         select: {
-                            user_id: true,
+                            user_profile_id: true,
                         },
                     });
 
                     await Promise.all(allFoldersAG?.map(folder =>
-                        this.updateUserStatistics(
-                            folder.user_id,
+                        this.updateProfileStatistics(
+                            folder.user_profile_id,
                             ['viewedAnime', 'genre', event.params.genreId],
                             event.value,
                         ),

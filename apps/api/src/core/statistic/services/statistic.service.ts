@@ -23,9 +23,7 @@ export class StatisticService {
     }: GetStatisticFolderInputType): Promise<GetUserStatisticFolderResultsType> {
         const folders: any = await this.prisma.userFolder.findMany({
             where: {
-                user: {
-                    id,
-                },
+                user_profile_id: id,
                 is_statistic_active: false, //Параметр false только для тестирования
                 id: user_folders_id && { in: user_folders_id },
             },
@@ -61,7 +59,7 @@ export class StatisticService {
             favourite_genres: true,
             favourite_studios: true,
         };
-        const favourite: any = await this.prisma.user.findUnique({
+        const favourite: any = await this.prisma.userProfile.findUnique({
             where: { id },
             include: {
                 _count: {

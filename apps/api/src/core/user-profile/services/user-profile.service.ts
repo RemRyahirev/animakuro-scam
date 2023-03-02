@@ -29,10 +29,10 @@ import {
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
 } from '../models/results';
-import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
 
 @Injectable()
 export class UserProfileService {
+    // avatarFiles;
     bannerFiles;
     coverFiles;
 
@@ -42,6 +42,11 @@ export class UserProfileService {
         private paginationService: PaginationService,
         private statistics: StatisticService,
     ) {
+        // this.avatarFiles = this.fileUpload.getStorageForOne(
+        //     'userProfile',
+        //     'avatar_id',
+        //     'userAvatars',
+        // );
         this.bannerFiles = this.fileUpload.getStorageForOne(
             'userProfile',
             'banner_id',
@@ -66,12 +71,7 @@ export class UserProfileService {
         if (!id && !user_id && !username) {
             throw new Error('UNAUTHORIZED');
         }
-        const selectUser = {
-            favourite_animes: true,
-            favourite_authors: true,
-            favourite_characters: true,
-            favourite_genres: true,
-            favourite_studios: true,
+        const select = {
             user_folders: true,
             user_collection: true,
         };
@@ -81,28 +81,30 @@ export class UserProfileService {
                     ? {
                           AND: [
                               {
-                                  OR: [
-                                      { user_id: id ?? user_id },
-                                      { user: { username } },
-                                  ],
+                                  user: {
+                                      OR: [
+                                          { id: id ?? user_id },
+                                          { username },
+                                      ],
+                                  },
                               },
                               {
-                                  profile_settings: {
-                                      profile_type: 'PUBLIC',
-                                  },
+                                  profile_type: 'PUBLIC',
                               },
                           ],
                       }
                     : user_id
                     ? {
-                          user_id,
+                          user: {
+                              id: user_id,
+                          },
                       }
                     : undefined,
             include: {
-                profile_settings:
-                    (!!user_id && !id && !username) || id === user_id
-                        ? true
-                        : false,
+                // profile_settings:
+                //     (!!user_id && !id && !username) || id === user_id
+                //         ? true
+                //         : false,
                 user:
                     (id && id != user_id) || username
                         ? {
@@ -111,12 +113,10 @@ export class UserProfileService {
                                   id: true,
                                   username: true,
                                   avatar: true,
-                                  ...selectUser,
                               },
                           }
-                        : {
-                              include: selectUser,
-                          },
+                        : {},
+                ...select,
             },
         });
         const errors = [];
@@ -150,14 +150,16 @@ export class UserProfileService {
     ): Promise<GetListUserProfileResultsType> {
         const userProfileList = await this.prisma.userProfile.findMany({
             where: {
-                profile_settings: {
-                    profile_type: 'PUBLIC',
-                },
+                profile_type: 'PUBLIC',
             },
             ...transformPaginationUtil(args),
             include: {
                 user: true,
-                profile_settings: true,
+                avatar: {
+                    include: {
+                        user: true,
+                    },
+                },
                 banner: {
                     include: {
                         user: true,
@@ -191,17 +193,16 @@ export class UserProfileService {
         const userProfile = await this.prisma.userProfile.create({
             data: {
                 ...(other as any),
-                profile_settings: {
-                    create: {
-                        integrations: [],
-                        notifications: notificationsDefault,
-                    },
-                },
+                integrations: [],
                 user: {
                     connect: {
                         id: user_id,
                     },
                 },
+                // avatar: await this.avatarFiles.tryCreate(
+                //     args.avatar,
+                //     authUserId,
+                // ),
                 banner: await this.bannerFiles.tryCreate(
                     args.banner,
                     authUserId,
@@ -210,7 +211,11 @@ export class UserProfileService {
             },
             include: {
                 user: true,
-                profile_settings: true,
+                avatar: {
+                    include: {
+                        user: true,
+                    },
+                },
                 banner: {
                     include: {
                         user: true,
@@ -239,6 +244,12 @@ export class UserProfileService {
             where: { id: args.id },
             data: {
                 ...(args as any),
+                // avatar: await this.avatarFiles.tryUpdate(
+                //     { id: args.id },
+                //     args.avatar,
+                //     undefined,
+                //     authUserId,
+                // ),
                 banner: await this.bannerFiles.tryUpdate(
                     { id: args.id },
                     args.banner,
@@ -254,7 +265,11 @@ export class UserProfileService {
             },
             include: {
                 user: true,
-                profile_settings: true,
+                avatar: {
+                    include: {
+                        user: true,
+                    },
+                },
                 banner: {
                     include: {
                         user: true,
@@ -276,12 +291,18 @@ export class UserProfileService {
 
     async deleteUserProfile(id: string): Promise<DeleteUserProfileResultsType> {
         await Promise.all([
+            // this.avatarFiles.tryDeleteAll({ id }),
             this.bannerFiles.tryDeleteAll({ id }),
             this.coverFiles.tryDeleteAll({ id }),
         ]);
         const userProfile = await this.prisma.userProfile.delete({
             where: { id },
             include: {
+                avatar: {
+                    include: {
+                        user: true,
+                    },
+                },
                 banner: {
                     include: {
                         user: true,
@@ -304,13 +325,13 @@ export class UserProfileService {
 
     async updateFavouriteAnimes(
         args: UpdateUserFavouriteAnimeInputType,
-        user_id: string,
+        profile_id: string,
     ): Promise<UpdateUserFavouriteAnimesResultType> {
         const animeToAdd = (args.favourite_animes_add ?? []).slice();
         const animeToRemove = (args.favourite_animes_remove ?? []).slice();
-        const oldFavoriteAnime = await this.prisma.user.findUnique({
+        const oldFavoriteAnime = await this.prisma.userProfile.findUnique({
             where: {
-                id: user_id,
+                id: profile_id,
             },
             select: {
                 favourite_animes: {
@@ -321,9 +342,9 @@ export class UserProfileService {
             },
         });
 
-        const userFavouriteAnimes = await this.prisma.user.update({
+        const userFavouriteAnimes = await this.prisma.userProfile.update({
             where: {
-                id: user_id,
+                id: profile_id,
             },
             data: {
                 ...entityUpdateUtil('favourite_animes', args),
@@ -342,7 +363,7 @@ export class UserProfileService {
 
             this.statistics.fireEvent('animeInFavorites', {
                 animeId,
-                userId: user_id,
+                profileId: profile_id,
             }, 1);
         });
         animeToRemove.forEach(animeId => {
@@ -353,24 +374,24 @@ export class UserProfileService {
 
             this.statistics.fireEvent('animeInFavorites', {
                 animeId,
-                userId: user_id,
+                profileId: profile_id,
             }, -1);
         });
 
         return {
             success: true,
             errors: [],
-            userFavouriteAnimes: userFavouriteAnimes['favourite_animes'] as any,
+            userFavouriteAnimes: userFavouriteAnimes.favourite_animes as any,
         };
     }
 
     async updateFavouriteStudios(
         args: UpdateUserFavouriteStudiosInputType,
-        user_id: string,
+        profile_id: string,
     ): Promise<UpdateUserFavouriteStudiosResultType> {
-        const userFavouriteStudios = await this.prisma.user.update({
+        const userFavouriteStudios = await this.prisma.userProfile.update({
             where: {
-                id: user_id,
+                id: profile_id,
             },
             data: {
                 ...entityUpdateUtil('favourite_studios', args),
@@ -382,19 +403,17 @@ export class UserProfileService {
         return {
             success: true,
             errors: [],
-            userFavouriteStudios: userFavouriteStudios[
-                'favourite_studios'
-            ] as any,
+            userFavouriteStudios: userFavouriteStudios.favourite_studios as any,
         };
     }
 
     async updateFavouriteCharacters(
         args: UpdateUserFavouriteCharactersInputType,
-        user_id: string,
+        profile_id: string,
     ): Promise<UpdateUserFavouriteCharactersResultType> {
-        const userFavouriteCharacters = await this.prisma.user.update({
+        const userFavouriteCharacters = await this.prisma.userProfile.update({
             where: {
-                id: user_id,
+                id: profile_id,
             },
             data: {
                 ...entityUpdateUtil('favourite_characters', args),
@@ -406,19 +425,17 @@ export class UserProfileService {
         return {
             success: true,
             errors: [],
-            userFavouriteCharacters: userFavouriteCharacters[
-                'favourite_characters'
-            ] as any,
+            userFavouriteCharacters: userFavouriteCharacters.favourite_characters as any,
         };
     }
 
     async updateFavouriteAuthors(
         args: UpdateUserFavouriteAuthorsInputType,
-        user_id: string,
+        profile_id: string,
     ): Promise<UpdateUserFavouriteAuthorsResultType> {
-        const userFavouriteAuthors = await this.prisma.user.update({
+        const userFavouriteAuthors = await this.prisma.userProfile.update({
             where: {
-                id: user_id,
+                id: profile_id,
             },
             data: {
                 ...entityUpdateUtil('favourite_authors', args),
@@ -430,19 +447,17 @@ export class UserProfileService {
         return {
             success: true,
             errors: [],
-            userFavouriteAuthors: userFavouriteAuthors[
-                'favourite_authors'
-            ] as any,
+            userFavouriteAuthors: userFavouriteAuthors.favourite_authors as any,
         };
     }
 
     async updateFavouriteGenres(
         args: UpdateUserFavouriteGenresInputType,
-        user_id: string,
+        profile_id: string,
     ): Promise<UpdateUserFavouriteGenresResultType> {
-        const userFavouriteGenres = await this.prisma.user.update({
+        const userFavouriteGenres = await this.prisma.userProfile.update({
             where: {
-                id: user_id,
+                id: profile_id,
             },
             data: {
                 ...entityUpdateUtil('favourite_genres', args),
@@ -454,7 +469,7 @@ export class UserProfileService {
         return {
             success: true,
             errors: [],
-            userFavouriteGenres: userFavouriteGenres['favourite_genres'] as any,
+            userFavouriteGenres: userFavouriteGenres.favourite_genres as any,
         };
     }
 }

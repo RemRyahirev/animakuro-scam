@@ -35,11 +35,11 @@ export class CharacterService {
 
     async getCharacter(
         id: string,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetCharacterResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -47,7 +47,7 @@ export class CharacterService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -83,12 +83,12 @@ export class CharacterService {
             };
         }
         const is_favourite_result = favourite &&
-            user_id && {
+            profile_id && {
                 animes: character.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: character.favourite_by.length > 0 ? true : false,
+                is_favourite: character.favourite_by.length > 0,
             };
 
         this.statistics.fireEvent(
@@ -111,11 +111,11 @@ export class CharacterService {
 
     async getCharacterList(
         args: PaginationInputType,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetListCharacterResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -123,7 +123,7 @@ export class CharacterService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -157,12 +157,12 @@ export class CharacterService {
 
         const is_favourite_result = (el: any) =>
             favourite &&
-            user_id && {
+            profile_id && {
                 animes: el.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: el.favourite_by.length > 0 ? true : false,
+                is_favourite: el.favourite_by.length > 0,
             };
         return {
             success: true,
@@ -178,11 +178,11 @@ export class CharacterService {
     async getCharacterListByAnimeId(
         id: string,
         args: PaginationInputType,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetListCharacterByAnimeIdResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -190,7 +190,7 @@ export class CharacterService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -224,12 +224,12 @@ export class CharacterService {
         );
         const is_favourite_result = (el: any) =>
             favourite &&
-            user_id && {
+            profile_id && {
                 animes: el.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: el.favourite_by.length > 0 ? true : false,
+                is_favourite: el.favourite_by.length > 0,
             };
 
         return {

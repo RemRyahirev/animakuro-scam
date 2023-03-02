@@ -14,21 +14,14 @@ model User {
   email                String        @db.VarChar(320)
   avatar               String?       @db.Text
   is_email_confirmed   Boolean       @default(false)
-  favourite_animes     Anime[]
-  favourite_studios    Studio[]
-  favourite_authors    Author[]
-  favourite_characters Character[]
-  favourite_genres     Genre[]
-  user_folders         UserFolder[]  @relation("user_folder")
   password             String        @map("password")
   created_at           DateTime      @default(now()) @map("created_at") @db.Date
   deleted              Boolean       @default(false)
-  statistics           Json?
+  notifications        Json?         @db.Json
+  subscribe_tier       SubscribeTier @default(FREE_ACCOUNT)
   auth                 Auth[]
   user_profile         UserProfile?
   auth_sessions        AuthSession[]
-  user_collection      UserFolder[]  @relation("user_collection")
-  rating_anime         RatingAnime[]
   social_service       AuthType      @default(JWT)
   files                File[]
 
@@ -63,19 +56,19 @@ model AuthSession {
 }
 
 model Studio {
-  id                  String   @id @default(uuid()) @db.Uuid
-  created_at          DateTime @default(now()) @map("created_at")
-  updated_at          DateTime @default(now()) @map("updated_at")
-  name                String   @db.VarChar(64)
-  rating              Float    @db.Real
-  thumbnail           File?    @relation(fields: [thumbnail_id], references: [id])
-  thumbnail_id        String?  @db.Uuid
-  anime_count         Float    @default(0) @db.Real
-  anime_starts        Float    @db.Real
-  anime_ends          Float    @db.Real
-  is_animation_studio Boolean  @default(true)
+  id                  String        @id @default(uuid()) @db.Uuid
+  created_at          DateTime      @default(now()) @map("created_at")
+  updated_at          DateTime      @default(now()) @map("updated_at")
+  name                String        @db.VarChar(64)
+  rating              Float         @db.Real
+  thumbnail           File?         @relation(fields: [thumbnail_id], references: [id])
+  thumbnail_id        String?       @db.Uuid
+  anime_count         Float         @default(0) @db.Real
+  anime_starts        Float         @db.Real
+  anime_ends          Float         @db.Real
+  is_animation_studio Boolean       @default(true)
   animes              Anime[]
-  favourite_by        User[]
+  favourite_by        UserProfile[]
 
   @@map("studio")
 }
@@ -132,7 +125,7 @@ model Anime {
   similar_by_animes  SimilarAnime[]   @relation("similar_by")
   user_folders       UserFolder[]
   airing_schedule    AiringSchedule[]
-  favourite_by       User[]
+  favourite_by       UserProfile[]
   opening_ending     OpeningEnding[]
   stills             AnimeStills[]
   rating_anime       RatingAnime[]
@@ -176,26 +169,26 @@ model AiringSchedule {
 }
 
 model Author {
-  id                  String   @id @default(uuid()) @db.Uuid
-  name                String   @db.VarChar(50)
+  id                  String        @id @default(uuid()) @db.Uuid
+  name                String        @db.VarChar(50)
   primary_occupations String[]
   age                 Int
-  date_of_birth       String   @db.VarChar(30)
-  date_of_death       String   @db.VarChar(30)
+  date_of_birth       String        @db.VarChar(30)
+  date_of_death       String        @db.VarChar(30)
   synonyms            String[]
   years_active        String[]
-  home_town           String   @db.VarChar(30)
-  blood_type          String   @db.VarChar(30)
-  language            String   @db.VarChar(30)
-  gender              String   @db.VarChar(30)
-  bio                 String   @db.Text
-  cover               File?    @relation(fields: [cover_id], references: [id])
-  cover_id            String?  @db.Uuid
+  home_town           String        @db.VarChar(30)
+  blood_type          String        @db.VarChar(30)
+  language            String        @db.VarChar(30)
+  gender              String        @db.VarChar(30)
+  bio                 String        @db.Text
+  cover               File?         @relation(fields: [cover_id], references: [id])
+  cover_id            String?       @db.Uuid
   statistics          Json?
-  created_at          DateTime @default(now()) @map("created_at")
-  updated_at          DateTime @default(now()) @map("updated_at")
+  created_at          DateTime      @default(now()) @map("created_at")
+  updated_at          DateTime      @default(now()) @map("updated_at")
   animes              Anime[]
-  favourite_by        User[]
+  favourite_by        UserProfile[]
 
   @@map("author")
 }
@@ -217,17 +210,17 @@ model Character {
   created_at    DateTime      @default(now()) @map("created_at")
   updated_at    DateTime      @default(now()) @map("updated_at")
   animes        Anime[]
-  favourite_by  User[]
+  favourite_by  UserProfile[]
 
   @@map("character")
 }
 
 model Genre {
-  id           String  @id @default(uuid()) @db.Uuid
-  name         String  @db.VarChar(50)
-  description  String? @db.Text
+  id           String           @id @default(uuid()) @db.Uuid
+  name         String           @db.VarChar(50)
+  description  String?          @db.Text
   animes       Anime[]
-  favourite_by User[]
+  favourite_by UserProfile[]
 
   @@map("genre")
 }
@@ -242,67 +235,64 @@ model Translation {
 
 // Модели частных индивидуальных баз
 model UserProfile {
-  id               String           @id @default(uuid()) @db.Uuid
-  user             User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id          String           @unique @db.Uuid //Field name changed 28/12 from user_id
-  banner           File?            @relation("banner", fields: [banner_id], references: [id])
-  banner_id        String?          @db.Uuid
-  cover            File?            @relation("cover", fields: [cover_id], references: [id])
-  cover_id         String?          @db.Uuid
-  statistics       Json?
-  profile_settings ProfileSettings?
-  created_at       DateTime?        @default(now()) @db.Date
+  id                    String              @id @default(uuid()) @db.Uuid
+  user                  User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id               String              @unique @db.Uuid //Field name changed 28/12 from user_id
+  avatar                File?               @relation("avatar", fields: [avatar_id], references: [id])
+  avatar_id             String?             @db.Uuid
+  banner                File?               @relation("banner", fields: [banner_id], references: [id])
+  banner_id             String?             @db.Uuid
+  cover                 File?               @relation("cover", fields: [cover_id], references: [id])
+  cover_id              String?             @db.Uuid
+  displayed_name        String?             @db.VarChar(30)
+  gender                Gender              @default(UNSPECIFIED)
+  birthday              DateTime?           @db.Date
+  site_theme            SiteTheme           @default(AUTO)
+  country               ProfileCountries    @default(UNSPECIFIED)
+  language              ProfileLanguages    @default(ENGLISH)
+  about                 String?             @db.Text
+  timezone              String?             @db.VarChar(7)
+  moderator_role        ModeratorRoles      @default(VIEWER)
+  is_blocked            Boolean             @default(false)
+  profile_type          ProfileType         @default(PUBLIC)
+  integrations          Json?               @db.Json
+  statistics            Json?
+  favourite_animes      Anime[]
+  favourite_studios     Studio[]
+  favourite_authors     Author[]
+  favourite_characters  Character[]
+  favourite_genres      Genre[]
+  user_folders          UserFolder[]        @relation("user_folder")
+  user_collection       UserFolder[]        @relation("user_collection")
+  rating_anime          RatingAnime[]
+  created_at            DateTime?           @default(now()) @db.Date
+  updated_at            DateTime?           @default(now()) @map("updated_at")
 
   @@map("user_profile")
 }
 
-model ProfileSettings {
-  id             String           @id @default(uuid()) @db.Uuid
-  profile        UserProfile      @relation(fields: [profile_id], references: [id], onDelete: Cascade)
-  profile_id     String           @unique @db.Uuid
-  displayed_name String?          @db.VarChar(30)
-  gender         Gender           @default(UNSPECIFIED)
-  birthday       DateTime?        @db.Date
-  site_theme     SiteTheme        @default(AUTO)
-  avatar_id      String?          @unique @db.Uuid
-  cover_id       String?          @unique @db.Uuid
-  country        ProfileCountries @default(UNSPECIFIED)
-  language       ProfileLanguages @default(ENGLISH)
-  about          String?          @db.Text
-  timezone       String?          @db.VarChar(7)
-  moderator_role ModeratorRoles   @default(VIEWER)
-  is_blocked     Boolean          @default(false)
-  profile_type   ProfileType      @default(PUBLIC)
-  integrations   Json             @db.Json
-  notifications  Json             @db.Json
-  subscribe_tier SubscribeTier    @default(FREE_ACCOUNT)
-  updated_at     DateTime         @default(now()) @map("updated_at")
-
-  @@map("profile_settings")
-}
-
 model UserFolder {
   // прошу не удалять мои комменты, я удалю их сам, когда утвердим модель.
-  id                  String     @id @default(uuid()) @db.Uuid
+  id                  String        @id @default(uuid()) @db.Uuid
   //  блок привязок - ИЗМЕНЕНЫ названия полей со snake_case на camelCase во избежание ошибок
-  user                User?      @relation(name: "user_folder", fields: [user_id], references: [id])
-  user_id             String     @db.Uuid // o-2-o relation
-  user_collection     User?      @relation(name: "user_collection", fields: [user_collection_id], references: [id])
-  user_collection_id  String?    @db.Uuid
+  user_profile        UserProfile?  @relation(name: "user_folder", fields: [user_profile_id], references: [id])
+  user_profile_id     String        @db.Uuid // o-2-o relation
+  user_collection     UserProfile?  @relation(name: "user_collection", fields: [user_collection_id], references: [id])
+  user_collection_id  String?       @db.Uuid
   animes              Anime[]
   // информативный блок
-  is_collection       Boolean    @default(false) @db.Boolean()
-  is_public           Boolean    @default(false) @db.Boolean()
-  is_statistic_active Boolean    @default(false) @db.Boolean() //Активация вывода статистики
-  name                String     @db.VarChar(25)
+  is_collection       Boolean       @default(false) @db.Boolean()
+  is_public           Boolean       @default(false) @db.Boolean()
+  is_statistic_active Boolean       @default(false) @db.Boolean() //Активация вывода статистики
+  name                String        @db.VarChar(25)
   description         String
-  type                FolderType @default(DEFAULT)
+  type                FolderType    @default(DEFAULT)
   // блок для аниме со статусом WATCHING
-  //episode          Int?         @db.SmallInt // какой эпизод(серию)
-  //episode_duration Int?         @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
-  //watched_duration Int?         @db.Integer // секунды: сколько просмотрел из этой серии
-  created_at          DateTime   @default(now()) @map("created_at")
-  updated_at          DateTime   @default(now()) @map("updated_at")
+  //episode          Int?             @db.SmallInt // какой эпизод(серию)
+  //episode_duration Int?             @db.Integer // секунды: продолжительность этого эпизода        ПОКА СТАТИСТИКИ НЕТ!!!
+  //watched_duration Int?             @db.Integer // секунды: сколько просмотрел из этой серии
+  created_at          DateTime      @default(now()) @map("created_at")
+  updated_at          DateTime      @default(now()) @map("updated_at")
 
   // @@id([user_id, user_collection_id])
   @@map("user_folder")
@@ -325,13 +315,13 @@ model OpeningEnding {
 }
 
 model RatingAnime {
-  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id  String @db.Uuid
-  anime    Anime  @relation(fields: [anime_id], references: [id], onDelete: Cascade)
-  anime_id String @db.Uuid
-  rating   Int
+  user_profile      UserProfile  @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id   String       @db.Uuid
+  anime             Anime        @relation(fields: [anime_id], references: [id], onDelete: Cascade)
+  anime_id          String       @db.Uuid
+  rating            Int
 
-  @@id([anime_id, user_id])
+  @@id([anime_id, user_profile_id])
   @@map("rating_anime")
 }
 
@@ -369,11 +359,12 @@ model File {
   studio_thumbnails     Studio[]
   anime_banners         Anime[]         @relation("banner")
   anime_covers          Anime[]         @relation("cover")
+  profile_avatars       UserProfile[]   @relation("avatar")
   profile_banners       UserProfile[]   @relation("banner")
   profile_covers        UserProfile[]   @relation("cover")
   author_covers         Author[]
   character_covers      Character[]
-  anime_still          AnimeStills?
+  anime_still           AnimeStills?
 
   @@map("file")
 }

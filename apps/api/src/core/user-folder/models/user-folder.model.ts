@@ -3,7 +3,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { FolderType } from '@app/common/models/enums';
 
 import { Anime } from '../../anime/models/anime.model';
-import { User } from '../../user/models/user.model';
+import { UserProfile } from '../../user-profile/models/user-profile.model';
 
 @ObjectType()
 export class UserFolder {
@@ -12,13 +12,13 @@ export class UserFolder {
     })
     id: string;
 
-    @Field(() => User, {
+    @Field(() => UserProfile, {
         nullable: true,
     })
-    user?: User;
+    user_profile?: UserProfile;
 
     @Field(() => ID)
-    user_id: string;
+    user_profile_id: string;
 
     @Field(() => [Anime], {
         description: 'The media in folder',

@@ -8,3 +8,4 @@ export * from './entity-exists.decorator';
 export * from './social-profile.decorator';
 export * from './access-token.decorator';
 export * from './custom-session.decorator';
+export * from './profile-id.decorator';

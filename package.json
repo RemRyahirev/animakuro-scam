@@ -10,7 +10,7 @@
     "dev:stat": "ts-node-dev -r tsconfig-paths/register --exit-child ./apps/statistic/src/main.ts",
     "build": "nest build",
     "generate": "prisma generate",
-    "seed": "ts-node src/database/seeds/index.ts",
+    "seed": "ts-node database/seeds/index.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:ci": "jest --ci --coverage --coverageReporters cobertura --reporters default jest-junit",

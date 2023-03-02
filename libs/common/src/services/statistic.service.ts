@@ -8,7 +8,7 @@ import {
 type UserAction = {
     animeInFavorites: {
         animeId: string;
-        userId: string;
+        profileId: string;
     };
     animeRate: {
         animeId: string;
@@ -16,12 +16,12 @@ type UserAction = {
     };
     animeInFolder: {
         animeId: string;
-        userId: string;
+        profileId: string;
         folderId: string;
         folderType: FolderType;
     };
     statFolder: {
-        userId: string;
+        profileId: string;
         folderId: string;
         folderType: FolderType;
     };
@@ -85,8 +85,8 @@ const Key = {
         ({ animeId }: { animeId: string }) =>
             `${EventCode.animeInFavorites}:${animeId}`,
     animeInUserFavorites:
-        ({ userId }: { userId: string }) =>
-            `${EventCode.animeInUserFavorites}:${userId}`,
+        ({ profileId }: { profileId: string }) =>
+            `${EventCode.animeInUserFavorites}:${profileId}`,
     animeUserRate:
         ({ animeId, stars }: { animeId: string, stars: number }) =>
             `${EventCode.animeUserRate}:${animeId}:${stars}`,
@@ -94,11 +94,11 @@ const Key = {
         ({ animeId, folderType }: { animeId: string, folderType: FolderType }) =>
             `${EventCode.animeInFolder}:${animeId}:${folderType}`,
     animeInUserFolder:
-        ({ userId, folderId, folderType, animeId }: { userId: string, folderId: string, folderType: FolderType, animeId: string }) =>
-            `${EventCode.animeInUserFolder}:${userId}:${folderId}:${folderType}:${animeId}`,
+        ({ profileId, folderId, folderType, animeId }: { profileId: string, folderId: string, folderType: FolderType, animeId: string }) =>
+            `${EventCode.animeInUserFolder}:${profileId}:${folderId}:${folderType}:${animeId}`,
     statFolder:
-        ({ userId, folderId, folderType }: { userId: string, folderId: string, folderType: FolderType }) =>
-            `${EventCode.statFolder}:${userId}:${folderId}:${folderType}`,
+        ({ profileId, folderId, folderType }: { profileId: string, folderId: string, folderType: FolderType }) =>
+            `${EventCode.statFolder}:${profileId}:${folderId}:${folderType}`,
     animeType:
         ({ animeId, animeType }: { animeId: string, animeType: AnimeType }) =>
             `${EventCode.animeType}:${animeId}:${animeType}`,
@@ -227,7 +227,7 @@ export class StatisticService {
                 return {
                     event: StatAction.animeInUserFavorites,
                     params: {
-                        userId: params[0],
+                        profileId: params[0],
                     },
                 };
 
@@ -253,7 +253,7 @@ export class StatisticService {
                 return {
                     event: StatAction.animeInUserFolder,
                     params: {
-                        userId: params[0],
+                        profileId: params[0],
                         folderId: params[1],
                         folderType: FolderType[params[2] as keyof typeof FolderType],
                         animeId: params[3],
@@ -264,7 +264,7 @@ export class StatisticService {
                 return {
                     event: StatAction.statFolder,
                     params: {
-                        userId: params[0],
+                        profileId: params[0],
                         folderId: params[1],
                         folderType: FolderType[params[2] as keyof typeof FolderType],
                     },

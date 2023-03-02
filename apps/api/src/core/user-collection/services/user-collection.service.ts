@@ -28,19 +28,18 @@ export class UserCollectionService {
                 is_collection: true,
             },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
                         user_folders: {
                             include: {
                                 animes: true,
                             },
                         },
-                        auth: true,
+                        user: {
+                            include: {
+                                auth: true,
+                            },
+                        },
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -66,19 +65,18 @@ export class UserCollectionService {
         const userCollectionList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
                         user_folders: {
                             include: {
                                 animes: true,
                             },
                         },
-                        auth: true,
+                        user: {
+                            include: {
+                                auth: true,
+                            },
+                        },
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -152,29 +150,28 @@ export class UserCollectionService {
 
     async createUserCollection(
         args: CreateUserCollectionInputType,
-        user_id: string,
+        user_profile_id: string,
     ): Promise<CreateUserCollectionResultsType> {
         const userCollection = await this.prisma.userFolder.create({
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
                 is_collection: true,
-                user_id,
+                user_profile_id,
             },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
                         user_folders: {
                             include: {
                                 animes: true,
                             },
                         },
-                        auth: true,
+                        user: {
+                            include: {
+                                auth: true,
+                            },
+                        },
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -203,19 +200,18 @@ export class UserCollectionService {
                 ...args,
             },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
                         user_folders: {
                             include: {
                                 animes: true,
                             },
                         },
-                        auth: true,
+                        user: {
+                            include: {
+                                auth: true,
+                            },
+                        },
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -240,19 +236,18 @@ export class UserCollectionService {
         const userCollection = await this.prisma.userFolder.delete({
             where: { id },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
                         user_folders: {
                             include: {
                                 animes: true,
                             },
                         },
-                        auth: true,
+                        user: {
+                            include: {
+                                auth: true,
+                            },
+                        },
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,

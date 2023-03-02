@@ -14,7 +14,6 @@ import { CatalogModule } from './catalog/catalog.module';
 import { AiringScheduleModule } from './airing-schedule/airing-schedule.module';
 import { AuthSessionModule } from './auth-session/auth-session.module';
 import { MicroserviceModule } from './microservice/microservice.module';
-import { ProfileSettingsModule } from './profile-settings/profile-settings.module';
 import { UserCollectionModule } from './user-collection/user-collection.module';
 import { OpeningEndingModule } from './opening-ending/opening-ending.module';
 import { StatisticModule } from './statistic/statistic.module';
@@ -36,7 +35,6 @@ import { StatisticModule } from './statistic/statistic.module';
         UserProfileModule,
         CatalogModule,
         MicroserviceModule,
-        ProfileSettingsModule,
         UserCollectionModule,
         OpeningEndingModule,
     ],
@@ -56,7 +54,6 @@ import { StatisticModule } from './statistic/statistic.module';
         UserProfileModule,
         CatalogModule,
         MicroserviceModule,
-        ProfileSettingsModule,
         UserCollectionModule,
         OpeningEndingModule,
     ],

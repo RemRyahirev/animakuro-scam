@@ -28,12 +28,23 @@ export const AuthMiddleware: FieldMiddleware = async (
             if (!!token && !ctx.context.req.user) {
                 const user = await prismaService.user.findUnique({
                     where: { id: token.uuid },
+                    select: {
+                        id: true,
+                        is_email_confirmed: true,
+                        user_profile: {
+                            select: {
+                                id: true,
+                            },
+                        },
+                    },
                 });
                 if (!!user && !user?.is_email_confirmed) {
                     ctx.context.req.error = ErrorType.UNAUTHORIZED_BY_EMAIL;
                     ctx.context.req.user_id = user?.id;
+                    ctx.context.req.profile_id = user?.user_profile?.id;
                 } else if (!!user) {
                     ctx.context.req.user_id = user.id;
+                    ctx.context.req.profile_id = user.user_profile?.id;
                 } else {
                     ctx.context.req.error = ErrorType.TOKEN_NOT_FOUND;
                 }

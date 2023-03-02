@@ -35,11 +35,11 @@ export class AuthorService {
 
     async getAuthor(
         id: string,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetAuthorResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -47,7 +47,7 @@ export class AuthorService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -84,7 +84,7 @@ export class AuthorService {
         }
 
         const is_favourite_result = favourite &&
-            user_id && {
+            profile_id && {
                 animes: author.animes.map((el: any) => ({
                     ...el,
                     is_favourite: el.favourite_by.length > 0 ? true : false,
@@ -112,11 +112,11 @@ export class AuthorService {
 
     async getAuthorList(
         args: PaginationInputType,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetListAuthorResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -124,7 +124,7 @@ export class AuthorService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -157,7 +157,7 @@ export class AuthorService {
         );
         const is_favourite_result = (el: any) =>
             favourite &&
-            user_id && {
+            profile_id && {
                 animes: el.animes.map((el: any) => ({
                     ...el,
                     is_favourite: el.favourite_by.length > 0 ? true : false,
@@ -178,11 +178,11 @@ export class AuthorService {
     async getAuthorListByAnimeId(
         id: string,
         args: PaginationInputType,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetListAuthorByAnimeIdResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -190,7 +190,7 @@ export class AuthorService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -224,7 +224,7 @@ export class AuthorService {
         );
         const is_favourite_result = (el: any) =>
             favourite &&
-            user_id && {
+            profile_id && {
                 animes: el.animes.map((el: any) => ({
                     ...el,
                     is_favourite: el.favourite_by.length > 0 ? true : false,

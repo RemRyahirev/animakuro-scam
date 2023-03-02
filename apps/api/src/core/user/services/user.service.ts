@@ -27,31 +27,30 @@ export class UserService {
     async getUserList(
         args: PaginationInputType,
     ): Promise<GetListUserResultsType> {
-        const userList: any = await this.prisma.user.findMany({
+        const userList = await this.prisma.user.findMany({
             ...transformPaginationUtil(args),
             include: {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -108,31 +107,32 @@ export class UserService {
         const user = await this.prisma.user.update({
             where: { id: args.id },
             data: {
-                ...mediaConnectUtil(args),
+                user_profile: {
+                    ...mediaConnectUtil(args),
+                },
             },
             include: {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -156,25 +156,24 @@ export class UserService {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -198,25 +197,24 @@ export class UserService {
             include: {
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -240,25 +238,24 @@ export class UserService {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -274,25 +271,24 @@ export class UserService {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -312,25 +308,24 @@ export class UserService {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },
@@ -351,25 +346,24 @@ export class UserService {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
-                    },
-                },
-                user_collection: {
-                    where: {
-                        is_collection: true,
-                    },
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            where: {
+                                is_collection: true,
+                            },
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },

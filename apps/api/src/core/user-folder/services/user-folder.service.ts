@@ -31,13 +31,33 @@ export class UserFolderService {
         const userByFolders = await this.prisma.user.findUnique({
             where: { id },
             include: {
+                user_profile: {
+                    include: {
+                        user_folders: true,
+                    },
+                },
+            },
+        });
+        return {
+            success: true,
+            errors: [],
+            userFolderList: userByFolders?.user_profile?.user_folders as any,
+        };
+    }
+
+    async getUserFolderByProfileId(
+        id: string,
+    ): Promise<GetUserFolderByUserIdResultsType> {
+        const profileByFolders = await this.prisma.userProfile.findUnique({
+            where: { id },
+            include: {
                 user_folders: true,
             },
         });
         return {
             success: true,
             errors: [],
-            userFolderList: userByFolders?.user_folders as any,
+            userFolderList: profileByFolders?.user_folders as any,
         };
     }
 
@@ -47,14 +67,13 @@ export class UserFolderService {
                 id,
             },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
+                        user: {
                             include: {
-                                profile_settings: true,
+                                auth: true,
                             },
                         },
-                        auth: true,
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -78,14 +97,13 @@ export class UserFolderService {
         const userFolderList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
+                        user: {
                             include: {
-                                profile_settings: true,
+                                auth: true,
                             },
                         },
-                        auth: true,
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -110,7 +128,7 @@ export class UserFolderService {
 
     async createUserFolder(
         args: CreateUserFolderInputType,
-        user_id: string,
+        user_profile_id: string,
     ): Promise<CreateUserFolderResultsType> {
         const animeToAdd = (args.animes_add ?? []).slice();
 
@@ -118,18 +136,17 @@ export class UserFolderService {
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                user_id,
-                user_collection_id: user_id,
+                user_profile_id,
+                user_collection_id: user_profile_id,
             },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
+                        user: {
                             include: {
-                                profile_settings: true,
+                                auth: true,
                             },
                         },
-                        auth: true,
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -144,7 +161,7 @@ export class UserFolderService {
         animeToAdd.forEach(animeId => {
             this.statistics.fireEvent('animeInFolder', {
                 animeId,
-                userId: user_id,
+                profileId: user_profile_id,
                 folderId: userFolder.id,
                 folderType: userFolder.type,
             }, 1);
@@ -159,7 +176,7 @@ export class UserFolderService {
 
     async updateUserFolder(
         args: UpdateUserFolderInputType,
-        user_id: string,
+        user_profile_id: string,
     ): Promise<UpdateUserFolderResultsType> {
         const animeToAdd = (args.animes_add ?? []).slice();
         const animeToRemove = (args.animes_remove ?? []).slice();
@@ -184,14 +201,13 @@ export class UserFolderService {
                 ...args,
             },
             include: {
-                user: {
+                user_profile: {
                     include: {
-                        user_profile: {
+                        user: {
                             include: {
-                                profile_settings: true,
+                                auth: true,
                             },
                         },
-                        auth: true,
                         favourite_animes: true,
                         favourite_authors: true,
                         favourite_genres: true,
@@ -212,7 +228,7 @@ export class UserFolderService {
 
             this.statistics.fireEvent('animeInFolder', {
                 animeId,
-                userId: user_id,
+                profileId: user_profile_id,
                 folderId: userFolder.id,
                 folderType: userFolder.type,
             }, 1);
@@ -225,7 +241,7 @@ export class UserFolderService {
 
             this.statistics.fireEvent('animeInFolder', {
                 animeId,
-                userId: user_id,
+                profileId: user_profile_id,
                 folderId: userFolder.id,
                 folderType: userFolder.type,
             }, -1);
@@ -233,7 +249,7 @@ export class UserFolderService {
 
         if (oldUserFolder?.is_statistic_active !== userFolder.is_statistic_active) {
             this.statistics.fireEvent('statFolder', {
-                userId: user_id,
+                profileId: user_profile_id,
                 folderId: userFolder.id,
                 folderType: userFolder.type,
             }, userFolder.is_statistic_active ? 1 : -1);
@@ -248,7 +264,7 @@ export class UserFolderService {
 
     async deleteUserFolder(
         id: string,
-        user_id: string,
+        user_profile_id: string,
     ): Promise<DeleteUserFolderResultsType> {
         const oldUserFolder = await this.prisma.userFolder.findUnique({
             where: { id },
@@ -270,7 +286,7 @@ export class UserFolderService {
         oldUserFolder?.animes.forEach(anime => {
             this.statistics.fireEvent('animeInFolder', {
                 animeId: anime.id,
-                userId: user_id,
+                profileId: user_profile_id,
                 folderId: id,
                 folderType: oldUserFolder.type,
             }, -1);

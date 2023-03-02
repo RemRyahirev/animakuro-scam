@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
     IsEmail,
     IsOptional,
@@ -6,10 +7,14 @@ import {
     Length,
     ValidateIf,
 } from 'class-validator';
-import { GraphQLUpload } from 'graphql-upload';
+import { IsEnum, IsObject, ValidateNested } from '@nestjs/class-validator';
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 
-import { IUpload } from '@app/common/models/interfaces';
+import { SubscribeTier } from '@app/common/models/enums';
+
+import { Notifications } from '../notifications.model';
+
+import { notificationsDefault } from './defaults/notifications.default';
 
 @ArgsType()
 export class UpdateUserInputType {
@@ -42,6 +47,18 @@ export class UpdateUserInputType {
     newPassword?: string;
 
     @IsOptional()
-    @Field(() => GraphQLUpload, { nullable: true })
-    avatar?: IUpload;
+    @Field(() => String, { nullable: true })
+    avatar?: string;
+
+    @IsOptional()
+    @IsObject()
+    @ValidateNested()
+    @Type(() => Notifications)
+    @Field(() => Notifications, { defaultValue: notificationsDefault })
+    notifications: object;
+
+    @IsOptional()
+    @IsEnum(SubscribeTier)
+    @Field(() => SubscribeTier)
+    subscribe_tier: SubscribeTier;
 }

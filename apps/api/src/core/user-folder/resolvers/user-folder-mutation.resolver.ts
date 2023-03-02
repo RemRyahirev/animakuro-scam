@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
@@ -28,10 +28,10 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async createUserFolder(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args() args: CreateUserFolderInputType,
     ): Promise<CreateUserFolderResultsType> {
-        return await this.userFolderService.createUserFolder(args, user_id);
+        return await this.userFolderService.createUserFolder(args, profileId);
     }
 
     @ResolveField(() => UpdateUserFolderResultsType, {
@@ -40,9 +40,9 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateUserFolder(
         @Args() args: UpdateUserFolderInputType,
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
     ): Promise<UpdateUserFolderResultsType> {
-        return await this.userFolderService.updateUserFolder(args, user_id);
+        return await this.userFolderService.updateUserFolder(args, profileId);
     }
 
     @ResolveField(() => DeleteUserFolderResultsType, {
@@ -51,8 +51,8 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     @UseGuards(JwtAuthGuard)
     async deleteUserFolder(
         @Args('id') id: string,
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
     ): Promise<DeleteUserFolderResultsType> {
-        return await this.userFolderService.deleteUserFolder(id, user_id);
+        return await this.userFolderService.deleteUserFolder(id, profileId);
     }
 }

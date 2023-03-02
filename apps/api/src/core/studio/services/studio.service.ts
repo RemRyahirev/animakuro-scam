@@ -34,11 +34,11 @@ export class StudioService {
 
     async getStudio(
         id: string,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetStudioResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -46,7 +46,7 @@ export class StudioService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -81,12 +81,12 @@ export class StudioService {
             };
         }
         const is_favourite_result = favourite &&
-            user_id && {
+            profile_id && {
                 animes: studio.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: studio.favourite_by.length > 0 ? true : false,
+                is_favourite: studio.favourite_by.length > 0,
             };
         return {
             success: true,
@@ -97,11 +97,11 @@ export class StudioService {
 
     async getStudioList(
         args: PaginationInputType,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetListStudioResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -109,7 +109,7 @@ export class StudioService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -137,12 +137,12 @@ export class StudioService {
 
         const is_favourite_result = (el: any) =>
             favourite &&
-            user_id && {
+            profile_id && {
                 animes: el.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: el.favourite_by.length > 0 ? true : false,
+                is_favourite: el.favourite_by.length > 0,
             };
 
         return {

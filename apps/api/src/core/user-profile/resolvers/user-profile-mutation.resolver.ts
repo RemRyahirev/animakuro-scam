@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { AccessToken, ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
@@ -44,9 +44,13 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         @Args() args: CreateUserProfileInputType,
         @AccessToken() user_id: string,
     ): Promise<CreateUserProfileResultsType> {
-        return await this.userProfileService.createUserProfile({
-            user_id: args.user_id ?? user_id,
-        }, user_id);
+        return await this.userProfileService.createUserProfile(
+            {
+                ...args,
+                user_id: args.user_id ?? user_id,
+            },
+            user_id,
+        );
     }
 
     @ResolveField(() => UpdateUserProfileResultsType, {
@@ -75,12 +79,12 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteAnimes(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args() args: UpdateUserFavouriteAnimeInputType,
     ): Promise<UpdateUserFavouriteAnimesResultType> {
         return await this.userProfileService.updateFavouriteAnimes(
             args,
-            user_id,
+            profileId,
         );
     }
 
@@ -89,12 +93,12 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteAuthors(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args() args: UpdateUserFavouriteAuthorsInputType,
     ): Promise<UpdateUserFavouriteAuthorsResultType> {
         return await this.userProfileService.updateFavouriteAuthors(
             args,
-            user_id,
+            profileId,
         );
     }
 
@@ -103,12 +107,12 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteCharacters(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args() args: UpdateUserFavouriteCharactersInputType,
     ): Promise<UpdateUserFavouriteCharactersResultType> {
         return await this.userProfileService.updateFavouriteCharacters(
             args,
-            user_id,
+            profileId,
         );
     }
 
@@ -117,12 +121,12 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteGenres(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args() args: UpdateUserFavouriteGenresInputType,
     ): Promise<UpdateUserFavouriteGenresResultType> {
         return await this.userProfileService.updateFavouriteGenres(
             args,
-            user_id,
+            profileId,
         );
     }
 
@@ -131,12 +135,12 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateFavouriteStudios(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args() args: UpdateUserFavouriteStudiosInputType,
     ): Promise<UpdateUserFavouriteStudiosResultType> {
         return await this.userProfileService.updateFavouriteStudios(
             args,
-            user_id,
+            profileId,
         );
     }
 }

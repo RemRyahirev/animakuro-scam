@@ -21,11 +21,11 @@ export class GenreService {
     ) {}
     async getGenre(
         id: string,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetGenreResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                       select: {
                           id: true,
@@ -33,7 +33,7 @@ export class GenreService {
                   }
                 : {
                       where: {
-                          id: user_id,
+                          id: profile_id,
                       },
                       select: {
                           id: true,
@@ -63,12 +63,12 @@ export class GenreService {
             };
         }
         const is_favourite_result = favourite &&
-            user_id && {
+            profile_id && {
                 animes: genre.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: genre.favourite_by.length > 0 ? true : false,
+                is_favourite: genre.favourite_by.length > 0,
             };
 
         return {
@@ -80,11 +80,11 @@ export class GenreService {
 
     async getGenreList(
         args: PaginationInputType,
-        user_id: string,
+        profile_id: string,
         favourite: boolean,
     ): Promise<GetListGenreResultsType> {
         const favourite_by_validation = {
-            favourite_by: !user_id
+            favourite_by: !profile_id
                 ? {
                     select: {
                         id: true,
@@ -92,7 +92,7 @@ export class GenreService {
                 }
                 : {
                     where: {
-                        id: user_id,
+                        id: profile_id,
                     },
                     select: {
                         id: true,
@@ -108,7 +108,7 @@ export class GenreService {
                         characters: true,
                         authors: true,
                         studios: true,
-                        ...favourite_by_validation, 
+                        ...favourite_by_validation,
                     },
                 },
             },
@@ -120,12 +120,12 @@ export class GenreService {
 
         const is_favourite_result = (el: any) =>
             favourite &&
-            user_id && {
+            profile_id && {
                 animes: el.animes.map((el: any) => ({
                     ...el,
-                    is_favourite: el.favourite_by.length > 0 ? true : false,
+                    is_favourite: el.favourite_by.length > 0,
                 })),
-                is_favourite: el.favourite_by.length > 0 ? true : false,
+                is_favourite: el.favourite_by.length > 0,
             };
 
         return {

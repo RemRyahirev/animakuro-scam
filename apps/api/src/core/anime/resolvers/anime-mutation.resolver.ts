@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { AccessToken, ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { AnimeApproval, AnimeRelation } from '@app/common/models/enums';
@@ -161,9 +161,9 @@ export class AnimeMutationResolver extends AnimeRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateRatingAnime(
         @Args() args: UpdateRatingAnimeInputType,
-        @AccessToken() user_id: string,
+        @ProfileId() user_profile_id: string,
     ): Promise<UpdateRatingAnimeResultsType> {
-        return await this.animeService.updateRatingAnime({ ...args, user_id });
+        return await this.animeService.updateRatingAnime({ ...args, user_profile_id });
     }
 
     @ResolveField(() => AddAnimeStillsResultsType, {

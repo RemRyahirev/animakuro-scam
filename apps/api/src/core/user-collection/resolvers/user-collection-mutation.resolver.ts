@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
@@ -29,11 +29,11 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async createUserCollection(
         @Args() args: CreateUserCollectionInputType,
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
     ): Promise<CreateUserCollectionResultsType> {
         return await this.userCollectionService.createUserCollection(
             args,
-            user_id,
+            profileId,
         );
     }
 

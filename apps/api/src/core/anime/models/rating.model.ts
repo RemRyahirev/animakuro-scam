@@ -9,7 +9,7 @@ export class Rating {
 
     @IsUUID()
     @Field(() => ID)
-    user_id: string;
+    user_profile_id: string;
 
     @IsUUID()
     @Field(() => ID)

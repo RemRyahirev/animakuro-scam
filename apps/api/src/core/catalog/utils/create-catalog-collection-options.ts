@@ -10,14 +10,13 @@ export function createCatalogCollectionOptions(
     const prismaOptions: Prisma.UserFolderFindManyArgs = {
         include: {
             animes: true,
-            user: {
+            user_profile: {
                 include: {
                     favourite_animes: true,
                     favourite_authors: true,
                     favourite_characters: true,
                     favourite_genres: true,
                     favourite_studios: true,
-                    user_profile: true,
                 },
             },
         },

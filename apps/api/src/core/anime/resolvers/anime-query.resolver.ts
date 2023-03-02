@@ -1,7 +1,7 @@
 import { fieldsMap } from 'graphql-fields-list';
 import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { AccessToken, ProfileId } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { PaginationInputType } from '@app/common/models/inputs';
 
@@ -27,11 +27,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     async getAnime(
         @Args() args: GetAnimeByIdInputType,
         @AccessToken() userId: string,
+        @ProfileId() profileId: string,
         @Info() info: any,
     ): Promise<GetAnimeResultsType> {
         return await this.animeService.getAnime(
             args,
             userId,
+            profileId,
             JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
     }
@@ -44,11 +46,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         @Args() args: PaginationInputType,
         @Info() info: any,
         @AccessToken() userId: string,
+        @ProfileId() profileId: string,
     ): Promise<GetListAnimeResultsType> {
         return await this.animeService.getAnimeList(
             input,
             args,
             userId,
+            profileId,
             JSON.stringify(fieldsMap(info)).includes('is_favourite'),
         );
     }
@@ -60,11 +64,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         @Args('id') id: string,
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @ProfileId() profileId: string,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
         return await this.animeService.getRelatedAnimeListByAnimeId(
             id,
             args,
             userId,
+            profileId,
         );
     }
 
@@ -75,11 +81,13 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         @Args('id') id: string,
         @Args() args: PaginationInputType,
         @AccessToken() userId: string,
+        @ProfileId() profileId: string,
     ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
         return await this.animeService.getSimilarAnimeListByAnimeId(
             id,
             args,
             userId,
+            profileId,
         );
     }
 

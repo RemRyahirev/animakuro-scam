@@ -77,17 +77,21 @@ export class AuthService {
                 auth: true,
                 user_profile: {
                     include: {
-                        profile_settings: true,
-                    },
-                },
-                favourite_animes: true,
-                favourite_authors: true,
-                favourite_characters: true,
-                favourite_genres: true,
-                favourite_studios: true,
-                user_folders: {
-                    include: {
-                        animes: true,
+                        favourite_animes: true,
+                        favourite_authors: true,
+                        favourite_characters: true,
+                        favourite_genres: true,
+                        favourite_studios: true,
+                        user_folders: {
+                            include: {
+                                animes: true,
+                            },
+                        },
+                        user_collection: {
+                            include: {
+                                animes: true,
+                            },
+                        },
                     },
                 },
             },

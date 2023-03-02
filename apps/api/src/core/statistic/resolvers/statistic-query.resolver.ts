@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
@@ -28,12 +28,12 @@ export class StatisticQueryResolver extends StatisticRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async getUserStatisticFolder(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args({ nullable: true }) args?: GetStatisticFolderInputType,
     ): Promise<GetUserStatisticFolderResultsType> {
         return await this.statisticService.getUserStatisticFolder({
             ...args,
-            id: args?.id ?? user_id,
+            id: args?.id ?? profileId,
         });
     }
 
@@ -42,11 +42,11 @@ export class StatisticQueryResolver extends StatisticRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async getUserStatisticFavourite(
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
         @Args('id', { nullable: true }) id?: string,
     ): Promise<GetUserStatisticFavouriteResultsType> {
         return await this.statisticService.getUserStatisticFavourite(
-            id ?? user_id,
+            id ?? profileId,
         );
     }
 }
