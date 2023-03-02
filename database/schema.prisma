@@ -319,7 +319,6 @@ model UserFolder {
   rating_collection             RatingUserCollection[]
   hashtags                      String[]
   is_spoiler                    Boolean?               @default(false) @db.Boolean()
-  score                         Float?                 @db.Real
   statistics                    Json?
   // блок для аниме со статусом WATCHING
   //episode          Int?         @db.SmallInt // какой эпизод(серию)

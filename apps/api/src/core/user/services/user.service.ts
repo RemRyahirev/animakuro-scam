@@ -15,6 +15,7 @@ import { GetListUserResultsType } from '../models/results/get-list-user-results.
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { mediaConnectUtil } from '../utils/media-connect.util';
 import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
+import { createUserCollectionStatisticOptions } from '../../user-collection/utils/create-user-collection-statistic-option';
 
 @Injectable()
 export class UserService {
@@ -22,7 +23,7 @@ export class UserService {
         private prisma: PrismaService,
         private paginationService: PaginationService,
         private jwtService: JwtService,
-    ) { }
+    ) {}
 
     async getUserList(
         args: PaginationInputType,
@@ -84,18 +85,18 @@ export class UserService {
                 user: null,
             };
         }
-        const user =
+        const user: any =
             (username || user_id || id) &&
             (await this.prisma.user.findUnique({
                 where: !!username
                     ? {
-                        username: username,
-                    }
+                          username: username,
+                      }
                     : !!user_id || id
-                        ? {
-                            id: id ?? user_id,
-                        }
-                        : {},
+                    ? {
+                          id: id ?? user_id,
+                      }
+                    : {},
                 include: {
                     auth: true,
                     user_profile: {
@@ -124,9 +125,14 @@ export class UserService {
                     },
                 },
             }));
+        if (user && user.statistics) {
+            user.statistics['score'] = createUserCollectionStatisticOptions({
+                userRating: user.statistics['userRating'],
+            });
+        }
         return {
             success: true,
-            user: user as any,
+            user: user,
         };
     }
 
