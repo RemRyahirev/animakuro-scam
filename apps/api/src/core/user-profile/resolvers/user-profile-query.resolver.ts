@@ -5,6 +5,7 @@ import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { PaginationInputType } from '@app/common/models/inputs';
 
 import {
+    GetAnimesGenresWithStatisticResultsType,
     GetListUserProfileResultsType,
     GetUserProfileResultsType,
 } from '../models/results';
@@ -80,4 +81,13 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
     ): Promise<GetHistoryCharacterResultsType> {
         return await this.userProfileService.getHistoryCharacter(args, pagination)
     }
+
+    // @ResolveField(() => GetAnimesGenresWithStatisticResultsType, {
+    //     middleware: [AuthMiddleware],
+    // })
+    // async getFavouriteGenresWithStatistic(
+    //     @AccessToken() user_id: string,
+    // ): Promise<GetAnimesGenresWithStatisticResultsType> {
+    //     return {}
+    // }
 }

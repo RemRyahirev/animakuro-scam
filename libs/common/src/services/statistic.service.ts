@@ -33,6 +33,10 @@ type UserAction = {
         animeId: string;
         genreId: string;
     };
+    animeStudio: {
+        animeId: string;
+        studioId: string;
+    }
 
     getAnime: {
         animeId: string;
@@ -56,6 +60,7 @@ enum StatAction {
     statFolder = 'statFolder',
     animeType = 'animeType',
     animeGenre = 'animeGenre',
+    animeStudio = 'animeStudio',
     getAnime = 'getAnime',
     getCharacter = 'getCharacter',
     getAuthor = 'getAuthor',
@@ -73,6 +78,7 @@ const EventCode = {
     statFolder: 'SF',
     animeType: 'AT',
     animeGenre: 'AG',
+    animeStudio: 'AS',
     getAnime: 'GAN',
     getCharacter: 'GCH',
     getAuthor: 'GAU',
@@ -105,6 +111,9 @@ const Key = {
     animeGenre:
         ({ animeId, genreId }: { animeId: string, genreId: string }) =>
             `${EventCode.animeGenre}:${animeId}:${genreId}`,
+    animeStudio:
+        ({ animeId, studioId }: { animeId: string, studioId: string }) =>
+            `${EventCode.animeStudio}:${animeId}:${studioId}`,
     getAnime:
         ({ animeId }: { animeId: string }) =>
             `${EventCode.getAnime}:${animeId}`,
@@ -178,6 +187,12 @@ export class StatisticService {
                 params = opts as UserAction['animeGenre'];
 
                 await this.redis.zadd(STAT_REDIS_KEY, changedBy, Key.animeGenre(params));
+                break;
+
+            case 'animeStudio':
+                params = opts as UserAction['animeStudio'];
+    
+                await this.redis.zadd(STAT_REDIS_KEY, changedBy, Key.animeStudio(params));
                 break;
 
             case 'getAnime':
@@ -285,6 +300,15 @@ export class StatisticService {
                     params: {
                         animeId: params[0],
                         genreId: params[1],
+                    },
+                };
+
+            case EventCode.animeStudio:
+                return {
+                    event: StatAction.animeStudio,
+                    params: {
+                        animeId: params[0],
+                        studioId: params[1],
                     },
                 };
 

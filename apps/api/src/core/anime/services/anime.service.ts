@@ -616,13 +616,20 @@ export class AnimeService {
     ): Promise<UpdateAnimeResultsType> {
         const { ...args } = input;
 
+        const studiosToAdd = (args.studios_add ?? []).slice();
         const genresToAdd = (args.genres_add ?? []).slice();
+        const studiosToRemove = (args.studios_remove ?? []).slice();
         const genresToRemove = (args.genres_remove ?? []).slice();
         const oldAnime = await this.prisma.anime.findUnique({
             where: { id: args.id},
             select: {
                 type: true,
                 genres: {
+                    select: {
+                        id: true,
+                    },
+                },
+                studios: {
                     select: {
                         id: true,
                     },
@@ -741,6 +748,38 @@ export class AnimeService {
                 {
                     animeId: anime.id,
                     genreId,
+                },
+                -1,
+            );
+        });
+
+        const oldAnimeStudiosIds = oldAnime?.studios.map(el => el.id) ?? [];
+        studiosToAdd.forEach(studioId => {
+            if (oldAnimeStudiosIds.includes(studioId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeStudio',
+                {
+                    animeId: anime.id,
+                    studioId,
+                },
+                1,
+            );
+        });
+        studiosToRemove.forEach(studioId => {
+            if (!oldAnimeStudiosIds.includes(studioId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeStudio',
+                {
+                    animeId: anime.id,
+                    studioId,
                 },
                 -1,
             );

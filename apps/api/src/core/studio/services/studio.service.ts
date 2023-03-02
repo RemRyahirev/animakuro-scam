@@ -15,6 +15,7 @@ import { UpdateStudioResultsType } from '../models/results/update-studio-results
 import { CreateStudioInputType } from '../models/inputs/create-studio-input.type';
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
 import { Studio } from '../models/studio.model';
+import { StatisticService } from '@app/common/services/statistic.service';
 
 @Injectable()
 export class StudioService {
@@ -22,6 +23,7 @@ export class StudioService {
 
     constructor(
         private prisma: PrismaService,
+        private statistics: StatisticService,
         private fileUpload: FileUploadService,
         private paginationService: PaginationService,
     ) {
@@ -195,6 +197,16 @@ export class StudioService {
         args: UpdateStudioInputType,
         user_id: string,
     ): Promise<UpdateStudioResultsType> {
+        const oldStudio = await this.prisma.studio.findUnique({
+            where: { id: args.id },
+            select: {
+                animes: {
+                    select: {
+                        id: true,
+                    },
+                },
+            }
+        })
         const studio = await this.prisma.studio.update({
             where: { id: args.id },
             data: {
@@ -229,6 +241,42 @@ export class StudioService {
                 studio: null,
             };
         }
+
+        const animesToAdd = (args.animes_to_add ?? []).slice();
+        const animesToRemove = (args.animes_to_remove ?? []).slice();
+        const oldStudioAnimesIds = oldStudio?.animes.map(el => el.id) ?? [];
+        
+        animesToAdd.forEach(animeId => {
+            if (oldStudioAnimesIds.includes(animeId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeStudio',
+                {
+                    animeId,
+                    studioId: studio.id,
+                },
+                1,
+            );
+        });
+        animesToRemove.forEach(animeId => {
+            if (!oldStudioAnimesIds.includes(animeId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeStudio',
+                {
+                    animeId,
+                    studioId: studio.id,
+                },
+                -1,
+            );
+        });
+
         return {
             success: true,
             studio: studio as any,

@@ -321,6 +321,19 @@ export class CalculationService implements OnModuleInit {
                     break
 
                 case 'animeInUserFolder':
+                    const folder = await this.prisma.userFolder.findUnique({
+                        where: {
+                            id: event.params.folderId,
+                        },
+                        select: {
+                            is_statistic_active: true,
+                        },
+                    });
+
+                    if (!folder?.is_statistic_active) {
+                        break;
+                    }
+
                     await Promise.all([
                         this.updateUserStatistics(
                             event.params.userId,
@@ -338,24 +351,6 @@ export class CalculationService implements OnModuleInit {
                             event.value,
                         ),
                     ]);
-
-                    const folder = await this.prisma.userFolder.findUnique({
-                        where: {
-                            id: event.params.folderId,
-                        },
-                        select: {
-                            is_statistic_active: true,
-                        },
-                    });
-
-                    if (!folder?.is_statistic_active) {
-                        break;
-                    }
-
-                    if (event.params.folderType !== FolderType.COMPLETED) {
-                        break;
-                    }
-
                     const anime = await this.prisma.anime.findUnique({
                         where: {
                             id: event.params.animeId,
@@ -366,11 +361,25 @@ export class CalculationService implements OnModuleInit {
                                 select: {
                                     id: true,
                                 },
-                            }
+                            },
                         },
                     });
 
                     if (!anime?.type) {
+                        break;
+                    }
+
+                    await Promise.all([
+                        ...(anime.genres?.map((genre) =>
+                            this.updateUserStatistics(
+                                event.params.userId,
+                                ['folder', 'genre', genre.id],
+                                event.value,
+                            ),
+                        ) ?? []),
+                    ]);
+
+                    if (event.params.folderType !== FolderType.COMPLETED) {
                         break;
                     }
 
@@ -448,6 +457,7 @@ export class CalculationService implements OnModuleInit {
                             ['folder', 'id', event.params.folderId],
                             animeCountDiff,
                         ),
+                            //this
                     ]);
 
                     if (event.params.folderType === FolderType.COMPLETED) {
@@ -503,7 +513,7 @@ export class CalculationService implements OnModuleInit {
                 case 'animeGenre':
                     const allFoldersAG = await this.prisma.userFolder.findMany({
                         where: {
-                            type: FolderType.COMPLETED,
+                            // type: FolderType.COMPLETED,
                             is_statistic_active: true,
                             animes: {
                                 some: {
@@ -513,17 +523,73 @@ export class CalculationService implements OnModuleInit {
                         },
                         select: {
                             user_id: true,
+                            type: true,
                         },
                     });
 
-                    await Promise.all(allFoldersAG?.map(folder =>
-                        this.updateUserStatistics(
-                            folder.user_id,
-                            ['viewedAnime', 'genre', event.params.genreId],
-                            event.value,
-                        ),
-                    ) ?? []);
+                    await Promise.all([
+                        ...allFoldersAG
+                            ?.filter((el) => el.type === FolderType.COMPLETED)
+                            .map((folder) =>
+                                this.updateUserStatistics(
+                                    folder.user_id,
+                                    [
+                                        'viewedAnime',
+                                        'genre',
+                                        event.params.genreId,
+                                    ],
+                                    event.value,
+                                ),
+                        ) ?? [],
+                        ...allFoldersAG?.map((folder) =>
+                            this.updateUserStatistics(
+                                folder.user_id,
+                                ['folder', 'genre', event.params.genreId],
+                                event.value,
+                            ),
+                        ) ?? [],
+                    ]);
                     break;
+
+                    case 'animeStudio':
+                        const allFoldersAS = await this.prisma.userFolder.findMany({
+                            where: {
+                                is_statistic_active: true,
+                                animes: {
+                                    some: {
+                                        id: event.params.animeId,
+                                    },
+                                },
+                            },
+                            select: {
+                                user_id: true,
+                                type: true,
+                            },
+                        });
+    
+                        await Promise.all([
+                            ...allFoldersAS
+                                ?.filter((el) => el.type === FolderType.COMPLETED)
+                                .map((folder) =>
+                                    this.updateUserStatistics(
+                                        folder.user_id,
+                                        [
+                                            'viewedAnime',
+                                            'studio',
+                                            event.params.studioId,
+                                        ],
+                                        event.value,
+                                    ),
+                            ) ?? [],
+                            ...allFoldersAS?.map((folder) =>
+                                this.updateUserStatistics(
+                                    folder.user_id,
+                                    ['folder', 'studio', event.params.studioId],
+                                    event.value,
+                                ),
+                            ) ?? [],
+                        ]);
+                        break;
 
                 case 'getAnime':
                     await this.updateAnimeStatistics(

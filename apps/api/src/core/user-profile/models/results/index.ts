@@ -8,3 +8,4 @@ export * from './get-user-favourite-genres-result.type';
 export * from './get-user-favourite-studios-result.type';
 export * from './get-user-profile-results.type';
 export * from './update-user-profile-results.type';
+export * from './get-animes-genres-statistic-result.type';

@@ -30,6 +30,18 @@ export class UserFolderStatistic {
         description: 'Amount of anime in all user folders',
     })
     total?: number;
+
+    @Field(() => GraphQLJSONObject, {
+        nullable: true,
+        description: 'genre.id in keys, amount of animes in genres in value',
+    })
+    genre?: Record<string, number>;
+
+    @Field(() => GraphQLJSONObject, {
+        nullable: true,
+        description: 'studio.id in keys, amount of animes in studios in value',
+    })
+    studio?: Record<string, number>;
 }
 
 @ObjectType()
@@ -54,6 +66,12 @@ export class UserViewedAnimeStatistic {
         description: 'genre.id in keys, amount of viewed anime of this genre in value'
     })
     genre?: Record<string, number>;
+
+    @Field(() => GraphQLJSONObject, {
+        nullable: true,
+        description: 'studio.id in keys, amount of viewed anime of this studio in value',
+    })
+    studio?: Record<string, number>;
 }
 
 @ObjectType()
