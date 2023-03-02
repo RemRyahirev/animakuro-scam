@@ -14,6 +14,7 @@ import {
     UpdateUserFavouriteCharactersResultType,
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
+    UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
 import { GetHistoryAnimeResultsType } from '../models/results/get-history-anime-results.type';
 import { AddHistoryAnimeResultsType } from '../models/results/add-history-anime-results.type';
@@ -78,6 +79,11 @@ export class UserProfileMutationType {
         description: 'Add author history'
     })
     addHistoryAuthor: AddHistoryAuthorResultsType
+
+    @Field(() => UpdateUserFavouriteCollectionsResultType, {
+        description: 'Update user Favourites by Collections',
+    })
+    updateFavouriteCollections: UpdateUserFavouriteCollectionsResultType;
 }
 
 @ObjectType()

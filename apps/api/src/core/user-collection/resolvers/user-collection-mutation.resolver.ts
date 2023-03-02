@@ -5,11 +5,19 @@ import { AccessToken } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
-import { CreateUserCollectionInputType } from '../models/inputs/create-user-collection-input.type';
-import { CreateUserCollectionResultsType } from '../models/results/create-user-collection-results.type';
-import { UpdateUserCollectionResultsType } from '../models/results/update-user-collection-results.type';
-import { UpdateUserCollectionInputType } from '../models/inputs/update-user-collection-input.type';
-import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
+import {
+    CreateUserCollectionResultsType,
+    UpdateRatingUserCollectionResultsType,
+    DeleteUserCollectionResultsType,
+    UpdateUserCollectionResultsType,
+} from '../models/results';
+
+import {
+    UpdateUserCollectionInputType,
+    UpdateRatingUserCollectionInputType,
+    CreateUserCollectionInputType,
+} from '../models/inputs';
+
 import { UserCollectionService } from '../services/user-collection.service';
 
 import {
@@ -43,8 +51,12 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateUserCollection(
         @Args() args: UpdateUserCollectionInputType,
+        @AccessToken() user_id: string,
     ): Promise<UpdateUserCollectionResultsType> {
-        return await this.userCollectionService.updateUserCollection(args);
+        return await this.userCollectionService.updateUserCollection(
+            args,
+            user_id,
+        );
     }
 
     @ResolveField(() => DeleteUserCollectionResultsType, {
@@ -55,5 +67,19 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
         @Args('id') id: string,
     ): Promise<DeleteUserCollectionResultsType> {
         return await this.userCollectionService.deleteUserCollection(id);
+    }
+
+    @ResolveField(() => UpdateRatingUserCollectionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async updateRatingUserCollection(
+        @Args() args: UpdateRatingUserCollectionInputType,
+        @AccessToken() user_id: string,
+    ): Promise<UpdateRatingUserCollectionResultsType> {
+        return await this.userCollectionService.updateRatingUserCollection({
+            ...args,
+            user_id,
+        });
     }
 }

@@ -61,6 +61,9 @@ export class User {
     @Field(() => [Genre])
     favourite_genres: Genre[];
 
+    @Field(() => [UserCollection])
+    favourite_collections: UserCollection[];
+
     @Field(() => [UserFolder])
     user_folders: UserFolder[];
 

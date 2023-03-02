@@ -13,6 +13,7 @@ import {
     UpdateUserFavouriteAuthorsInputType,
     UpdateUserFavouriteGenresInputType,
     UpdateUserFavouriteCharactersInputType,
+    UpdateUserFavouriteCollectionsInputType,
 } from '../models/inputs';
 import {
     CreateUserProfileResultsType,
@@ -23,6 +24,7 @@ import {
     UpdateUserFavouriteCharactersResultType,
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
+    UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
 import { UserProfileService } from '../services/user-profile.service';
 
@@ -141,6 +143,20 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         @Args() args: UpdateUserFavouriteStudiosInputType,
     ): Promise<UpdateUserFavouriteStudiosResultType> {
         return await this.userProfileService.updateFavouriteStudios(
+            args,
+            user_id,
+        );
+    }
+
+    @ResolveField(() => UpdateUserFavouriteStudiosResultType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async updateFavouriteCollections(
+        @AccessToken() user_id: string,
+        @Args() args: UpdateUserFavouriteCollectionsInputType,
+    ): Promise<UpdateUserFavouriteCollectionsResultType> {
+        return await this.userProfileService.updateFavouriteCollections(
             args,
             user_id,
         );

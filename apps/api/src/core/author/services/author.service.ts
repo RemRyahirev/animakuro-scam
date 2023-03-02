@@ -208,7 +208,9 @@ export class AuthorService {
             },
             include: {
                 animes: {
-                    ...favourite_by_validation,
+                    include: {
+                        ...favourite_by_validation,
+                    },
                 },
                 ...favourite_by_validation,
             },
@@ -225,7 +227,7 @@ export class AuthorService {
         const is_favourite_result = (el: any) =>
             favourite &&
             user_id && {
-                animes: el.animes.map((el: any) => ({
+                animes: el.animes?.map((el: any) => ({
                     ...el,
                     is_favourite: el.favourite_by.length > 0 ? true : false,
                 })),

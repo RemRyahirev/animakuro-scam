@@ -23,6 +23,7 @@ import { User } from '../../user/models/user.model';
 
 import { Stills } from './stills.model';
 import { AnimeHistory } from './history.model';
+import { UserFolder } from '../../user-folder/models/user-folder.model';
 
 @ObjectType()
 export class Anime {
@@ -212,6 +213,12 @@ export class Anime {
         nullable: true,
     })
     studios?: Studio[];
+
+    @Field(() => [UserFolder], {
+        description: 'The userFolder',
+        nullable: true,
+    })
+    user_folders?: UserFolder[];
 
     @Field(() => [AiringSchedule], {
         description: `List of anime's airing schedule`,
