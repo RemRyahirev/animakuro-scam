@@ -17,6 +17,7 @@ import {
     UpdateUserFavouriteGenresInputType,
     UpdateUserFavouriteCharactersInputType,
     GetUserProfileInputType,
+    UpdateUserFavouriteCollectionsInputType,
 } from '../models/inputs';
 import {
     GetListUserProfileResultsType,
@@ -29,6 +30,7 @@ import {
     UpdateUserFavouriteCharactersResultType,
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
+    UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
 import { notificationsDefault } from '../../profile-settings/models/inputs/defaults/notifications.default';
 import { GetHistoryBaseInputType } from '../models/inputs/get-history-base-input.type';
@@ -41,6 +43,7 @@ import { AddHistoryAuthorInputType } from '../models/inputs/add-history-author-i
 import { AddHistoryAuthorResultsType } from '../models/results/add-history-author-results.type';
 import { AddHistoryCharacterInputType } from '../models/inputs/add-history-character-input.type';
 import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
+import { UserCollection } from '../../user-collection/models/user-collection.model';
 
 @Injectable()
 export class UserProfileService {
@@ -81,6 +84,7 @@ export class UserProfileService {
             favourite_characters: true,
             favourite_genres: true,
             favourite_studios: true,
+            favourite_collections: true,
             user_folders: true,
             user_collection: true,
         };
@@ -129,7 +133,7 @@ export class UserProfileService {
         if (!userProfile) {
             errors.push({
                 property: 'userProfileQueries.getUserProfile',
-                reason: 'The user has been not found or his profile is closed!',
+                reason: 'ACCES_DENIDED_PROFILE_PRIVATE',
                 value: 401,
             });
         }
@@ -671,6 +675,77 @@ export class UserProfileService {
             success: true,
             errors: [],
             userFavouriteGenres: userFavouriteGenres['favourite_genres'] as any,
+        };
+    }
+    async updateFavouriteCollections(
+        args: UpdateUserFavouriteCollectionsInputType,
+        user_id: string,
+    ): Promise<UpdateUserFavouriteCollectionsResultType> {
+        const collectionToAdd = (args.favourite_collections_add ?? []).slice();
+        const collectionToRemove = (args.favourite_collections_remove ?? []).slice();
+        const oldFavoriteCollection = await this.prisma.user.findUnique({
+            where: {
+                id: user_id,
+            },
+            select: {
+                favourite_collections: {
+                    select: {
+                        id: true,
+                    },
+                },
+            },
+        });
+        const userFavouriteCollections = await this.prisma.user.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                ...entityUpdateUtil('favourite_collections', args),
+            },
+            select: {
+                favourite_collections: true,
+            },
+        });
+
+        const oldFavoriteCollectionIds =
+            oldFavoriteCollection?.favourite_collections.map((el) => el.id) ?? [];
+        collectionToAdd.forEach((collectionId) => {
+            if (oldFavoriteCollectionIds.includes(collectionId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'collectionInFavorites',
+                {
+                    collectionId,
+                    userId: user_id,
+                },
+                1,
+            );
+        });
+        collectionToRemove.forEach((collectionId) => {
+            if (!oldFavoriteCollectionIds.includes(collectionId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'collectionInFavorites',
+                {
+                    collectionId,
+                    userId: user_id,
+                },
+                -1,
+            );
+        });
+
+        return {
+            success: true,
+            errors: [],
+            userFavouriteCollections: userFavouriteCollections[
+                'favourite_collections'
+            ] as any,
         };
     }
 }

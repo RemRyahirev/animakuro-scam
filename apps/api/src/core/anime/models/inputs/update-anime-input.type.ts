@@ -27,6 +27,7 @@ import {
 import { Relate } from '../related.model';
 import { Similar } from '../similar.model';
 import { UploadStills } from '../stills.model';
+import { AnimeAuthorAddType } from '../anime-author-add.model';
 
 @ArgsType()
 export class UpdateAnimeInputType {
@@ -191,10 +192,9 @@ export class UpdateAnimeInputType {
     characters_remove?: string[];
 
     @IsOptional()
-    @IsUUID(4, { each: true })
     @IsArray()
-    @Field(() => [ID], { nullable: true })
-    authors_add?: string[];
+    @Field(() => [AnimeAuthorAddType], { nullable: true })
+    authors_add?: AnimeAuthorAddType[];
 
     @IsOptional()
     @IsUUID(4, { each: true })

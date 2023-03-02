@@ -55,10 +55,19 @@ export const BUCKET_CONFIG = {
         bucket: 'studios',
         validation: VALIDATION.JpegPngGifSvg,
     },
+
+    userCollectionThumbnails: {
+        maxFileSize: 3,
+        bucket: 'collections_thumbnails',
+        validation: VALIDATION.JpegPng,
+    },
 } satisfies Record<string, BucketConfigItem>;
 
 export function getMaxFileSize() {
     const cdnFileSizeLimit = 6 * 1024 * 1024;
-    const maxFileSize = Object.values(BUCKET_CONFIG).reduce((max, { maxFileSize }) => Math.max(max, maxFileSize), 0);
+    const maxFileSize = Object.values(BUCKET_CONFIG).reduce(
+        (max, { maxFileSize }) => Math.max(max, maxFileSize),
+        0,
+    );
     return Math.min(maxFileSize, cdnFileSizeLimit) * 1024 * 1024;
 }

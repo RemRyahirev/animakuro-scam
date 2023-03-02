@@ -15,6 +15,7 @@ import { GetListUserResultsType } from '../models/results/get-list-user-results.
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { mediaConnectUtil } from '../utils/media-connect.util';
 import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
+import { createUserStatisticOptions } from '../utils/create-user-statistic-option.util';
 
 @Injectable()
 export class UserService {
@@ -40,6 +41,7 @@ export class UserService {
                 favourite_authors: true,
                 favourite_characters: true,
                 favourite_genres: true,
+                favourite_collections: true,
                 favourite_studios: true,
                 user_folders: {
                     include: {
@@ -83,9 +85,9 @@ export class UserService {
                 user: null,
             };
         }
-        const user =
+        const user: any =
             (username || user_id || id) &&
-            this.prisma.user.findUnique({
+            (await this.prisma.user.findUnique({
                 where: !!username
                     ? {
                           username: username,
@@ -95,10 +97,42 @@ export class UserService {
                           id: id ?? user_id,
                       }
                     : {},
-            });
+                include: {
+                    auth: true,
+                    user_profile: {
+                        include: {
+                            profile_settings: true,
+                        },
+                    },
+                    favourite_animes: true,
+                    favourite_authors: true,
+                    favourite_characters: true,
+                    favourite_genres: true,
+                    favourite_collections: true,
+                    favourite_studios: true,
+                    user_folders: {
+                        include: {
+                            animes: true,
+                        },
+                    },
+                    user_collection: {
+                        where: {
+                            is_collection: true,
+                        },
+                        include: {
+                            animes: true,
+                        },
+                    },
+                },
+            }));
         return {
             success: true,
-            user: user as any,
+            user: {
+                ...user,
+                favourite_collections: await createUserStatisticOptions(
+                    user.favourite_collections,
+                ),
+            },
         };
     }
 
@@ -122,6 +156,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -164,6 +199,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -206,6 +242,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -248,6 +285,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -282,6 +320,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -320,6 +359,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
@@ -359,6 +399,7 @@ export class UserService {
                 favourite_characters: true,
                 favourite_genres: true,
                 favourite_studios: true,
+                favourite_collections: true,
                 user_folders: {
                     include: {
                         animes: true,
