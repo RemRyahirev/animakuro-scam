@@ -22,6 +22,6 @@ export class RegisterInputType {
 
     @Field(() => String)
     @IsString()
-    @Length(1, 255)
+    @Length(8, 255)
     password: string;
 }
