@@ -16,7 +16,7 @@ export const statisticData = async () => {
         },
         {
             name: StatisticName.COLLECTION_USER_RATING,
-            data: {}
+            data: {},
         }
     ];
 };
