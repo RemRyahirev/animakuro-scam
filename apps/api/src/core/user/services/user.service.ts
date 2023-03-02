@@ -15,7 +15,7 @@ import { GetListUserResultsType } from '../models/results/get-list-user-results.
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { mediaConnectUtil } from '../utils/media-connect.util';
 import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
-import { createUserCollectionStatisticOptions } from '../../user-collection/utils/create-user-collection-statistic-option';
+import { createUserStatisticOptions } from '../utils/create-user-statistic-option.util';
 
 @Injectable()
 export class UserService {
@@ -125,14 +125,14 @@ export class UserService {
                     },
                 },
             }));
-        if (user && user.statistics) {
-            user.statistics['score'] = createUserCollectionStatisticOptions({
-                userRating: user.statistics['userRating'],
-            });
-        }
         return {
             success: true,
-            user: user,
+            user: {
+                ...user,
+                favourite_collections: await createUserStatisticOptions(
+                    user.favourite_collections,
+                ),
+            },
         };
     }
 
