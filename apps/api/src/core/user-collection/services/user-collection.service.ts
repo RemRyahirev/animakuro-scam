@@ -13,11 +13,12 @@ import { GetListUserCollectionResultsType } from '../models/results/get-list-use
 import { CreateUserCollectionResultsType } from '../models/results/create-user-collection-results.type';
 import { UpdateUserCollectionResultsType } from '../models/results/update-user-collection-results.type';
 import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
-import { UpdateRatingUserCollectionInputType } from '../models/inputs';
+import { GetUserCollectionInputType } from '../models/inputs';
 import { UpdateRatingUserCollectionResultsType } from '../models/results';
 import { RatingUserCollection } from '../models/rating-user-collection.model';
 import { StatisticService } from '@app/common/services/statistic.service';
 import { FileUploadService } from '@app/common/services/file-upload.service';
+import { createUserCollectionOptions } from '../utils/create-user-collection-options';
 
 @Injectable()
 export class UserCollectionService {
@@ -76,37 +77,15 @@ export class UserCollectionService {
     async getUserCollectionListByUserId(
         user_id: string,
         args: PaginationInputType,
+        input: GetUserCollectionInputType,
     ): Promise<GetListUserCollectionResultsType> {
+        const prismaOptions = createUserCollectionOptions({
+            user_id,
+            option: input,
+        });
         const userCollectionList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
-            include: {
-                user: {
-                    include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
-                        user_folders: {
-                            include: {
-                                animes: true,
-                            },
-                        },
-                        auth: true,
-                        favourite_animes: true,
-                        favourite_authors: true,
-                        favourite_genres: true,
-                        favourite_characters: true,
-                        favourite_studios: true,
-                    },
-                },
-                animes: true,
-            },
-            // orderBy: { created_at: 'desc', name: 'asc' }, // сотртировка по дате от свежих и имени от а до я
-            where: {
-                is_collection: true,
-                user_id,
-            },
+            ...prismaOptions,
         });
         const pagination = await this.paginationService.getPagination(
             'userFolder',
@@ -122,35 +101,14 @@ export class UserCollectionService {
 
     async getUserCollectionList(
         args: PaginationInputType,
+        input: GetUserCollectionInputType,
     ): Promise<GetListUserCollectionResultsType> {
+        const prismaOptions = createUserCollectionOptions({
+            option: input,
+        });
         const userCollectionList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
-            where: {
-                is_collection: true,
-            },
-            include: {
-                user: {
-                    include: {
-                        user_profile: {
-                            include: {
-                                profile_settings: true,
-                            },
-                        },
-                        user_folders: {
-                            include: {
-                                animes: true,
-                            },
-                        },
-                        auth: true,
-                        favourite_animes: true,
-                        favourite_authors: true,
-                        favourite_genres: true,
-                        favourite_characters: true,
-                        favourite_studios: true,
-                    },
-                },
-                animes: true,
-            },
+            ...prismaOptions,
         });
         const pagination = await this.paginationService.getPagination(
             'userFolder',

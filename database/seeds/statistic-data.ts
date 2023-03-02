@@ -14,5 +14,9 @@ export const statisticData = async () => {
             name: StatisticName.ANIME_FOLDER,
             data: {},
         },
+        {
+            name: StatisticName.COLLECTION_USER_RATING,
+            data: {}
+        }
     ];
 };
