@@ -19,7 +19,7 @@ model User {
   favourite_authors    Author[]
   favourite_characters Character[]
   favourite_genres     Genre[]
-  favourite_collection UserFolder[]           @relation("user_favourite_collections")
+  favourite_collections UserFolder[]           @relation("user_favourite_collections")
   user_folders         UserFolder[]           @relation("user_folder")
   password             String                 @map("password")
   created_at           DateTime               @default(now()) @map("created_at") @db.Date
