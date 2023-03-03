@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { ProfileId } from '@app/common/decorators';
+import { AccessToken, ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
@@ -38,10 +38,12 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     async createUserCollection(
         @Args() args: CreateUserCollectionInputType,
         @ProfileId() profileId: string,
+        @AccessToken() userId: string,
     ): Promise<CreateUserCollectionResultsType> {
         return await this.userCollectionService.createUserCollection(
             args,
             profileId,
+            userId,
         );
     }
 
@@ -51,11 +53,13 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateUserCollection(
         @Args() args: UpdateUserCollectionInputType,
-        @AccessToken() user_id: string,
+        @ProfileId() profileId: string,
+        @AccessToken() userId: string,
     ): Promise<UpdateUserCollectionResultsType> {
         return await this.userCollectionService.updateUserCollection(
             args,
-            user_id,
+            profileId,
+            userId,
         );
     }
 
@@ -75,11 +79,11 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateRatingUserCollection(
         @Args() args: UpdateRatingUserCollectionInputType,
-        @AccessToken() user_id: string,
+        @ProfileId() user_profile_id: string,
     ): Promise<UpdateRatingUserCollectionResultsType> {
         return await this.userCollectionService.updateRatingUserCollection({
             ...args,
-            user_id,
+            user_profile_id,
         });
     }
 }

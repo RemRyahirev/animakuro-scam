@@ -1,5 +1,6 @@
-import { Field, ID, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { User } from "../../user/models/user.model";
+import { Field, ID, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
+
+import { UserProfile } from './user-profile.model';
 
 export enum HistorySortFields {
     SPENT_TIME = 'spent_time',
@@ -8,17 +9,17 @@ export enum HistorySortFields {
 }
 
 registerEnumType(HistorySortFields, {
-    name: 'HistorySortFields'
-})
+    name: 'HistorySortFields',
+});
 
 
 @ObjectType()
 export class BaseHistoryModel {
     @Field(() => ID)
     id: string;
-    
+
     @Field(() => ID)
-    user_id: string;
+    user_profile_id: string;
 
     @Field(() => Int)
     spent_time: number;
@@ -29,6 +30,6 @@ export class BaseHistoryModel {
     @Field(() => Date)
     updated_at: Date;
 
-    @Field(() => User)
-    user?: User;
+    @Field(() => UserProfile)
+    user_profile?: UserProfile;
 }

@@ -284,9 +284,9 @@ export class UserCollectionService {
 
         const existRating = await this.prisma.ratingUserCollection.findUnique({
             where: {
-                user_id_collection_id: {
+                user_profile_id_collection_id: {
                     collection_id: args.collection_id,
-                    user_id: args.user_id,
+                    user_profile_id: args.user_profile_id,
                 },
             },
         });
@@ -295,9 +295,9 @@ export class UserCollectionService {
                 await this.prisma.ratingUserCollection.update({
                     data: args,
                     where: {
-                        user_id_collection_id: {
+                        user_profile_id_collection_id: {
                             collection_id: args.collection_id,
-                            user_id: args.user_id,
+                            user_profile_id: args.user_profile_id,
                         },
                     },
                 });

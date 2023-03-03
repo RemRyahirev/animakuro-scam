@@ -17,6 +17,8 @@ type NodeEntry = {
     node: any;
 };
 
+const MAX_DEPTH = 5;
+
 const scanInfoForExtensions = (
     node: any,
     path = '',
@@ -36,7 +38,7 @@ const scanInfoForExtensions = (
 
     let child = node.type?.ofType?.ofType || node.type?.ofType;
 
-    if (!child && newPath.split('.').length < 12 && (node.type?._fields || node.type?.extensions)) {
+    if (!child && newPath.split('.').length < MAX_DEPTH && (node.type?._fields || node.type?.extensions)) {
         child = node.type;
     }
 

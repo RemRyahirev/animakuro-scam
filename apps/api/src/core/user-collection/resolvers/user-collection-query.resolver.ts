@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken } from '@app/common/decorators';
+import { ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { PaginationInputType } from '@app/common/models/inputs';
@@ -47,14 +47,14 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)
-    async getUserCollectionListByUserId(
-        @AccessToken() user_id: string,
+    async getUserCollectionListByProfileId(
+        @ProfileId() profileId: string,
         @Args('id', { nullable: true }) id: string,
         @Args() input: GetUserCollectionInputType,
         @Args() args: PaginationInputType,
     ): Promise<GetListUserCollectionResultsType> {
-        return this.userCollectionService.getUserCollectionListByUserId(
-            id ?? user_id,
+        return this.userCollectionService.getUserCollectionListByProfileId(
+            id ?? profileId,
             args,
             input
         );

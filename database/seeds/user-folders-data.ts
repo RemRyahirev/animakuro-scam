@@ -11,7 +11,7 @@ export const userFoldersData = async () => {
         throw new Error('Either UserProfile or Anime table is empty or not available');
     }
 
-    const [anime1, anime2, anime3, anime4, ] = animeList;
+    const [anime1, anime2, anime3, anime4] = animeList;
     const [profile1, profile2, profile3] = profileList;
     const [file1, file2, file3, file4] = fileList;
 
@@ -103,9 +103,9 @@ export const userFoldersData = async () => {
         {
             id: '08599e44-218c-4433-9974-4c11e377d84b',
             description: 'Сборник моих любимых аниме_2',
-            user_profile_id: profile4.id,
-            user_collection_id: profile4.id,
-            user_favourite_collections_id: profile4.id,
+            user_profile_id: profile3.id,
+            user_collection_id: profile3.id,
+            user_favourite_collections_id: profile3.id,
             hashtags: ['ANIME'],
             name: 'Любимые аниме_2',
             type: 'DEFAULT',
@@ -129,9 +129,9 @@ export const userFoldersData = async () => {
         {
             id: 'edb1f80c-a9b4-4551-b6ca-0355a02b8089',
             description: 'Сборник моих любимых аниме_3',
-            user_profile_id: profile5.id,
-            user_collection_id: profile5.id,
-            user_favourite_collections_id: profile5.id,
+            user_profile_id: profile1.id,
+            user_collection_id: profile1.id,
+            user_favourite_collections_id: profile1.id,
             hashtags: ['ANIME'],
             name: 'Любимые аниме_3',
             thumbnail_id: file1.id,

@@ -354,13 +354,13 @@ model RatingAnime {
 }
 
 model RatingUserCollection {
-  user_profile      UserProfile     @relation(fields: [user_pofile_id], references: [id], onDelete: Cascade)
-  user_pofile_id    String          @db.Uuid
+  user_profile      UserProfile     @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id   String          @db.Uuid
   collection        UserFolder      @relation(fields: [collection_id], references: [id], onDelete: Cascade)
   collection_id     String          @db.Uuid
   rating            Int
 
-  @@id([user_pofile_id, collection_id])
+  @@id([user_profile_id, collection_id])
   @@map("rating_user_collection")
 }
 

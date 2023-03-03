@@ -5,7 +5,7 @@ import { Field, ID, InputType, Int } from '@nestjs/graphql';
 export class RatingUserCollection {
     @IsUUID()
     @Field(() => ID)
-    user_id: string;
+    user_profile_id: string;
 
     @IsUUID()
     @Field(() => ID)
