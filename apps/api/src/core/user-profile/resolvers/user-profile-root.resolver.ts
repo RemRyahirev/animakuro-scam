@@ -14,7 +14,14 @@ import {
     UpdateUserFavouriteCharactersResultType,
     UpdateUserFavouriteGenresResultType,
     UpdateUserFavouriteStudiosResultType,
+    UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
+import { GetHistoryAnimeResultsType } from '../models/results/get-history-anime-results.type';
+import { AddHistoryAnimeResultsType } from '../models/results/add-history-anime-results.type';
+import { GetHistoryCharacterResultsType } from '../models/results/get-history-character-results.type';
+import { GetHistoryAuthorResultsType } from '../models/results/get-history-author-results.type';
+import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
+import { AddHistoryAuthorResultsType } from '../models/results/add-history-author-results.type';
 
 @ObjectType()
 export class UserProfileMutationType {
@@ -57,6 +64,26 @@ export class UserProfileMutationType {
         description: 'Update user Favourites by Studios',
     })
     updateFavouriteStudios: UpdateUserFavouriteStudiosResultType;
+
+    @Field(() => AddHistoryAnimeResultsType, {
+        description: 'Add anime history'
+    })
+    addHistoryAnime: AddHistoryAnimeResultsType
+
+    @Field(() => AddHistoryCharacterResultsType, {
+        description: 'Add character history'
+    })
+    addHistoryCharacter: AddHistoryCharacterResultsType
+
+    @Field(() => AddHistoryAuthorResultsType, {
+        description: 'Add author history'
+    })
+    addHistoryAuthor: AddHistoryAuthorResultsType
+
+    @Field(() => UpdateUserFavouriteCollectionsResultType, {
+        description: 'Update user Favourites by Collections',
+    })
+    updateFavouriteCollections: UpdateUserFavouriteCollectionsResultType;
 }
 
 @ObjectType()
@@ -70,6 +97,21 @@ export class UserProfileQueryType {
         description: 'Get user profile list',
     })
     getUserProfileList: GetListUserProfileResultsType;
+
+    @Field(() => GetHistoryAnimeResultsType, {
+        description: 'Get anime history'
+    })
+    getHistoryAnime: GetHistoryAnimeResultsType
+
+    @Field(() => GetHistoryCharacterResultsType, {
+        description: 'Get character history'
+    })
+    getHistoryCharacter: GetHistoryCharacterResultsType
+
+    @Field(() => GetHistoryAuthorResultsType, {
+        description: 'Get author history'
+    })
+    getHistoryAuthor: GetHistoryAuthorResultsType
 }
 
 @Resolver()

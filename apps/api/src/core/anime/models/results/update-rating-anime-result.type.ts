@@ -6,7 +6,7 @@ import { BaseResultsType } from '@app/common/models/results';
 export class UpdateRatingAnimeResultsType extends BaseResultsType {
     @Field(() => Number, {
         nullable: true,
-        description: 'update Anime reyting',
+        description: 'update Anime rating',
     })
     rating: number;
 }

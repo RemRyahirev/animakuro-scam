@@ -62,9 +62,9 @@ async function bootstrap(): Promise<void> {
                 'oauth/google',
                 'oauth/google/redirect',
                 'oauth/apple',
+                'oauth/apple/redirect',
                 'oauth/discord',
                 'oauth/discord/redirect',
-                'oauth/apple/redirect',
                 'oauth/facebook',
                 'oauth/facebook/redirect',
                 'oauth/apple',
@@ -73,7 +73,12 @@ async function bootstrap(): Promise<void> {
                 'oauth/twitter/redirect',
             ],
         });
-        app.use(graphqlUploadExpress({ maxFiles: 50, maxFileSize: getMaxFileSize() }))
+        app.use(
+            graphqlUploadExpress({
+                maxFiles: 50,
+                maxFileSize: getMaxFileSize(),
+            }),
+        );
         app.useGlobalFilters(new PrismaClientExceptionFilter());
         app.useGlobalFilters(new ValidationExceptionFilter());
         app.useGlobalPipes(

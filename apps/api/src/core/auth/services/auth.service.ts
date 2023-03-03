@@ -1,7 +1,7 @@
 import geoip from 'geoip-lite';
 import requestIp from 'request-ip';
 import { Context } from 'vm';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
 import {
@@ -58,7 +58,7 @@ export class AuthService {
                 errors: [
                     {
                         property: 'token',
-                        value: token,
+                        value: '401',
                         reason: 'No user matched by this token',
                     },
                 ],
@@ -114,7 +114,6 @@ export class AuthService {
         args: LoginInputType,
         context: Context,
     ): Promise<LoginResultsType> {
-        // TODO made setup mail notification
         const user = (await this.userService.findUserByUsername(
             args.username,
         )) as unknown as NonNullable<User>;
@@ -126,7 +125,7 @@ export class AuthService {
         });
         const access_token = await this.tokenService.generateToken(
             user.id,
-            session.auth_session!.id ?? null,
+            session.auth_session?.id ?? null,
             TokenType.ACCESS_TOKEN,
         );
         const userIp = requestIp.getClientIp(context.req) || 1;
@@ -170,7 +169,6 @@ export class AuthService {
 
     async sendEmail(
         args: RegisterInputType,
-        context: ExecutionContext,
         req: any,
         res: any,
     ): Promise<LogoutResultsType> {
@@ -180,15 +178,12 @@ export class AuthService {
             };
         }
         if (await this.throttler._handleRequest(1, 120, req, res)) {
-            return await this.register(args, context);
+            return await this.register(args);
         }
         return { success: false };
     }
 
-    async register(
-        args: RegisterInputType,
-        context: Context,
-    ): Promise<LogoutResultsType> {
+    async register(args: RegisterInputType): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
         const token = await this.tokenService.generateEmailToken(
             args.email,
@@ -268,14 +263,13 @@ export class AuthService {
             );
             await this.prisma.auth.create({
                 data: {
-                    // @ts-ignore
                     type: auth_type.toUpperCase() as keyof typeof AuthType,
                     access_token,
                     uuid: profile.account.uuid,
                     email: profile.account.email,
                     username: profile.account.username,
                     avatar: profile.account.avatar,
-                    user_id: result!.id,
+                    user_id: result?.id,
                 },
             });
 
@@ -308,14 +302,13 @@ export class AuthService {
             );
             await this.prisma.auth.create({
                 data: {
-                    // @ts-ignore
                     type: auth_type.toUpperCase() as keyof typeof AuthType,
                     access_token,
                     uuid: profile.account.uuid,
                     email: profile.account.email,
                     username,
                     avatar: profile.account.avatar,
-                    user_id: user!.id,
+                    user_id: user?.id,
                 },
             });
 
@@ -339,7 +332,7 @@ export class AuthService {
                 errors: [
                     {
                         property: 'access_token',
-                        value: user_id,
+                        value: '401',
                         reason: 'Token is invalid',
                     },
                 ],
@@ -352,12 +345,100 @@ export class AuthService {
         });
         await this.prisma.authSession.update({
             where: {
-                id: authorizedSession!.id,
+                id: authorizedSession?.id,
             },
             data: {
                 active: false,
             },
         });
         return { success: true };
+    }
+
+    async resetPasswordFirstStep(name: string): Promise<LogoutResultsType> {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                username: name,
+            },
+        });
+
+        if (!user) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'username',
+                        value: '404',
+                        reason: 'User is not find',
+                    },
+                ],
+            };
+        }
+
+        const token = await this.tokenService.generateResetToken(name, user.id);
+
+        await this.mailer.sendMail(
+            {
+                to: user.email,
+                subject: 'Reset password',
+            },
+            MailPurpose.RESET_PASSWORD,
+            {
+                username: name,
+                confirm_link:
+                    'https://' +
+                    this.configService.get<string>('RESET_PASS_REDIRECT_HOST') +
+                    '/' +
+                    token,
+            },
+        );
+        console.log(token);
+
+        return {
+            success: true,
+        };
+    }
+
+    async resetPasswordSecondStep(
+        newPassword: string,
+        code: string,
+    ): Promise<LoginResultsType> {
+        const decoded = await this.tokenService.decodeResetPassToken(code);
+
+        if (newPassword.length < 2) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'password',
+                        value: '400',
+                        reason: 'Password is invalid',
+                    },
+                ],
+                user: null as any,
+                access_token: '',
+            };
+        }
+        const password = await this.passwordService.encrypt(newPassword);
+
+        const user = await this.prisma.user.update({
+            where: {
+                username: decoded.username,
+            },
+            data: {
+                password,
+            },
+        });
+
+        const access_token = await this.tokenService.generateToken(
+            user.id as any,
+            null,
+            TokenType.ACCESS_TOKEN,
+        );
+
+        return {
+            user: user as any,
+            access_token,
+            success: true,
+        };
     }
 }

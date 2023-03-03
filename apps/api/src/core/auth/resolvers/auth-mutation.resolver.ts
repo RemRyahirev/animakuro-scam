@@ -1,8 +1,11 @@
-import { Profile } from 'passport';
-import { ExecutionContext, Req, UseGuards } from '@nestjs/common';
+import { ExecutionContext, UseGuards } from '@nestjs/common';
 import { Args, Context, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AccessToken, SocialProfile, ValidateSchemas } from '@app/common/decorators';
+import {
+    AccessToken,
+    SocialProfile,
+    ValidateSchemas,
+} from '@app/common/decorators';
 import { SocialAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { AuthType } from '@app/common/models/enums';
@@ -30,7 +33,6 @@ export class AuthMutationResolver extends AuthRootResolver {
     ): Promise<LogoutResultsType> {
         return await this.authService.sendEmail(
             args,
-            context,
             //@ts-ignore
             context.req,
             //@ts-ignore
@@ -77,5 +79,23 @@ export class AuthMutationResolver extends AuthRootResolver {
         @Args('token') token: string,
     ): Promise<RegisterResultsType> {
         return await this.authService.emailConfirmation(token);
+    }
+
+    @ResolveField(() => LogoutResultsType)
+    async resetPassFirstStep(
+        @Args('username') username: string,
+    ): Promise<LogoutResultsType> {
+        return await this.authService.resetPasswordFirstStep(username);
+    }
+
+    @ResolveField(() => LoginResultsType)
+    async resetPassSecondStep(
+        @Args('newPassword') newPassword: string,
+        @Args('code') code: string,
+    ): Promise<LoginResultsType> {
+        return await this.authService.resetPasswordSecondStep(
+            newPassword,
+            code,
+        );
     }
 }

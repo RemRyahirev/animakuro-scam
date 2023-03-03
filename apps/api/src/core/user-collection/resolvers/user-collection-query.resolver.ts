@@ -14,6 +14,7 @@ import {
     UserCollectionQueryType,
     UserCollectionRootResolver,
 } from './user-collection-root.resolver';
+import { GetUserCollectionInputType } from '../models/inputs';
 
 @Resolver(UserCollectionQueryType)
 export class UserCollectionQueryResolver extends UserCollectionRootResolver {
@@ -37,8 +38,9 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async getUserCollectionList(
         @Args() args: PaginationInputType,
+        @Args() input: GetUserCollectionInputType,
     ): Promise<GetListUserCollectionResultsType> {
-        return await this.userCollectionService.getUserCollectionList(args);
+        return await this.userCollectionService.getUserCollectionList(args, input);
     }
 
     @ResolveField(() => GetListUserCollectionResultsType, {
@@ -47,12 +49,14 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
     @UseGuards(JwtAuthGuard)
     async getUserCollectionListByUserId(
         @AccessToken() user_id: string,
-        @Args('user_id') id: string,
+        @Args('id', { nullable: true }) id: string,
+        @Args() input: GetUserCollectionInputType,
         @Args() args: PaginationInputType,
     ): Promise<GetListUserCollectionResultsType> {
         return this.userCollectionService.getUserCollectionListByUserId(
             id ?? user_id,
             args,
+            input
         );
     }
 }

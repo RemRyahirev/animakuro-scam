@@ -35,6 +35,7 @@ import { MailerModule } from './mailer/mailer.module';
             driver: ApolloDriver,
             autoSchemaFile: true,
             fieldResolverEnhancers: ['guards', 'interceptors'],
+            introspection: true,
             playground: {
                 settings: {
                     'request.credentials': 'include',

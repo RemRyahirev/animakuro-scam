@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { AnimeStillsType, OpeningEndingType, RatingAnime } from '@prisma/client';
 
 import { AnimeApproval, AnimeRelation } from '@app/common/models/enums';
-import { PaginationInputType, FavouriteInputType } from '@app/common/models/inputs';
+import {
+    PaginationInputType,
+    FavouriteInputType,
+} from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
@@ -82,6 +85,34 @@ export class AnimeService {
             min_ending_start,
             max_stills,
         } = args;
+        const favouriteSelect = !!favourites && {
+            favourite_authors: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_characters: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_studios: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_genres: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_collections: {
+                select: {
+                    id: true,
+                },
+            },
+        };
+
         const anime: any = await this.prisma.anime.findUnique({
             where: {
                 id,
@@ -94,6 +125,7 @@ export class AnimeService {
                 characters: {
                     take: max_characters_count,
                 },
+                user_folders: true,
                 studios: true,
                 related_by_animes: {
                     take: max_similar_by_animes_count,
@@ -169,67 +201,47 @@ export class AnimeService {
         );
         const opening_ending = [...openings, ...endings];
 
-        const user_favourites =
-            !!favourites &&
-            user_id &&
-            (await this.prisma.user.findUnique({
-                where: {
-                    id: user_id,
-                },
-                include: {
-                    user_profile: {
-                        include: {
-                            favourite_authors: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_characters: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_studios: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_genres: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            }));
+        const favorites_by: any = await this.prisma.userProfile.findUnique({
+            where: {
+                id: profile_id,
+            },
+            select: {
+                ...favouriteSelect,
+            },
+        });
 
         const user_favourites_result = !!favourites &&
             user_id && {
                 is_favourite: anime?.favourite_by.length > 0 ? true : false,
                 characters: anime?.characters.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_characters.some(
+                    is_favourite: favorites_by?.favourite_characters.some(
                         (item: { id: string }) => item.id === el.id,
-                    ) : false,
+                    ),
                 })),
                 genres: anime?.genres.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_genres.some(
+                    is_favourite: favorites_by?.favourite_genres.some(
                         (item: { id: string }) => item.id === el.id,
-                    ) : false,
+                    ),
                 })),
                 studios: anime?.studios.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_studios.some(
+                    is_favourite: favorites_by?.favourite_studios.some(
                         (item: { id: string }) => item.id === el.id,
-                    ) : false,
+                    ),
                 })),
                 authors: anime?.authors.map((el: { id: string }) => ({
                     ...el,
-                    is_favourite: user_favourites ? user_favourites.user_profile?.favourite_authors.some(
+                    is_favourite: favorites_by?.favourite_authors.some(
                         (item: { id: string }) => item.id === el.id,
-                    ) : false,
+                    ),
+                })),
+                user_folders: anime?.user_folders.map((el: { id: string }) => ({
+                    ...el,
+                    is_favourite: favorites_by?.favourite_collections.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
             };
 
@@ -261,7 +273,34 @@ export class AnimeService {
         profile_id: string,
         favourites: boolean,
     ): Promise<GetListAnimeResultsType> {
-        console.time('start');
+        const favouriteSelect = !!favourites && {
+            favourite_authors: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_characters: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_studios: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_genres: {
+                select: {
+                    id: true,
+                },
+            },
+            favourite_collections: {
+                select: {
+                    id: true,
+                },
+            },
+        };
+
         const animeList: any = await this.prisma.anime.findMany({
             ...transformPaginationUtil(args),
             include: {
@@ -321,73 +360,47 @@ export class AnimeService {
             'anime',
             args,
         );
-        const liked =
-            !!favourites &&
-            user_id &&
-            (await this.prisma.user.findUnique({
-                where: {
-                    id: user_id,
-                },
-                select: {
-                    user_profile: {
-                        include: {
-                            favourite_animes: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_authors: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_characters: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_genres: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            favourite_studios: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            }));
-
+        const favorites_by: any = await this.prisma.userProfile.findUnique({
+            where: {
+                id: profile_id,
+            },
+            select: {
+                ...favouriteSelect,
+            },
+        });
         const user_favourites_result = (el: any) =>
             !!favourites &&
             user_id && {
                 is_favourite: el?.favourite_by.length > 0,
                 characters: el?.characters?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked ? liked.user_profile?.favourite_characters.some(
+                    is_favourite: favorites_by?.favourite_characters.some(
                         (item: { id: string }) => item.id === els.id,
-                    ) : false,
+                    ),
                 })),
                 genres: el?.genres?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked ? liked.user_profile?.favourite_genres.some(
+                    is_favourite: favorites_by?.favourite_genres.some(
                         (item: { id: string }) => item.id === els.id,
-                    ) : false,
+                    ),
                 })),
                 studios: el?.studios?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked ? liked.user_profile?.favourite_studios.some(
+                    is_favourite: favorites_by?.favourite_studios.some(
                         (item: { id: string }) => item.id === els.id,
-                    ) : false,
+                    ),
                 })),
                 authors: el?.authors?.map((els: any) => ({
                     ...els,
-                    is_favourite: liked ? liked.user_profile?.favourite_authors.some(
+                    is_favourite: favorites_by?.favourite_authors.some(
                         (item: { id: string }) => item.id === els.id,
-                    ) : false,
+                    ),
+                })),
+                user_folders: el?.user_folders.map((el: { id: string }) => ({
+                    ...el,
+                    is_favourite: favorites_by?.favourite_collections.some(
+                        (item: { id: string }) => item.id === el.id,
+                    ),
                 })),
             };
 
@@ -628,13 +641,20 @@ export class AnimeService {
     ): Promise<UpdateAnimeResultsType> {
         const { ...args } = input;
 
+        const studiosToAdd = (args.studios_add ?? []).slice();
         const genresToAdd = (args.genres_add ?? []).slice();
+        const studiosToRemove = (args.studios_remove ?? []).slice();
         const genresToRemove = (args.genres_remove ?? []).slice();
         const oldAnime = await this.prisma.anime.findUnique({
-            where: { id: args.id},
+            where: { id: args.id },
             select: {
                 type: true,
                 genres: {
+                    select: {
+                        id: true,
+                    },
+                },
+                studios: {
                     select: {
                         id: true,
                     },
@@ -753,6 +773,38 @@ export class AnimeService {
                 {
                     animeId: anime.id,
                     genreId,
+                },
+                -1,
+            );
+        });
+
+        const oldAnimeStudiosIds = oldAnime?.studios.map(el => el.id) ?? [];
+        studiosToAdd.forEach(studioId => {
+            if (oldAnimeStudiosIds.includes(studioId)) {
+                // already exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeStudio',
+                {
+                    animeId: anime.id,
+                    studioId,
+                },
+                1,
+            );
+        });
+        studiosToRemove.forEach(studioId => {
+            if (!oldAnimeStudiosIds.includes(studioId)) {
+                // never exists
+                return;
+            }
+
+            this.statistics.fireEvent(
+                'animeStudio',
+                {
+                    animeId: anime.id,
+                    studioId,
                 },
                 -1,
             );
@@ -1061,20 +1113,28 @@ export class AnimeService {
                     anime_id_user_profile_id: data,
                 },
             });
-            this.statistics.fireEvent('animeRate', {
-                animeId: data.anime_id,
-                stars: existRating.rating,
-            }, -1);
+            this.statistics.fireEvent(
+                'animeRate',
+                {
+                    animeId: data.anime_id,
+                    stars: existRating.rating,
+                },
+                -1,
+            );
         } else {
             ratingResult = await this.prisma.ratingAnime.create({
                 data,
             });
         }
 
-        this.statistics.fireEvent('animeRate', {
-            animeId: data.anime_id,
-            stars: data.rating,
-        }, 1);
+        this.statistics.fireEvent(
+            'animeRate',
+            {
+                animeId: data.anime_id,
+                stars: data.rating,
+            },
+            1,
+        );
 
         return {
             success: true,

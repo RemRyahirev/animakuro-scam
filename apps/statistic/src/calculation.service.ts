@@ -81,6 +81,8 @@ store in redis:
 10. getCharacter (incr)         - GCH:<character_id>
 11. getAuthor (incr)            - GAU:<author_id>
 12. getProfile (incr)           - GPR:<profile_id>
+13. userCollectionRate (incr)   - UCOR:<collection_id>:<stars>
+14. collectionInFavorites (incr)- CFav:<collection_id>
 
 insert incr: zincrby
 insert final: zadd
@@ -151,6 +153,28 @@ export class CalculationService implements OnModuleInit {
         // XXX: there is no other way to make atomic updates on json field with prisma
         return await this.prisma.$executeRawUnsafe(
             `UPDATE anime
+                SET statistics = jsonb_set(
+                      ${buildJsonPath('statistics', path)},
+                      $1::text[],
+                      (COALESCE(statistics#>$1::text[], '0')::int + $2)::text::jsonb
+                    )
+              WHERE id = $3::uuid`,
+            pathStr,
+            value,
+            id,
+        );
+    }
+
+    private async updateFolderStatistic(
+        id: string,
+        path: string[],
+        value: number,
+    ) {
+        const pathStr = '{' + path.join(',') + '}';
+
+        // XXX: there is no other way to make atomic updates on json field with prisma
+        return await this.prisma.$executeRawUnsafe(
+            `UPDATE user_folder
                 SET statistics = jsonb_set(
                       ${buildJsonPath('statistics', path)},
                       $1::text[],
@@ -330,10 +354,6 @@ export class CalculationService implements OnModuleInit {
                         ),
                     ]);
 
-                    if (event.params.folderType !== FolderType.COMPLETED) {
-                        break;
-                    }
-
                     const anime = await this.prisma.anime.findUnique({
                         where: {
                             id: event.params.animeId,
@@ -344,11 +364,25 @@ export class CalculationService implements OnModuleInit {
                                 select: {
                                     id: true,
                                 },
-                            }
+                            },
                         },
                     });
 
                     if (!anime?.type) {
+                        break;
+                    }
+
+                    await Promise.all([
+                        ...(anime.genres?.map((genre) =>
+                            this.updateProfileStatistics(
+                                event.params.profileId,
+                                ['folder', 'genre', genre.id],
+                                event.value,
+                            ),
+                        ) ?? []),
+                    ]);
+
+                    if (event.params.folderType !== FolderType.COMPLETED) {
                         break;
                     }
 
@@ -427,7 +461,7 @@ export class CalculationService implements OnModuleInit {
 
                     if (event.params.folderType === FolderType.COMPLETED) {
                         await Promise.all(
-                            (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string}> }>)
+                            (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string }> }>)
                                 .reduce((arr, anime) => {
                                     arr.push(
                                         this.updateProfileStatistics(
@@ -478,7 +512,6 @@ export class CalculationService implements OnModuleInit {
                 case 'animeGenre':
                     const allFoldersAG = await this.prisma.userFolder.findMany({
                         where: {
-                            type: FolderType.COMPLETED,
                             is_statistic_active: true,
                             animes: {
                                 some: {
@@ -488,17 +521,73 @@ export class CalculationService implements OnModuleInit {
                         },
                         select: {
                             user_profile_id: true,
+                            type: true,
                         },
                     });
 
-                    await Promise.all(allFoldersAG?.map(folder =>
-                        this.updateProfileStatistics(
-                            folder.user_profile_id,
-                            ['viewedAnime', 'genre', event.params.genreId],
-                            event.value,
-                        ),
-                    ) ?? []);
+                    await Promise.all([
+                        ...allFoldersAG
+                            ?.filter((el) => el.type === FolderType.COMPLETED)
+                            .map((folder) =>
+                                this.updateProfileStatistics(
+                                    folder.user_profile_id,
+                                    [
+                                        'viewedAnime',
+                                        'genre',
+                                        event.params.genreId,
+                                    ],
+                                    event.value,
+                                ),
+                        ) ?? [],
+                        ...allFoldersAG?.map((folder) =>
+                            this.updateProfileStatistics(
+                                folder.user_profile_id,
+                                ['folder', 'genre', event.params.genreId],
+                                event.value,
+                            ),
+                        ) ?? [],
+                    ]);
                     break;
+
+                    case 'animeStudio':
+                        const allFoldersAS = await this.prisma.userFolder.findMany({
+                            where: {
+                                is_statistic_active: true,
+                                animes: {
+                                    some: {
+                                        id: event.params.animeId,
+                                    },
+                                },
+                            },
+                            select: {
+                                user_profile_id: true,
+                                type: true,
+                            },
+                        });
+
+                        await Promise.all([
+                            ...allFoldersAS
+                                ?.filter((el) => el.type === FolderType.COMPLETED)
+                                .map((folder) =>
+                                    this.updateProfileStatistics(
+                                        folder.user_profile_id,
+                                        [
+                                            'viewedAnime',
+                                            'studio',
+                                            event.params.studioId,
+                                        ],
+                                        event.value,
+                                    ),
+                            ) ?? [],
+                            ...allFoldersAS?.map((folder) =>
+                                this.updateProfileStatistics(
+                                    folder.user_profile_id,
+                                    ['folder', 'studio', event.params.studioId],
+                                    event.value,
+                                ),
+                            ) ?? [],
+                        ]);
+                        break;
 
                 case 'getAnime':
                     await this.updateAnimeStatistics(
@@ -528,6 +617,43 @@ export class CalculationService implements OnModuleInit {
                     await this.updateProfileStatistics(
                         event.params.profileId,
                         ['requests'],
+                        event.value,
+                    );
+                    break;
+
+                case 'userCollectionRate':
+                    await Promise.all([
+                        this.updateGlobalStatistic(
+                            StatisticName.COLLECTION_USER_RATING,
+                            [String(event.params.stars)],
+                            event.value,
+                        ),
+                        this.updateFolderStatistic(
+                            event.params.collectionId,
+                            ['userRating', String(event.params.stars)],
+                            event.value,
+                        ),
+                    ]);
+                    break;
+                case 'collectionInFavorites':
+                    await Promise.all([
+                        this.updateFolderStatistic(
+                            event.params.collectionId,
+                            ['favorites'],
+                            event.value,
+                        ),
+                        this.updateGlobalStatistic(
+                            StatisticName.FAVORITES,
+                            ['collection'],
+                            event.value,
+                        ),
+                    ]);
+                    break;
+
+                case 'collectionInUserFavorites':
+                    await this.updateProfileStatistics(
+                        event.params.profileId,
+                        ['favorites', 'collection'],
                         event.value,
                     );
                     break;

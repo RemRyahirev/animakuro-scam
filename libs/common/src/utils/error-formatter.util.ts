@@ -77,7 +77,9 @@ export function formatError(error: GraphQLError) {
     let details = error.extensions.details;
 
     const isInternalError = error.extensions?.code === 'INTERNAL_SERVER_ERROR';
-    const prismaErrorCode = (error.extensions?.exception as { code: string } | undefined)?.code;
+    const prismaErrorCode = (
+        error.extensions?.exception as { code: string } | undefined
+    )?.code;
     if (
         isInternalError &&
         prismaErrorCode &&
