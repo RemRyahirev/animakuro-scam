@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Extensions, Field, ID, ObjectType } from '@nestjs/graphql';
 
 import {
     Gender,
@@ -154,6 +154,7 @@ export class UserProfile {
     @Field(() => [UserCollection])
     user_collection: UserCollection[];
 
+    @Extensions({ userIdFilter: { userIdField: '@user_id' } })
     @Field(() => ProfileStatistics, {
         nullable: true,
         description: 'User profile statistics',

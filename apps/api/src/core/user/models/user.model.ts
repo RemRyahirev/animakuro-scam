@@ -38,13 +38,11 @@ export class User {
     })
     avatar?: string | null;
 
-    @Extensions({ userIdFilter: { userIdField: '@id' } })
     @Field(() => Notifications, {
         nullable: true,
     })
     notifications?: Notifications;
 
-    @Extensions({ userIdFilter: { userIdField: '@id' } })
     @Field(() => SubscribeTier, {
         description: 'Type of profile subscription',
         nullable: true,

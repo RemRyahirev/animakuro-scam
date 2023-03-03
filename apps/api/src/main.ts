@@ -88,7 +88,7 @@ async function bootstrap(): Promise<void> {
                 exceptionFactory,
             }),
         );
-        // app.useGlobalInterceptors(new GraphqlFilterInterceptor());
+        app.useGlobalInterceptors(new GraphqlFilterInterceptor());
         const port = configService.get('APP_PORT', 8080);
         await app.listen(port);
         Logger.log(

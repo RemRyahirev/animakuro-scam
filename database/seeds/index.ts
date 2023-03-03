@@ -72,9 +72,9 @@ async function createEntities<
     Logger.log(`➡️ Start seeding ${entityName}s...`);
     for (const entity of entityArray) {
         if (!entity.id) {
-            if (entity.parent_anime_id || entityName === 'statistic') {
+            if (entity.parent_anime_id) {
                 continue;
-            } else {
+            } else if (entityName !== 'statistic') {
                 Logger.log(
                     `ℹ️ Entity id ${entityName} not defined, will be create random`,
                 );
@@ -97,6 +97,9 @@ async function createEntities<
                     name: entity.name,
                 },
             });
+            if (existenceEntity) {
+                continue;
+            }
         } else {
             // @ts-ignore
             existenceEntity = await prisma[entityName].findUnique({
@@ -113,14 +116,14 @@ async function createEntities<
             continue;
         }
         if (existenceEntity) {
-            // @ts-ignore
+                // @ts-ignore
             const updatedEntity = await prisma[entityName].update({
-                where: {
-                    id: entity.id,
-                },
-                data: entity as any,
-            });
-            Logger.log(`🔧 Updated ${entityName} with id: ${updatedEntity.id}`);
+                    where: {
+                        id: entity.id,
+                    },
+                    data: entity as any,
+                });
+                Logger.log(`🔧 Updated ${entityName} with id: ${updatedEntity.id}`);
         }
         if (!existenceEntity) {
             // @ts-ignore

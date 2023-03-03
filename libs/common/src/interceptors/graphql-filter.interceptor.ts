@@ -17,14 +17,34 @@ type NodeEntry = {
     node: any;
 };
 
-const MAX_DEPTH = 5;
+const MAX_DEPTH = 12;
 
 const scanInfoForExtensions = (
     node: any,
+    // used as shape of object to check and not to fall into deep recursion
+    data: any,
     path = '',
 ): ExtensionData[] => {
     let result: ExtensionData[] = [];
     const newPath = path + '.' + node.name;
+
+    const isDataArray = Array.isArray(data) || false;
+    let newData;
+    if (!path) {
+        newData = data;
+    } else if (isDataArray) {
+        newData = data
+            .map((el: any) => el?.[node.name])
+            .filter((el: any) => el !== null && el !== undefined);
+        if (!newData?.length) {
+            return result;
+        }
+    } else {
+        newData = data?.[node.name];
+        if (newData === null || newData === undefined) {
+            return result;
+        }
+    }
 
     if (
         node.extensions &&
@@ -38,11 +58,11 @@ const scanInfoForExtensions = (
 
     let child = node.type?.ofType?.ofType || node.type?.ofType;
 
-    if (!child && newPath.split('.').length < MAX_DEPTH && (node.type?._fields || node.type?.extensions)) {
+    if (!child && (node.type?._fields || node.type?.extensions)) {
         child = node.type;
     }
 
-    if (!child) {
+    if (!child || newPath.split('.').length >= MAX_DEPTH) {
         return result;
     }
 
@@ -51,8 +71,9 @@ const scanInfoForExtensions = (
             .keys(child._fields)
             .filter(name => !['args', 'resolve', 'subscribe', 'deprecationReason', 'extensions', 'astNode'].includes(name))
 
+        const isArray = !!node.type?.ofType?.ofType;
         for (const key of keys) {
-            const res = scanInfoForExtensions(child._fields[key], newPath + (node.type?.ofType?.ofType ? '[]' : ''));
+            const res = scanInfoForExtensions(child._fields[key], newData, newPath + (isArray ? '[]' : ''));
             result.push(...res);
         }
     }
@@ -147,7 +168,11 @@ export class GraphqlFilterInterceptor implements NestInterceptor {
         return next.handle()
             .pipe(
                 map(value => {
+                    // const start = Date.now();
                     this.applyFilters(value, context);
+                    // const end = Date.now();
+
+                    // console.log('filter interceptor time:', (end - start), 'ms');
 
                     return value;
                 }),
@@ -164,7 +189,7 @@ export class GraphqlFilterInterceptor implements NestInterceptor {
 
         const info = gqlCtx.getInfo();
         const parentNode = info.parentType.getFields()[info.fieldName];
-        const extensions = scanInfoForExtensions(parentNode);
+        const extensions = scanInfoForExtensions(parentNode, value);
 
         // path by length asc sort (upside down though tree because parent filter may depend on child fields)
         extensions.sort((a, b) => a.path.split('.').length - b.path.split('.').length);
