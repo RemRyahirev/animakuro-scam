@@ -19,10 +19,10 @@ import { OpeningEnding } from '../../opening-ending/models/opening-ending.model'
 import { RelatingAnime } from '../../relating-anime/models/relating-anime.model';
 import { SimilarAnime } from '../../similar-anime/models/similar-anime.model';
 import { Studio } from '../../studio/models/studio.model';
-
-import { Stills } from './stills.model';
 import { UserFolder } from '../../user-folder/models/user-folder.model';
 import { UserProfile } from '../../user-profile/models/user-profile.model';
+import { Stills } from './stills.model';
+
 
 @ObjectType()
 export class Anime {

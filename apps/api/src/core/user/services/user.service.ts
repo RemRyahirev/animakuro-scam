@@ -84,7 +84,7 @@ export class UserService {
                 user: null,
             };
         }
-        const user: any =
+        const user =
             (username || user_id || id) &&
             (await this.prisma.user.findUnique({
                 where: !!username
@@ -122,18 +122,19 @@ export class UserService {
                         },
                     },
                 },
-            }));
+            })) || null;
+
         return {
             success: true,
             user: {
                 ...user,
                 user_profile: {
-                    ...user.user_profile,
+                    ...user?.user_profile,
                     favourite_collections: await createUserStatisticOptions(
-                        user.user_profile.favourite_collections,
+                        user?.user_profile?.favourite_collections,
                     ),
                 },
-            },
+            } as any,
         };
     }
 
