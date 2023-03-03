@@ -82,12 +82,12 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         return await this.userProfileService.getHistoryCharacter(args, pagination)
     }
 
-    // @ResolveField(() => GetAnimesGenresWithStatisticResultsType, {
-    //     middleware: [AuthMiddleware],
-    // })
-    // async getFavouriteGenresWithStatistic(
-    //     @AccessToken() user_id: string,
-    // ): Promise<GetAnimesGenresWithStatisticResultsType> {
-    //     return {}
-    // }
+    @ResolveField(() => GetAnimesGenresWithStatisticResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    async getFavouriteGenresWithStatistic(
+        @AccessToken() user_id: string,
+    ): Promise<GetAnimesGenresWithStatisticResultsType> {
+        return await this.userProfileService.getGenresLikeFolders(user_id);
+    }
 }

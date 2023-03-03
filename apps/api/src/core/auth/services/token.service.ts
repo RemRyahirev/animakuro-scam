@@ -148,6 +148,46 @@ export class TokenService {
         };
     }
 
+    public async decodeEmailToken(
+        token: string,
+    ): Promise<TokenDecodeResultsType> {
+        try {
+            await this.jwtService.verify(token, {
+                secret: this.configService.get<string>('EMAIL_TOKEN_SECRET'),
+            });
+        } catch (err: any) {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'token',
+                        value: token,
+                        reason: 'Token is invalid',
+                    },
+                ],
+            };
+        }
+        const decoded = this.jwtService.decode(token);
+        if (decoded == null || typeof decoded == 'string') {
+            return {
+                success: false,
+                errors: [
+                    {
+                        property: 'token',
+                        value: token,
+                        reason: 'Token is invalid',
+                    },
+                ],
+            };
+        }
+        return {
+            email: decoded.email,
+            password: decoded.password,
+            username: decoded.username,
+            success: true,
+        };
+    }
+
     public async decodeToken(token: string): Promise<TokenDecodeResultsType> {
         try {
             await this.jwtService.verify(token, {
