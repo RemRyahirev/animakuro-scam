@@ -404,7 +404,7 @@ export class AuthService {
     ): Promise<LoginResultsType> {
         const decoded = await this.tokenService.decodeResetPassToken(code);
 
-        if (newPassword.length < 2) {
+        if (newPassword.length < 8) {
             return {
                 success: false,
                 errors: [
