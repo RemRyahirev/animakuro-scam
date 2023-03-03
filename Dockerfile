@@ -2,9 +2,9 @@ FROM node:16-alpine AS base
 
 WORKDIR /app
 
-RUN addgroup -g 1001 appuser && \
-    adduser -D -S -G appuser appuser && \
-    chown -R appuser:appuser /app && \
+RUN addgroup -g 1001 animakuro && \
+    adduser -D -S -G animakuro animakuro && \
+    chown -R animakuro:animakuro /app && \
     corepack enable pnpm
 
 ####################
@@ -22,20 +22,20 @@ RUN pnpm fetch && \
 COPY . .
 
 ENV NODE_ENV=production
-ARG SERVICE=api
+ARG service=api
 
 RUN pnpm generate && \
-    pnpm build $SERVICE && \
+    pnpm build $service && \
     pnpm prune --prod
 
 ####################
 
 FROM base
 
-ARG SERVICE=api
+ARG service=api
 COPY --from=builder --chown=appuser:appuser /app/package.json /app/nest-cli.json ./
 COPY --from=builder --chown=appuser:appuser /app/node_modules node_modules
-COPY --from=builder --chown=appuser:appuser /app/dist/apps/$SERVICE dist
+COPY --from=builder --chown=appuser:appuser /app/dist/apps/$service dist
 
 USER appuser
 
