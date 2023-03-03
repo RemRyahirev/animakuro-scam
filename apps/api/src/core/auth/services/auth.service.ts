@@ -101,6 +101,8 @@ export class AuthService {
             },
         });
 
+        console.log(user, userData.email)
+
         const access_token = await this.tokenService.generateToken(
             user.id,
             null,
