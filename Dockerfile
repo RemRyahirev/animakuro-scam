@@ -13,7 +13,7 @@ FROM base as builder
 
 RUN apk add --no-cache openssl openssl-dev libssl1.1 libssl3
 
-USER appuser
+USER animakuro
 
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm fetch && \
