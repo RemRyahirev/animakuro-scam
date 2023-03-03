@@ -365,6 +365,7 @@ export class AnimeService {
                 id: profile_id,
             },
             select: {
+                id: true,
                 ...favouriteSelect,
             },
         });

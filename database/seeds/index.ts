@@ -36,6 +36,9 @@ async function seedAll() {
     await studioDependencies().then((array) =>
         createDependencies(array, 'studio'),
     );
+    await fileData().then((array) =>
+        createEntities(array, 'file')
+    );
     await userProfileData().then((array) =>
         createEntities(array, 'userProfile'),
     );
@@ -53,9 +56,6 @@ async function seedAll() {
     );
     await openingEndingData().then((array) =>
         createEntities(array, 'openingEnding')
-    );
-    await fileData().then((array) =>
-        createEntities(array, 'file')
     );
     await animeStillsData().then((array) =>
         createEntities(array, 'animeStills')
