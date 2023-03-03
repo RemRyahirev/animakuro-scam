@@ -33,11 +33,11 @@ RUN pnpm generate && \
 FROM base
 
 ARG service=api
-COPY --from=builder --chown=appuser:appuser /app/package.json /app/nest-cli.json ./
-COPY --from=builder --chown=appuser:appuser /app/node_modules node_modules
-COPY --from=builder --chown=appuser:appuser /app/dist/apps/$service dist
+COPY --from=builder --chown=animakuro:animakuro /app/package.json /app/nest-cli.json ./
+COPY --from=builder --chown=animakuro:animakuro /app/node_modules node_modules
+COPY --from=builder --chown=animakuro:animakuro /app/dist/apps/$service dist
 
-USER appuser
+USER animakuro
 
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV:-production}
