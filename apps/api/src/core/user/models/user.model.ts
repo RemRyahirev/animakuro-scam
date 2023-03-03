@@ -5,6 +5,9 @@ import { SubscribeTier } from '@app/common/models/enums';
 import { UserProfile } from '../../user-profile/models/user-profile.model';
 
 import { Notifications } from './notifications.model';
+import { AnimeHistory } from '../../anime/models/history.model';
+import { AuthorHistory } from '../../author/models/history.model';
+import { CharacterHistory } from '../../character/models/history.model';
 
 @Extensions({ userIdFilter: { userIdField: 'id' } })
 @ObjectType()
@@ -54,4 +57,22 @@ export class User {
         nullable: true,
     })
     user_profile: UserProfile | null;
+
+    @Field(() => [AnimeHistory], {
+        nullable: true,
+        description: 'Anime browsing history'
+    })
+    anime_history?: AnimeHistory[];
+
+    @Field(() => [AuthorHistory], {
+        nullable: true,
+        description: 'Author browsing history'
+    })
+    author_history?: AuthorHistory[];
+
+    @Field(() => [CharacterHistory], {
+        nullable: true,
+        description: 'Anime browsing history'
+    })
+    character_history?: CharacterHistory[];
 }

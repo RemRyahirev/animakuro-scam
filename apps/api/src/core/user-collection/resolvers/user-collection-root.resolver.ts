@@ -5,6 +5,8 @@ import { UpdateUserCollectionResultsType } from '../models/results/update-user-c
 import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
 import { GetListUserCollectionResultsType } from '../models/results/get-list-user-collection-results.type';
 import { GetUserCollectionResultsType } from '../models/results/get-user-collection-results.type';
+import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
+import { GetMarkdownCollectionResultsType } from '../models/results/get-markdown-collection-results.type';
 
 @ObjectType()
 export class UserCollectionMutationType {
@@ -22,6 +24,11 @@ export class UserCollectionMutationType {
         description: 'Delete User Collection',
     })
     deleteUserCollection: DeleteUserCollectionResultsType;
+
+    @Field(() => CreateMarkdownCollectionResultsType, {
+        description: 'Create user\'s collection markdown'
+    })
+    createMarkdown: CreateMarkdownCollectionResultsType
 }
 
 @ObjectType()
@@ -40,6 +47,11 @@ export class UserCollectionQueryType {
         description: 'Get User Collection List by user_id',
     })
     getUserCollectionListByUserId: GetListUserCollectionResultsType;
+
+    @Field(() => GetMarkdownCollectionResultsType, {
+        description: 'Get markdown collection by user'
+    })
+    getMarkdown: GetMarkdownCollectionResultsType
 }
 
 @Resolver()

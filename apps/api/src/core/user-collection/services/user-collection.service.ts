@@ -15,10 +15,16 @@ import { GetListUserCollectionResultsType } from '../models/results/get-list-use
 import { CreateUserCollectionResultsType } from '../models/results/create-user-collection-results.type';
 import { UpdateUserCollectionResultsType } from '../models/results/update-user-collection-results.type';
 import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
+import { GetMarkdownCollectionInputType } from '../models/inputs/get-markdown-collection-input.type';
+import { CreateMarkdownCollectionInputType } from '../models/inputs/create-markdown-collection-input.type';
+import { GetMarkdownCollectionResultsType } from '../models/results/get-markdown-collection-results.type';
+import { Prisma } from '@prisma/client';
 import { GetUserCollectionInputType } from '../models/inputs';
 import { UpdateRatingUserCollectionResultsType } from '../models/results';
 import { RatingUserCollection } from '../models/rating-user-collection.model';
 import { createUserCollectionOptions } from '../utils/create-user-collection-options';
+import { MarkdownService } from '@app/common/services/markdown.service';
+import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
 
 @Injectable()
 export class UserCollectionService {
@@ -28,6 +34,7 @@ export class UserCollectionService {
         private paginationService: PaginationService,
         private fileUpload: FileUploadService,
         private statistics: StatisticService,
+        private markdownService: MarkdownService
     ) {
         this.thumbnailFiles = this.fileUpload.getStorageForOne(
             'userFolder',
@@ -277,6 +284,71 @@ export class UserCollectionService {
             userCollection: userCollection as any,
         };
     }
+
+    async getMarkdownCollection(
+        args: GetMarkdownCollectionInputType,
+        user_id: string,
+    ): Promise<GetMarkdownCollectionResultsType> {
+        const str = "**Это крутые аниме **\n" +
+        "<anime:1484d58b-bd26-4fed-99a0-d0ba53da3827,9a189481-ba95-4091-a6e9-95ae42319ee2 columns=8 size=large>" +
+        "<studio:2a968ac7-b82a-41ce-beb6-25f790a4b31b,e34522f4-6656-4d97-a0f5-728089494bef columns=3 shape=circle>";
+
+        const markdownById = await this.prisma.userCollectionMardown.findUnique({
+            where: {
+                id: args.id
+            }
+        })
+        const markdownByUserId = await this.prisma.userCollectionMardown.findUnique({
+            where: {
+                user_id
+            }
+        })
+
+        const markdown = markdownById ?? markdownByUserId;
+
+
+        const data = await this.markdownService.getParsed(str);
+        console.log(data);
+        
+        return { success: true, mark_collections: 0 } as any;
+    }
+    
+    async createMarkdownCollection(
+        args: CreateMarkdownCollectionInputType,
+        user_id: string
+    ): Promise<CreateMarkdownCollectionResultsType> {
+
+        const createdMarkdown = await this.prisma.userCollectionMardown.create({
+            data: {
+                markdown: args.markdown,
+                user_id: user_id
+            }
+        });
+
+        const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
+
+        return { success: true, markdown: args.markdown, data: parsedMarkdown};
+    }
+
+    async updateMarkdownCollection(
+        args: any,
+        user_id: string
+    ): Promise<CreateMarkdownCollectionResultsType> {
+
+        const createdMarkdown = await this.prisma.userCollectionMardown.update({
+            where: {
+                id: '1'
+            },
+            data: {
+
+            }
+        });
+
+        const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
+
+        return { success: true, markdown: args.markdown, data: parsedMarkdown};
+    }
+
     async updateRatingUserCollection(
         args: RatingUserCollection,
     ): Promise<UpdateRatingUserCollectionResultsType> {

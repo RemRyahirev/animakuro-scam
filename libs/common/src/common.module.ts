@@ -12,6 +12,7 @@ import {
     EntityExistsConstraint,
     UniqueConstraint,
 } from './decorators';
+import { MarkdownService } from './services/markdown.service';
 
 @Global()
 @Module({
@@ -26,6 +27,7 @@ import {
         ComparePasswordConstraint,
         AccountLimitConstraint,
         UniqueConstraint,
+        MarkdownService,
     ],
     exports: [
         PaginationService,
@@ -38,6 +40,7 @@ import {
         ComparePasswordConstraint,
         AccountLimitConstraint,
         UniqueConstraint,
+        MarkdownService,
     ],
 })
 export class CommonModule {}

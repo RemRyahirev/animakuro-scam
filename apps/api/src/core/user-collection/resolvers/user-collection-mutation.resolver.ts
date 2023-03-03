@@ -24,6 +24,8 @@ import {
     UserCollectionMutationType,
     UserCollectionRootResolver,
 } from './user-collection-root.resolver';
+import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
+import { CreateMarkdownCollectionInputType } from '../models/inputs/create-markdown-collection-input.type';
 
 @Resolver(UserCollectionMutationType)
 export class UserCollectionMutationResolver extends UserCollectionRootResolver {
@@ -71,6 +73,18 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
         @Args('id') id: string,
     ): Promise<DeleteUserCollectionResultsType> {
         return await this.userCollectionService.deleteUserCollection(id);
+    }
+    
+    @ResolveField(() => CreateMarkdownCollectionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async createMarkdown(
+        @Args() args: CreateMarkdownCollectionInputType,
+        // @ProfileId() user_profile_id: string,
+        @AccessToken() userId: string
+    ) {
+        return await this.userCollectionService.createMarkdownCollection(args, userId);
     }
 
     @ResolveField(() => UpdateRatingUserCollectionResultsType, {

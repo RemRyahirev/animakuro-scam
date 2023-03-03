@@ -7,7 +7,9 @@ import { IsInt } from "class-validator";
 @ArgsType()
 export class AddHistoryAuthorInputType {
     @IsUUID()
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'Story author id'
+    })
     author_id: string;
 
     @IsInt()
