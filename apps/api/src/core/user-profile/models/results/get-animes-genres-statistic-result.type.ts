@@ -4,11 +4,11 @@ import { Anime } from '../../../anime/models/anime.model';
 
 @ObjectType()
 export class GetAnimesGenresWithStatisticResultsType extends BaseResultsType {
-    @Field(() => [GenreStatistic], {
-        nullable: true,
-        description: 'genres',
-    })
-    genres: GenreStatistic[];
+    // @Field(() => [GenreStatistic], {
+    //     nullable: true,
+    //     description: 'genres',
+    // })
+    // // genres: GenreStatistic[];
 }
 
 @ObjectType()

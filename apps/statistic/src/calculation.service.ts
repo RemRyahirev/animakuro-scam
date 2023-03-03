@@ -6,6 +6,7 @@ import { StatisticName } from '@prisma/client';
 import { AnimeType, FolderType } from '@app/common/models/enums';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { StatisticService } from '@app/common/services/statistic.service';
+import { type } from 'os';
 
 /*
 1. Статистика по папкам (Всех пользователей) к конкретному аниме (Ко всем)
@@ -408,7 +409,7 @@ export class CalculationService implements OnModuleInit {
                         break;
                     }
 
-                    let animeFields = {};
+                    let animeFields: { type?: boolean, genres?: { select: { id: boolean }}} = {};
                     if (event.params.folderType === FolderType.COMPLETED) {
                         animeFields = {
                             type: true,
@@ -427,6 +428,16 @@ export class CalculationService implements OnModuleInit {
                         select: {
                             animes: {
                                 select: {
+                                    genres: {
+                                        select: {
+                                            id: true,
+                                        },
+                                    },
+                                    studios: {
+                                        select: {
+                                            id: true,
+                                        },
+                                    },
                                     id: true,
                                     ...animeFields,
                                 },
@@ -437,9 +448,17 @@ export class CalculationService implements OnModuleInit {
                     if (!statFolder?.animes?.length) {
                         break;
                     }
+                    const genreMap: Record<string, number> = {};
+                    const studioMap: Record<string, number> = {};
+
                     const animeCount = statFolder.animes.length;
                     const multiplier = event.value > 0 ? 1 : -1;
                     const animeCountDiff = animeCount * multiplier;
+
+                    statFolder.animes.forEach((anime) => {
+                        anime.genres.forEach((el) => genreMap[el.id] = (genreMap[el.id] ?? 0) + 1 );
+                        anime.studios.forEach((el) => studioMap[el.id] = (studioMap[el.id] ?? 0) + 1);
+                    });
 
                     await Promise.all([
                         this.updateProfileStatistics(
@@ -457,16 +476,30 @@ export class CalculationService implements OnModuleInit {
                             ['folder', 'id', event.params.folderId],
                             animeCountDiff,
                         ),
+                        ...Object.keys(genreMap).map((genreId) => (
+                            this.updateProfileStatistics(
+                                event.params.profileId,
+                                ['folder', 'genre', genreId],
+                                genreMap[genreId] * multiplier,
+                            )
+                        )),
+                        ...Object.keys(studioMap).map((studioId) => (
+                            this.updateProfileStatistics(
+                                event.params.profileId,
+                                ['folder', 'studio', studioId],
+                                studioMap[studioId] * multiplier,
+                            )
+                        )),
                     ]);
 
                     if (event.params.folderType === FolderType.COMPLETED) {
                         await Promise.all(
-                            (statFolder.animes as Array<{ id: string, type: AnimeType, genres: Array<{ id: string }> }>)
+                            statFolder.animes
                                 .reduce((arr, anime) => {
                                     arr.push(
                                         this.updateProfileStatistics(
                                             event.params.profileId,
-                                            ['viewedAnime', 'type', anime.type],
+                                            ['viewedAnime', 'type', anime.type!],
                                             multiplier,
                                         ),
                                         ...(anime.genres?.map(genre =>
