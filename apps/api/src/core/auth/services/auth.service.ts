@@ -52,7 +52,11 @@ export class AuthService {
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeToken(token);
 
-        if (!userData) {
+        if (!userData?.email || !userData?.password || !userData?.username) {
+            if (userData?.errors?.length) {
+                return userData;
+            }
+
             return {
                 success: false,
                 errors: [
@@ -67,9 +71,9 @@ export class AuthService {
 
         const user = await this.prisma.user.create({
             data: {
-                email: userData.email as any,
-                password: userData.password as any,
-                username: userData.username as any,
+                email: userData.email,
+                password: userData.password,
+                username: userData.username,
                 is_email_confirmed: true,
                 ...userDefaults,
             },
