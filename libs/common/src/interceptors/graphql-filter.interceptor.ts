@@ -194,7 +194,7 @@ export class GraphqlFilterInterceptor implements NestInterceptor {
         // path by length asc sort (upside down though tree because parent filter may depend on child fields)
         extensions.sort((a, b) => a.path.split('.').length - b.path.split('.').length);
         extensions.forEach(ext => {
-            if (ext.extensions.userIdFilter) {
+            if (userId && ext.extensions.userIdFilter) {
                 const entries = getEntriesFromPath(value, ext.path);
                 entries.forEach(entry => {
                     userIdFilter(entry.parent, entry.field, ext.extensions.userIdFilter, userId);
