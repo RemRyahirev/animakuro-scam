@@ -748,4 +748,17 @@ export class UserProfileService {
             userFavouriteCollections: userFavouriteCollections.favourite_collections as any,
         };
     }
+
+    async getGenresLikeFolders(userId: string) {
+        const genres = await this.prisma.userProfile.findUnique({
+            where: { id: userId },
+            select: {
+                statistics: true,
+            },
+        });
+        console.log(genres?.statistics?.toLocaleString)
+        return {
+            success: true,
+        };
+    }
 }

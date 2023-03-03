@@ -50,7 +50,7 @@ export class AuthService {
         this.throttler = new HandleRequest(options, storageService, reflector);
     }
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
-        const userData = await this.tokenService.decodeToken(token);
+        const userData = await this.tokenService.decodeEmailToken(token);
 
         if (!userData?.email || !userData?.password || !userData?.username) {
             if (userData?.errors?.length) {
