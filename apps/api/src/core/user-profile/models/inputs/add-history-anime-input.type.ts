@@ -7,7 +7,9 @@ import { ArgsType, Field, ID, Int } from "@nestjs/graphql";
 @ArgsType()
 export class AddHistoryAnimeInputType {
     @IsUUID()
-    @Field(() => ID)
+    @Field(() => ID, {
+        description: 'Story anime id'
+    })
     anime_id: string;
 
     @IsInt()

@@ -24,6 +24,7 @@ model User {
   auth_sessions        AuthSession[]
   social_service       AuthType      @default(JWT)
   files                File[]
+  user_collection_markdown UserCollectionMardown?
 
   @@map("users")
 }
@@ -421,6 +422,18 @@ model AnimeHistory {
   user_profile  UserProfile @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
 
   @@map("anime_history")
+}
+
+model UserCollectionMardown {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @unique @db.Uuid
+  markdown   String?  @db.Text
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  user       User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("user_collection_markdown")
 }
 
 model AuthorHistory {

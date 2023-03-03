@@ -9,7 +9,7 @@ variables:
  
 stages:
 - stage: Build
-  displayName: Build image
+  displayName: Build and push images
   jobs:
   - job: Build
     displayName: Build
@@ -17,16 +17,43 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build API
       inputs:
-        command: buildAndPush
-        repository: 'backend'
+        command: build
+        repository: 'backend_api'
         buildContext: '.'
         containerRegistry: 'docker'
+        arguments: '--build-arg service=api'
         dockerfile: 'Dockerfile'
         tags: |
           $(tag)
-
+    - task: Docker@2
+      displayName: Build statistic
+      inputs:
+        command: build
+        repository: 'backend_statistic'
+        buildContext: '.'
+        containerRegistry: 'docker'
+        arguments: '--build-arg service=statistic'
+        dockerfile: 'Dockerfile'
+        tags: |
+          $(tag)
+    - task: Docker@2
+      displayName: Push API
+      inputs:
+        command: push
+        repository: 'backend_api'
+        containerRegistry: 'docker'
+        tags: |
+          $(tag)
+    - task: Docker@2
+      displayName: Push statistic
+      inputs:
+        command: push
+        repository: 'backend_statistic'
+        containerRegistry: 'docker'
+        tags: |
+          $(tag)
 - stage: Test
   displayName: Test
   jobs:
@@ -75,6 +102,8 @@ stages:
                 runOptions: 'inline'
                 inline: |
                   cd ~/infra/animakuro
-                  docker compose pull backend_dev 2>&1
-                  docker compose up -d backend_dev 2>&1
+                  docker compose pull backend_dev_api 2>&1
+                  docker compose up -d backend_dev_api 2>&1
+                  docker compose pull backend_dev_statistic 2>&1
+                  docker compose up -d backend_dev_statistic 2>&1
                 readyTimeout: '20000'
