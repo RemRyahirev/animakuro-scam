@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { ProfileId } from '@app/common/decorators';
+import { AccessToken, ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { PaginationInputType } from '@app/common/models/inputs';
@@ -14,6 +14,8 @@ import {
     UserCollectionQueryType,
     UserCollectionRootResolver,
 } from './user-collection-root.resolver';
+import { GetMarkdownCollectionResultsType } from '../models/results/get-markdown-collection-results.type';
+import { GetMarkdownCollectionInputType } from '../models/inputs/get-markdown-collection-input.type';
 import { GetUserCollectionInputType } from '../models/inputs';
 
 @Resolver(UserCollectionQueryType)
@@ -58,5 +60,16 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
             args,
             input
         );
+    }
+    
+    @ResolveField(() => GetMarkdownCollectionResultsType, {
+        middleware: [AuthMiddleware]
+    })
+    @UseGuards(JwtAuthGuard)
+    async getMarkdown(
+        @Args() args: GetMarkdownCollectionInputType,
+        @AccessToken() userId: string
+    ) {
+        return await this.userCollectionService.getMarkdownCollection(args, userId);
     }
 }
