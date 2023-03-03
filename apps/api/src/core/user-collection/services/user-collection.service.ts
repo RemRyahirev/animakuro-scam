@@ -294,25 +294,26 @@ export class UserCollectionService {
         const str = "**Это крутые аниме **\n" +
         "<anime:1484d58b-bd26-4fed-99a0-d0ba53da3827,9a189481-ba95-4091-a6e9-95ae42319ee2 columns=8 size=large>" +
         "<studio:2a968ac7-b82a-41ce-beb6-25f790a4b31b,e34522f4-6656-4d97-a0f5-728089494bef columns=3 shape=circle>";
+        let markdown: any = '';
+        if (args.id) {
+            markdown = await this.prisma.userCollectionMardown.findUnique({
+                where: {
+                    id: args.id
+                }
+            })
+        }
 
-        const markdownById = await this.prisma.userCollectionMardown.findUnique({
-            where: {
-                id: args.id
-            }
-        })
-        const markdownByUserId = await this.prisma.userCollectionMardown.findUnique({
-            where: {
-                user_id
-            }
-        })
+        if (!args.id) {
+           markdown = await this.prisma.userCollectionMardown.findUnique({
+                where: {
+                    user_id
+                }
+            })
+        }        
 
-        const markdown = markdownById ?
-            markdownById.markdown || '' :
-            markdownByUserId?.markdown || '';
-
+        markdown = markdown?.markdown || '';
 
         const data = await this.markdownService.getParsed(markdown);
-        console.log(data);
         
         return { success: true, markdown: markdown, data: JSON.stringify(data)};
     }
@@ -321,14 +322,16 @@ export class UserCollectionService {
         args: CreateMarkdownCollectionInputType,
         user_id: string
     ): Promise<CreateMarkdownCollectionResultsType> {
-
+        console.log('args', args);
+        console.log('userid', user_id);
+        
         const createdMarkdown = await this.prisma.userCollectionMardown.create({
             data: {
                 markdown: args.markdown,
                 user_id: user_id
             }
         });
-
+        
         const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
 
         return { success: true, markdown: args.markdown, data: JSON.stringify(parsedMarkdown)};
@@ -338,17 +341,37 @@ export class UserCollectionService {
         args: UpdateMarkdownCollectionInputType,
         user_id: string
     ): Promise<UpdateMarkdownCollectionResultsType> {
+        let updatedMarkdown: any = null;
 
-        const createdMarkdown = await this.prisma.userCollectionMardown.update({
-            where: {
-                id: args.id
-            },
-            data: {
-                markdown: args.markdown
-            }
-        });
+        console.log(args);
+        
+        if (args.id) {
+            console.log('ID');
+            
+            updatedMarkdown = await this.prisma.userCollectionMardown.update({
+                where: {
+                    id: args.id
+                },
+                data: {
+                    markdown: args.markdown
+                }
+            });
+        }
 
-        const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
+        if (!args.id) {
+            console.log('TOKEN');
+            
+            updatedMarkdown = await this.prisma.userCollectionMardown.update({
+                where: {
+                    user_id
+                },
+                data: {
+                    markdown: args.markdown
+                }
+            });
+        }
+
+        const parsedMarkdown = await this.markdownService.getParsed(updatedMarkdown.markdown)
 
         return { success: true, markdown: args.markdown, data: JSON.stringify(parsedMarkdown)};
     }
