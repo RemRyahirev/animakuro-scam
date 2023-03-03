@@ -26,6 +26,7 @@ import {
 } from './user-collection-root.resolver';
 import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
 import { CreateMarkdownCollectionInputType } from '../models/inputs/create-markdown-collection-input.type';
+import { UpdateMarkdownCollectionInputType } from '../models/inputs/update-markdown-collection-input.type';
 
 @Resolver(UserCollectionMutationType)
 export class UserCollectionMutationResolver extends UserCollectionRootResolver {
@@ -85,6 +86,18 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
         @AccessToken() userId: string
     ) {
         return await this.userCollectionService.createMarkdownCollection(args, userId);
+    }
+
+    @ResolveField(() => CreateMarkdownCollectionResultsType, {
+        middleware: [AuthMiddleware],
+    })
+    @UseGuards(JwtAuthGuard)
+    async updateMarkdown(
+        @Args() args: UpdateMarkdownCollectionInputType,
+        // @ProfileId() user_profile_id: string,
+        @AccessToken() userId: string
+    ) {
+        return await this.userCollectionService.updateMarkdownCollection(args, userId)
     }
 
     @ResolveField(() => UpdateRatingUserCollectionResultsType, {

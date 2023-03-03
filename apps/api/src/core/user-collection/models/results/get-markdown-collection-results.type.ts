@@ -47,6 +47,14 @@ class MarkCollection {
 
 @ObjectType()
 export class GetMarkdownCollectionResultsType extends BaseResultsType {
-    @Field(() => [MarkCollection])
-    markdown_list: MarkCollection[]
+    @Field(() => String, {
+        nullable: true,
+        description: 'Markdown'
+    })
+    markdown?: string;
+
+    @Field(() => String, {
+        description: 'Parsed data'
+    })
+    data?: string;
 }

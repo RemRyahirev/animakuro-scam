@@ -25,6 +25,8 @@ import { RatingUserCollection } from '../models/rating-user-collection.model';
 import { createUserCollectionOptions } from '../utils/create-user-collection-options';
 import { MarkdownService } from '@app/common/services/markdown.service';
 import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
+import { UpdateMarkdownCollectionInputType } from '../models/inputs/update-markdown-collection-input.type';
+import { UpdateMarkdownCollectionResultsType } from '../models/results/update-user-markdown-collection-results.type';
 
 @Injectable()
 export class UserCollectionService {
@@ -304,13 +306,15 @@ export class UserCollectionService {
             }
         })
 
-        const markdown = markdownById ?? markdownByUserId;
+        const markdown = markdownById ?
+            markdownById.markdown || '' :
+            markdownByUserId?.markdown || '';
 
 
-        const data = await this.markdownService.getParsed(str);
+        const data = await this.markdownService.getParsed(markdown);
         console.log(data);
         
-        return { success: true, mark_collections: 0 } as any;
+        return { success: true, markdown: markdown, data: JSON.stringify(data)};
     }
     
     async createMarkdownCollection(
@@ -327,26 +331,26 @@ export class UserCollectionService {
 
         const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
 
-        return { success: true, markdown: args.markdown, data: parsedMarkdown};
+        return { success: true, markdown: args.markdown, data: JSON.stringify(parsedMarkdown)};
     }
 
     async updateMarkdownCollection(
-        args: any,
+        args: UpdateMarkdownCollectionInputType,
         user_id: string
-    ): Promise<CreateMarkdownCollectionResultsType> {
+    ): Promise<UpdateMarkdownCollectionResultsType> {
 
         const createdMarkdown = await this.prisma.userCollectionMardown.update({
             where: {
-                id: '1'
+                id: args.id
             },
             data: {
-
+                markdown: args.markdown
             }
         });
 
         const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
 
-        return { success: true, markdown: args.markdown, data: parsedMarkdown};
+        return { success: true, markdown: args.markdown, data: JSON.stringify(parsedMarkdown)};
     }
 
     async updateRatingUserCollection(
