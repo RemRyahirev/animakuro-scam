@@ -396,7 +396,7 @@ export class UserProfileService {
         args: CreateUserProfileInputType,
         authUserId: string,
     ): Promise<CreateUserProfileResultsType> {
-        const { user_id, ...other } = args;
+        const { user_id, avatar, ...other } = args;
         const userProfile = await this.prisma.userProfile.create({
             data: {
                 ...(other as any),

@@ -138,8 +138,16 @@ export class UserFolderService {
             data: {
                 ...entityUpdateUtil('animes', args),
                 ...args,
-                user_profile_id,
-                user_collection_id: user_profile_id,
+                user_profile: {
+                    connect: {
+                        id: user_profile_id,
+                    }
+                },
+                user_collection: {
+                    connect: {
+                        id: user_profile_id,
+                    },
+                },
             },
             include: {
                 user_profile: {
