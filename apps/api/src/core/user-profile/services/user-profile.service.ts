@@ -87,6 +87,12 @@ export class UserProfileService {
         const select = {
             user_folders: true,
             user_collection: true,
+            favourite_animes: true,
+            favourite_authors: true,
+            favourite_characters: true,
+            favourite_collections: true,
+            favourite_genres: true,
+            favourite_studios: true,
         };
         const userProfile = await this.prisma.userProfile.findFirst({
             where:
@@ -95,10 +101,7 @@ export class UserProfileService {
                           AND: [
                               {
                                   user: {
-                                      OR: [
-                                          { id: id ?? user_id },
-                                          { username },
-                                      ],
+                                      OR: [{ id: id ?? user_id }, { username }],
                                   },
                               },
                               {
@@ -177,6 +180,13 @@ export class UserProfileService {
                         user: true,
                     },
                 },
+
+                favourite_animes: true,
+                favourite_authors: true,
+                favourite_characters: true,
+                favourite_collections: true,
+                favourite_genres: true,
+                favourite_studios: true,
             },
         });
         const pagination = await this.paginationService.getPagination(
@@ -562,28 +572,37 @@ export class UserProfileService {
             },
         });
 
-        const oldFavoriteAnimeIds = oldFavoriteAnime?.favourite_animes.map(el => el.id) ?? [];
-        animeToAdd.forEach(animeId => {
+        const oldFavoriteAnimeIds =
+            oldFavoriteAnime?.favourite_animes.map((el) => el.id) ?? [];
+        animeToAdd.forEach((animeId) => {
             if (oldFavoriteAnimeIds.includes(animeId)) {
                 // already exists
                 return;
             }
 
-            this.statistics.fireEvent('animeInFavorites', {
-                animeId,
-                profileId: profile_id,
-            }, 1);
+            this.statistics.fireEvent(
+                'animeInFavorites',
+                {
+                    animeId,
+                    profileId: profile_id,
+                },
+                1,
+            );
         });
-        animeToRemove.forEach(animeId => {
+        animeToRemove.forEach((animeId) => {
             if (!oldFavoriteAnimeIds.includes(animeId)) {
                 // never exists
                 return;
             }
 
-            this.statistics.fireEvent('animeInFavorites', {
-                animeId,
-                profileId: profile_id,
-            }, -1);
+            this.statistics.fireEvent(
+                'animeInFavorites',
+                {
+                    animeId,
+                    profileId: profile_id,
+                },
+                -1,
+            );
         });
 
         return {
@@ -633,7 +652,8 @@ export class UserProfileService {
         return {
             success: true,
             errors: [],
-            userFavouriteCharacters: userFavouriteCharacters.favourite_characters as any,
+            userFavouriteCharacters:
+                userFavouriteCharacters.favourite_characters as any,
         };
     }
 
@@ -685,7 +705,9 @@ export class UserProfileService {
         profile_id: string,
     ): Promise<UpdateUserFavouriteCollectionsResultType> {
         const collectionToAdd = (args.favourite_collections_add ?? []).slice();
-        const collectionToRemove = (args.favourite_collections_remove ?? []).slice();
+        const collectionToRemove = (
+            args.favourite_collections_remove ?? []
+        ).slice();
         const oldFavoriteCollection = await this.prisma.userProfile.findUnique({
             where: {
                 id: profile_id,
@@ -711,7 +733,8 @@ export class UserProfileService {
         });
 
         const oldFavoriteCollectionIds =
-            oldFavoriteCollection?.favourite_collections.map((el) => el.id) ?? [];
+            oldFavoriteCollection?.favourite_collections.map((el) => el.id) ??
+            [];
         collectionToAdd.forEach((collectionId) => {
             if (oldFavoriteCollectionIds.includes(collectionId)) {
                 // already exists
@@ -746,7 +769,8 @@ export class UserProfileService {
         return {
             success: true,
             errors: [],
-            userFavouriteCollections: userFavouriteCollections.favourite_collections as any,
+            userFavouriteCollections:
+                userFavouriteCollections.favourite_collections as any,
         };
     }
 

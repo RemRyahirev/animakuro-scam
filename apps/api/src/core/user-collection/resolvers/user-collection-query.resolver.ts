@@ -42,7 +42,10 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
         @Args() args: PaginationInputType,
         @Args() input: GetUserCollectionInputType,
     ): Promise<GetListUserCollectionResultsType> {
-        return await this.userCollectionService.getUserCollectionList(args, input);
+        return await this.userCollectionService.getUserCollectionList(
+            args,
+            input,
+        );
     }
 
     @ResolveField(() => GetListUserCollectionResultsType, {

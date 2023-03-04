@@ -27,6 +27,8 @@ import { MarkdownService } from '@app/common/services/markdown.service';
 import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
 import { UpdateMarkdownCollectionInputType } from '../models/inputs/update-markdown-collection-input.type';
 import { UpdateMarkdownCollectionResultsType } from '../models/results/update-user-markdown-collection-results.type';
+import { createUserStatisticOptions } from '../../user/utils/create-user-statistic-option.util';
+
 
 @Injectable()
 export class UserCollectionService {
@@ -36,7 +38,7 @@ export class UserCollectionService {
         private paginationService: PaginationService,
         private fileUpload: FileUploadService,
         private statistics: StatisticService,
-        private markdownService: MarkdownService
+        private markdownService: MarkdownService,
     ) {
         this.thumbnailFiles = this.fileUpload.getStorageForOne(
             'userFolder',
@@ -78,7 +80,9 @@ export class UserCollectionService {
         return {
             success: true,
             errors: [],
-            userCollection: userCollection[0] as any,
+            userCollection: (await createUserStatisticOptions(
+                userCollection[0],
+            )) as any,
         };
     }
 
@@ -103,7 +107,9 @@ export class UserCollectionService {
         return {
             success: true,
             errors: [],
-            userCollectionList: userCollectionList as any,
+            userCollectionList: (await createUserStatisticOptions(
+                userCollectionList,
+            )) as any,
             pagination,
         };
     }
@@ -126,7 +132,9 @@ export class UserCollectionService {
         return {
             success: true,
             errors: [],
-            userCollectionList: userCollectionList as any,
+            userCollectionList: (await createUserStatisticOptions(
+                userCollectionList,
+            )) as any,
             pagination,
         };
     }
@@ -291,89 +299,106 @@ export class UserCollectionService {
         args: GetMarkdownCollectionInputType,
         user_id: string,
     ): Promise<GetMarkdownCollectionResultsType> {
-        const str = "**Это крутые аниме **\n" +
-        "<anime:1484d58b-bd26-4fed-99a0-d0ba53da3827,9a189481-ba95-4091-a6e9-95ae42319ee2 columns=8 size=large>" +
-        "<studio:2a968ac7-b82a-41ce-beb6-25f790a4b31b,e34522f4-6656-4d97-a0f5-728089494bef columns=3 shape=circle>";
+        const str =
+            '**Это крутые аниме **\n' +
+            '<anime:1484d58b-bd26-4fed-99a0-d0ba53da3827,9a189481-ba95-4091-a6e9-95ae42319ee2 columns=8 size=large>' +
+            '<studio:2a968ac7-b82a-41ce-beb6-25f790a4b31b,e34522f4-6656-4d97-a0f5-728089494bef columns=3 shape=circle>';
         let markdown: any = '';
         if (args.id) {
             markdown = await this.prisma.userCollectionMardown.findUnique({
                 where: {
-                    id: args.id
-                }
-            })
+                    id: args.id,
+                },
+            });
         }
 
         if (!args.id) {
-           markdown = await this.prisma.userCollectionMardown.findUnique({
+            markdown = await this.prisma.userCollectionMardown.findUnique({
                 where: {
-                    user_id
-                }
-            })
-        }        
+                    user_id,
+                },
+            });
+        }
 
         markdown = markdown?.markdown || '';
 
         const data = await this.markdownService.getParsed(markdown);
-        
-        return { success: true, markdown: markdown, data: JSON.stringify(data)};
+
+        return {
+            success: true,
+            markdown: markdown,
+            data: JSON.stringify(data),
+        };
     }
-    
+
     async createMarkdownCollection(
         args: CreateMarkdownCollectionInputType,
-        user_id: string
+        user_id: string,
     ): Promise<CreateMarkdownCollectionResultsType> {
         console.log('args', args);
         console.log('userid', user_id);
-        
+
         const createdMarkdown = await this.prisma.userCollectionMardown.create({
             data: {
                 markdown: args.markdown,
-                user_id: user_id
-            }
+                user_id: user_id,
+            },
         });
-        
-        const parsedMarkdown = await this.markdownService.getParsed(createdMarkdown.markdown)
 
-        return { success: true, markdown: args.markdown, data: JSON.stringify(parsedMarkdown)};
+        const parsedMarkdown = await this.markdownService.getParsed(
+            createdMarkdown.markdown,
+        );
+
+        return {
+            success: true,
+            markdown: args.markdown,
+            data: JSON.stringify(parsedMarkdown),
+        };
     }
 
     async updateMarkdownCollection(
         args: UpdateMarkdownCollectionInputType,
-        user_id: string
+        user_id: string,
     ): Promise<UpdateMarkdownCollectionResultsType> {
         let updatedMarkdown: any = null;
 
         console.log(args);
-        
+
         if (args.id) {
             console.log('ID');
-            
+
             updatedMarkdown = await this.prisma.userCollectionMardown.update({
                 where: {
-                    id: args.id
+                    id: args.id,
                 },
                 data: {
-                    markdown: args.markdown
-                }
+                    markdown: args.markdown,
+                },
             });
         }
 
         if (!args.id) {
             console.log('TOKEN');
-            
+
             updatedMarkdown = await this.prisma.userCollectionMardown.update({
                 where: {
-                    user_id
+                    user_id,
                 },
                 data: {
-                    markdown: args.markdown
-                }
+                    markdown: args.markdown,
+                },
             });
         }
 
-        const parsedMarkdown = await this.markdownService.getParsed(updatedMarkdown.markdown)
+        const parsedMarkdown = await this.markdownService.getParsed(
+            updatedMarkdown.markdown,
+        );
 
-        return { success: true, markdown: args.markdown, data: JSON.stringify(parsedMarkdown)};
+        return {
+            success: true,
+            markdown: args.markdown,
+            data: JSON.stringify(parsedMarkdown),
+        };
     }
 
     async updateRatingUserCollection(
