@@ -20,6 +20,7 @@ import { GetHistoryAnimeResultsType } from '../models/results/get-history-anime-
 import { GetHistoryBaseInputType } from '../models/inputs/get-history-base-input.type';
 import { GetHistoryAuthorResultsType } from '../models/results/get-history-author-results.type';
 import { GetHistoryCharacterResultsType } from '../models/results/get-history-character-results.type';
+import { SortOrder } from '@app/common/models/enums/sort-order.enum';
 
 @Resolver(UserProfileQueryType)
 export class UserProfileQueryResolver extends UserProfileRootResolver {
@@ -82,12 +83,22 @@ export class UserProfileQueryResolver extends UserProfileRootResolver {
         return await this.userProfileService.getHistoryCharacter(args, pagination)
     }
 
-    @ResolveField(() => GetAnimesGenresWithStatisticResultsType, {
-        middleware: [AuthMiddleware],
-    })
-    async getFavouriteGenresWithStatistic(
-        @AccessToken() user_id: string,
-    ): Promise<GetAnimesGenresWithStatisticResultsType> {
-        return await this.userProfileService.getGenresLikeFolders(user_id);
-    }
+    // @ResolveField(() => GetAnimesGenresWithStatisticResultsType, {
+    //     middleware: [AuthMiddleware],
+    // })
+    // async getFavouriteGenresWithStatistic(
+    //     @AccessToken() user_id: string,
+    //     @Args('name') name: SortOrder,
+    //     @Args('count') count: SortOrder,
+    //     @Args('countIn') countIn: SortOrder,
+    //     @Args('percent') percent: SortOrder,
+    // ): Promise<GetAnimesGenresWithStatisticResultsType> {
+    //     return await this.userProfileService.getGenresLikeFolders(
+    //         user_id,
+    //         name,
+    //         count,
+    //         countIn,
+    //         percent,
+    //     );
+    // }
 }

@@ -260,6 +260,28 @@ export class AuthService {
                     social_service:
                         auth_type.toUpperCase() as keyof typeof AuthType,
                 },
+                include: {
+                    auth: true,
+                    user_profile: {
+                        include: {
+                            favourite_animes: true,
+                            favourite_authors: true,
+                            favourite_characters: true,
+                            favourite_genres: true,
+                            favourite_studios: true,
+                            user_folders: {
+                                include: {
+                                    animes: true,
+                                },
+                            },
+                            user_collection: {
+                                include: {
+                                    animes: true,
+                                },
+                            },
+                        },
+                    },
+                },
             });
             const id = result.id;
             const access_token = await this.tokenService.generateToken(
