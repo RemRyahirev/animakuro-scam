@@ -44,6 +44,7 @@ import { AddHistoryCharacterInputType } from '../models/inputs/add-history-chara
 import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
 import { UserCollection } from '../../user-collection/models/user-collection.model';
 import { SortOrder } from '@app/common/models/enums/sort-order.enum';
+import { ModeratorRoles } from '@prisma/client';
 
 @Injectable()
 export class UserProfileService {
@@ -407,10 +408,11 @@ export class UserProfileService {
         args: CreateUserProfileInputType,
         authUserId: string,
     ): Promise<CreateUserProfileResultsType> {
-        const { user_id, avatar, ...other } = args;
+        const { user_id, avatar,  moderator_role, ...other } = args;
         const userProfile = await this.prisma.userProfile.create({
             data: {
                 ...(other as any),
+                moderator_role: ModeratorRoles.VIEWER,
                 integrations: [],
                 user: {
                     connect: {
