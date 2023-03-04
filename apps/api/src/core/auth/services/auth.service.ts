@@ -86,6 +86,10 @@ export class AuthService {
             include: {
                 auth: true,
                 user_profile: {
+                    select: {
+                        displayed_name: true,
+                        profile_type: true,
+                    },
                     include: {
                         favourite_animes: true,
                         favourite_authors: true,
@@ -276,6 +280,10 @@ export class AuthService {
                 include: {
                     auth: true,
                     user_profile: {
+                        select: {
+                            displayed_name: true,
+                            profile_type: true,
+                        },
                         include: {
                             favourite_animes: true,
                             favourite_authors: true,
