@@ -212,6 +212,9 @@ export class AuthService {
                 social_service:
                     auth_type.toUpperCase() as keyof typeof AuthType,
             },
+            include: {
+                user_profile: true,
+            },
         });
 
         const byUsername = await this.prisma.user.findFirst({
