@@ -1,3 +1,4 @@
+import { ProfileType } from '@prisma/client';
 import { notificationsDefault } from '../../../../apps/api/src/core/user/models/inputs/defaults/notifications.default';
 
 import { FolderType } from '../models/enums/folder-type.enum';
@@ -6,6 +7,7 @@ export const userDefaults = {
     notifications: notificationsDefault,
     user_profile: {
         create: {
+            profile_type: ProfileType.PUBLIC,
             integrations: [],
             user_folders: {
                 create: [

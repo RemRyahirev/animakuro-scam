@@ -51,6 +51,7 @@ export class AuthService {
     }
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeEmailToken(token);
+        const { notifications, user_profile } = userDefaults;
 
         if (!userData?.email || !userData?.password || !userData?.username) {
             if (userData?.errors?.length) {
@@ -75,39 +76,17 @@ export class AuthService {
                 password: userData.password,
                 username: userData.username,
                 is_email_confirmed: true,
+                notifications,
                 user_profile: {
                     create: {
                         displayed_name: userData.username,
-                        profile_type: ProfileType.PUBLIC,
-                        ...userDefaults,
+                        ...user_profile.create,
                     },
                 },
             },
             include: {
                 auth: true,
-                user_profile: {
-                    select: {
-                        displayed_name: true,
-                        profile_type: true,
-                    },
-                    include: {
-                        favourite_animes: true,
-                        favourite_authors: true,
-                        favourite_characters: true,
-                        favourite_genres: true,
-                        favourite_studios: true,
-                        user_folders: {
-                            include: {
-                                animes: true,
-                            },
-                        },
-                        user_collection: {
-                            include: {
-                                animes: true,
-                            },
-                        },
-                    },
-                },
+                user_profile: true,
             },
         });
 
@@ -260,6 +239,7 @@ export class AuthService {
                 access_token,
             };
         } else if (!alreadyCreated && !byUsername) {
+            const { notifications, user_profile } = userDefaults;
             const result = await this.prisma.user.create({
                 data: {
                     username: profile.account.username,
@@ -269,39 +249,17 @@ export class AuthService {
                     is_email_confirmed: true,
                     social_service:
                         auth_type.toUpperCase() as keyof typeof AuthType,
+                    notifications,
                     user_profile: {
                         create: {
                             displayed_name: profile.account.username,
-                            profile_type: ProfileType.PUBLIC,
-                            ...userDefaults,
+                            ...user_profile.create,
                         },
                     },
                 },
                 include: {
                     auth: true,
-                    user_profile: {
-                        select: {
-                            displayed_name: true,
-                            profile_type: true,
-                        },
-                        include: {
-                            favourite_animes: true,
-                            favourite_authors: true,
-                            favourite_characters: true,
-                            favourite_genres: true,
-                            favourite_studios: true,
-                            user_folders: {
-                                include: {
-                                    animes: true,
-                                },
-                            },
-                            user_collection: {
-                                include: {
-                                    animes: true,
-                                },
-                            },
-                        },
-                    },
+                    user_profile: true,
                 },
             });
             const id = result.id;
