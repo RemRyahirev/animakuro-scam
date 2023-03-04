@@ -12,7 +12,7 @@ import {
 } from '@nestjs/throttler';
 
 import { userDefaults } from '@app/common/defaults/user-defaults';
-import { AuthType, MailPurpose, TokenType } from '@app/common/models/enums';
+import { AuthType, MailPurpose, ProfileType, TokenType } from '@app/common/models/enums';
 import { PasswordService } from '@app/common/services/password.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 
@@ -76,6 +76,12 @@ export class AuthService {
                 username: userData.username,
                 is_email_confirmed: true,
                 ...userDefaults,
+                user_profile: {
+                    create: {
+                        displayed_name: userData.username,
+                        profile_type: ProfileType.PUBLIC,
+                    },
+                },
             },
             include: {
                 auth: true,
@@ -260,6 +266,12 @@ export class AuthService {
                     social_service:
                         auth_type.toUpperCase() as keyof typeof AuthType,
                     ...userDefaults,
+                    user_profile: {
+                        create: {
+                            displayed_name: profile.account.username,
+                            profile_type: ProfileType.PUBLIC,
+                        },
+                    },
                 },
                 include: {
                     auth: true,
