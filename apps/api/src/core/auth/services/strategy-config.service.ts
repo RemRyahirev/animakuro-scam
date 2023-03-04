@@ -16,7 +16,7 @@ export class StrategyConfigService implements JwtOptionsFactory {
                         'ACCESS_TOKEN_SECRET',
                     ),
                     signOptions: {
-                        expiresIn: this.configService.get<number>(
+                        expiresIn: this.configService.get(
                             'ACCESS_TOKEN_SECRET_EXP_IN',
                         ),
                     },
@@ -26,7 +26,7 @@ export class StrategyConfigService implements JwtOptionsFactory {
                         'REFRESH_TOKEN_SECRET',
                     ),
                     signOptions: {
-                        expiresIn: this.configService.get<number>(
+                        expiresIn: this.configService.get(
                             'REFRESH_TOKEN_SECRET_EXP_IN',
                         ),
                     },
@@ -35,7 +35,7 @@ export class StrategyConfigService implements JwtOptionsFactory {
                     privateKey:
                         this.configService.get<string>('EMAIL_TOKEN_SECRET'),
                     signOptions: {
-                        expiresIn: this.configService.get<number>(
+                        expiresIn: this.configService.get(
                             'EMAIL_TOKEN_SECRET_EXP_IN',
                         ),
                     },
@@ -45,7 +45,7 @@ export class StrategyConfigService implements JwtOptionsFactory {
                         'RESET_PASS_TOKEN_SECRET',
                     ),
                     signOptions: {
-                        expiresIn: this.configService.get<number>(
+                        expiresIn: this.configService.get(
                             'RESET_PASS_TOKEN_SECRET_EXP_IN',
                         ),
                     },

@@ -43,6 +43,7 @@ import { AddHistoryAuthorResultsType } from '../models/results/add-history-autho
 import { AddHistoryCharacterInputType } from '../models/inputs/add-history-character-input.type';
 import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
 import { UserCollection } from '../../user-collection/models/user-collection.model';
+import { SortOrder } from '@app/common/models/enums/sort-order.enum';
 import { ModeratorRoles } from '@prisma/client';
 
 @Injectable()
@@ -775,16 +776,98 @@ export class UserProfileService {
         };
     }
 
-    async getGenresLikeFolders(userId: string) {
-        const genres = await this.prisma.userProfile.findUnique({
-            where: { id: userId },
+    async getGenresLikeFolders(
+        userId: string,
+        name: SortOrder,
+        count: SortOrder,
+        countIn: SortOrder,
+        percent: SortOrder,
+    ) {
+        const statistic = await this.prisma.userProfile.findUnique({
+            where: { user_id: userId },
             select: {
                 statistics: true,
             },
         });
-        console.log(genres?.statistics?.toLocaleString);
+
+        //@ts-ignore
+        const genresIds = Object.keys(statistic?.statistics.folder.genre)
+        const countSum = Object.values(
+            //@ts-ignore
+            statistic?.statistics.folder.genre,
+        ).reduce((a: any, b: any) => a + b, 0);
+
+        const genres = await this.prisma.genre.findMany({
+            where: {
+                id: { in: genresIds },
+            },
+            orderBy: [
+                {
+                    name,
+                },
+            ],
+            include: {
+                animes: true,
+            },
+        });
+
+        const result: any[] = [];
+
+        genres.map((genre) =>
+            result.push({
+                genre: {
+                    id: genre.id,
+                    name: genre.name,
+                    description: genre.description,
+                },
+                //@ts-ignore
+                count: statistic?.statistics.folder.genre[genre.id],
+                percent:
+                    //@ts-ignore
+                    Math.round((statistic?.statistics.folder.genre[genre.id] / countSum).toFixed(2) * 100),
+                animes: genre.animes,
+            }),
+        );
+
+        if (name) {
+            console.log(result);
+        }
+        if (count) {
+            result.sort(this.byField('count'));
+
+            if (count === 'desc') {
+                result.reverse();
+            }
+        }
+        if (countIn) {
+            result.sort(this.byField('animes'));
+        }
+            // console.log(result)
+
+        //@ts-ignore
+        const a = statistic?.statistics.folder.genre;
+
+        const sortable = [];
+        for (const genre in a) {
+            sortable.push([genre, a[genre]]);
+        }
+
+        const b = this.getObject(sortable.sort((a, b) => a[1] - b[1]));
+
+        // console.log(b)
+
         return {
             success: true,
         };
     }
+
+    private getObject = (data: any) =>
+        data.reduce((acc: any, obj: any) => {
+            acc[obj[0]] = obj[1];
+            return acc;
+        }, {});
+
+    private byField = (field: any) => {
+        return (a: any, b: any) => (a[field] > b[field] ? 1 : -1);
+    };
 }
