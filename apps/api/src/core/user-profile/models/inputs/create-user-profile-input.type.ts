@@ -51,7 +51,10 @@ export class CreateUserProfileInputType {
 
     @IsOptional()
     @IsEnum(Gender)
-    @Field(() => Gender, { nullable: true, defaultValue: Gender.UNSPECIFIED })
+    @Field(() => Gender, { 
+        nullable: true, 
+        defaultValue: Gender.UNSPECIFIED
+    })
     gender: Gender;
 
     @IsOptional()
@@ -82,17 +85,26 @@ export class CreateUserProfileInputType {
 
     @IsOptional()
     @IsEnum(ProfileType)
-    @Field(() => ProfileType, { defaultValue: ProfileType.PUBLIC })
+    @Field(() => ProfileType, {
+        nullable: true,
+        defaultValue: ProfileType.PUBLIC 
+    })
     profile_type: ProfileType;
 
     @IsOptional()
     @IsEnum(ModeratorRoles)
-    @Field(() => ModeratorRoles, { defaultValue: ModeratorRoles.VIEWER })
+    @Field(() => ModeratorRoles, {
+        nullable: true,
+        defaultValue: ModeratorRoles.VIEWER
+    })
     moderator_role: ModeratorRoles;
 
     @IsOptional()
     @IsBoolean()
-    @Field(() => Boolean, { defaultValue: false })
+    @Field(() => Boolean, {
+        nullable: true, 
+        defaultValue: false 
+    })
     is_blocked: boolean;
 
     @IsOptional()
