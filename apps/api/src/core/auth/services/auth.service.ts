@@ -12,7 +12,7 @@ import {
 } from '@nestjs/throttler';
 
 import { userDefaults } from '@app/common/defaults/user-defaults';
-import { AuthType, MailPurpose, ProfileType, TokenType } from '@app/common/models/enums';
+import { AuthType, MailPurpose, TokenType } from '@app/common/models/enums';
 import { PasswordService } from '@app/common/services/password.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 
@@ -51,7 +51,6 @@ export class AuthService {
     }
     async emailConfirmation(token: string): Promise<RegisterResultsType> {
         const userData = await this.tokenService.decodeEmailToken(token);
-        const { notifications, user_profile } = userDefaults;
 
         if (!userData?.email || !userData?.password || !userData?.username) {
             if (userData?.errors?.length) {
@@ -76,13 +75,7 @@ export class AuthService {
                 password: userData.password,
                 username: userData.username,
                 is_email_confirmed: true,
-                notifications,
-                user_profile: {
-                    create: {
-                        displayed_name: userData.username,
-                        ...user_profile.create,
-                    },
-                },
+                ...userDefaults,
             },
             include: {
                 auth: true,
@@ -239,7 +232,6 @@ export class AuthService {
                 access_token,
             };
         } else if (!alreadyCreated && !byUsername) {
-            const { notifications, user_profile } = userDefaults;
             const result = await this.prisma.user.create({
                 data: {
                     username: profile.account.username,
@@ -249,13 +241,7 @@ export class AuthService {
                     is_email_confirmed: true,
                     social_service:
                         auth_type.toUpperCase() as keyof typeof AuthType,
-                    notifications,
-                    user_profile: {
-                        create: {
-                            displayed_name: profile.account.username,
-                            ...user_profile.create,
-                        },
-                    },
+                    ...userDefaults,
                 },
                 include: {
                     auth: true,
