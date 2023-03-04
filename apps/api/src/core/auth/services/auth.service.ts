@@ -75,11 +75,11 @@ export class AuthService {
                 password: userData.password,
                 username: userData.username,
                 is_email_confirmed: true,
-                ...userDefaults,
                 user_profile: {
                     create: {
                         displayed_name: userData.username,
                         profile_type: ProfileType.PUBLIC,
+                        ...userDefaults,
                     },
                 },
             },
@@ -265,11 +265,11 @@ export class AuthService {
                     is_email_confirmed: true,
                     social_service:
                         auth_type.toUpperCase() as keyof typeof AuthType,
-                    ...userDefaults,
                     user_profile: {
                         create: {
                             displayed_name: profile.account.username,
                             profile_type: ProfileType.PUBLIC,
+                            ...userDefaults,
                         },
                     },
                 },
