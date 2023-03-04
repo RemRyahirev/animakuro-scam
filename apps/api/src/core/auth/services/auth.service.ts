@@ -259,6 +259,7 @@ export class AuthService {
                     is_email_confirmed: true,
                     social_service:
                         auth_type.toUpperCase() as keyof typeof AuthType,
+                    ...userDefaults,
                 },
                 include: {
                     auth: true,
