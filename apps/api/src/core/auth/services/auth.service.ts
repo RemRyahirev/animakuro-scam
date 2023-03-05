@@ -212,8 +212,6 @@ export class AuthService {
         // if (await this.throttler._handleRequest(1, 120, req, res)) {
         // Код сюда
         // }
-        console.log('TEST');
-        console.log('REG SOC', profile);
         const alreadyCreated = await this.prisma.user.findFirst({
             where: {
                 email: profile.account.email,
@@ -224,14 +222,11 @@ export class AuthService {
                 user_profile: true,
             },
         });
-        console.log('ALREADY CREATED', alreadyCreated);
         const byUsername = await this.prisma.user.findFirst({
             where: {
                 username: profile.account.username,
             },
         });
-        console.log('BY USERNAME', byUsername);
-
         if (alreadyCreated) {
             const access_token = await this.tokenService.generateToken(
                 alreadyCreated.id as any,
@@ -267,7 +262,6 @@ export class AuthService {
                     user_profile: true,
                 },
             });
-            console.log('!ALREADY_CRE * !ByUSER  res', result);
             const id = result.id;
             const access_token = await this.tokenService.generateToken(
                 id as any,
@@ -306,7 +300,6 @@ export class AuthService {
                         auth_type.toUpperCase() as keyof typeof AuthType,
                 },
             });
-            console.log('ELSE user', user);
             const id = user.id;
             const access_token = await this.tokenService.generateToken(
                 id as any,
