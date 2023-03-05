@@ -212,6 +212,7 @@ export class AuthService {
         // if (await this.throttler._handleRequest(1, 120, req, res)) {
         // Код сюда
         // }
+        console.log('TEST');
         console.log('REG SOC', profile);
         const alreadyCreated = await this.prisma.user.findFirst({
             where: {
