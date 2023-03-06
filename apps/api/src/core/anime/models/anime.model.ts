@@ -1,4 +1,4 @@
-import { Field, Float, HideField, ID, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, HideField, ID, InputType, Int, ObjectType } from '@nestjs/graphql';
 
 import {
     AnimeType,
@@ -23,63 +23,55 @@ import { UserFolder } from '../../user-folder/models/user-folder.model';
 import { UserProfile } from '../../user-profile/models/user-profile.model';
 import { Stills } from './stills.model';
 
-
 @ObjectType()
 export class Anime {
-    @Field(() => ID, {
-        description: 'Unique ID of the media',
-    })
+    /**
+     * Unique ID of the media
+     */
+    @Field(() => ID)
     id?: string;
 
-    @Field(() => Boolean, {
-        description: 'Favourite anime',
-        defaultValue: false,
-    })
+    /**
+     * Favourite anime
+     */
+    @Field({ defaultValue: false })
     is_favourite?: boolean;
 
-    @Field(() => [UserProfile], {
-        description: 'Favourite by',
-        nullable: true,
-    })
+    /**
+     * Favourite by
+     */
     favourite_by?: UserProfile[];
 
-    @Field(() => String, {
-        description: 'The official titles of the media in various languages',
-    })
+    /**
+     * The official titles of the media in various languages
+     */
     title: string;
 
-    @Field(() => Float, {
-        description: 'Popularity rating of the media',
-    })
+    /**
+     * Popularity rating of the media
+     */
     score: number;
 
-    // @Field(() => Object, {
-    //     description: 'User ratings',
-    // })
-    // evaluation: object;
-
-    @Field(() => Int, {
-        description: 'Year of production of the media',
-    })
+    /**
+     * Year of production of the media
+     */
+    @Field(() => Int)
     year: number;
 
-    @Field(() => String, {
-        description:
-            'Country where the media was created. (ISO 3166-1 alpha-2)',
-    })
+    /**
+     * Country where the media was created. (ISO 3166-1 alpha-2)
+     */
     country_of_origin: string;
 
-    @Field(() => Date, {
-        nullable: true,
-        description: 'The first official release date of the media',
-    })
-    date_start?: Date | null;
+    /**
+     * The first official release date of the media
+     */
+    date_start?: Date;
 
-    @Field(() => Date, {
-        nullable: true,
-        description: 'The last official release date of the media',
-    })
-    date_end?: Date | null;
+    /**
+     * The last official release date of the media
+     */
+    date_end?: Date;
 
     @Field(() => [Genre], {
         nullable: true,
@@ -91,13 +83,13 @@ export class Anime {
         defaultValue: MediaFormat.OTHER,
         description: 'The format the media was released in',
     })
-    format: string;
+    format: MediaFormat;
 
     @Field(() => MediaSource, {
         defaultValue: MediaSource.OTHER,
         description: 'Source type the media was adapted from',
     })
-    source: string;
+    source: MediaSource;
 
     @Field(() => Int, {
         description: 'Number of seasons',
@@ -124,7 +116,7 @@ export class Anime {
         defaultValue: FilmRating.G,
         description: 'Content rating of the media',
     })
-    rating: string;
+    rating: FilmRating;
 
     @Field(() => String, {
         description: 'Brief description of the media',
@@ -163,7 +155,7 @@ export class Anime {
         defaultValue: ReleaseStatus.COMPLETED,
         description: 'The current releasing status of the media',
     })
-    release_status: string;
+    release_status: ReleaseStatus;
 
     @Field(() => AnimeType, {
         defaultValue: AnimeType.ANIME,

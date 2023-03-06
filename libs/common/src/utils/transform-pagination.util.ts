@@ -1,6 +1,6 @@
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
-export function transformPaginationUtil<T extends PaginationInputType>(
+export function transformPaginationUtil<T extends PaginationArgsType>(
     args: T,
 ): any {
     return {

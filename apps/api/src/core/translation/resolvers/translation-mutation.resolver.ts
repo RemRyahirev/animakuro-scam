@@ -2,9 +2,9 @@ import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { DeleteTranslationResultsType } from '../models/results/delete-translation-results.type';
 import { CreateTranslationResultsType } from '../models/results/create-translation-results.type';
-import { CreateTranslationInputType } from '../models/inputs/create-translation-input.type';
+import { CreateTranslationArgsType } from '../models/inputs/create-translation-args.type';
 import { UpdateTranslationResultsType } from '../models/results/update-translation-results.type';
-import { UpdateTranslationInputType } from '../models/inputs/update-translation-input.type';
+import { UpdateTranslationArgsType } from '../models/inputs/update-translation-args.type';
 import { TranslationService } from '../services/translation.service';
 
 import {
@@ -20,14 +20,14 @@ export class TranslationMutationResolver extends TranslationRootResolver {
 
     @ResolveField(() => CreateTranslationResultsType)
     async createTranslation(
-        @Args() args: CreateTranslationInputType,
+        @Args() args: CreateTranslationArgsType,
     ): Promise<CreateTranslationResultsType> {
         return await this.translationService.createTranslation(args);
     }
 
     @ResolveField(() => UpdateTranslationResultsType)
     async updateTranslation(
-        @Args() args: UpdateTranslationInputType,
+        @Args() args: UpdateTranslationArgsType,
     ): Promise<UpdateTranslationResultsType> {
         return await this.translationService.updateTranslation(args);
     }

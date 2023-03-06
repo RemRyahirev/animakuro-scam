@@ -10,7 +10,7 @@ import {
     GetUserStatisticFavouriteResultsType,
 } from '../models/results';
 import { StatisticService } from '../services/statistic.service';
-import { GetStatisticFolderInputType } from '../models/inputs';
+import { GetStatisticFolderArgsType } from '../models/inputs';
 
 import {
     StatisticQueryType,
@@ -29,7 +29,7 @@ export class StatisticQueryResolver extends StatisticRootResolver {
     @UseGuards(JwtAuthGuard)
     async getUserStatisticFolder(
         @ProfileId() profileId: string,
-        @Args({ nullable: true }) args?: GetStatisticFolderInputType,
+        @Args({ nullable: true }) args?: GetStatisticFolderArgsType,
     ): Promise<GetUserStatisticFolderResultsType> {
         return await this.statisticService.getUserStatisticFolder({
             ...args,

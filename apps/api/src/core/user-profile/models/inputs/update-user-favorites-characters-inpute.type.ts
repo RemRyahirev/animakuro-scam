@@ -2,7 +2,7 @@ import { IsOptional, IsUUID, IsArray } from '@nestjs/class-validator';
 import { ArgsType, Field, ID } from '@nestjs/graphql';
 
 @ArgsType()
-export class UpdateUserFavouriteCharactersInputType {
+export class UpdateUserFavouriteCharactersArgsType {
     @IsOptional()
     @IsUUID(4, { each: true })
     @IsArray()

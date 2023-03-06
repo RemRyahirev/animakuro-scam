@@ -1,14 +1,14 @@
 import { Prisma } from '@prisma/client';
 
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
-import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input.type';
+import { CatalogAuthorArgsType } from '../models/inputs/catalog-author-args.type';
 import { CatalogAuthorSort } from '../models/interfaces/catalog-author-sort';
 import { CatalogAuthorSearchTable } from '../models/enums/catalog-author-search-table.enum';
 
 export function createCatalogAuthorOptions(
     elasticResults: ElasticResults,
     options: Omit<
-        CatalogAuthorInputType,
+        CatalogAuthorArgsType,
         'search' | 'sort_field' | 'sort_order'
     >,
     sort: CatalogAuthorSort,

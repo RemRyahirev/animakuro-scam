@@ -106,7 +106,9 @@ export class SchemaService {
             {},
             (err: NodeJS.ErrnoException | null) => {
                 Logger.log(`✅  GraphQL schema generated`);
-                if (err) console.log(err);
+                if (err) {
+                    console.log('GraphQL generation failed');
+                }
             },
         );
     }

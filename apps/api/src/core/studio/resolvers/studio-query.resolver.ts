@@ -3,7 +3,7 @@ import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { ProfileId } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetStudioResultsType } from '../models/results/get-studio-results.type';
 import { GetListStudioResultsType } from '../models/results/get-list-studio-results.type';
@@ -34,7 +34,7 @@ export class StudioQueryResolver extends StudioRootResolver {
         middleware: [AuthMiddleware],
     })
     async getStudioList(
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @ProfileId() profileId: string,
         @Info() info: any,
     ): Promise<GetListStudioResultsType> {

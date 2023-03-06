@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { userDefaults } from '@app/common/defaults/user-defaults';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateUserInputType } from '../models/inputs/create-user-input.type';
-import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
+import { CreateUserArgsType } from '../models/inputs/create-user-args.type';
+import { UpdateUserArgsType } from '../models/inputs/update-user-args.type';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
 import { UpdateUserResultsType } from '../models/results/update-user-results.type';
 import { GetListUserResultsType } from '../models/results/get-list-user-results.type';
 import { GetUserResultsType } from '../models/results/get-user-results.type';
 import { mediaConnectUtil } from '../utils/media-connect.util';
-import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
+import { UpdateUserFavouritesArgsType } from '../models/inputs/update-user-favourites-args.type';
 import { createUserStatisticOptions } from '../utils/create-user-statistic-option.util';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UserService {
     ) {}
 
     async getUserList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListUserResultsType> {
         const userList = await this.prisma.user.findMany({
             ...transformPaginationUtil(args),
@@ -81,7 +81,7 @@ export class UserService {
         if (!username && !user_id && !id) {
             return {
                 success: false,
-                user: null,
+                // user: null,
             };
         }
         const user =
@@ -139,7 +139,7 @@ export class UserService {
     }
 
     async updateUserFavourites(
-        args: UpdateUserFavouritesInputType,
+        args: UpdateUserFavouritesArgsType,
     ): Promise<UpdateUserResultsType> {
         const user = await this.prisma.user.update({
             where: { id: args.id },
@@ -185,7 +185,7 @@ export class UserService {
 
     async getUsersByEmail(
         email: string,
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListUserResultsType> {
         const userList = await this.prisma.user.findMany({
             where: { email },
@@ -338,7 +338,7 @@ export class UserService {
     }
 
     async createUser(
-        args: CreateUserInputType,
+        args: CreateUserArgsType,
     ): Promise<CreateUserResultsType> {
         const user = await this.prisma.user.create({
             data: {
@@ -380,7 +380,7 @@ export class UserService {
     }
 
     async updateUser(
-        args: UpdateUserInputType,
+        args: UpdateUserArgsType,
     ): Promise<UpdateUserResultsType> {
         const user = await this.prisma.user.update({
             where: { id: args.id },

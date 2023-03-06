@@ -6,15 +6,13 @@ import { AiringSchedule } from '../airing-schedule.model';
 
 @ObjectType()
 export class GetListAiringScheduleByAnimeResultsType extends BaseResultsType {
-    @Field(() => [AiringSchedule], {
-        nullable: true,
-        description: 'AiringSchedule',
-    })
-    airing_schedule: AiringSchedule[];
+    /**
+     * AiringSchedule
+     */
+    airing_schedule?: AiringSchedule[];
 
-    @Field(() => PaginationResultsType, {
-        nullable: false,
-        description: 'Pagination data',
-    })
+    /**
+     * Pagination data
+     */
     pagination: PaginationResultsType;
 }

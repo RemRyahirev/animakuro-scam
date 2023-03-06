@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nest start",
+    "start:dev": "nest start -w",
     "start:prod": "node dist/main",
     "dev": "ts-node-dev -r tsconfig-paths/register --exit-child ./apps/api/src/main.ts",
     "dev:stat": "ts-node-dev -r tsconfig-paths/register --exit-child ./apps/statistic/src/main.ts",

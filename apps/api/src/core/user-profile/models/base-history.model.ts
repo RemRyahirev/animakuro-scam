@@ -12,7 +12,6 @@ registerEnumType(HistorySortFields, {
     name: 'HistorySortFields',
 });
 
-
 @ObjectType()
 export class BaseHistoryModel {
     @Field(() => ID)
@@ -24,12 +23,9 @@ export class BaseHistoryModel {
     @Field(() => Int)
     spent_time: number;
 
-    @Field(() => Date)
     created_at: Date;
 
-    @Field(() => Date)
     updated_at: Date;
 
-    @Field(() => UserProfile)
     user_profile?: UserProfile;
 }

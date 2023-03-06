@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateTranslationInputType } from '../models/inputs/create-translation-input.type';
-import { UpdateTranslationInputType } from '../models/inputs/update-translation-input.type';
+import { CreateTranslationArgsType } from '../models/inputs/create-translation-args.type';
+import { UpdateTranslationArgsType } from '../models/inputs/update-translation-args.type';
 import { GetTranslationResultsType } from '../models/results/get-translation-results.type';
 import { GetListTranslationResultsType } from '../models/results/get-list-translation-results.type';
 import { CreateTranslationResultsType } from '../models/results/create-translation-results.type';
@@ -40,7 +40,7 @@ export class TranslationService {
     }
 
     async getTranslationList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListTranslationResultsType> {
         const translationList = await this.prisma.translation.findMany({
             ...transformPaginationUtil(args),
@@ -55,7 +55,7 @@ export class TranslationService {
     }
 
     async createTranslation(
-        args: CreateTranslationInputType,
+        args: CreateTranslationArgsType,
     ): Promise<CreateTranslationResultsType> {
         const translation = await this.prisma.translation.create({
             data: args,
@@ -67,7 +67,7 @@ export class TranslationService {
     }
 
     async updateTranslation(
-        args: UpdateTranslationInputType,
+        args: UpdateTranslationArgsType,
     ): Promise<UpdateTranslationResultsType> {
         const translation = await this.prisma.translation.update({
             where: { id: args.id },

@@ -3,17 +3,17 @@ import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AccessToken, ProfileId } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { AnimeService } from '../services/anime.service';
-import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
+import { GetAnimeByIdArgsType } from '../models/inputs/get-anime-by-id-args.type';
 import { GetStillsByAnimeIdResultsType } from '../models/results/get-stills-by-animeId-results.type';
-import { GetStillsByAnimeIdInputType } from '../models/inputs/get-stills-by-animeId-input.type';
-import { GetAnimeListInputType } from '../models/inputs/get-anime-list-input.type';
+import { GetStillsByAnimeIdArgsType } from '../models/inputs/get-stills-by-anime-id-args.type';
+import { GetAnimeListArgsType } from '../models/inputs/get-anime-list-args.type';
 
 import { AnimeQueryType, AnimeRootResolver } from './anime-root.resolver';
 
@@ -25,7 +25,7 @@ export class AnimeQueryResolver extends AnimeRootResolver {
 
     @ResolveField(() => GetAnimeResultsType, { middleware: [AuthMiddleware] })
     async getAnime(
-        @Args() args: GetAnimeByIdInputType,
+        @Args() args: GetAnimeByIdArgsType,
         @AccessToken() userId: string,
         @ProfileId() profileId: string,
         @Info() info: any,
@@ -42,8 +42,8 @@ export class AnimeQueryResolver extends AnimeRootResolver {
         middleware: [AuthMiddleware],
     })
     async getAnimeList(
-        @Args() input: GetAnimeListInputType,
-        @Args() args: PaginationInputType,
+        @Args() input: GetAnimeListArgsType,
+        @Args() args: PaginationArgsType,
         @Info() info: any,
         @AccessToken() userId: string,
         @ProfileId() profileId: string,
@@ -62,7 +62,7 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     })
     async getRelatedAnimeListByAnimeId(
         @Args('id') id: string,
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @AccessToken() userId: string,
         @ProfileId() profileId: string,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
@@ -79,7 +79,7 @@ export class AnimeQueryResolver extends AnimeRootResolver {
     })
     async getSimilarAnimeListByAnimeId(
         @Args('id') id: string,
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @AccessToken() userId: string,
         @ProfileId() profileId: string,
     ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
@@ -93,8 +93,8 @@ export class AnimeQueryResolver extends AnimeRootResolver {
 
     @ResolveField(() => GetStillsByAnimeIdResultsType)
     async getStillsByAnimeId(
-        @Args() args: GetStillsByAnimeIdInputType,
-        @Args() pagination: PaginationInputType,
+        @Args() args: GetStillsByAnimeIdArgsType,
+        @Args() pagination: PaginationArgsType,
     ) {
         return await this.animeService.getStillsByAnimeId(args, pagination);
     }

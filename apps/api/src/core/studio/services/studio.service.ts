@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
@@ -10,9 +10,9 @@ import { transformPaginationUtil } from '@app/common/utils/transform-pagination.
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
 import { GetStudioResultsType } from '../models/results/get-studio-results.type';
 import { GetListStudioResultsType } from '../models/results/get-list-studio-results.type';
-import { UpdateStudioInputType } from '../models/inputs/update-studio-input.type';
+import { UpdateStudioArgsType } from '../models/inputs/update-studio-args.type';
 import { UpdateStudioResultsType } from '../models/results/update-studio-results.type';
-import { CreateStudioInputType } from '../models/inputs/create-studio-input.type';
+import { CreateStudioArgsType } from '../models/inputs/create-studio-args.type';
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
 import { Studio } from '../models/studio.model';
 import { StatisticService } from '@app/common/services/statistic.service';
@@ -98,7 +98,7 @@ export class StudioService {
     }
 
     async getStudioList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
         profile_id: string,
         favourite: boolean,
     ): Promise<GetListStudioResultsType> {
@@ -159,7 +159,7 @@ export class StudioService {
     }
 
     async createStudio(
-        args: CreateStudioInputType,
+        args: CreateStudioArgsType,
         user_id: string,
     ): Promise<CreateStudioResultsType> {
         const studio = await this.prisma.studio.create({
@@ -194,7 +194,7 @@ export class StudioService {
     }
 
     async updateStudio(
-        args: UpdateStudioInputType,
+        args: UpdateStudioArgsType,
         user_id: string,
     ): Promise<UpdateStudioResultsType> {
         const oldStudio = await this.prisma.studio.findUnique({
@@ -245,7 +245,7 @@ export class StudioService {
         const animesToAdd = (args.animes_to_add ?? []).slice();
         const animesToRemove = (args.animes_to_remove ?? []).slice();
         const oldStudioAnimesIds = oldStudio?.animes.map(el => el.id) ?? [];
-        
+
         animesToAdd.forEach(animeId => {
             if (oldStudioAnimesIds.includes(animeId)) {
                 // already exists
@@ -309,17 +309,17 @@ export class StudioService {
     }
 
     private async calculateAdditionalFields(
-        args: CreateStudioInputType | UpdateStudioInputType,
+        args: CreateStudioArgsType | UpdateStudioArgsType,
     ) {
         let animeCount: number;
-        if (args instanceof CreateStudioInputType) {
+        if (args instanceof CreateStudioArgsType) {
             if (!args.animes_to_add) {
                 animeCount = 0;
             } else {
                 animeCount = args.animes_to_add.length;
             }
         }
-        if (args instanceof UpdateStudioInputType) {
+        if (args instanceof UpdateStudioArgsType) {
             animeCount = await this.prisma.studio
                 .findUnique({
                     where: { id: args.id },

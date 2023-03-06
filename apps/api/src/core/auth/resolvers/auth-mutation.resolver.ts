@@ -10,8 +10,8 @@ import { SocialAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { AuthType } from '@app/common/models/enums';
 
-import { LoginInputType } from '../models/inputs/login-input.type';
-import { RegisterInputType } from '../models/inputs/register-input.type';
+import { LoginArgsType } from '../models/inputs/login-args.type';
+import { RegisterArgsType } from '../models/inputs/register-args.type';
 import { RegisterResultsType } from '../models/results/register-results.type';
 import { LoginResultsType } from '../models/results/login-results.type';
 import { LogoutResultsType } from '../models/results/logout-results.type';
@@ -28,7 +28,7 @@ export class AuthMutationResolver extends AuthRootResolver {
     @ResolveField(() => LogoutResultsType)
     @ValidateSchemas()
     async register(
-        @Args() args: RegisterInputType,
+        @Args() args: RegisterArgsType,
         @Context() context: ExecutionContext,
     ): Promise<LogoutResultsType> {
         return await this.authService.sendEmail(
@@ -42,7 +42,7 @@ export class AuthMutationResolver extends AuthRootResolver {
 
     @ResolveField(() => LoginResultsType)
     async login(
-        @Args() args: LoginInputType,
+        @Args() args: LoginArgsType,
         @Context() context: ExecutionContext,
     ): Promise<LoginResultsType> {
         console.log(args);

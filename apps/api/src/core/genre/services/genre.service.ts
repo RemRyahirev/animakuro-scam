@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
-import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
+import { CreateGenreArgsType } from '../models/inputs/create-genre-args.type';
+import { UpdateGenreArgsType } from '../models/inputs/update-genre-args.type';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
@@ -79,7 +79,7 @@ export class GenreService {
     }
 
     async getGenreList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
         profile_id: string,
         favourite: boolean,
     ): Promise<GetListGenreResultsType> {
@@ -140,7 +140,7 @@ export class GenreService {
     }
 
     async createGenre(
-        args: CreateGenreInputType,
+        args: CreateGenreArgsType,
     ): Promise<CreateGenreResultsType> {
         const genre = await this.prisma.genre.create({
             data: args,
@@ -152,7 +152,7 @@ export class GenreService {
     }
 
     async updateGenre(
-        args: UpdateGenreInputType,
+        args: UpdateGenreArgsType,
     ): Promise<UpdateGenreResultsType> {
         const genre = await this.prisma.genre.update({
             where: { id: args.id },

@@ -3,7 +3,7 @@ import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { JwtAuthGuard } from '@app/common/guards/jwt-auth.guard';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { AuthSessionService } from '../services/auth-session.service';
 import { GetAuthSessionResultsType } from '../models/results/get-auth-session-results.type';
@@ -33,7 +33,7 @@ export class AuthSessionQueryResolver extends AuthSessionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async getAuthSessionList(
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
     ): Promise<GetListAuthSessionResultsType> {
         return await this.authSessionService.getAuthSessionList(args);
     }

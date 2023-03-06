@@ -1,6 +1,5 @@
 import { GraphQLJSONObject } from 'graphql-type-json';
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { FolderType } from '@prisma/client';
 
 @ObjectType()
 export class CollectionStatistics {

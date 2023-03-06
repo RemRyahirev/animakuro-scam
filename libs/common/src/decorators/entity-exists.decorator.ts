@@ -6,7 +6,7 @@ import {
     ValidatorConstraintInterface,
 } from '@nestjs/class-validator';
 
-import { LoginInputType } from '../../../../apps/api/src/core/auth/models/inputs/login-input.type';
+import { LoginArgsType } from '../../../../apps/api/src/core/auth/models/inputs/login-args.type';
 
 import { PrismaService } from '../services/prisma.service';
 
@@ -15,7 +15,7 @@ export class EntityExistsConstraint implements ValidatorConstraintInterface {
     constructor(private prisma: PrismaService) {}
 
     async validate(value: any, args: ValidationArguments) {
-        const inputArgs = args.object as LoginInputType;
+        const inputArgs = args.object as LoginArgsType;
         const user = await this.prisma.user.findFirst({
             where: {
                 username: inputArgs.username,

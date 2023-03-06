@@ -8,8 +8,8 @@ import { DeleteAiringScheduleResultsType } from '../models/results/delete-airing
 import { CreateAiringScheduleResultsType } from '../models/results/create-airing-schedule-results.type';
 import { UpdateAiringScheduleResultsType } from '../models/results/update-airing-schedule-results.type';
 import { AiringScheduleService } from '../services/airing-schedule.service';
-import { CreateAiringScheduleInputType } from '../models/inputs/create-airing-schedule-input.type';
-import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-schedule-input.type';
+import { CreateAiringScheduleArgsType } from '../models/inputs/create-airing-schedule-args.type';
+import { UpdateAiringScheduleArgsType } from '../models/inputs/update-airing-schedule-args.type';
 
 import {
     AiringScheduleMutationType,
@@ -27,7 +27,7 @@ export class AiringScheduleMutationResolver extends AiringScheduleRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async createAiringSchedule(
-        @Args() args: CreateAiringScheduleInputType,
+        @Args() args: CreateAiringScheduleArgsType,
     ): Promise<CreateAiringScheduleResultsType> {
         return await this.airingScheduleService.createAiringSchedule(args);
     }
@@ -37,7 +37,7 @@ export class AiringScheduleMutationResolver extends AiringScheduleRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateAiringSchedule(
-        @Args() args: UpdateAiringScheduleInputType,
+        @Args() args: UpdateAiringScheduleArgsType,
     ): Promise<UpdateAiringScheduleResultsType> {
         return await this.airingScheduleService.updateAiringSchedule(args);
     }

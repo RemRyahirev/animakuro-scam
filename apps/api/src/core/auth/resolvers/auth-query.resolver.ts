@@ -1,6 +1,6 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { OathUrlInputType } from '../models/inputs/oath-url-input.type';
+import { OathUrlArgsType } from '../models/inputs/oath-url-args.type';
 import { AuthService } from '../services/auth.service';
 
 import { AuthQueryType, AuthRootResolver } from './auth-root.resolver';
@@ -12,7 +12,7 @@ export class AuthQueryResolver extends AuthRootResolver {
     }
 
     @ResolveField(() => String)
-    async oauthRedirectUrl(@Args() args: OathUrlInputType) {
+    async oauthRedirectUrl(@Args() args: OathUrlArgsType) {
         // return await this.authService.oauthRedirectUrl(args);
     }
 }

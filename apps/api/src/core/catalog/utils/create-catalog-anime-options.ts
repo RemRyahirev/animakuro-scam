@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 
 import { ReleaseStatus } from '@app/common/models/enums';
 
-import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
+import { CatalogAnimeArgsType } from '../models/inputs/catalog-anime-args.type';
 import { CatalogAnimeSortField } from '../models/enums/catalog-anime-sort-field.enum';
 import { CatalogAnimeSort } from '../models/interfaces/catalog-anime-sort';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
@@ -10,7 +10,7 @@ import { ElasticResults } from '../models/interfaces/elastic-response.type';
 export function createCatalogAnimeOptions(
     elasticResults: ElasticResults,
     options: Omit<
-        CatalogAnimeInputType,
+        CatalogAnimeArgsType,
         'search' | 'sort_field' | 'sort_order'
     >,
     sort: CatalogAnimeSort,

@@ -1,14 +1,14 @@
 import { Prisma } from '@prisma/client';
 
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
-import { CatalogCharacterInputType } from '../models/inputs/catalog-character-input.type';
+import { CatalogCharacterArgsType } from '../models/inputs/catalog-character-args.type';
 import { CatalogCharacterSort } from '../models/interfaces/catalog-character-sort';
 import { CatalogCharacterSearchTable } from '../models/enums/catalog-character-search-table.enum';
 
 export function createCatalogCharacterOptions(
     elasticResults: ElasticResults,
     options: Omit<
-        CatalogCharacterInputType,
+        CatalogCharacterArgsType,
         'search' | 'sort_field' | 'sort_order' | 'search_table'
     >,
     sort: CatalogCharacterSort,

@@ -47,6 +47,7 @@ import { MailerModule } from './mailer/mailer.module';
                 methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
                 allowedHeaders: '*',
             },
+            debug: true,
         }),
         ThrottlerModule.forRoot({
             ttl: 10,

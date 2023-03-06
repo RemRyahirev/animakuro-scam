@@ -3,8 +3,8 @@ import { AnimeStillsType, OpeningEndingType, RatingAnime } from '@prisma/client'
 
 import { AnimeApproval, AnimeRelation } from '@app/common/models/enums';
 import {
-    PaginationInputType,
-    FavouriteInputType,
+    PaginationArgsType,
+    FavouriteArgsType,
 } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
@@ -13,8 +13,8 @@ import { StatisticService } from '@app/common/services/statistic.service';
 import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateAnimeInputType } from '../models/inputs/create-anime-input.type';
-import { UpdateAnimeInputType } from '../models/inputs/update-anime-input.type';
+import { CreateAnimeArgsType } from '../models/inputs/create-anime-args.type';
+import { UpdateAnimeArgsType } from '../models/inputs/update-anime-args.type';
 import { GetAnimeResultsType } from '../models/results/get-anime-results.type';
 import { GetListAnimeResultsType } from '../models/results/get-list-anime-results.type';
 import { CreateAnimeResultsType } from '../models/results/create-anime-results.type';
@@ -23,19 +23,19 @@ import { DeleteAnimeResultsType } from '../models/results/delete-anime-results.t
 import { GetListRelatedAnimeByAnimeIdResultsType } from '../models/results/get-list-related-anime-by-anime-id-results.type';
 import { GetListSimilarAnimeByAnimeIdResultsType } from '../models/results/get-list-similar-anime-by-anime-id-results.type';
 import { relationAnimeUpdateUtil } from '../utils/relation-anime-update.util';
-import { GetAnimeByIdInputType } from '../models/inputs/get-anime-by-id-input.type';
+import { GetAnimeByIdArgsType } from '../models/inputs/get-anime-by-id-args.type';
 import { UpdateRatingAnimeResultsType } from '../models/results/update-rating-anime-result.type';
-import { Rating } from '../models/rating.model';
+import { RatingInputType } from '../models/rating-input.type';
 import { Anime } from '../models/anime.model';
 import { GetStillsByAnimeIdResultsType } from '../models/results/get-stills-by-animeId-results.type';
-import { GetStillsByAnimeIdInputType } from '../models/inputs/get-stills-by-animeId-input.type';
-import { DeleteAnimeStillsInputType } from '../models/inputs/delete-anime-stills-input.type';
+import { GetStillsByAnimeIdArgsType } from '../models/inputs/get-stills-by-anime-id-args.type';
+import { DeleteAnimeStillsArgsType } from '../models/inputs/delete-anime-stills-args.type';
 import { DeleteAnimeStillsResultsType } from '../models/results/delete-anime-stills-results.type';
 import { AddAnimeStillsResultsType } from '../models/results/add-anime-stills-results.type';
-import { AddAnimeStillsInputType } from '../models/inputs/add-anime-stills-input.type';
-import { UpdateAnimeStillsInputType } from '../models/inputs/update-anime-stills-input.type';
+import { AddAnimeStillsArgsType } from '../models/inputs/add-anime-stills-args.type';
+import { UpdateAnimeStillsArgsType } from '../models/inputs/update-anime-stills-args.type';
 import { UpdateAnimeStillsResultsType } from '../models/results/update-anime-stills-results.type';
-import { GetAnimeListInputType } from '../models/inputs/get-anime-list-input.type';
+import { GetAnimeListArgsType } from '../models/inputs/get-anime-list-args.type';
 
 @Injectable()
 export class AnimeService {
@@ -68,7 +68,7 @@ export class AnimeService {
     }
 
     async getAnime(
-        args: GetAnimeByIdInputType,
+        args: GetAnimeByIdArgsType,
         user_id: string,
         profile_id: string,
         favourites: boolean,
@@ -268,8 +268,8 @@ export class AnimeService {
     }
 
     async getAnimeList(
-        input: GetAnimeListInputType,
-        args: PaginationInputType,
+        input: GetAnimeListArgsType,
+        args: PaginationArgsType,
         user_id: string,
         profile_id: string,
         favourites: boolean,
@@ -419,7 +419,7 @@ export class AnimeService {
 
     async getRelatedAnimeListByAnimeId(
         id: string,
-        args: PaginationInputType,
+        args: PaginationArgsType,
         user_id: string,
         profile_id: string,
     ): Promise<GetListRelatedAnimeByAnimeIdResultsType> {
@@ -482,7 +482,7 @@ export class AnimeService {
 
     async getSimilarAnimeListByAnimeId(
         id: string,
-        args: PaginationInputType,
+        args: PaginationArgsType,
         user_id: string,
         profile_id: string,
     ): Promise<GetListSimilarAnimeByAnimeIdResultsType> {
@@ -543,14 +543,14 @@ export class AnimeService {
     }
 
     async getStillsByAnimeId(
-        input: GetStillsByAnimeIdInputType,
-        page: PaginationInputType,
+        input: GetStillsByAnimeIdArgsType,
+        page: PaginationArgsType,
     ): Promise<GetStillsByAnimeIdResultsType> {
         const stills = await this.prisma.anime.findUnique({
             where: { id: input.anime_id },
             include: {
                 stills: {
-                    orderBy: { [input.sort_field]: input.sort_order },
+                    orderBy: { [String(input.sort_field)]: input.sort_order },
                     ...transformPaginationUtil(page),
                     include: {
                         frame: true,
@@ -572,7 +572,7 @@ export class AnimeService {
     }
 
     async createAnime(
-        input: CreateAnimeInputType,
+        input: CreateAnimeArgsType,
         user_id: string,
     ): Promise<CreateAnimeResultsType> {
         const { ...args } = input;
@@ -638,7 +638,7 @@ export class AnimeService {
     }
 
     async updateAnime(
-        input: UpdateAnimeInputType,
+        input: UpdateAnimeArgsType,
         user_id: string,
     ): Promise<UpdateAnimeResultsType> {
         const { ...args } = input;
@@ -1098,7 +1098,7 @@ export class AnimeService {
     }
 
     async updateRatingAnime(
-        data: Rating,
+        data: RatingInputType,
     ): Promise<UpdateRatingAnimeResultsType> {
         let ratingResult: RatingAnime;
 
@@ -1146,7 +1146,7 @@ export class AnimeService {
     }
 
     async addAnimeStills(
-        input: AddAnimeStillsInputType,
+        input: AddAnimeStillsArgsType,
         user_id: string,
     ): Promise<AddAnimeStillsResultsType> {
         const toLink = input.stills.filter((stillItem) => stillItem.url);
@@ -1188,7 +1188,7 @@ export class AnimeService {
     }
 
     async updateAnimeStills(
-        input: UpdateAnimeStillsInputType,
+        input: UpdateAnimeStillsArgsType,
         user_id: string,
     ): Promise<UpdateAnimeStillsResultsType> {
         const stillsToUpdate = [];
@@ -1206,7 +1206,7 @@ export class AnimeService {
     }
 
     async deleteAnimeStills(
-        input: DeleteAnimeStillsInputType,
+        input: DeleteAnimeStillsArgsType,
         user_id: string,
     ): Promise<DeleteAnimeStillsResultsType> {
         const stills = await this.prisma.animeStills.findMany({

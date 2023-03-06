@@ -5,10 +5,10 @@ import { ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
-import { CreateUserFolderInputType } from '../models/inputs/create-user-folder-input.type';
+import { CreateUserFolderArgsType } from '../models/inputs/create-user-folder-args.type';
 import { CreateUserFolderResultsType } from '../models/results/create-user-folder-results.type';
 import { UpdateUserFolderResultsType } from '../models/results/update-user-folder-results.type';
-import { UpdateUserFolderInputType } from '../models/inputs/update-user-folder-input.type';
+import { UpdateUserFolderArgsType } from '../models/inputs/update-user-folder-args.type';
 import { DeleteUserFolderResultsType } from '../models/results/delete-user-folder-results.type';
 import { UserFolderService } from '../services/user-folder.service';
 
@@ -29,7 +29,7 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     @UseGuards(JwtAuthGuard)
     async createUserFolder(
         @ProfileId() profileId: string,
-        @Args() args: CreateUserFolderInputType,
+        @Args() args: CreateUserFolderArgsType,
     ): Promise<CreateUserFolderResultsType> {
         return await this.userFolderService.createUserFolder(args, profileId);
     }
@@ -39,7 +39,7 @@ export class UserFolderMutationResolver extends UserFolderRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateUserFolder(
-        @Args() args: UpdateUserFolderInputType,
+        @Args() args: UpdateUserFolderArgsType,
         @ProfileId() profileId: string,
     ): Promise<UpdateUserFolderResultsType> {
         return await this.userFolderService.updateUserFolder(args, profileId);

@@ -1,18 +1,18 @@
 import { Resolver, ResolveField, Args } from '@nestjs/graphql';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetCatalogAnimeResultsType } from '../models/results/get-catalog-anime-results.type';
-import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
+import { CatalogAnimeArgsType } from '../models/inputs/catalog-anime-args.type';
 import { CatalogService } from '../services/catalog.service';
 import { GetCatalogAuthorResultsType } from '../models/results/get-catalog-author-results.type';
-import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input.type';
+import { CatalogAuthorArgsType } from '../models/inputs/catalog-author-args.type';
 import { GetCatalogStudioResultsType } from '../models/results/get-catalog-studio-results.type';
-import { CatalogStudioInputType } from '../models/inputs/catalog-studio-input.type';
-import { CatalogCharacterInputType } from '../models/inputs/catalog-character-input.type';
+import { CatalogStudioArgsType } from '../models/inputs/catalog-studio-args.type';
+import { CatalogCharacterArgsType } from '../models/inputs/catalog-character-args.type';
 import { GetCatalogCharacterResultsType } from '../models/results/get-catalog-character-results.type';
 import { GetCatalogCollectionResultsType } from '../models/results/get-catalog-collection-results.type';
-import { CatalogCollectionInputType } from '../models/inputs/catalog-collection-input.type';
+import { CatalogCollectionArgsType } from '../models/inputs/catalog-collection-args.type';
 
 import { CatalogQueryType, CatalogRootResolver } from './catalog-root.resolver';
 
@@ -24,40 +24,40 @@ export class CatalogQueryResolver extends CatalogRootResolver {
 
     @ResolveField(() => GetCatalogAnimeResultsType)
     async getCatalogAnimeList(
-        @Args() args: CatalogAnimeInputType,
-        @Args() pages: PaginationInputType,
+        @Args() args: CatalogAnimeArgsType,
+        @Args() pages: PaginationArgsType,
     ): Promise<GetCatalogAnimeResultsType> {
         return await this.catalogService.getCatalogAnimeList(args, pages);
     }
 
     @ResolveField(() => GetCatalogCollectionResultsType)
     async getCatalogCollectionList(
-        @Args() args: CatalogCollectionInputType,
-        @Args() pages: PaginationInputType,
+        @Args() args: CatalogCollectionArgsType,
+        @Args() pages: PaginationArgsType,
     ): Promise<GetCatalogCollectionResultsType> {
         return this.catalogService.getCatalogCollectionList(args, pages);
     }
 
     @ResolveField(() => GetCatalogAuthorResultsType)
     async getCatalogAuthorList(
-        @Args() args: CatalogAuthorInputType,
-        @Args() pages: PaginationInputType,
+        @Args() args: CatalogAuthorArgsType,
+        @Args() pages: PaginationArgsType,
     ): Promise<GetCatalogAuthorResultsType> {
         return await this.catalogService.getCatalogAuthorList(args, pages);
     }
 
     @ResolveField(() => GetCatalogStudioResultsType)
     async getCatalogStudioList(
-        @Args() args: CatalogStudioInputType,
-        @Args() pages: PaginationInputType,
+        @Args() args: CatalogStudioArgsType,
+        @Args() pages: PaginationArgsType,
     ): Promise<GetCatalogStudioResultsType> {
         return await this.catalogService.getCatalogStudioList(args, pages);
     }
 
     @ResolveField(() => GetCatalogCharacterResultsType)
     async getCatalogCharacterList(
-        @Args() args: CatalogCharacterInputType,
-        @Args() pages: PaginationInputType,
+        @Args() args: CatalogCharacterArgsType,
+        @Args() pages: PaginationArgsType,
     ): Promise<GetCatalogCharacterResultsType> {
         return await this.catalogService.getCatalogCharacterList(args, pages);
     }

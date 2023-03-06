@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
@@ -8,24 +8,24 @@ import { StatisticService } from '@app/common/services/statistic.service';
 import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateUserCollectionInputType } from '../models/inputs/create-user-collection-input.type';
-import { UpdateUserCollectionInputType } from '../models/inputs/update-user-collection-input.type';
+import { CreateUserCollectionArgsType } from '../models/inputs/create-user-collection-args.type';
+import { UpdateUserCollectionArgsType } from '../models/inputs/update-user-collection-args.type';
 import { GetUserCollectionResultsType } from '../models/results/get-user-collection-results.type';
 import { GetListUserCollectionResultsType } from '../models/results/get-list-user-collection-results.type';
 import { CreateUserCollectionResultsType } from '../models/results/create-user-collection-results.type';
 import { UpdateUserCollectionResultsType } from '../models/results/update-user-collection-results.type';
 import { DeleteUserCollectionResultsType } from '../models/results/delete-user-collection-results.type';
-import { GetMarkdownCollectionInputType } from '../models/inputs/get-markdown-collection-input.type';
-import { CreateMarkdownCollectionInputType } from '../models/inputs/create-markdown-collection-input.type';
+import { GetMarkdownCollectionArgsType } from '../models/inputs/get-markdown-collection-args.type';
+import { CreateMarkdownCollectionArgsType } from '../models/inputs/create-markdown-collection-args.type';
 import { GetMarkdownCollectionResultsType } from '../models/results/get-markdown-collection-results.type';
 import { Prisma } from '@prisma/client';
-import { GetUserCollectionInputType } from '../models/inputs';
+import { GetUserCollectionArgsType } from '../models/inputs';
 import { UpdateRatingUserCollectionResultsType } from '../models/results';
-import { RatingUserCollection } from '../models/rating-user-collection.model';
+import { RatingUserCollectionInputType } from '../models/inputs/rating-user-collection-input.type';
 import { createUserCollectionOptions } from '../utils/create-user-collection-options';
 import { MarkdownService } from '@app/common/services/markdown.service';
 import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
-import { UpdateMarkdownCollectionInputType } from '../models/inputs/update-markdown-collection-input.type';
+import { UpdateMarkdownCollectionArgsType } from '../models/inputs/update-markdown-collection-args.type';
 import { UpdateMarkdownCollectionResultsType } from '../models/results/update-user-markdown-collection-results.type';
 import { createUserStatisticOptions } from '../../user/utils/create-user-statistic-option.util';
 
@@ -88,8 +88,8 @@ export class UserCollectionService {
 
     async getUserCollectionListByProfileId(
         user_profile_id: string,
-        args: PaginationInputType,
-        input: GetUserCollectionInputType,
+        args: PaginationArgsType,
+        input: GetUserCollectionArgsType,
     ): Promise<GetListUserCollectionResultsType> {
         const prismaOptions = createUserCollectionOptions({
             user_profile_id,
@@ -115,8 +115,8 @@ export class UserCollectionService {
     }
 
     async getUserCollectionList(
-        args: PaginationInputType,
-        input: GetUserCollectionInputType,
+        args: PaginationArgsType,
+        input: GetUserCollectionArgsType,
     ): Promise<GetListUserCollectionResultsType> {
         const prismaOptions = createUserCollectionOptions({
             option: input,
@@ -140,7 +140,7 @@ export class UserCollectionService {
     }
 
     async createUserCollection(
-        args: CreateUserCollectionInputType,
+        args: CreateUserCollectionArgsType,
         user_profile_id: string,
         user_id: string,
     ): Promise<CreateUserCollectionResultsType> {
@@ -196,7 +196,7 @@ export class UserCollectionService {
     }
 
     async updateUserCollection(
-        args: UpdateUserCollectionInputType,
+        args: UpdateUserCollectionArgsType,
         user_profile_id: string,
         user_id: string,
     ): Promise<UpdateUserCollectionResultsType> {
@@ -296,7 +296,7 @@ export class UserCollectionService {
     }
 
     async getMarkdownCollection(
-        args: GetMarkdownCollectionInputType,
+        args: GetMarkdownCollectionArgsType,
         user_id: string,
     ): Promise<GetMarkdownCollectionResultsType> {
         const str =
@@ -332,7 +332,7 @@ export class UserCollectionService {
     }
 
     async createMarkdownCollection(
-        args: CreateMarkdownCollectionInputType,
+        args: CreateMarkdownCollectionArgsType,
         user_id: string,
     ): Promise<CreateMarkdownCollectionResultsType> {
         console.log('args', args);
@@ -357,7 +357,7 @@ export class UserCollectionService {
     }
 
     async updateMarkdownCollection(
-        args: UpdateMarkdownCollectionInputType,
+        args: UpdateMarkdownCollectionArgsType,
         user_id: string,
     ): Promise<UpdateMarkdownCollectionResultsType> {
         let updatedMarkdown: any = null;
@@ -402,9 +402,9 @@ export class UserCollectionService {
     }
 
     async updateRatingUserCollection(
-        args: RatingUserCollection,
+        args: RatingUserCollectionInputType,
     ): Promise<UpdateRatingUserCollectionResultsType> {
-        let ratingUserCollection: RatingUserCollection;
+        let ratingUserCollection: RatingUserCollectionInputType;
 
         const existRating = await this.prisma.ratingUserCollection.findUnique({
             where: {

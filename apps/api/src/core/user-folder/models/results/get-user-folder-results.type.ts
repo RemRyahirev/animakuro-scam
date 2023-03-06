@@ -6,9 +6,8 @@ import { UserFolder } from '../user-folder.model';
 
 @ObjectType()
 export class GetUserFolderResultsType extends BaseResultsType {
-    @Field(() => UserFolder, {
-        nullable: true,
-        description: 'User Folder',
-    })
-    userFolder: UserFolder | null; // имя для поля - обратить внимание. После тестов удалить коммент
+    /**
+     * User Folder
+     */
+    userFolder?: UserFolder; // имя для поля - обратить внимание. После тестов удалить коммент
 }

@@ -1,5 +1,5 @@
-export * from './create-user-profile-input.type';
-export * from './update-user-profile-input.type';
+export * from './create-user-profile-args.type';
+export * from './update-user-profile-args.type';
 export * from './update-user-favorites-animes-inpute.type';
 export * from './update-user-favorites-authors-inpute.type';
 export * from './update-user-favorites-characters-inpute.type';

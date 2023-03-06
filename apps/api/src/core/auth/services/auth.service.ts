@@ -16,9 +16,9 @@ import { AuthType, MailPurpose, TokenType } from '@app/common/models/enums';
 import { PasswordService } from '@app/common/services/password.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 
-import { RegisterInputType } from '../models/inputs/register-input.type';
+import { RegisterArgsType } from '../models/inputs/register-args.type';
 import { UserService } from '../../user/services/user.service';
-import { LoginInputType } from '../models/inputs/login-input.type';
+import { LoginArgsType } from '../models/inputs/login-args.type';
 import { User } from '../../user/models/user.model';
 import { RegisterResultsType } from '../models/results/register-results.type';
 import { Mailer } from '../../../mailer/mailer';
@@ -105,7 +105,7 @@ export class AuthService {
     }
 
     async login(
-        args: LoginInputType,
+        args: LoginArgsType,
         context: Context,
     ): Promise<LoginResultsType> {
         const user = (await this.userService.findUserByUsername(
@@ -162,7 +162,7 @@ export class AuthService {
     }
 
     async sendEmail(
-        args: RegisterInputType,
+        args: RegisterArgsType,
         req: any,
         res: any,
     ): Promise<LogoutResultsType> {
@@ -177,7 +177,7 @@ export class AuthService {
         return { success: false };
     }
 
-    async register(args: RegisterInputType): Promise<LogoutResultsType> {
+    async register(args: RegisterArgsType): Promise<LogoutResultsType> {
         args.password = await this.passwordService.encrypt(args.password);
         const token = await this.tokenService.generateEmailToken(
             args.email,

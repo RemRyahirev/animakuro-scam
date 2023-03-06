@@ -5,8 +5,8 @@ import { AccessToken, ValidateSchemas } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
-import { UpdateUserInputType } from '../models/inputs/update-user-input.type';
-import { CreateUserInputType } from '../models/inputs/create-user-input.type';
+import { UpdateUserArgsType } from '../models/inputs/update-user-args.type';
+import { CreateUserArgsType } from '../models/inputs/create-user-args.type';
 import { UpdateUserResultsType } from '../models/results/update-user-results.type';
 import { CreateUserResultsType } from '../models/results/create-user-results.type';
 import { UserService } from '../services/user.service';
@@ -25,7 +25,7 @@ export class UserMutationResolver extends UserRootResolver {
     @ValidateSchemas()
     @UseGuards(JwtAuthGuard)
     async updateUser(
-        @Args() args: UpdateUserInputType,
+        @Args() args: UpdateUserArgsType,
         @AccessToken() user_id: string,
     ): Promise<UpdateUserResultsType> {
         return await this.userService.updateUser({
@@ -40,7 +40,7 @@ export class UserMutationResolver extends UserRootResolver {
     @ValidateSchemas()
     @UseGuards(JwtAuthGuard)
     async createUser(
-        @Args() args: CreateUserInputType,
+        @Args() args: CreateUserArgsType,
     ): Promise<CreateUserResultsType> {
         return await this.userService.createUser(args);
     }

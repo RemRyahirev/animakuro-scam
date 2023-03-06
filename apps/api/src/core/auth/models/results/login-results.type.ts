@@ -10,5 +10,5 @@ export class LoginResultsType extends BaseResultsType {
     access_token?: string;
 
     @Field(() => User, { nullable: true })
-    user: User | null;
+    user?: User;
 }

@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { GetUserCollectionInputType } from '../models/inputs';
+import { GetUserCollectionArgsType } from '../models/inputs';
 import { UserCollectionSort } from '../models/interfaces/user-collection-sort';
 
 export function createUserCollectionOptions({
@@ -13,7 +13,7 @@ export function createUserCollectionOptions({
     },
 }: {
     user_profile_id?: string;
-    option: GetUserCollectionInputType;
+    option: GetUserCollectionArgsType;
 }) {
     const prismaOptions: Prisma.UserFolderFindManyArgs = {
         include: {

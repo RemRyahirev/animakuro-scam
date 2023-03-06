@@ -6,14 +6,14 @@ import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
 import {
-    UpdateUserProfileInputType,
-    UpdateUserFavouriteAnimeInputType,
-    CreateUserProfileInputType,
-    UpdateUserFavouriteStudiosInputType,
-    UpdateUserFavouriteAuthorsInputType,
-    UpdateUserFavouriteGenresInputType,
-    UpdateUserFavouriteCharactersInputType,
-    UpdateUserFavouriteCollectionsInputType,
+    UpdateUserProfileArgsType,
+    UpdateUserFavouriteAnimeArgsType,
+    CreateUserProfileArgsType,
+    UpdateUserFavouriteStudiosArgsType,
+    UpdateUserFavouriteAuthorsArgsType,
+    UpdateUserFavouriteGenresArgsType,
+    UpdateUserFavouriteCharactersArgsType,
+    UpdateUserFavouriteCollectionsArgsType,
 } from '../models/inputs';
 import {
     CreateUserProfileResultsType,
@@ -33,10 +33,10 @@ import {
     UserProfileRootResolver,
 } from './user-profile-root.resolver';
 import { AddHistoryAnimeResultsType } from '../models/results/add-history-anime-results.type';
-import { AddHistoryAnimeInputType } from '../models/inputs/add-history-anime-input.type';
+import { AddHistoryAnimeArgsType } from '../models/inputs/add-history-anime-args.type';
 import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
-import { AddHistoryCharacterInputType } from '../models/inputs/add-history-character-input.type';
-import { AddHistoryAuthorInputType } from '../models/inputs/add-history-author-input.type';
+import { AddHistoryCharacterArgsType } from '../models/inputs/add-history-character-args.type';
+import { AddHistoryAuthorArgs } from '../models/inputs/add-history-author.args';
 import { AddHistoryAuthorResultsType } from '../models/results/add-history-author-results.type';
 
 @Resolver(UserProfileMutationType)
@@ -49,7 +49,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
         middleware: [AuthMiddleware],
     })
     async createUserProfile(
-        @Args() args: CreateUserProfileInputType,
+        @Args() args: CreateUserProfileArgsType,
         @AccessToken() user_id: string,
     ): Promise<CreateUserProfileResultsType> {
         return await this.userProfileService.createUserProfile(
@@ -66,7 +66,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateUserProfile(
-        @Args() args: UpdateUserProfileInputType,
+        @Args() args: UpdateUserProfileArgsType,
         @AccessToken() user_id: string,
     ): Promise<UpdateUserProfileResultsType> {
         return await this.userProfileService.updateUserProfile(args, user_id);
@@ -88,7 +88,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateFavouriteAnimes(
         @ProfileId() profileId: string,
-        @Args() args: UpdateUserFavouriteAnimeInputType,
+        @Args() args: UpdateUserFavouriteAnimeArgsType,
     ): Promise<UpdateUserFavouriteAnimesResultType> {
         return await this.userProfileService.updateFavouriteAnimes(
             args,
@@ -102,7 +102,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateFavouriteAuthors(
         @ProfileId() profileId: string,
-        @Args() args: UpdateUserFavouriteAuthorsInputType,
+        @Args() args: UpdateUserFavouriteAuthorsArgsType,
     ): Promise<UpdateUserFavouriteAuthorsResultType> {
         return await this.userProfileService.updateFavouriteAuthors(
             args,
@@ -116,7 +116,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateFavouriteCharacters(
         @ProfileId() profileId: string,
-        @Args() args: UpdateUserFavouriteCharactersInputType,
+        @Args() args: UpdateUserFavouriteCharactersArgsType,
     ): Promise<UpdateUserFavouriteCharactersResultType> {
         return await this.userProfileService.updateFavouriteCharacters(
             args,
@@ -130,7 +130,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateFavouriteGenres(
         @ProfileId() profileId: string,
-        @Args() args: UpdateUserFavouriteGenresInputType,
+        @Args() args: UpdateUserFavouriteGenresArgsType,
     ): Promise<UpdateUserFavouriteGenresResultType> {
         return await this.userProfileService.updateFavouriteGenres(
             args,
@@ -144,7 +144,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateFavouriteStudios(
         @ProfileId() profileId: string,
-        @Args() args: UpdateUserFavouriteStudiosInputType,
+        @Args() args: UpdateUserFavouriteStudiosArgsType,
     ): Promise<UpdateUserFavouriteStudiosResultType> {
         return await this.userProfileService.updateFavouriteStudios(
             args,
@@ -158,7 +158,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     @UseGuards(JwtAuthGuard)
     async updateFavouriteCollections(
         @ProfileId() profileId: string,
-        @Args() args: UpdateUserFavouriteCollectionsInputType,
+        @Args() args: UpdateUserFavouriteCollectionsArgsType,
     ): Promise<UpdateUserFavouriteCollectionsResultType> {
         return await this.userProfileService.updateFavouriteCollections(
             args,
@@ -171,7 +171,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async addHistoryAnime(
-        @Args() args: AddHistoryAnimeInputType,
+        @Args() args: AddHistoryAnimeArgsType,
         @ProfileId() profileId: string,
     ): Promise<AddHistoryAnimeResultsType> {
         return await this.userProfileService.addHistoryAnime(args, profileId);
@@ -182,7 +182,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async addHistoryCharacter(
-        @Args() args: AddHistoryCharacterInputType,
+        @Args() args: AddHistoryCharacterArgsType,
         @ProfileId() profileId: string,
     ): Promise<AddHistoryCharacterResultsType> {
         return await this.userProfileService.addHistoryCharacter(args, profileId);
@@ -193,7 +193,7 @@ export class UserProfileMutationResolver extends UserProfileRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async addHistoryAuthor(
-        @Args() args: AddHistoryAuthorInputType,
+        @Args() args: AddHistoryAuthorArgs,
         @ProfileId() profileId: string,
     ): Promise<AddHistoryAuthorResultsType> {
         return await this.userProfileService.addHistoryAuthor(args, profileId);

@@ -13,7 +13,7 @@ export class GetListUserByEmailResultsType extends BaseResultsType {
         nullable: true,
         description: 'User list by email',
     })
-    userList: User[] | null;
+    userList?: User[];
 
     @Field(() => PaginationResultsType, {
         nullable: false,

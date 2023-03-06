@@ -4,7 +4,7 @@ import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { AccessToken, ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListUserFolderResultsType } from '../models/results/get-list-user-folder-results.type';
 import { GetUserFolderResultsType } from '../models/results/get-user-folder-results.type';
@@ -36,7 +36,7 @@ export class UserFolderQueryResolver extends UserFolderRootResolver {
         middleware: [AuthMiddleware],
     })
     async getUserFolderList(
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
     ): Promise<GetListUserFolderResultsType> {
         return await this.userFolderService.getUserFolderList(args);
     }

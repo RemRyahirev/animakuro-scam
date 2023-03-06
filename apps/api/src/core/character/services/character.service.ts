@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { StatisticService } from '@app/common/services/statistic.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateCharacterInputType } from '../models/inputs/create-character-input.type';
-import { UpdateCharacterInputType } from '../models/inputs/update-character-input.type';
+import { CreateCharacterArgsType } from '../models/inputs/create-character-args.type';
+import { UpdateCharacterArgsType } from '../models/inputs/update-character-args.type';
 import { GetCharacterResultsType } from '../models/results/get-character-results.type';
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
 import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
@@ -110,7 +110,7 @@ export class CharacterService {
     }
 
     async getCharacterList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
         profile_id: string,
         favourite: boolean,
     ): Promise<GetListCharacterResultsType> {
@@ -177,7 +177,7 @@ export class CharacterService {
 
     async getCharacterListByAnimeId(
         id: string,
-        args: PaginationInputType,
+        args: PaginationArgsType,
         profile_id: string,
         favourite: boolean,
     ): Promise<GetListCharacterByAnimeIdResultsType> {
@@ -244,7 +244,7 @@ export class CharacterService {
     }
 
     async createCharacter(
-        args: CreateCharacterInputType,
+        args: CreateCharacterArgsType,
         user_id: string,
     ): Promise<CreateCharacterResultsType> {
         const character = await this.prisma.character.create({
@@ -275,7 +275,7 @@ export class CharacterService {
     }
 
     async updateCharacter(
-        args: UpdateCharacterInputType,
+        args: UpdateCharacterArgsType,
         user_id: string,
     ): Promise<UpdateCharacterResultsType> {
         const character = await this.prisma.character.update({

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
@@ -9,8 +9,8 @@ import { CreateAuthSessionResultsType } from '../models/results/create-auth-sess
 import { GetAuthSessionResultsType } from '../models/results/get-auth-session-results.type';
 import { DeleteAuthSessionResultsType } from '../models/results/delete-auth-session-results.type';
 import { GetListAuthSessionResultsType } from '../models/results/get-list-auth-session-results.type';
-import { UpdateAuthSessionInputType } from '../models/inputs/update-auth-session-input.type';
-import { CreateAuthSessionInputType } from '../models/inputs/create-auth-session-input.type';
+import { UpdateAuthSessionArgsType } from '../models/inputs/update-auth-session-args.type';
+import { CreateAuthSessionArgsType } from '../models/inputs/create-auth-session-args.type';
 import { UpdateAuthSessionResultsType } from '../models/results/update-auth-session-results.type';
 
 @Injectable()
@@ -40,7 +40,7 @@ export class AuthSessionService {
     }
 
     async getAuthSessionList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListAuthSessionResultsType> {
         const auth_session_list = await this.prisma.authSession.findMany({
             ...transformPaginationUtil(args),
@@ -58,7 +58,7 @@ export class AuthSessionService {
     }
 
     async createAuthSession(
-        args: CreateAuthSessionInputType,
+        args: CreateAuthSessionArgsType,
     ): Promise<CreateAuthSessionResultsType> {
         const auth_session = await this.prisma.authSession.create({
             data: args,
@@ -70,7 +70,7 @@ export class AuthSessionService {
     }
 
     async updateAuthSession(
-        args: UpdateAuthSessionInputType,
+        args: UpdateAuthSessionArgsType,
     ): Promise<UpdateAuthSessionResultsType> {
         const auth_session = await this.prisma.authSession.update({
             where: { id: args.id },

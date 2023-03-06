@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { StatisticService } from '@app/common/services/statistic.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateAuthorInputType } from '../models/inputs/create-author-input.type';
-import { UpdateAuthorInputType } from '../models/inputs/update-author-input.type';
+import { CreateAuthorArgsType } from '../models/inputs/create-author-args.type';
+import { UpdateAuthorArgsType } from '../models/inputs/update-author-args.type';
 import { GetAuthorResultsType } from '../models/results/get-author-results.type';
 import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';
 import { GetListAuthorByAnimeIdResultsType } from '../models/results/get-list-author-by-anime-id-results.type';
@@ -111,7 +111,7 @@ export class AuthorService {
     }
 
     async getAuthorList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
         profile_id: string,
         favourite: boolean,
     ): Promise<GetListAuthorResultsType> {
@@ -177,7 +177,7 @@ export class AuthorService {
 
     async getAuthorListByAnimeId(
         id: string,
-        args: PaginationInputType,
+        args: PaginationArgsType,
         profile_id: string,
         favourite: boolean,
     ): Promise<GetListAuthorByAnimeIdResultsType> {
@@ -245,7 +245,7 @@ export class AuthorService {
     }
 
     async createAuthor(
-        args: CreateAuthorInputType,
+        args: CreateAuthorArgsType,
         user_id: string,
     ): Promise<CreateAuthorResultsType> {
         const author = await this.prisma.author.create({
@@ -261,7 +261,7 @@ export class AuthorService {
     }
 
     async updateAuthor(
-        args: UpdateAuthorInputType,
+        args: UpdateAuthorArgsType,
         user_id: string,
     ): Promise<UpdateAuthorResultsType> {
         const author = await this.prisma.author.update({

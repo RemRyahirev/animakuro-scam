@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
@@ -12,11 +12,11 @@ import { GetListAiringScheduleResultsType } from '../models/results/get-list-air
 import { CreateAiringScheduleResultsType } from '../models/results/create-airing-schedule-results.type';
 import { UpdateAiringScheduleResultsType } from '../models/results/update-airing-schedule-results.type';
 import { DeleteAiringScheduleResultsType } from '../models/results/delete-airing-schedule-results.type';
-import { CreateAiringScheduleInputType } from '../models/inputs/create-airing-schedule-input.type';
-import { UpdateAiringScheduleInputType } from '../models/inputs/update-airing-schedule-input.type';
+import { CreateAiringScheduleArgsType } from '../models/inputs/create-airing-schedule-args.type';
+import { UpdateAiringScheduleArgsType } from '../models/inputs/update-airing-schedule-args.type';
 import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-next-airing-schedule-by-anime-results.type';
 import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
-import { GetListAiringScheduleInput } from '../models/inputs/get-list-airing-schedule-input';
+import { GetListAiringScheduleInputType } from '../models/inputs/get-list-airing-schedule-input-type';
 import { AiringScheduleRelevance } from '../models/enums/airing-schedule-relevance.enum';
 
 @Injectable()
@@ -38,7 +38,6 @@ export class AiringScheduleService {
         if (!airing_schedule) {
             return {
                 success: false,
-                airing_schedule: null,
             };
         }
         return {
@@ -49,8 +48,8 @@ export class AiringScheduleService {
     }
 
     async getAiringScheduleList(
-        args: GetListAiringScheduleInput,
-        pages: PaginationInputType,
+        args: GetListAiringScheduleInputType,
+        pages: PaginationArgsType,
     ): Promise<GetListAiringScheduleResultsType> {
         let { start_airing_at, end_airing_at } = args;
 
@@ -120,7 +119,6 @@ export class AiringScheduleService {
         if (!airing_schedule) {
             return {
                 success: false,
-                airing_schedule: null,
             };
         }
 
@@ -133,7 +131,7 @@ export class AiringScheduleService {
 
     async getListAiringScheduleByAnime(
         anime_id: string,
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListAiringScheduleByAnimeResultsType> {
         const airing_schedule = await this.prisma.airingSchedule.findMany({
             ...transformPaginationUtil(args),
@@ -159,7 +157,7 @@ export class AiringScheduleService {
     }
 
     async createAiringSchedule(
-        args: CreateAiringScheduleInputType,
+        args: CreateAiringScheduleArgsType,
     ): Promise<CreateAiringScheduleResultsType> {
         const airing_schedule = await this.prisma.airingSchedule.create({
             data: {
@@ -185,7 +183,7 @@ export class AiringScheduleService {
     }
 
     async updateAiringSchedule(
-        args: UpdateAiringScheduleInputType,
+        args: UpdateAiringScheduleArgsType,
     ): Promise<UpdateAiringScheduleResultsType> {
         const airing_schedule = await this.prisma.airingSchedule.update({
             where: { id: args.id },

@@ -7,58 +7,56 @@ import { UserProfile } from '../../user-profile/models/user-profile.model';
 
 @ObjectType()
 export class UserFolder {
-    @Field(() => ID, {
-        description: 'Unique ID of the user-anime',
-    })
+    /**
+     * Unique ID of the user-anime
+     */
+    @Field(() => ID)
     id: string;
 
-    @Field(() => UserProfile, {
-        nullable: true,
-    })
     user_profile?: UserProfile;
 
-    @Field(() => Boolean, {
-        description: 'Favourite anime',
-        defaultValue: false,
-    })
+    /**
+     * Favourite anime
+     */
     is_favourite?: boolean;
 
     @Field(() => ID)
     user_profile_id: string;
 
-    @Field(() => [Anime], {
-        description: 'The media in folder',
-        nullable: true,
-    })
+    /**
+     * The media in folder
+     */
     animes: Anime[];
 
-    @Field(() => String, {
-        description: 'Name of folder',
-    })
+    /**
+     * Name of folder
+     */
     name: string;
 
-    @Field(() => String, {
-        description: 'Description of folder',
-    })
+    /**
+     * Description of folder
+     */
     description: string;
 
-    @Field(() => FolderType, {
-        defaultValue: FolderType.DEFAULT,
-        description: 'Type of folder',
-    })
+    /**
+     * Type of folder
+     */
+    @Field(() => FolderType, { defaultValue: FolderType.DEFAULT })
     type: FolderType;
 
-    @Field(() => Date, {
-        description: 'Creation date',
-    })
+    /**
+     * Creation date
+     */
     created_at: Date;
 
-    @Field(() => Date, {
-        description: 'Updation date',
-    })
+    /**
+     * Updation date
+     */
     updated_at: Date;
 
-    @Field(() => Boolean, { description: 'Active statistic' })
+    /**
+     * Active statistic
+     */
     is_statistic_active: boolean;
 
     /*@Field(() => Int, {

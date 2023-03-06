@@ -1,2 +1,2 @@
-export * from './pagination-input.type';
-export * from './favourite-input.type';
+export * from './pagination-args.type';
+export * from './favourite-args.type';

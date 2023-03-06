@@ -1,27 +1,27 @@
 import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
 import { GetCatalogAnimeResultsType } from '../models/results/get-catalog-anime-results.type';
-import { CatalogAnimeInputType } from '../models/inputs/catalog-anime-input.type';
+import { CatalogAnimeArgsType } from '../models/inputs/catalog-anime-args.type';
 import { CatalogIndices } from '../models/enums/catalog-indices.enum';
 import { GetCatalogAuthorResultsType } from '../models/results/get-catalog-author-results.type';
 import { createCatalogAuthorOptions } from '../utils/create-catalog-author-options';
-import { CatalogAuthorInputType } from '../models/inputs/catalog-author-input.type';
-import { CatalogStudioInputType } from '../models/inputs/catalog-studio-input.type';
+import { CatalogAuthorArgsType } from '../models/inputs/catalog-author-args.type';
+import { CatalogStudioArgsType } from '../models/inputs/catalog-studio-args.type';
 import { GetCatalogStudioResultsType } from '../models/results/get-catalog-studio-results.type';
 import { createCatalogStudioOptions } from '../utils/create-catalog-studio-options';
-import { CatalogCharacterInputType } from '../models/inputs/catalog-character-input.type';
+import { CatalogCharacterArgsType } from '../models/inputs/catalog-character-args.type';
 import { createCatalogCharacterOptions } from '../utils/create-catalog-character-options';
 import { CatalogCharacterSearchTable } from '../models/enums/catalog-character-search-table.enum';
 import { CatalogAuthorSearchTable } from '../models/enums/catalog-author-search-table.enum';
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
 import { createCatalogAnimeOptions } from '../utils/create-catalog-anime-options';
-import { CatalogCollectionInputType } from '../models/inputs/catalog-collection-input.type';
+import { CatalogCollectionArgsType } from '../models/inputs/catalog-collection-args.type';
 import { GetCatalogCollectionResultsType } from '../models/results/get-catalog-collection-results.type';
 import { createCatalogCollectionOptions } from '../utils/create-catalog-collection-options';
 
@@ -36,8 +36,8 @@ export class CatalogService {
     ) {}
 
     async getCatalogAnimeList(
-        args: CatalogAnimeInputType,
-        pages: PaginationInputType,
+        args: CatalogAnimeArgsType,
+        pages: PaginationArgsType,
     ): Promise<GetCatalogAnimeResultsType> {
         const { search, sort_field, sort_order, ...filterOptions } = args;
         const sort = { sort_field, sort_order };
@@ -81,8 +81,8 @@ export class CatalogService {
     }
 
     async getCatalogAuthorList(
-        args: CatalogAuthorInputType,
-        pages: PaginationInputType,
+        args: CatalogAuthorArgsType,
+        pages: PaginationArgsType,
     ): Promise<GetCatalogAuthorResultsType> {
         const {
             search,
@@ -161,8 +161,8 @@ export class CatalogService {
     }
 
     async getCatalogCollectionList(
-        args: CatalogCollectionInputType,
-        pages: PaginationInputType,
+        args: CatalogCollectionArgsType,
+        pages: PaginationArgsType,
     ): Promise<GetCatalogCollectionResultsType> {
         const { search, ...sort } = args;
 
@@ -204,8 +204,8 @@ export class CatalogService {
     }
 
     async getCatalogStudioList(
-        args: CatalogStudioInputType,
-        pages: PaginationInputType,
+        args: CatalogStudioArgsType,
+        pages: PaginationArgsType,
     ): Promise<GetCatalogStudioResultsType> {
         const { search, sort_field, sort_order, ...filterOptions } = args;
         const sort = { sort_field, sort_order };
@@ -249,8 +249,8 @@ export class CatalogService {
     }
 
     async getCatalogCharacterList(
-        args: CatalogCharacterInputType,
-        pages: PaginationInputType,
+        args: CatalogCharacterArgsType,
+        pages: PaginationArgsType,
     ) {
         const {
             search,
@@ -350,7 +350,7 @@ export class CatalogService {
 
     private async getCatalogPagination<
         N extends keyof Prisma.TypeMap['model'],
-        A extends PaginationInputType,
+        A extends PaginationArgsType,
         T extends Prisma.TypeMap['model'][N]['count']['args']['where'],
     >(entityName: N, pages: A, where: T) {
         // @ts-ignore
@@ -365,7 +365,7 @@ export class CatalogService {
         };
     }
 
-    private takeByPages<T extends Array<{}>, A extends PaginationInputType>(
+    private takeByPages<T extends Array<{}>, A extends PaginationArgsType>(
         list: T,
         pages: A,
     ) {

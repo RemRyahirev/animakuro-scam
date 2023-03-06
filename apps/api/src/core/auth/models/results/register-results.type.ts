@@ -15,7 +15,7 @@ export class RegisterResultsType extends BaseResultsType {
         nullable: true,
         description: 'User',
     })
-    user?: User | null;
+    user?: User;
 
     @Field(() => String, {
         nullable: true,

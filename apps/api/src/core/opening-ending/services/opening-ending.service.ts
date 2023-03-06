@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { GetOpeningEndingInputType } from '../models/inputs/get-opening-ending-input.type';
+import { GetOpeningEndingArgsType } from '../models/inputs/get-opening-ending-args.type';
 import { GetOpeningEndingResultsType } from '../models/results/get-opening-ending-results.type';
-import { GetOpeningEndingListInputType } from '../models/inputs/get-opening-ending-list-input.type';
+import { GetOpeningEndingListArgsType } from '../models/inputs/get-opening-ending-list-args.type';
 import { GetOpeningEndingListResultsType } from '../models/results/get-opening-ending-list-results.type';
-import { CreateOpeningEndingInputType } from '../models/inputs/create-opening-ending-input.type';
-import { UpdateOpeningEndingInputType } from '../models/inputs/update-opening-ending-input.type';
+import { CreateOpeningEndingArgsType } from '../models/inputs/create-opening-ending-args.type';
+import { UpdateOpeningEndingArgsType } from '../models/inputs/update-opening-ending-args.type';
 import { CreateOpeningEndingResultsType } from '../models/results/create-opening-ending-results.type';
 import { UpdateOpeningEndingResultsType } from '../models/results/update-opening-ending-results.type';
 import { DeleteOpeningEndingResultsType } from '../models/results/delete-opening-ending-reslts.type';
 import { OpeningEnding } from '../models/opening-ending.model';
-import { GetOpeningEndingListSortInputType } from '../models/inputs/get-opening-ending-list-sort-input.type';
+import { GetOpeningEndingListSortArgsType } from '../models/inputs/get-opening-ending-list-sort-args.type';
 
 import { OpeningEndingTransformerService } from './opening-ending-transformer.service';
 
@@ -28,7 +28,7 @@ export class OpeningEndingService {
     ) {}
 
     async getOpeningEnding(
-        input: GetOpeningEndingInputType
+        input: GetOpeningEndingArgsType
     ): Promise<GetOpeningEndingResultsType> {
 
         const openingEnding = await this.prisma.openingEnding.findUnique({
@@ -50,9 +50,9 @@ export class OpeningEndingService {
     }
 
     async getOpeningEndingList(
-        input: GetOpeningEndingListInputType,
-        sort: GetOpeningEndingListSortInputType,
-        pages: PaginationInputType
+        input: GetOpeningEndingListArgsType,
+        sort: GetOpeningEndingListSortArgsType,
+        pages: PaginationArgsType
     ): Promise<GetOpeningEndingListResultsType> {
         const trWhere = this.opeTransformer.transformInput(input, ['min', 'max']);
         const openingEndingList = await this.prisma.openingEnding.findMany({
@@ -93,7 +93,7 @@ export class OpeningEndingService {
     }
 
     async createOpeningEnding(
-        input: CreateOpeningEndingInputType
+        input: CreateOpeningEndingArgsType
     ): Promise<CreateOpeningEndingResultsType> {
 
         const openingEnding = await this.prisma.openingEnding.create({
@@ -114,7 +114,7 @@ export class OpeningEndingService {
     }
 
     async updateOpeningEnding(
-        input: UpdateOpeningEndingInputType
+        input: UpdateOpeningEndingArgsType
     ): Promise<UpdateOpeningEndingResultsType> {
 
         const updOpeningEnding = await this.prisma.openingEnding.update({

@@ -4,7 +4,7 @@ import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 import { AccessToken, ProfileId } from '@app/common/decorators';
 import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListUserCollectionResultsType } from '../models/results/get-list-user-collection-results.type';
 import { GetUserCollectionResultsType } from '../models/results/get-user-collection-results.type';
@@ -15,8 +15,8 @@ import {
     UserCollectionRootResolver,
 } from './user-collection-root.resolver';
 import { GetMarkdownCollectionResultsType } from '../models/results/get-markdown-collection-results.type';
-import { GetMarkdownCollectionInputType } from '../models/inputs/get-markdown-collection-input.type';
-import { GetUserCollectionInputType } from '../models/inputs';
+import { GetMarkdownCollectionArgsType } from '../models/inputs/get-markdown-collection-args.type';
+import { GetUserCollectionArgsType } from '../models/inputs';
 
 @Resolver(UserCollectionQueryType)
 export class UserCollectionQueryResolver extends UserCollectionRootResolver {
@@ -39,8 +39,8 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async getUserCollectionList(
-        @Args() args: PaginationInputType,
-        @Args() input: GetUserCollectionInputType,
+        @Args() args: PaginationArgsType,
+        @Args() input: GetUserCollectionArgsType,
     ): Promise<GetListUserCollectionResultsType> {
         return await this.userCollectionService.getUserCollectionList(
             args,
@@ -55,8 +55,8 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
     async getUserCollectionListByProfileId(
         @ProfileId() profileId: string,
         @Args('id', { nullable: true }) id: string,
-        @Args() input: GetUserCollectionInputType,
-        @Args() args: PaginationInputType,
+        @Args() input: GetUserCollectionArgsType,
+        @Args() args: PaginationArgsType,
     ): Promise<GetListUserCollectionResultsType> {
         return this.userCollectionService.getUserCollectionListByProfileId(
             id ?? profileId,
@@ -64,13 +64,13 @@ export class UserCollectionQueryResolver extends UserCollectionRootResolver {
             input
         );
     }
-    
+
     @ResolveField(() => GetMarkdownCollectionResultsType, {
         middleware: [AuthMiddleware]
     })
     @UseGuards(JwtAuthGuard)
     async getMarkdown(
-        @Args() args: GetMarkdownCollectionInputType,
+        @Args() args: GetMarkdownCollectionArgsType,
         @AccessToken() userId: string
     ) {
         return await this.userCollectionService.getMarkdownCollection(args, userId);

@@ -3,7 +3,7 @@ import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { ProfileId } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListAuthorResultsType } from '../models/results/get-list-author-results.type';
 import { GetAuthorResultsType } from '../models/results/get-author-results.type';
@@ -34,7 +34,7 @@ export class AuthorQueryResolver extends AuthorRootResolver {
         middleware: [AuthMiddleware],
     })
     async getAuthorList(
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @ProfileId() profileId: string,
         @Info() info: any,
     ): Promise<GetListAuthorResultsType> {
@@ -50,7 +50,7 @@ export class AuthorQueryResolver extends AuthorRootResolver {
     })
     async getAuthorListByAnimeId(
         @Args('id') id: string,
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @ProfileId() profileId: string,
         @Info() info: any,
     ): Promise<GetListAuthorResultsType> {

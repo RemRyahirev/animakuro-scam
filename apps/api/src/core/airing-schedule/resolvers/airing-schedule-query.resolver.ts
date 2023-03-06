@@ -1,13 +1,13 @@
 import { Args, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListAiringScheduleResultsType } from '../models/results/get-list-airing-schedule-results.type';
 import { GetAiringScheduleResultsType } from '../models/results/get-airing-schedule-results.type';
 import { AiringScheduleService } from '../services/airing-schedule.service';
 import { GetListAiringScheduleByAnimeResultsType } from '../models/results/get-list-airing-schedule-by-anime-results.type';
 import { GetNextAiringScheduleByAnimeResultsType } from '../models/results/get-next-airing-schedule-by-anime-results.type';
-import { GetListAiringScheduleInput } from '../models/inputs/get-list-airing-schedule-input';
+import { GetListAiringScheduleInputType } from '../models/inputs/get-list-airing-schedule-input-type';
 
 import {
     AiringScheduleQueryType,
@@ -29,8 +29,8 @@ export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
 
     @ResolveField(() => GetListAiringScheduleResultsType)
     async getAiringScheduleList(
-        @Args() args: GetListAiringScheduleInput,
-        @Args() pages: PaginationInputType,
+        @Args() args: GetListAiringScheduleInputType,
+        @Args() pages: PaginationArgsType,
     ): Promise<GetListAiringScheduleResultsType> {
         return await this.airingScheduleService.getAiringScheduleList(args, pages);
     }
@@ -45,7 +45,7 @@ export class AiringScheduleQueryResolver extends AiringScheduleRootResolver {
     @ResolveField(() => GetListAiringScheduleByAnimeResultsType)
     async getListAiringScheduleByAnime(
         @Args('anime_id') anime_id: string,
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
     ) {
         return await this.airingScheduleService.getListAiringScheduleByAnime(
             anime_id,

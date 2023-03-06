@@ -2,7 +2,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationResultsType } from '@app/common/models/results';
 import { INestedPagination } from '@app/common/models/interfaces';
 
@@ -17,7 +17,7 @@ export class PaginationService {
 
     public async getPagination<
         N extends keyof PrismaClient,
-        A extends PaginationInputType,
+        A extends PaginationArgsType,
         C extends INestedPagination | undefined,
     >(entityName: N, args: A, condition?: C): Promise<PaginationResultsType> {
         this.entityName = entityName;

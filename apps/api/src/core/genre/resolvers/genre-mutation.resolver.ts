@@ -7,9 +7,9 @@ import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
 import { DeleteGenreResultsType } from '../models/results/delete-genre-results.type';
 import { CreateGenreResultsType } from '../models/results/create-genre-results.type';
-import { CreateGenreInputType } from '../models/inputs/create-genre-input.type';
+import { CreateGenreArgsType } from '../models/inputs/create-genre-args.type';
 import { UpdateGenreResultsType } from '../models/results/update-genre-results.type';
-import { UpdateGenreInputType } from '../models/inputs/update-genre-input.type';
+import { UpdateGenreArgsType } from '../models/inputs/update-genre-args.type';
 import { GenreService } from '../services/genre.service';
 
 import { GenreMutationType, GenreRootResolver } from './genre-root.resolver';
@@ -25,7 +25,7 @@ export class GenreMutationResolver extends GenreRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async createGenre(
-        @Args() args: CreateGenreInputType,
+        @Args() args: CreateGenreArgsType,
     ): Promise<CreateGenreResultsType> {
         return await this.genreService.createGenre(args);
     }
@@ -35,7 +35,7 @@ export class GenreMutationResolver extends GenreRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateGenre(
-        @Args() args: UpdateGenreInputType,
+        @Args() args: UpdateGenreArgsType,
     ): Promise<UpdateGenreResultsType> {
         return await this.genreService.updateGenre(args);
     }

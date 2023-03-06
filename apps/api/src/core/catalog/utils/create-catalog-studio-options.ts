@@ -1,12 +1,12 @@
 import { Prisma } from '@prisma/client';
 
 import { ElasticResults } from '../models/interfaces/elastic-response.type';
-import { CatalogStudioInputType } from '../models/inputs/catalog-studio-input.type';
+import { CatalogStudioArgsType } from '../models/inputs/catalog-studio-args.type';
 import { CatalogStudioSort } from '../models/interfaces/catalog-studio-sort';
 
 export function createCatalogStudioOptions(
     elasticResults: ElasticResults,
-    options: Omit<CatalogStudioInputType, 'search' | 'sort_field' | 'sort_order'>,
+    options: Omit<CatalogStudioArgsType, 'search' | 'sort_field' | 'sort_order'>,
     sort: CatalogStudioSort,
 ) {
     const {

@@ -3,7 +3,7 @@ import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { ProfileId } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListGenreResultsType } from '../models/results/get-list-genre-results.type';
 import { GetGenreResultsType } from '../models/results/get-genre-results.type';
@@ -34,7 +34,7 @@ export class GenreQueryResolver extends GenreRootResolver {
         middleware: [AuthMiddleware],
     })
     async getGenreList(
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @Info() info: any,
         @ProfileId() profileId: string,
     ): Promise<GetListGenreResultsType> {

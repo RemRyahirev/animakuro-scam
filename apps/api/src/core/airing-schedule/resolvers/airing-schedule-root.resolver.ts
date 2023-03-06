@@ -1,4 +1,4 @@
-import { Field, Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
+import { Mutation, ObjectType, Query, Resolver } from '@nestjs/graphql';
 
 import { CreateAiringScheduleResultsType } from '../models/results/create-airing-schedule-results.type';
 import { UpdateAiringScheduleResultsType } from '../models/results/update-airing-schedule-results.type';
@@ -8,32 +8,32 @@ import { GetAiringScheduleResultsType } from '../models/results/get-airing-sched
 
 @ObjectType()
 export class AiringScheduleMutationType {
-    @Field(() => CreateAiringScheduleResultsType, {
-        description: 'Create Airing Schedule',
-    })
+    /**
+     * Create Airing Schedule
+     */
     createAiringSchedule: CreateAiringScheduleResultsType;
 
-    @Field(() => UpdateAiringScheduleResultsType, {
-        description: 'Update Airing Schedule',
-    })
+    /**
+     * Update Airing Schedule
+     */
     updateAiringSchedule: UpdateAiringScheduleResultsType;
 
-    @Field(() => DeleteAiringScheduleResultsType, {
-        description: 'Delete Airing Schedule',
-    })
+    /**
+     * Delete Airing Schedule
+     */
     deleteAiringSchedule: DeleteAiringScheduleResultsType;
 }
 
 @ObjectType()
 export class AiringScheduleQueryType {
-    @Field(() => GetAiringScheduleResultsType, {
-        description: 'Get Airing Schedule by ID',
-    })
+    /**
+     * Get Airing Schedule by ID
+     */
     getAiringSchedule: GetAiringScheduleResultsType;
 
-    @Field(() => GetListAiringScheduleResultsType, {
-        description: 'Get Airing Schedule  list',
-    })
+    /**
+     * Get Airing Schedule  list
+     */
     getAiringScheduleList: GetListAiringScheduleResultsType;
 }
 

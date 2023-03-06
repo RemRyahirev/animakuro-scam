@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
 import { FolderType } from '@app/common/models/enums';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
 import { StatisticService } from '@app/common/services/statistic.service';
 import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
-import { CreateUserFolderInputType } from '../models/inputs/create-user-folder-input.type';
-import { UpdateUserFolderInputType } from '../models/inputs/update-user-folder-input.type';
+import { CreateUserFolderArgsType } from '../models/inputs/create-user-folder-args.type';
+import { UpdateUserFolderArgsType } from '../models/inputs/update-user-folder-args.type';
 import { GetUserFolderResultsType } from '../models/results/get-user-folder-results.type';
 import { GetListUserFolderResultsType } from '../models/results/get-list-user-folder-results.type';
 import { CreateUserFolderResultsType } from '../models/results/create-user-folder-results.type';
@@ -93,7 +93,7 @@ export class UserFolderService {
     }
 
     async getUserFolderList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListUserFolderResultsType> {
         const userFolderList = await this.prisma.userFolder.findMany({
             ...transformPaginationUtil(args),
@@ -129,7 +129,7 @@ export class UserFolderService {
     }
 
     async createUserFolder(
-        args: CreateUserFolderInputType,
+        args: CreateUserFolderArgsType,
         user_profile_id: string,
     ): Promise<CreateUserFolderResultsType> {
         const animeToAdd = (args.animes_add ?? []).slice();
@@ -186,7 +186,7 @@ export class UserFolderService {
     }
 
     async updateUserFolder(
-        args: UpdateUserFolderInputType,
+        args: UpdateUserFolderArgsType,
         user_profile_id: string,
     ): Promise<UpdateUserFolderResultsType> {
         const animeToAdd = (args.animes_add ?? []).slice();

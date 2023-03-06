@@ -22,4 +22,7 @@ export * from './profile-type.enum';
 export * from './site-theme.enum';
 export * from './profile-integrations.enum';
 export * from './media.enum';
-export * from './folder-type.enum'
+export * from './folder-type.enum';
+export * from './anime-stills-type.enum';
+export * from './anime-stills-sort-field.enum';
+export * from './sort-order.enum';

@@ -8,9 +8,9 @@ import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { OpeningEndingService } from '../services/opening-ending.service';
 import { CreateOpeningEndingResultsType } from '../models/results/create-opening-ending-results.type';
 import { UpdateOpeningEndingResultsType } from '../models/results/update-opening-ending-results.type';
-import { UpdateOpeningEndingInputType } from '../models/inputs/update-opening-ending-input.type';
+import { UpdateOpeningEndingArgsType } from '../models/inputs/update-opening-ending-args.type';
 import { DeleteOpeningEndingResultsType } from '../models/results/delete-opening-ending-reslts.type';
-import { CreateOpeningEndingInputType } from '../models/inputs/create-opening-ending-input.type';
+import { CreateOpeningEndingArgsType } from '../models/inputs/create-opening-ending-args.type';
 
 import {
     OpeningEndingMutationType,
@@ -28,7 +28,7 @@ export class OpeningEndingMutationResolver extends OpeningEndingRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async createOpeningEnding(
-        @Args() args: CreateOpeningEndingInputType,
+        @Args() args: CreateOpeningEndingArgsType,
     ): Promise<CreateOpeningEndingResultsType> {
         return await this.opendingService.createOpeningEnding(args);
     }
@@ -38,7 +38,7 @@ export class OpeningEndingMutationResolver extends OpeningEndingRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateOpeningEnding(
-        @Args() args: UpdateOpeningEndingInputType,
+        @Args() args: UpdateOpeningEndingArgsType,
     ): Promise<UpdateOpeningEndingResultsType> {
         return await this.opendingService.updateOpeningEnding(args);
     }

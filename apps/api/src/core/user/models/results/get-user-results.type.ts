@@ -10,5 +10,5 @@ export class GetUserResultsType extends BaseResultsType {
         nullable: true,
         description: 'User',
     })
-    user: User | null;
+    user?: User;
 }

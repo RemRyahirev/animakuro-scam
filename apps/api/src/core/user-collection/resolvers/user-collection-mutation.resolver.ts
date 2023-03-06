@@ -13,9 +13,9 @@ import {
 } from '../models/results';
 
 import {
-    UpdateUserCollectionInputType,
-    UpdateRatingUserCollectionInputType,
-    CreateUserCollectionInputType,
+    UpdateUserCollectionArgsType,
+    UpdateRatingUserCollectionArgsType,
+    CreateUserCollectionArgsType,
 } from '../models/inputs';
 
 import { UserCollectionService } from '../services/user-collection.service';
@@ -25,8 +25,8 @@ import {
     UserCollectionRootResolver,
 } from './user-collection-root.resolver';
 import { CreateMarkdownCollectionResultsType } from '../models/results/create-markdown-collection-results.type';
-import { CreateMarkdownCollectionInputType } from '../models/inputs/create-markdown-collection-input.type';
-import { UpdateMarkdownCollectionInputType } from '../models/inputs/update-markdown-collection-input.type';
+import { CreateMarkdownCollectionArgsType } from '../models/inputs/create-markdown-collection-args.type';
+import { UpdateMarkdownCollectionArgsType } from '../models/inputs/update-markdown-collection-args.type';
 
 @Resolver(UserCollectionMutationType)
 export class UserCollectionMutationResolver extends UserCollectionRootResolver {
@@ -39,7 +39,7 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async createUserCollection(
-        @Args() args: CreateUserCollectionInputType,
+        @Args() args: CreateUserCollectionArgsType,
         @ProfileId() profileId: string,
         @AccessToken() userId: string,
     ): Promise<CreateUserCollectionResultsType> {
@@ -55,7 +55,7 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateUserCollection(
-        @Args() args: UpdateUserCollectionInputType,
+        @Args() args: UpdateUserCollectionArgsType,
         @ProfileId() profileId: string,
         @AccessToken() userId: string,
     ): Promise<UpdateUserCollectionResultsType> {
@@ -75,13 +75,13 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     ): Promise<DeleteUserCollectionResultsType> {
         return await this.userCollectionService.deleteUserCollection(id);
     }
-    
+
     @ResolveField(() => CreateMarkdownCollectionResultsType, {
         middleware: [AuthMiddleware],
     })
     @UseGuards(JwtAuthGuard)
     async createMarkdown(
-        @Args() args: CreateMarkdownCollectionInputType,
+        @Args() args: CreateMarkdownCollectionArgsType,
         // @ProfileId() user_profile_id: string,
         @AccessToken() userId: string
     ) {
@@ -93,7 +93,7 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateMarkdown(
-        @Args() args: UpdateMarkdownCollectionInputType,
+        @Args() args: UpdateMarkdownCollectionArgsType,
         // @ProfileId() user_profile_id: string,
         @AccessToken() userId: string
     ) {
@@ -105,7 +105,7 @@ export class UserCollectionMutationResolver extends UserCollectionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateRatingUserCollection(
-        @Args() args: UpdateRatingUserCollectionInputType,
+        @Args() args: UpdateRatingUserCollectionArgsType,
         @ProfileId() user_profile_id: string,
     ): Promise<UpdateRatingUserCollectionResultsType> {
         return await this.userCollectionService.updateRatingUserCollection({

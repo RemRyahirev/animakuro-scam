@@ -3,7 +3,7 @@ import { Args, Info, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { ProfileId } from '@app/common/decorators';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 
 import { GetListCharacterResultsType } from '../models/results/get-list-character-results.type';
 import { GetListCharacterByAnimeIdResultsType } from '../models/results/get-list-character-by-anime-id-results.type';
@@ -40,7 +40,7 @@ export class CharacterQueryResolver extends CharacterRootResolver {
         middleware: [AuthMiddleware],
     })
     async getCharacterList(
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @ProfileId() profileId: string,
         @Info() info: any,
     ): Promise<GetListCharacterResultsType> {
@@ -56,7 +56,7 @@ export class CharacterQueryResolver extends CharacterRootResolver {
     })
     async getCharacterListByAnimeId(
         @Args('id') id: string,
-        @Args() args: PaginationInputType,
+        @Args() args: PaginationArgsType,
         @Info() info: any,
         @ProfileId() profileId: string,
     ): Promise<GetListCharacterResultsType> {

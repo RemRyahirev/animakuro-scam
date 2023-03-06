@@ -8,8 +8,8 @@ import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 import { CreateAuthSessionResultsType } from '../models/results/create-auth-session-results.type';
 import { AuthSessionService } from '../services/auth-session.service';
 import { DeleteAuthSessionResultsType } from '../models/results/delete-auth-session-results.type';
-import { UpdateAuthSessionInputType } from '../models/inputs/update-auth-session-input.type';
-import { CreateAuthSessionInputType } from '../models/inputs/create-auth-session-input.type';
+import { UpdateAuthSessionArgsType } from '../models/inputs/update-auth-session-args.type';
+import { CreateAuthSessionArgsType } from '../models/inputs/create-auth-session-args.type';
 import { UpdateAuthSessionResultsType } from '../models/results/update-auth-session-results.type';
 
 import {
@@ -28,7 +28,7 @@ export class AuthSessionMutationResolver extends AuthSessionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async createAuthSession(
-        @Args() args: CreateAuthSessionInputType,
+        @Args() args: CreateAuthSessionArgsType,
         @AccessToken() user_id: string,
     ): Promise<CreateAuthSessionResultsType> {
         return await this.authSessionService.createAuthSession({
@@ -42,7 +42,7 @@ export class AuthSessionMutationResolver extends AuthSessionRootResolver {
     })
     @UseGuards(JwtAuthGuard)
     async updateAuthSession(
-        @Args() args: UpdateAuthSessionInputType,
+        @Args() args: UpdateAuthSessionArgsType,
     ): Promise<UpdateAuthSessionResultsType> {
         return await this.authSessionService.updateAuthSession(args);
     }

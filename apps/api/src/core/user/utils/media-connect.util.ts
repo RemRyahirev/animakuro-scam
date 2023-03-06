@@ -1,6 +1,6 @@
-import { UpdateUserFavouritesInputType } from '../models/inputs/update-user-favourites-input.type';
+import { UpdateUserFavouritesArgsType } from '../models/inputs/update-user-favourites-args.type';
 
-export const mediaConnectUtil = (args: UpdateUserFavouritesInputType) => {
+export const mediaConnectUtil = (args: UpdateUserFavouritesArgsType) => {
     const result: any = {
         connect: [],
         disconnect: [],

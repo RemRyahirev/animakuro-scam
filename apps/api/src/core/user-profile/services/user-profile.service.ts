@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { PaginationInputType } from '@app/common/models/inputs';
+import { PaginationArgsType } from '@app/common/models/inputs';
 import { FileUploadService } from '@app/common/services/file-upload.service';
 import { PaginationService } from '@app/common/services/pagination.service';
 import { PrismaService } from '@app/common/services/prisma.service';
@@ -9,15 +9,15 @@ import { entityUpdateUtil } from '@app/common/utils/entity-update.util';
 import { transformPaginationUtil } from '@app/common/utils/transform-pagination.util';
 
 import {
-    UpdateUserProfileInputType,
-    CreateUserProfileInputType,
-    UpdateUserFavouriteAnimeInputType,
-    UpdateUserFavouriteStudiosInputType,
-    UpdateUserFavouriteAuthorsInputType,
-    UpdateUserFavouriteGenresInputType,
-    UpdateUserFavouriteCharactersInputType,
-    GetUserProfileInputType,
-    UpdateUserFavouriteCollectionsInputType,
+    UpdateUserProfileArgsType,
+    CreateUserProfileArgsType,
+    UpdateUserFavouriteAnimeArgsType,
+    UpdateUserFavouriteStudiosArgsType,
+    UpdateUserFavouriteAuthorsArgsType,
+    UpdateUserFavouriteGenresArgsType,
+    UpdateUserFavouriteCharactersArgsType,
+    GetUserProfileArgsType,
+    UpdateUserFavouriteCollectionsArgsType,
 } from '../models/inputs';
 import {
     GetListUserProfileResultsType,
@@ -32,15 +32,15 @@ import {
     UpdateUserFavouriteStudiosResultType,
     UpdateUserFavouriteCollectionsResultType,
 } from '../models/results';
-import { GetHistoryBaseInputType } from '../models/inputs/get-history-base-input.type';
-import { AddHistoryAnimeInputType } from '../models/inputs/add-history-anime-input.type';
+import { GetHistoryBaseArgsType } from '../models/inputs/get-history-base-args.type';
+import { AddHistoryAnimeArgsType } from '../models/inputs/add-history-anime-args.type';
 import { GetHistoryAnimeResultsType } from '../models/results/get-history-anime-results.type';
 import { AddHistoryAnimeResultsType } from '../models/results/add-history-anime-results.type';
 import { GetHistoryAuthorResultsType } from '../models/results/get-history-author-results.type';
 import { GetHistoryCharacterResultsType } from '../models/results/get-history-character-results.type';
-import { AddHistoryAuthorInputType } from '../models/inputs/add-history-author-input.type';
+import { AddHistoryAuthorArgs } from '../models/inputs/add-history-author.args';
 import { AddHistoryAuthorResultsType } from '../models/results/add-history-author-results.type';
-import { AddHistoryCharacterInputType } from '../models/inputs/add-history-character-input.type';
+import { AddHistoryCharacterArgsType } from '../models/inputs/add-history-character-args.type';
 import { AddHistoryCharacterResultsType } from '../models/results/add-history-character-results.type';
 import { UserCollection } from '../../user-collection/models/user-collection.model';
 import { SortOrder } from '@app/common/models/enums/sort-order.enum';
@@ -79,7 +79,7 @@ export class UserProfileService {
         id,
         user_id,
         username,
-    }: GetUserProfileInputType & {
+    }: GetUserProfileArgsType & {
         user_id: string;
     }): Promise<GetUserProfileResultsType> {
         if (!id && !user_id && !username) {
@@ -157,7 +157,7 @@ export class UserProfileService {
     }
 
     async getUserProfileList(
-        args: PaginationInputType,
+        args: PaginationArgsType,
     ): Promise<GetListUserProfileResultsType> {
         const userProfileList = await this.prisma.userProfile.findMany({
             where: {
@@ -204,8 +204,8 @@ export class UserProfileService {
     }
 
     async getHistoryCharacter(
-        args: GetHistoryBaseInputType,
-        pagination: PaginationInputType,
+        args: GetHistoryBaseArgsType,
+        pagination: PaginationArgsType,
     ): Promise<GetHistoryCharacterResultsType> {
         const character_history_list =
             await this.prisma.characterHistory.findMany({
@@ -231,7 +231,7 @@ export class UserProfileService {
     }
 
     async addHistoryCharacter(
-        args: AddHistoryCharacterInputType,
+        args: AddHistoryCharacterArgsType,
         user_profile_id: string,
     ): Promise<AddHistoryCharacterResultsType> {
         const exists_history = await this.prisma.characterHistory.findFirst({
@@ -272,8 +272,8 @@ export class UserProfileService {
     }
 
     async getHistoryAuthor(
-        args: GetHistoryBaseInputType,
-        pagination: PaginationInputType,
+        args: GetHistoryBaseArgsType,
+        pagination: PaginationArgsType,
     ): Promise<GetHistoryAuthorResultsType> {
         const author_history_list = await this.prisma.authorHistory.findMany({
             where: {
@@ -298,7 +298,7 @@ export class UserProfileService {
     }
 
     async addHistoryAuthor(
-        args: AddHistoryAuthorInputType,
+        args: AddHistoryAuthorArgs,
         user_profile_id: string,
     ): Promise<AddHistoryAuthorResultsType> {
         const exists_history = await this.prisma.authorHistory.findFirst({
@@ -340,8 +340,8 @@ export class UserProfileService {
     }
 
     async getHistoryAnime(
-        args: GetHistoryBaseInputType,
-        pagination: PaginationInputType,
+        args: GetHistoryBaseArgsType,
+        pagination: PaginationArgsType,
     ): Promise<GetHistoryAnimeResultsType> {
         const anime_history_list = await this.prisma.animeHistory.findMany({
             where: {
@@ -364,7 +364,7 @@ export class UserProfileService {
     }
 
     async addHistoryAnime(
-        args: AddHistoryAnimeInputType,
+        args: AddHistoryAnimeArgsType,
         user_profile_id: string,
     ): Promise<AddHistoryAnimeResultsType> {
         const exists_history = await this.prisma.animeHistory.findFirst({
@@ -405,7 +405,7 @@ export class UserProfileService {
     }
 
     async createUserProfile(
-        args: CreateUserProfileInputType,
+        args: CreateUserProfileArgsType,
         authUserId: string,
     ): Promise<CreateUserProfileResultsType> {
         const { user_id, avatar,  moderator_role, ...other } = args;
@@ -457,7 +457,7 @@ export class UserProfileService {
     }
 
     async updateUserProfile(
-        args: UpdateUserProfileInputType,
+        args: UpdateUserProfileArgsType,
         authUserId: string,
     ): Promise<UpdateUserProfileResultsType> {
         const userProfile = await this.prisma.userProfile.update({
@@ -544,7 +544,7 @@ export class UserProfileService {
     }
 
     async updateFavouriteAnimes(
-        args: UpdateUserFavouriteAnimeInputType,
+        args: UpdateUserFavouriteAnimeArgsType,
         profile_id: string,
     ): Promise<UpdateUserFavouriteAnimesResultType> {
         const animeToAdd = (args.favourite_animes_add ?? []).slice();
@@ -615,7 +615,7 @@ export class UserProfileService {
     }
 
     async updateFavouriteStudios(
-        args: UpdateUserFavouriteStudiosInputType,
+        args: UpdateUserFavouriteStudiosArgsType,
         profile_id: string,
     ): Promise<UpdateUserFavouriteStudiosResultType> {
         const userFavouriteStudios = await this.prisma.userProfile.update({
@@ -637,7 +637,7 @@ export class UserProfileService {
     }
 
     async updateFavouriteCharacters(
-        args: UpdateUserFavouriteCharactersInputType,
+        args: UpdateUserFavouriteCharactersArgsType,
         profile_id: string,
     ): Promise<UpdateUserFavouriteCharactersResultType> {
         const userFavouriteCharacters = await this.prisma.userProfile.update({
@@ -660,7 +660,7 @@ export class UserProfileService {
     }
 
     async updateFavouriteAuthors(
-        args: UpdateUserFavouriteAuthorsInputType,
+        args: UpdateUserFavouriteAuthorsArgsType,
         profile_id: string,
     ): Promise<UpdateUserFavouriteAuthorsResultType> {
         const userFavouriteAuthors = await this.prisma.userProfile.update({
@@ -682,7 +682,7 @@ export class UserProfileService {
     }
 
     async updateFavouriteGenres(
-        args: UpdateUserFavouriteGenresInputType,
+        args: UpdateUserFavouriteGenresArgsType,
         profile_id: string,
     ): Promise<UpdateUserFavouriteGenresResultType> {
         const userFavouriteGenres = await this.prisma.userProfile.update({
@@ -703,7 +703,7 @@ export class UserProfileService {
         };
     }
     async updateFavouriteCollections(
-        args: UpdateUserFavouriteCollectionsInputType,
+        args: UpdateUserFavouriteCollectionsArgsType,
         profile_id: string,
     ): Promise<UpdateUserFavouriteCollectionsResultType> {
         const collectionToAdd = (args.favourite_collections_add ?? []).slice();

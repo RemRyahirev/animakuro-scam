@@ -1,1 +1,1 @@
-export * from './get-statistic-folder-input.type';
+export * from './get-statistic-folder-args.type';

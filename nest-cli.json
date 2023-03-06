@@ -7,7 +7,13 @@
     "watchAssets": true,
     "webpack": true,
     "tsConfigPath": "apps/api/tsconfig.app.json",
-    "plugins": ["@nestjs/graphql"]
+    "plugins": [{
+        "name": "@nestjs/graphql",
+        "options": {
+            "typeFileNameSuffix": ["input.type.ts", "results.type.ts", "args.type.ts", ".model.ts"],
+            "introspectComments": true
+        }
+    }]
   },
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/api/src",

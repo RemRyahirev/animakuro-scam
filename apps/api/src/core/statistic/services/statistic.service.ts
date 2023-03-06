@@ -7,7 +7,7 @@ import {
     GetUserStatisticFolderResultsType,
     GetUserStatisticFavouriteResultsType,
 } from '../models/results';
-import { GetStatisticFolderInputType } from '../models/inputs';
+import { GetStatisticFolderArgsType } from '../models/inputs';
 
 @Injectable()
 export class StatisticService {
@@ -20,7 +20,7 @@ export class StatisticService {
         id = '',
         max_count = 5,
         user_folders_id,
-    }: GetStatisticFolderInputType): Promise<GetUserStatisticFolderResultsType> {
+    }: GetStatisticFolderArgsType): Promise<GetUserStatisticFolderResultsType> {
         const folders: any = await this.prisma.userFolder.findMany({
             where: {
                 user_profile_id: id,

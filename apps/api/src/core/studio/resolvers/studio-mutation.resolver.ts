@@ -6,10 +6,10 @@ import { JwtAuthGuard } from '@app/common/guards';
 import { AuthMiddleware } from '@app/common/middlewares/auth.middleware';
 
 import { DeleteStudioResultsType } from '../models/results/delete-studio-results.type';
-import { UpdateStudioInputType } from '../models/inputs/update-studio-input.type';
+import { UpdateStudioArgsType } from '../models/inputs/update-studio-args.type';
 import { UpdateStudioResultsType } from '../models/results/update-studio-results.type';
 import { CreateStudioResultsType } from '../models/results/create-studio-results.type';
-import { CreateStudioInputType } from '../models/inputs/create-studio-input.type';
+import { CreateStudioArgsType } from '../models/inputs/create-studio-args.type';
 import { StudioService } from '../services/studio.service';
 
 import { StudioMutationType, StudioRootResolver } from './studio-root.resolver';
@@ -25,7 +25,7 @@ export class StudioMutationResolver extends StudioRootResolver {
         middleware: [AuthMiddleware],
     })
     async createStudio(
-        @Args() args: CreateStudioInputType,
+        @Args() args: CreateStudioArgsType,
         @AccessToken() user_id: string,
     ): Promise<CreateStudioResultsType> {
         return await this.studioService.createStudio(args, user_id);
@@ -35,7 +35,7 @@ export class StudioMutationResolver extends StudioRootResolver {
         middleware: [AuthMiddleware],
     })
     async updateStudio(
-        @Args() args: UpdateStudioInputType,
+        @Args() args: UpdateStudioArgsType,
         @AccessToken() user_id: string,
     ): Promise<UpdateStudioResultsType> {
         return await this.studioService.updateStudio(args, user_id);
